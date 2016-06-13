@@ -24,8 +24,12 @@ IN THE SOFTWARE.
 #ifndef RENDERING_BASE_OPENGL_H_INCLUDED
 #define RENDERING_BASE_OPENGL_H_INCLUDED
 
+#ifdef ANDROID
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#else
+#include <GL/glew.h>
+#endif
 #include "utils/std/product.h"
 
 namespace eps {
