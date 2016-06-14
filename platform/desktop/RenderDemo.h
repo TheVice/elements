@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #ifndef _MSC_VER
 #include "renderer.h"
+#include "elements/simulation/air/system.h"
 #endif
 #include <GL/glew.h>
 
@@ -18,6 +19,7 @@ class renderer;
 }
 }
 
+//eps::simulation::air::system
 
 namespace Rendering
 {
@@ -39,7 +41,9 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	std::unique_ptr<eps::simulation::air::system> mSystem;
 	std::unique_ptr<eps::experiment::air::renderer> mRenderer;
+	GLuint mParticlesCount;
 };
 }
 
