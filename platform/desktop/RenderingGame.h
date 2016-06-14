@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #ifndef _MSC_VER
+#include "desktop_asset_reader.h"
 #include "Camera.h"
 #include "RenderDemo.h"
 #endif

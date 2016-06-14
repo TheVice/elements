@@ -48,6 +48,11 @@ namespace Utility
 std::string path(const char* aPath)
 {
 	std::string spath(aPath);
+	return path(spath);
+}
+
+std::string path(std::string aPath)
+{
 #ifdef WIN32
 	const char presentChar = '/';
 	const char charToReplace[] = "\\";
@@ -57,12 +62,12 @@ std::string path(const char* aPath)
 #endif
 	std::string::size_type pathSeparator = std::string::npos;
 
-	while (std::string::npos != (pathSeparator = spath.find(presentChar)))
+	while (std::string::npos != (pathSeparator = aPath.find(presentChar)))
 	{
-		spath = spath.replace(pathSeparator, 1, charToReplace);
+		aPath = aPath.replace(pathSeparator, 1, charToReplace);
 	}
 
-	return spath;
+	return aPath;
 }
 #ifdef WIN32
 void char2wchar(const char* aChar, wchar_t* aWchar, int aLength)

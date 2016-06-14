@@ -47,13 +47,8 @@ enum class program_enum : short
 
 bool pass_particles::initialize()
 {
-#ifdef WIN32
-    return rendering::load_program("shaders\\experiments\\air\\particles.prog",
-                                   program_);
-#else
     return rendering::load_program("shaders/experiments/air/particles.prog",
                                    program_);
-#endif
 }
 
 utils::unique<rendering::pass_target> pass_particles::construct(const math::uvec2 & size)

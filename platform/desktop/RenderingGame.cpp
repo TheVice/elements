@@ -1,6 +1,7 @@
 
 #include "RenderingGame.h"
 #ifdef _MSC_VER
+#include "desktop_asset_reader.h"
 #include "Camera.h"
 #include "RenderDemo.h"
 #endif
@@ -23,6 +24,9 @@ void RenderingGame::Initialize()
 								 std::placeholders::_1, std::placeholders::_2,
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
+	//
+	std::string path_to_asset = ".";
+	eps::assets_storage::init<my_asset_reader>(path_to_asset);
 	//
 	mCamera = std::make_unique<Library::Camera>(*this);
 	mComponents.push_back(mCamera.get());

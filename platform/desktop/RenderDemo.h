@@ -7,9 +7,12 @@
 #endif
 #include <GL/glew.h>
 
-namespace eps {
-namespace experiment {
-namespace air {
+namespace eps
+{
+namespace experiment
+{
+namespace air
+{
 class renderer;
 }
 }

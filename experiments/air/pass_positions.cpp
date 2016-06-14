@@ -56,17 +56,10 @@ void pass_positions::set_count(size_t particles_count)
 
 bool pass_positions::initialize()
 {
-#ifdef WIN32
-    return load_program("shaders\\experiments\\air\\positions_product_reset.prog",
-                        program_reset_) &&
-           load_program("shaders\\experiments\\air\\positions_product_process.prog",
-                        program_process_);
-#else
     return load_program("shaders/experiments/air/positions_product_reset.prog",
                         program_reset_) &&
            load_program("shaders/experiments/air/positions_product_process.prog",
                         program_process_);
-#endif
 }
 
 utils::unique<rendering::pass_target> pass_positions::construct(const math::uvec2 & size)
