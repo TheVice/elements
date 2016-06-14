@@ -56,10 +56,17 @@ void pass_velocities::set_field(sync::future<math::vec2> field)
 
 bool pass_velocities::initialize()
 {
+#ifdef WIN32
+    return load_program("shaders\\experiments\\air\\velocities_product_reset.prog",
+                        program_reset_) &&
+           load_program("shaders\\experiments\\air\\velocities_product_process.prog",
+                        program_process_);
+#else
     return load_program("shaders/experiments/air/velocities_product_reset.prog",
                         program_reset_) &&
            load_program("shaders/experiments/air/velocities_product_process.prog",
                         program_process_);
+#endif
 }
 
 utils::unique<rendering::pass_target> pass_velocities::construct(const math::uvec2 & size)

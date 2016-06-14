@@ -1,8 +1,8 @@
 
+#include "RenderingGame.h"
 #include <memory>
 
 #ifdef WIN32
-#include <windows.h>
 #include <tchar.h>
 #if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
@@ -29,5 +29,22 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
+	auto game = std::make_unique<Rendering::RenderingGame>(TEXT("desktop"));
+
+	try
+	{
+		game->Run();
+	}
+	catch (const std::runtime_error& aExc)
+	{
+#ifndef WIN32
+		std::cerr << aExc.what() << std::endl;
+#else
+#ifndef UNICODE
+		MessageBox(game->GetWindowHandle(), aExc.what(), game->GetWindowTitle(), MB_ABORTRETRYIGNORE);
+#endif
+#endif
+	}
+
 	return 0;
 }
