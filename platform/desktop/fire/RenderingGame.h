@@ -5,7 +5,7 @@
 #ifndef _MSC_VER
 #include "desktop_asset_reader.h"
 #include "Camera.h"
-#include "RenderDemo.h"
+#include "FireDemo.h"
 #endif
 #include <glm/glm.hpp>
 #include <memory>
@@ -18,7 +18,7 @@ class Camera;
 
 namespace Rendering
 {
-class RenderDemo;
+class FireDemo;
 class RenderingGame : public Library::Game
 {
 public:
@@ -35,7 +35,7 @@ private:
 
 	KeyboardHandler mKeyboardHandler;
 	std::unique_ptr<Library::Camera> mCamera;
-	std::unique_ptr<RenderDemo> mRenderDemo;
+	std::unique_ptr<FireDemo> mFireDemo;
 
 private:
 	static const glm::vec4 sBackgroundColor;

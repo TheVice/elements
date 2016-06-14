@@ -3,7 +3,7 @@
 #ifdef _MSC_VER
 #include "desktop_asset_reader.h"
 #include "Camera.h"
-#include "RenderDemo.h"
+#include "StrangeDemo.h"
 #endif
 #include <glm/gtc/constants.hpp>
 
@@ -13,7 +13,7 @@ RenderingGame::RenderingGame(const TCHAR* aWindowTitle)
 	: Game(aWindowTitle),
 	  mKeyboardHandler(nullptr),
 	  mCamera(nullptr),
-	  mRenderDemo(nullptr)
+	  mStrangeDemo(nullptr)
 {
 	//mIsDepthStencilBufferEnabled = true;
 }
@@ -26,14 +26,14 @@ void RenderingGame::Initialize()
 	AddKeyboardHandler(mKeyboardHandler);
 	//
 	std::string path_to_asset = ".";
-	eps::assets_storage::init<my_asset_reader>(path_to_asset);
+	eps::assets_storage::init<desktop_asset_reader>(path_to_asset);
 	//
 	mCamera = std::make_unique<Library::Camera>(*this);
 	mComponents.push_back(mCamera.get());
 	mServices.AddService(Library::Camera::TypeIdClass(), mCamera.get());
 	//
-	mRenderDemo = std::make_unique<RenderDemo>(*this, *mCamera);
-	mComponents.push_back(mRenderDemo.get());
+	mStrangeDemo = std::make_unique<StrangeDemo>(*this, *mCamera);
+	mComponents.push_back(mStrangeDemo.get());
 	//
 	Game::Initialize();
 }

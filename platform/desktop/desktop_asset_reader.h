@@ -6,11 +6,11 @@
 #include "elements/assets/asset_operations_stream.h"
 #include "Utility.h"
 
-struct my_asset_reader : public eps::asset_reader
+struct desktop_asset_reader : public eps::asset_reader
 {
 	// root path to asset folder. For example, C:\elements\assets
-	explicit my_asset_reader(std::string& root);
-	virtual ~my_asset_reader();
+	explicit desktop_asset_reader(std::string& root);
+	virtual ~desktop_asset_reader();
 
 	bool visit(eps::asset_texture& asset) final
 	{

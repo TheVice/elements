@@ -29,7 +29,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Rendering::RenderingGame>(TEXT("desktop"));
+	auto game = std::make_unique<Rendering::RenderingGame>(TEXT("Wind Field [Sources experiments/air]"));
 
 	try
 	{

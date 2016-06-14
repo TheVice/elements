@@ -1,31 +1,29 @@
 
-#include "RenderDemo.h"
+#include "LightDemo.h"
 #ifdef _MSC_VER
 #include "renderer.h"
 #include "elements/simulation/air/system.h"
 #endif
 #include "Game.h"
-#include "Camera.h"
-#include "Utility.h"
 #include <memory>
 
 namespace Rendering
 {
-RTTI_DEFINITIONS(RenderDemo)
+RTTI_DEFINITIONS(LightDemo)
 
-RenderDemo::RenderDemo(Library::Game& aGame, Library::Camera& aCamera)
+LightDemo::LightDemo(Library::Game& aGame, Library::Camera& aCamera)
 	: DrawableGameComponent(aGame, aCamera),
 	  mSystem(nullptr),
 	  mRenderer(nullptr),
-	  mParticlesCount(10)
+	  mParticlesCount(10000)
 {
 }
 
-RenderDemo::~RenderDemo()
+LightDemo::~LightDemo()
 {
 }
 
-void RenderDemo::Initialize()
+void LightDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 	// create simulation subsystem
@@ -33,7 +31,7 @@ void RenderDemo::Initialize()
 	// construct with window size
 	mSystem->construct(size);
 	//
-	mRenderer = std::make_unique<eps::experiment::air::renderer>();
+	mRenderer = std::make_unique<eps::experiment::light::renderer>();
 
 	if (!mRenderer->initialize())
 	{
@@ -43,16 +41,17 @@ void RenderDemo::Initialize()
 	// spawn simulation
 	mRenderer->set_field(mSystem->spawn(1.0f / 60.0f));
 	//
-	mRenderer->set_colors(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 1.0f));
+	const std::string pathToTexture = "textures/noise.png";
+	mRenderer->set_background(pathToTexture);
+	//
+	mRenderer->set_color(glm::vec3(0.14f, 0.25f, 0.15f));
 	// construct renderer
 	mRenderer->construct(size, mParticlesCount);
 }
 
-void RenderDemo::Draw(const Library::GameTime& aGameTime)
+void LightDemo::Draw(const Library::GameTime& aGameTime)
 {
-	mRenderer->render(static_cast<float>(aGameTime.GetElapsedGameTime()));
-	// mSystem->spawn(1.0f / 60.0f);
-	// mRenderer->render(static_cast<float>(1000000.0f * aGameTime.GetElapsedGameTime()));
+	mRenderer->render(aGameTime.GetElapsedGameTime());
 }
 
 }

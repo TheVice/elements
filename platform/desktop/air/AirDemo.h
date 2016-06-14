@@ -1,5 +1,5 @@
-#ifndef _RENDER_DEMO_H_
-#define _RENDER_DEMO_H_
+#ifndef _AIR_DEMO_H_
+#define _AIR_DEMO_H_
 
 #include "DrawableGameComponent.h"
 #ifndef _MSC_VER
@@ -19,22 +19,31 @@ class renderer;
 }
 }
 
-//eps::simulation::air::system
+namespace eps
+{
+namespace simulation
+{
+namespace air
+{
+class system;
+}
+}
+}
 
 namespace Rendering
 {
-class RenderDemo : public Library::DrawableGameComponent
+class AirDemo : public Library::DrawableGameComponent
 {
-	RTTI_DECLARATIONS(RenderDemo, DrawableGameComponent)
+	RTTI_DECLARATIONS(AirDemo, DrawableGameComponent)
 
 public:
-	RenderDemo(Library::Game& aGame, Library::Camera& aCamera);
-	~RenderDemo();
+	AirDemo(Library::Game& aGame, Library::Camera& aCamera);
+	~AirDemo();
 
 public:
-	RenderDemo() = delete;
-	RenderDemo(const RenderDemo& aRhs) = delete;
-	RenderDemo& operator = (const RenderDemo& aRhs) = delete;
+	AirDemo() = delete;
+	AirDemo(const AirDemo& aRhs) = delete;
+	AirDemo& operator = (const AirDemo& aRhs) = delete;
 
 public:
 	virtual void Initialize() override;
