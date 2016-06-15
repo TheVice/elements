@@ -15,7 +15,8 @@ LightDemo::LightDemo(Library::Game& aGame, Library::Camera& aCamera)
 	: DrawableGameComponent(aGame, aCamera),
 	  mSystem(nullptr),
 	  mRenderer(nullptr),
-	  mParticlesCount(10000)
+	  mParticlesCount(10000),
+	  mTouchDown(false)
 {
 }
 
@@ -47,6 +48,23 @@ void LightDemo::Initialize()
 	mRenderer->set_color(glm::vec3(0.14f, 0.25f, 0.15f));
 	// construct renderer
 	mRenderer->construct(size, mParticlesCount);
+}
+
+void LightDemo::Update(const Library::GameTime&)
+{
+	glm::dvec2 pos;
+	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
+
+	if ((!mTouchDown) && glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
+	{
+		mSystem->touch_down(static_cast<float>(pos.x), static_cast<float>(pos.y));
+		mTouchDown = true;
+	}
+	else if (mTouchDown && (!glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)))
+	{
+		mTouchDown = false;
+		mSystem->touch_up(static_cast<float>(pos.x), static_cast<float>(pos.y));
+	}
 }
 
 void LightDemo::Draw(const Library::GameTime& aGameTime)
