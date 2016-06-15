@@ -13,6 +13,7 @@
 #ifndef WIN32
 #include <X11/Xlib.h>
 #define TCHAR char
+#define TEXT(A) A
 #endif
 
 namespace Library
