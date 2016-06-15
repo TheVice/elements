@@ -15,7 +15,8 @@ AirDemo::AirDemo(Library::Game& aGame, Library::Camera& aCamera)
 	: DrawableGameComponent(aGame, aCamera),
 	  mSystem(nullptr),
 	  mRenderer(nullptr),
-	  mParticlesCount(10)
+	  mParticlesCount(100000),
+	  mTouchDown(false)
 {
 }
 
@@ -46,11 +47,26 @@ void AirDemo::Initialize()
 	mRenderer->construct(size, mParticlesCount);
 }
 
+void AirDemo::Update(const Library::GameTime&)
+{
+	glm::dvec2 pos;
+	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
+
+	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
+	{
+		mSystem->touch_down(static_cast<float>(pos.x), static_cast<float>(pos.y));
+		mTouchDown = true;
+	}
+	else if (mTouchDown && (!glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)))
+	{
+		mTouchDown = false;
+		mSystem->touch_up(static_cast<float>(pos.x), static_cast<float>(pos.y));
+	}
+}
+
 void AirDemo::Draw(const Library::GameTime& aGameTime)
 {
 	mRenderer->render(static_cast<float>(aGameTime.GetElapsedGameTime()));
-	// mSystem->spawn(1.0f / 60.0f);
-	// mRenderer->render(static_cast<float>(1000000.0f * aGameTime.GetElapsedGameTime()));
 }
 
 }

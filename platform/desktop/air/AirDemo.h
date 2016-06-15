@@ -47,12 +47,14 @@ public:
 
 public:
 	virtual void Initialize() override;
+	virtual void Update(const Library::GameTime& aGameTime) override;
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
 	std::unique_ptr<eps::simulation::air::system> mSystem;
 	std::unique_ptr<eps::experiment::air::renderer> mRenderer;
 	GLuint mParticlesCount;
+	GLboolean mTouchDown;
 };
 }
 
