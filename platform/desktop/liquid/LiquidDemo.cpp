@@ -2,7 +2,7 @@
 #include "LiquidDemo.h"
 #ifdef _MSC_VER
 #include "renderer.h"
-//#include "elements/simulation/liquid/system.h"
+#include "elements/simulation/liquid/system.h"
 #endif
 #include "Game.h"
 #include <memory>
@@ -13,7 +13,7 @@ RTTI_DEFINITIONS(LiquidDemo)
 
 LiquidDemo::LiquidDemo(Library::Game& aGame, Library::Camera& aCamera)
 	: DrawableGameComponent(aGame, aCamera),
-	  //	  mSystem(nullptr),
+	  mSystem(nullptr),
 	  mRenderer(nullptr),
 	  mParticlesCount(10)
 {
@@ -27,9 +27,9 @@ void LiquidDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 	// create simulation subsystem
-	//	mSystem = std::make_unique<eps::simulation::liquid::system>();
+	mSystem = std::make_unique<eps::simulation::liquid::system>();
 	// construct with window size
-	//	mSystem->construct(size, mParticlesCount);
+	mSystem->construct(size, mParticlesCount);
 	//
 	//    void set_gravity(const math::vec2 & value) { config_.gravity(value); }
 	//    void set_density(float value) { config_.density(value); }
@@ -37,12 +37,12 @@ void LiquidDemo::Initialize()
 	//    void set_pressure(float value, float near) { config_.pressure(value, near); }
 	//    void set_elasticity(float value) { config_.spring(value); }
 	//
-	//	mRenderer = std::make_unique<eps::experiment::liquid::renderer>();
-	//	//
-	//	if (!mRenderer->initialize())
-	//	{
-	//		throw std::runtime_error("mRenderer->initialize() failed");
-	//	}
+	mRenderer = std::make_unique<eps::experiment::liquid::renderer>();
+
+	if (!mRenderer->initialize())
+	{
+		throw std::runtime_error("mRenderer->initialize() failed");
+	}
 	//    void set_particles(sync::future<math::vec2> particles);
 	//    bool set_surface_background(const std::string & asset_name);
 	//    void set_surface_color(const math::vec4 & color);

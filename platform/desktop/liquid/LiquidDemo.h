@@ -4,7 +4,7 @@
 #include "DrawableGameComponent.h"
 #ifndef _MSC_VER
 #include "renderer.h"
-//#include "elements/simulation/liquid/system.h"
+#include "elements/simulation/liquid/system.h"
 #endif
 #include <GL/glew.h>
 
@@ -50,7 +50,7 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	//	std::unique_ptr<eps::simulation::liquid::system> mSystem;
+	std::unique_ptr<eps::simulation::liquid::system> mSystem;
 	std::unique_ptr<eps::experiment::liquid::renderer> mRenderer;
 	GLuint mParticlesCount;
 };
