@@ -51,13 +51,14 @@ void AirDemo::Update(const Library::GameTime&)
 {
 	glm::dvec2 pos;
 	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
+	pos.y = mGame->GetScreenHeight() - pos.y;
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
 		mSystem->touch_down(static_cast<float>(pos.x), static_cast<float>(pos.y));
 		mTouchDown = true;
 	}
-	else if (mTouchDown && (!glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT)))
+	else if (mTouchDown)
 	{
 		mTouchDown = false;
 		mSystem->touch_up(static_cast<float>(pos.x), static_cast<float>(pos.y));

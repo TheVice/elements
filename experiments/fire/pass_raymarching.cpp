@@ -77,8 +77,11 @@ bool pass_raymarching::initialize()
         return false;
 
     texture_noise_.set_data(asset.pixels(), asset.size(), asset.format());
-
+#ifdef ANDROID
     return rendering::load_program("shaders/experiments/fire/raymarching.prog", program_);
+#else
+    return rendering::load_program("shaders/experiments/fire/raymarching.desktop.prog", program_);
+#endif
 }
 
 void pass_raymarching::process(float dt)
