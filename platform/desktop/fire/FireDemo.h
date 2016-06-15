@@ -35,11 +35,11 @@ public:
 
 public:
 	virtual void Initialize() override;
+	virtual void Update(const Library::GameTime& aGameTime) override;
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
 	std::unique_ptr<eps::experiment::fire::renderer> mRenderer;
-	GLuint mParticlesCount;
 };
 }
 
