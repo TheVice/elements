@@ -15,7 +15,7 @@ LiquidDemo::LiquidDemo(Library::Game& aGame, Library::Camera& aCamera)
 	: DrawableGameComponent(aGame, aCamera),
 	  mSystem(nullptr),
 	  mRenderer(nullptr),
-	  mParticlesCount(10)
+	  mParticlesCount(1000)
 {
 }
 
@@ -31,11 +31,15 @@ void LiquidDemo::Initialize()
 	// construct with window size
 	mSystem->construct(size, mParticlesCount);
 	//
-	//    void set_gravity(const math::vec2 & value) { config_.gravity(value); }
-	//    void set_density(float value) { config_.density(value); }
-	//    void set_viscosity(float sigma, float beta) { config_.viscosty(sigma, beta); }
-	//    void set_pressure(float value, float near) { config_.pressure(value, near); }
-	//    void set_elasticity(float value) { config_.spring(value); }
+	mSystem->set_gravity(glm::vec2(1.0f, 1.0f));
+	//
+	mSystem->set_density(100.0f);
+	//
+	mSystem->set_viscosity(10.0f, 10.0f);
+	//
+	mSystem->set_pressure(10.0f, 10.0f);
+	//
+	mSystem->set_elasticity(10.0f);
 	//
 	mRenderer = std::make_unique<eps::experiment::liquid::renderer>();
 
@@ -43,15 +47,35 @@ void LiquidDemo::Initialize()
 	{
 		throw std::runtime_error("mRenderer->initialize() failed");
 	}
-	//    void set_particles(sync::future<math::vec2> particles);
-	//    bool set_surface_background(const std::string & asset_name);
-	//    void set_surface_color(const math::vec4 & color);
-	//    bool construct(const math::uvec2 & size, const math::uvec2 & sim_size, size_t texture_size);
+
+	// spawn simulation
+	mRenderer->set_particles(mSystem->spawn(1.0f / 60.0f));
+	//
+	const std::string pathToTexture = "textures/noise.png";
+	mRenderer->set_surface_background(pathToTexture);
+	//
+	mRenderer->set_surface_color(glm::vec4(1.0f, 0.5f, 0.25f, 1.0f));
+	// construct renderer
+	const glm::uvec2 sim_size(size.x, size.y);
+	mRenderer->construct(size, sim_size, 512);
+}
+
+void LiquidDemo::Update(const Library::GameTime&)
+{
+	glm::dvec2 pos;
+	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
+	pos.y = mGame->GetScreenHeight() - pos.y;
+
+	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
+	{
+		GLfloat radius = 5.0f;
+		mSystem->touch(glm::vec2(pos.x, pos.y), radius);
+	}
 }
 
 void LiquidDemo::Draw(const Library::GameTime&)
 {
-	//	mRenderer->render();
+	mRenderer->render();
 }
 
 }
