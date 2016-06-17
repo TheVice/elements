@@ -49,10 +49,14 @@ public:
 	virtual void Initialize() override;
 	virtual void Update(const Library::GameTime& aGameTime) override;
 	virtual void Draw(const Library::GameTime& aGameTime) override;
+	static GLboolean IsMove(glm::dvec2 aScreenPos, glm::dvec2 aPrevScreenPos);
 
 private:
 	std::unique_ptr<eps::simulation::liquid::system> mSystem;
 	std::unique_ptr<eps::experiment::liquid::renderer> mRenderer;
+	glm::mat4 mTransform;
+	glm::mat4 mTransformTouch;
+	glm::dvec2 mPrevScreenPos;
 	GLuint mParticlesCount;
 };
 }

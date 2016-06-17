@@ -16,13 +16,13 @@ if(MSVC)
   message(FATAL_ERROR "Could not support Visual Studio")
 endif()
 
-if(CMAKE_HOST_WIN32)
+if(WIN32)
   add_definitions(-DWIN32)
   add_definitions(-D_WIN32)
   add_definitions(-D_WINDOWS)
   add_definitions(-DWIN32_LEAN_AND_MEAN)
   add_definitions(-D_WIN32_WINNT=0x0500)
-endif(CMAKE_HOST_WIN32)
+endif()
 
 set(REQUIRED_INCLUDES)
 set(REQUIRED_LIBRARIES)
@@ -93,13 +93,13 @@ if(WIN32 OR UNIX)
 
   target_compile_definitions(freetype PRIVATE FT2_BUILD_LIBRARY)
   target_include_directories(freetype SYSTEM PRIVATE ${FREETYPE_INCLUDE_DIRS})
-# elseif(CMAKE_HOST_UNIX)
+# elseif(UNIX)
 #   list(APPEND REQUIRED_INCLUDES /usr/include/freetype2)
 endif()
 list(APPEND REQUIRED_LIBRARIES freetype)
 
 # glew
-if(CMAKE_HOST_WIN32)
+if(WIN32)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/glew)
     set(glew_Path ${CMAKE_SOURCE_DIR}/third-party/glew)
   elseif(DEFINED ENV{GLEW_PATH})
@@ -128,7 +128,7 @@ endif()
 list(APPEND REQUIRED_LIBRARIES GLEW)
 
 # glfw
-if(CMAKE_HOST_UNIX)
+if(UNIX)
   add_definitions(-DGLFW_EXPOSE_NATIVE_X11)
   add_definitions(-DGLFW_EXPOSE_NATIVE_GLX)
 else()
@@ -186,7 +186,7 @@ else()
 endif()
 
 # glm
-if(CMAKE_HOST_WIN32)
+if(WIN32)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/glm)
     set(glm_Path ${CMAKE_SOURCE_DIR}/third-party/glm)
   elseif(DEFINED ENV{GLM_PATH})
@@ -200,7 +200,7 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 # z
-if(CMAKE_HOST_WIN32)
+if(WIN32)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/zlib)
     set(zlib_Path ${CMAKE_SOURCE_DIR}/third-party/zlib)
   elseif(DEFINED ENV{ZLIB_PATH})
@@ -217,7 +217,7 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 # libpng
-if(CMAKE_HOST_WIN32)
+if(WIN32)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/libpng)
     set(libpng_Path ${CMAKE_SOURCE_DIR}/third-party/libpng)
   elseif(DEFINED ENV{LIBPNG_PATH})
@@ -236,7 +236,7 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 # pugixml
-if(CMAKE_HOST_WIN32)
+if(WIN32)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/pugixml)
     set(pugixml_Path ${CMAKE_SOURCE_DIR}/third-party/pugixml)
   elseif(DEFINED ENV{PUGIXML_PATH})
@@ -271,7 +271,7 @@ list(APPEND REQUIRED_LIBRARIES elements)
 
 # platform library
 set(PLATFORM)
-if(CMAKE_HOST_WIN32 OR CMAKE_HOST_UNIX)
+if(WIN32 OR UNIX)
   set(PLATFORM desktop)
 endif()
 
