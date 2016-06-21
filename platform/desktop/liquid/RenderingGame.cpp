@@ -1,10 +1,11 @@
 
 #include "RenderingGame.h"
 #ifdef _MSC_VER
-#include "desktop_asset_reader.h"
 #include "Camera.h"
 #include "LiquidDemo.h"
 #endif
+#include "desktop_asset_reader.h"
+#include "preferences.h"
 #include <glm/gtc/constants.hpp>
 
 namespace Rendering
@@ -27,6 +28,8 @@ void RenderingGame::Initialize()
 	//
 	std::string path_to_asset = ".";
 	eps::assets_storage::init<desktop_asset_reader>(path_to_asset);
+	//
+	eps::preferences::init<preferences>();
 	//
 	mCamera = std::make_unique<Library::Camera>(*this);
 	mComponents.push_back(mCamera.get());

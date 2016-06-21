@@ -1,3 +1,5 @@
+#ifndef _DESKTOP_ASSET_READER_H_
+#define _DESKTOP_ASSET_READER_H_
 
 #include "elements/assets/assets_storage.h"
 #include "elements/assets/asset_texture.h"
@@ -66,3 +68,5 @@ struct desktop_asset_reader : public eps::asset_reader
 private:
 	std::string root_;
 };
+
+#endif

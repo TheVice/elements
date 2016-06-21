@@ -46,8 +46,11 @@ if(WIN32 OR UNIX)
   set(FREETYPE_SRC_DIR ${freetype_Path}/src)
 
   set(FREETYPE_SRC_FILES ${FREETYPE_SRC_DIR}/autofit/autofit.c
+                         ${FREETYPE_SRC_DIR}/base/ftbase.c
                          ${FREETYPE_SRC_DIR}/base/ftbbox.c
+                         ${FREETYPE_SRC_DIR}/base/ftbdf.c
                          ${FREETYPE_SRC_DIR}/base/ftbitmap.c
+                         ${FREETYPE_SRC_DIR}/base/ftcid.c
                          ${FREETYPE_SRC_DIR}/base/ftfntfmt.c
                          ${FREETYPE_SRC_DIR}/base/ftfstype.c
                          ${FREETYPE_SRC_DIR}/base/ftgasp.c
@@ -65,6 +68,7 @@ if(WIN32 OR UNIX)
                          ${FREETYPE_SRC_DIR}/base/fttype1.c
                          ${FREETYPE_SRC_DIR}/base/ftwinfnt.c
                          ${FREETYPE_SRC_DIR}/bdf/bdf.c
+                         ${FREETYPE_SRC_DIR}/bzip2/ftbzip2.c
                          ${FREETYPE_SRC_DIR}/cache/ftcache.c
                          ${FREETYPE_SRC_DIR}/cff/cff.c
                          ${FREETYPE_SRC_DIR}/cid/type1cid.c
@@ -74,6 +78,7 @@ if(WIN32 OR UNIX)
                          ${FREETYPE_SRC_DIR}/pfr/pfr.c
                          ${FREETYPE_SRC_DIR}/psaux/psaux.c
                          ${FREETYPE_SRC_DIR}/pshinter/pshinter.c
+                         ${FREETYPE_SRC_DIR}/psnames/psnames.c
                          ${FREETYPE_SRC_DIR}/raster/raster.c
                          ${FREETYPE_SRC_DIR}/sfnt/sfnt.c
                          ${FREETYPE_SRC_DIR}/smooth/smooth.c
@@ -83,7 +88,6 @@ if(WIN32 OR UNIX)
                          ${FREETYPE_SRC_DIR}/winfonts/winfnt.c)
   if(WIN32)
       list(APPEND FREETYPE_SRC_FILES ${FREETYPE_SRC_DIR}/../builds/windows/ftdebug.c
-                                     ${FREETYPE_SRC_DIR}/base/ftbase.c
                                      ${FREETYPE_SRC_DIR}/psnames/psmodule.c)
   endif()
 
@@ -96,7 +100,6 @@ if(WIN32 OR UNIX)
 # elseif(UNIX)
 #   list(APPEND REQUIRED_INCLUDES /usr/include/freetype2)
 endif()
-list(APPEND REQUIRED_LIBRARIES freetype)
 
 # glew
 if(WIN32)
@@ -288,6 +291,7 @@ endif()
 
 list(APPEND REQUIRED_LIBRARIES ${PLATFORM})
 list(APPEND REQUIRED_LIBRARIES elements)
+list(APPEND REQUIRED_LIBRARIES freetype)
 
 if(WIN32)
   list(APPEND REQUIRED_LIBRARIES libpng)
@@ -316,6 +320,13 @@ foreach(Experiment ${Experiments})
   if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/experiments/${Experiment})
     set(Experiment_Path ${CMAKE_SOURCE_DIR}/experiments/${Experiment})
     file(GLOB SRC_FILES ${Experiment_Path}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.cpp ${Experiment_Path}/*.cpp)
+
+    if(Experiment STREQUAL liquid)
+      file(GLOB ADDITION_SRC_FILES ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/liquid/*.cpp ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/liquid/*.h)
+      list(APPEND REQUIRED_INCLUDES ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/liquid/)
+      list(APPEND REQUIRED_INCLUDES ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/)
+      list(APPEND SRC_FILES ${ADDITION_SRC_FILES})
+    endif()
 
     add_executable(${Experiment} ${IS_SUBSYSTEM_WIN32} ${SRC_FILES})
 

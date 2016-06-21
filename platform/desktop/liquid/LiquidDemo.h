@@ -5,7 +5,9 @@
 #ifndef _MSC_VER
 #include "renderer.h"
 #include "elements/simulation/liquid/system.h"
+#include "liquid_renderer.h"
 #endif
+#include "renderer_factory.h"
 #include <GL/glew.h>
 
 namespace eps
@@ -29,6 +31,8 @@ class system;
 }
 }
 }
+
+class liquid_renderer;
 
 namespace Rendering
 {
@@ -58,6 +62,12 @@ private:
 	glm::mat4 mTransformTouch;
 	glm::dvec2 mPrevScreenPos;
 	GLuint mParticlesCount;
+	std::unique_ptr<liquid_renderer> mLiquidRenderer;
+
+	int mRenderId;
+
+	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
+	static liquid_renderer_factory liquid_renderer_factory_;
 };
 }
 

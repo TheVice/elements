@@ -3,7 +3,6 @@
 
 #include "Game.h"
 #ifndef _MSC_VER
-#include "desktop_asset_reader.h"
 #include "Camera.h"
 #include "LiquidDemo.h"
 #endif

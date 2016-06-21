@@ -22,7 +22,9 @@ IN THE SOFTWARE.
 */
 
 #include "liquid_config.h"
+#ifdef ANDROID
 #include "logging.h"
+#endif
 #include <elements/preferences/preferences.h>
 
 static inline float to_real(float min, float max, float value)
