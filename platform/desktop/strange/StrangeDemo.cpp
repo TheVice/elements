@@ -27,7 +27,7 @@ void StrangeDemo::Initialize()
 	//
 	mRenderer = std::make_unique<eps::experiment::strange::renderer>();
 
-	if (!mRenderer->initialize(mParticlesCount))
+	if (!mRenderer->initialize())
 	{
 		throw std::runtime_error("mRenderer->initialize() failed");
 	}
@@ -36,7 +36,7 @@ void StrangeDemo::Initialize()
 	//
 	mRenderer->color_gradient(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	// construct renderer
-	mRenderer->construct(size);
+	mRenderer->construct(size, mParticlesCount);
 }
 
 void StrangeDemo::Draw(const Library::GameTime& aGameTime)
