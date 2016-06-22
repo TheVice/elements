@@ -52,7 +52,10 @@ const quality_params qualities[3] =
     {700, 512},
     {900, 748}
 };
-#ifdef ANDROID
+#ifndef ANDROID
+#define AMOTION_EVENT_ACTION_DOWN 0
+#define AMOTION_EVENT_ACTION_MOVE 2
+#endif
 static eps::ui::touch_action ui_touch_action(int action)
 {
     if(action == AMOTION_EVENT_ACTION_MOVE)
@@ -61,7 +64,7 @@ static eps::ui::touch_action ui_touch_action(int action)
         return eps::ui::touch_action::DOWN;
     return eps::ui::touch_action::UP;
 }
-#endif
+
 liquid_renderer::liquid_renderer(bool preview)
     : rate_(60)
     , preview_(preview)
@@ -177,7 +180,6 @@ void liquid_renderer::touch(float x, float y, int action)
     if(renderer_ && liquid_)
     {
         const eps::math::vec4 pos_touch = transform_touch_ * eps::math::vec4(x, y, 1.0f, 1.0f);
-#ifdef ANDROID
         if(!ui_ || !ui_->touch(pos_touch.x, pos_touch.y, ui_touch_action(action)))
         {
             const eps::math::vec4 pos = transform_ * eps::math::vec4(x, y, 1.0f, 1.0f);
@@ -186,16 +188,6 @@ void liquid_renderer::touch(float x, float y, int action)
             else
                 liquid_->touch(eps::math::vec2(pos.x, pos.y), 0.0f);
         }
-#else
-        if(!ui_)
-        {
-            const eps::math::vec4 pos = transform_ * eps::math::vec4(x, y, 1.0f, 1.0f);
-            //if(action == AMOTION_EVENT_ACTION_MOVE)
-                liquid_->touch(eps::math::vec2(pos.x, pos.y), 1.0f);
-            //else
-                liquid_->touch(eps::math::vec2(pos.x, pos.y), 0.0f);
-        }
-#endif
     }
 }
 

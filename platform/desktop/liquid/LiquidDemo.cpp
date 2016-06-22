@@ -1,10 +1,10 @@
 
 #include "LiquidDemo.h"
-#ifdef _MSC_VER
-#include "renderer.h"
-#include "elements/simulation/liquid/system.h"
-#include "liquid_renderer.h"
-#endif
+//#ifdef _MSC_VER
+//#include "renderer.h"
+//#include "elements/simulation/liquid/system.h"
+//#include "liquid_renderer.h"
+//#endif
 #include "Game.h"
 #include "elements/math/transform.h"
 #include <memory>
@@ -22,7 +22,8 @@ LiquidDemo::LiquidDemo(Library::Game& aGame, Library::Camera& aCamera)
 	  mPrevScreenPos(),
 	  mParticlesCount(700),
 	  mLiquidRenderer(nullptr),
-	  mRenderId(-1)
+	  mRenderId(-1),
+	  mGravity(sDefaultGravity)
 {
 }
 
@@ -69,11 +70,11 @@ void LiquidDemo::Initialize()
 	mRenderer->construct(size, sim_size, 512);
 	// setup transformation matrix
 	mTransform = eps::math::translate(0.0f, sim_size.y, 0.0f) *
-			eps::math::scale(sim_size.x, -sim_size.y, 1.0f) *
-			eps::math::scale(1.0f / size.x, 1.0f / size.y, 1.0f);
+				 eps::math::scale(sim_size.x, -sim_size.y, 1.0f) *
+				 eps::math::scale(1.0f / size.x, 1.0f / size.y, 1.0f);
 	//
 	mTransformTouch = eps::math::translate(0.0f, size.y, 0.0f) *
-			eps::math::scale(1.0f, -1.0f, 1.0f);
+					  eps::math::scale(1.0f, -1.0f, 1.0f);
 #endif
 #ifdef B
 	bool preview = false;
@@ -81,7 +82,7 @@ void LiquidDemo::Initialize()
 	//
 	size_t quality = 1;
 
-	if(!mLiquidRenderer->startup(size, quality))
+	if (!mLiquidRenderer->startup(size, quality))
 	{
 		throw std::runtime_error("mLiquidRenderer->startup() failed");
 	}
@@ -93,15 +94,14 @@ void LiquidDemo::Initialize()
 	mRenderId = liquid_renderer_factory_.open(preview);
 	//
 	auto renderer = liquid_renderer_factory_.get(mRenderId);
-	enum QUALITY { LOW = 0, MEDIUM = 1, HIGHT = 2};
+	enum QUALITY { LOW = 0, MEDIUM = 1, HIGH = 2};
 	size_t quality = MEDIUM;
-	renderer->startup(size, quality);
 
-	if(!renderer->startup(size, quality))
+	if (!renderer->startup(size, quality))
 	{
 		throw std::runtime_error("renderer->startup() failed");
 	}
-	//
+
 	const std::string pathToTexture = "textures/noise.png";
 	renderer->set_background(pathToTexture.c_str());
 	//
@@ -119,8 +119,8 @@ void LiquidDemo::Update(const Library::GameTime&)
 		screen_pos.y = mGame->GetScreenHeight() - screen_pos.y;
 		// touch
 		const eps::math::vec4 pos = mTransform * eps::math::vec4(screen_pos.x, screen_pos.y, 1.0f, 1.0f);
-//		const eps::math::vec4 pos_touch = mTransformTouch * eps::math::vec4(screen_pos.x, screen_pos.y, 1.0f, 1.0f);
-//		const eps::math::vec4 pos = mTransform * eps::math::vec4(pos_touch.x, pos_touch.y, 1.0f, 1.0f);
+		// const eps::math::vec4 pos_touch = mTransformTouch * eps::math::vec4(screen_pos.x, screen_pos.y, 1.0f, 1.0f);
+		// const eps::math::vec4 pos = mTransform * eps::math::vec4(pos_touch.x, pos_touch.y, 1.0f, 1.0f);
 
 		if (IsMove(screen_pos, mPrevScreenPos))
 		{
@@ -133,22 +133,23 @@ void LiquidDemo::Update(const Library::GameTime&)
 
 		mPrevScreenPos = screen_pos;
 	}
+
+	mSystem->set_gravity(mGravity);
 #endif
 #ifdef B
 	glm::dvec2 screen_pos;
 	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
 	screen_pos.y = mGame->GetScreenHeight() - screen_pos.y;
 	//
-	mLiquidRenderer->acceleration(screen_pos.x, screen_pos.y, 0);
+	mLiquidRenderer->acceleration(mGravity.x, mGravity.y, 0.0f);
 	mLiquidRenderer->touch(screen_pos.x, screen_pos.y, 0);
 #endif
 #ifdef C
 	glm::dvec2 screen_pos;
 	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
-	screen_pos.y = mGame->GetScreenHeight() - screen_pos.y;
 	//
 	auto renderer = liquid_renderer_factory_.get(mRenderId);
-	renderer->acceleration(0, 0, 0);
+	renderer->acceleration(mGravity.x, mGravity.y, 0.0f);
 	renderer->touch(screen_pos.x, screen_pos.y, 0);
 #endif
 }
@@ -173,5 +174,6 @@ GLboolean LiquidDemo::IsMove(glm::dvec2 aScreenPos, glm::dvec2 aPrevScreenPos)
 }
 
 LiquidDemo::liquid_renderer_factory LiquidDemo::liquid_renderer_factory_;
+const glm::vec2 LiquidDemo::sDefaultGravity(0.0f, -9.8f);
 
 }

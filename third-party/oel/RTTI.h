@@ -45,23 +45,23 @@ public:
 #define RTTI_DECLARATIONS(Type, ParentType)														\
 	public:																						\
 	static std::string TypeName() { return std::string(#Type); }								\
-	virtual const uintptr_t& TypeIdInstance() const { return TypeIdClass(); }					\
+	virtual const uintptr_t& TypeIdInstance() const override { return TypeIdClass(); }			\
 	static const uintptr_t& TypeIdClass() { return sRunTimeTypeId; }							\
-	virtual RTTI* QueryInterface(const uintptr_t aId) const										\
+	virtual RTTI* QueryInterface(const uintptr_t aId) const override							\
 	{																							\
 		if (aId == sRunTimeTypeId)																\
 		{ return (RTTI*)this; }																	\
 		else																					\
 		{ return ParentType::QueryInterface(aId); }												\
 	}																							\
-	virtual bool Is(const uintptr_t aId) const													\
+	virtual bool Is(const uintptr_t aId) const override											\
 	{																							\
 		if (aId == sRunTimeTypeId)																\
 		{ return true; }																		\
 		else																					\
 		{ return ParentType::Is(aId); }															\
 	}																							\
-	virtual bool Is(const std::string& aName) const												\
+	virtual bool Is(const std::string& aName) const override									\
 	{																							\
 		if (aName == TypeName())																\
 		{ return true; }																		\

@@ -2,10 +2,10 @@
 #define _RENDERING_GAME_H_
 
 #include "Game.h"
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
 #include "Camera.h"
 #include "LiquidDemo.h"
-#endif
+//#endif
 #include <glm/glm.hpp>
 #include <memory>
 

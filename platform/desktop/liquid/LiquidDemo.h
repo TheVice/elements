@@ -2,13 +2,14 @@
 #define _LIQUID_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
 #include "renderer.h"
 #include "elements/simulation/liquid/system.h"
 #include "liquid_renderer.h"
-#endif
+//#endif
 #include "renderer_factory.h"
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 namespace eps
 {
@@ -65,9 +66,12 @@ private:
 	std::unique_ptr<liquid_renderer> mLiquidRenderer;
 
 	int mRenderId;
-
 	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
 	static liquid_renderer_factory liquid_renderer_factory_;
+
+	glm::vec2 mGravity;
+
+	static const glm::vec2 sDefaultGravity;
 };
 }
 

@@ -10,8 +10,8 @@ public:
 	preferences();
 	~preferences();
 
-	float get_float(const std::string & key, float default_value) const final;
-	void set_float(const std::string & key, float value) final;
+	float get_float(const std::string& key, float default_value) const final;
+	void set_float(const std::string& key, float value) final;
 
 private:
 
