@@ -40,9 +40,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #ifndef WIN32
 		std::cerr << aExc.what() << std::endl;
 #else
-#ifndef UNICODE
-		MessageBox(game->GetWindowHandle(), aExc.what(), game->GetWindowTitle(), MB_ABORTRETRYIGNORE);
-#endif
+		MessageBoxA(game->GetWindowHandle(), aExc.what(), "", MB_ABORTRETRYIGNORE);
 #endif
 	}
 
