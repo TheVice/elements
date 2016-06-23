@@ -317,7 +317,7 @@ foreach(Experiment ${Experiments})
     set(Experiment_Path ${CMAKE_SOURCE_DIR}/experiments/${Experiment})
     file(GLOB SRC_FILES ${Experiment_Path}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.cpp ${Experiment_Path}/*.cpp)
 
-    if((Experiment STREQUAL liquid) OR (Experiment STREQUAL light))
+    if((Experiment STREQUAL fire) OR (Experiment STREQUAL light) OR (Experiment STREQUAL liquid))
       set(ADDITION_SOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
       file(GLOB ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/*.cpp ${ADDITION_SOURCE_PATH}/${Experiment}/*.h)
       list(APPEND REQUIRED_INCLUDES ${ADDITION_SOURCE_PATH}/${Experiment}/)
@@ -368,9 +368,12 @@ if(NOT (CMAKE_SOURCE_DIR STREQUAL ${CMAKE_BINARY_DIR}))
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets/shaders" "${CMAKE_BINARY_DIR}/shaders")
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets/textures" "${CMAKE_BINARY_DIR}/textures")
   #
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets/textures" "${CMAKE_BINARY_DIR}/textures")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets/ui" "${CMAKE_BINARY_DIR}/ui")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/FireWallpaper/src/main/assets/textures" "${CMAKE_BINARY_DIR}/textures")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/FireWallpaper/src/main/assets/ui" "${CMAKE_BINARY_DIR}/ui")
   #
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LightWallpaper/src/main/assets/textures" "${CMAKE_BINARY_DIR}/textures")
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LightWallpaper/src/main/assets/ui" "${CMAKE_BINARY_DIR}/ui")
+  #
+  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets/textures" "${CMAKE_BINARY_DIR}/textures")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets/ui" "${CMAKE_BINARY_DIR}/ui")
 endif(NOT (CMAKE_SOURCE_DIR STREQUAL ${CMAKE_BINARY_DIR}))

@@ -3,20 +3,10 @@
 
 #include "DrawableGameComponent.h"
 #if !defined(_MSC_VER) || defined(__clang__)
-#include "renderer.h"
+#include "fire_renderer.h"
 #endif
+#include "renderer_factory.h"
 #include <GL/glew.h>
-
-namespace eps
-{
-namespace experiment
-{
-namespace fire
-{
-class renderer;
-}
-}
-}
 
 namespace Rendering
 {
@@ -39,7 +29,10 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	std::unique_ptr<eps::experiment::fire::renderer> mRenderer;
+	bool mTouchDown;
+	int mRenderId;
+	typedef renderer_factory<fire_renderer> fire_renderer_factory;
+	std::unique_ptr<fire_renderer_factory> mFireRendererFactory;
 };
 }
 

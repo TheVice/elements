@@ -1,9 +1,11 @@
 
 #include "RenderingGame.h"
 #if defined (_MSC_VER) && !defined(__clang__)
-#include "desktop_asset_reader.h"
 #include "FireDemo.h"
 #endif
+#include "desktop_asset_reader.h"
+#include "preferences.h"
+#include "metrics.h"
 #include <glm/gtc/constants.hpp>
 
 namespace Rendering
@@ -24,6 +26,10 @@ void RenderingGame::Initialize()
 	AddKeyboardHandler(mKeyboardHandler);
 	//
 	eps::assets_storage::init<desktop_asset_reader>();
+	//
+	eps::preferences::init<preferences>();
+	//
+	eps::metrics::init<metrics>(1.0f);
 	//
 	mFireDemo = std::make_unique<FireDemo>(*this);
 	mComponents.push_back(mFireDemo.get());
