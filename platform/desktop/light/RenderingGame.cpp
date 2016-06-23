@@ -24,8 +24,7 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	std::string path_to_asset = ".";
-	eps::assets_storage::init<desktop_asset_reader>(path_to_asset);
+	eps::assets_storage::init<desktop_asset_reader>();
 	//
 	eps::metrics::init<metrics>(1.0f);
 	//

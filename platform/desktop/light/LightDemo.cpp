@@ -37,9 +37,13 @@ void LightDemo::Initialize()
 		throw std::runtime_error("renderer->startup() failed");
 	}
 
-	const std::string pathToTexture = "textures/background.png";
-	renderer->set_background(pathToTexture.c_str());
-	//
+	const char* pathToTexture = "textures/noise.png";
+
+	if (!renderer->set_background(pathToTexture))
+	{
+		throw std::runtime_error("renderer->set_background() failed");
+	}
+
 	renderer->set_color(glm::vec3(1.0f, 0.5f, 0.25f));
 }
 
@@ -47,7 +51,7 @@ void LightDemo::Update(const Library::GameTime&)
 {
 	glm::dvec2 pos;
 	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
-	//pos.y = mGame->GetScreenHeight() - pos.y;
+	//
 	auto renderer = light_renderer_factory_.get(mRenderId);
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
