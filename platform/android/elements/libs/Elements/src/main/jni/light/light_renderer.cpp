@@ -24,7 +24,9 @@ IN THE SOFTWARE.
 #include "light_renderer.h"
 #include "logging.h"
 
+#ifdef ANDROID
 #include <android/input.h>
+#endif
 #include <elements/timing/update.h>
 #include <elements/math/transform.h>
 #include <elements/metrics/metrics.h>

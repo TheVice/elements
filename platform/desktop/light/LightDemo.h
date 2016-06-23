@@ -3,32 +3,10 @@
 
 #include "DrawableGameComponent.h"
 #if !defined(_MSC_VER) || defined(__clang__)
-#include "renderer.h"
-#include "elements/simulation/air/system.h"
+#include "light_renderer.h"
 #endif
+#include "renderer_factory.h"
 #include <GL/glew.h>
-
-namespace eps
-{
-namespace experiment
-{
-namespace light
-{
-class renderer;
-}
-}
-}
-
-namespace eps
-{
-namespace simulation
-{
-namespace air
-{
-class system;
-}
-}
-}
 
 namespace Rendering
 {
@@ -51,10 +29,10 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	std::unique_ptr<eps::simulation::air::system> mSystem;
-	std::unique_ptr<eps::experiment::light::renderer> mRenderer;
-	GLuint mParticlesCount;
-	GLboolean mTouchDown;
+	bool mTouchDown;
+	int mRenderId;
+	typedef renderer_factory<light_renderer> light_renderer_factory;
+	static light_renderer_factory light_renderer_factory_;
 };
 }
 

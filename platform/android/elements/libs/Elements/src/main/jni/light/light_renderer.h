@@ -31,6 +31,12 @@ IN THE SOFTWARE.
 #include <elements/utils/std/pointer.h>
 #include <experiments/light/renderer.h>
 
+#ifndef ANDROID
+#define AMOTION_EVENT_ACTION_DOWN 0
+#define AMOTION_EVENT_ACTION_UP   1
+#define AMOTION_EVENT_ACTION_MOVE 2
+#endif
+
 class light_renderer
 {
 public:

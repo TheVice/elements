@@ -1,9 +1,10 @@
 
 #include "RenderingGame.h"
 #if defined (_MSC_VER) && !defined(__clang__)
-#include "desktop_asset_reader.h"
 #include "LightDemo.h"
 #endif
+#include "desktop_asset_reader.h"
+#include "metrics.h"
 #include <glm/gtc/constants.hpp>
 
 namespace Rendering
@@ -25,6 +26,8 @@ void RenderingGame::Initialize()
 	//
 	std::string path_to_asset = ".";
 	eps::assets_storage::init<desktop_asset_reader>(path_to_asset);
+	//
+	eps::metrics::init<metrics>(1.0f);
 	//
 	mLightDemo = std::make_unique<LightDemo>(*this);
 	mComponents.push_back(mLightDemo.get());

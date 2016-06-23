@@ -3,7 +3,6 @@
 
 #include "Game.h"
 #if !defined(_MSC_VER) || defined(__clang__)
-#include "desktop_asset_reader.h"
 #include "LightDemo.h"
 #endif
 #include <glm/glm.hpp>
