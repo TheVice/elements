@@ -32,7 +32,7 @@ private:
 	bool mTouchDown;
 	int mRenderId;
 	typedef renderer_factory<light_renderer> light_renderer_factory;
-	static light_renderer_factory light_renderer_factory_;
+	std::unique_ptr<light_renderer_factory> mLightRendererFactory;
 };
 }
 

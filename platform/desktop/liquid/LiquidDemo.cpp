@@ -23,13 +23,16 @@ LiquidDemo::LiquidDemo(Library::Game& aGame)
 	  mParticlesCount(700),
 	  mLiquidRenderer(nullptr),
 	  mRenderId(-1),
+	  mLiquidRendererFactory(nullptr),
 	  mGravity(sDefaultGravity)
 {
 }
 
 LiquidDemo::~LiquidDemo()
 {
-	liquid_renderer_factory_.close(mRenderId);
+#ifdef C
+	mLiquidRendererFactory->close(mRenderId);
+#endif
 }
 
 void LiquidDemo::Initialize()
@@ -90,10 +93,12 @@ void LiquidDemo::Initialize()
 	mLiquidRenderer->set_color(0.0f, 0.65f, 0.95f, 1.0f);
 #endif
 #ifdef C
-	bool preview = false;
-	mRenderId = liquid_renderer_factory_.open(preview);
+	mLiquidRendererFactory = std::make_unique<liquid_renderer_factory>();
 	//
-	auto renderer = liquid_renderer_factory_.get(mRenderId);
+	bool preview = false;
+	mRenderId = mLiquidRendererFactory->open(preview);
+	//
+	auto renderer = mLiquidRendererFactory->get(mRenderId);
 	enum QUALITY { LOW = 0, MEDIUM = 1, HIGH = 2};
 	size_t quality = MEDIUM;
 
@@ -147,7 +152,7 @@ void LiquidDemo::Update(const Library::GameTime&)
 	glm::dvec2 screen_pos;
 	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
 	//
-	auto renderer = liquid_renderer_factory_.get(mRenderId);
+	auto renderer = mLiquidRendererFactory->get(mRenderId);
 	renderer->acceleration(mGravity.x, mGravity.y, 0.0f);
 	renderer->touch(screen_pos.x, screen_pos.y, 0);
 #endif
@@ -162,7 +167,7 @@ void LiquidDemo::Draw(const Library::GameTime&)
 	mLiquidRenderer->render();
 #endif
 #ifdef C
-	auto renderer = liquid_renderer_factory_.get(mRenderId);
+	auto renderer = mLiquidRendererFactory->get(mRenderId);
 	renderer->render();
 #endif
 }
@@ -172,7 +177,6 @@ GLboolean LiquidDemo::IsMove(glm::dvec2 aScreenPos, glm::dvec2 aPrevScreenPos)
 	return (std::abs(aScreenPos.x - aPrevScreenPos.x) > 1.0f || std::abs(aScreenPos.y - aPrevScreenPos.y) > 1.0f);
 }
 
-LiquidDemo::liquid_renderer_factory LiquidDemo::liquid_renderer_factory_;
 const glm::vec2 LiquidDemo::sDefaultGravity(0.0f, -9.8f);
 
 }

@@ -13,23 +13,26 @@ RTTI_DEFINITIONS(LightDemo)
 LightDemo::LightDemo(Library::Game& aGame)
 	: DrawableGameComponent(aGame),
 	  mTouchDown(false),
-	  mRenderId(-1)
+	  mRenderId(-1),
+	  mLightRendererFactory(nullptr)
 {
 }
 
 LightDemo::~LightDemo()
 {
-	light_renderer_factory_.close(mRenderId);
+	mLightRendererFactory->close(mRenderId);
 }
 
 void LightDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 	//
-	bool preview = true;
-	mRenderId = light_renderer_factory_.open(preview);
+	mLightRendererFactory = std::make_unique<light_renderer_factory>();
 	//
-	auto renderer = light_renderer_factory_.get(mRenderId);
+	bool preview = true;
+	mRenderId = mLightRendererFactory->open(preview);
+	//
+	auto renderer = mLightRendererFactory->get(mRenderId);
 	size_t particles_count = 500;
 
 	if (!renderer->startup(size, particles_count))
@@ -52,7 +55,7 @@ void LightDemo::Update(const Library::GameTime&)
 	glm::dvec2 pos;
 	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
 	//
-	auto renderer = light_renderer_factory_.get(mRenderId);
+	auto renderer = mLightRendererFactory->get(mRenderId);
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
@@ -68,10 +71,8 @@ void LightDemo::Update(const Library::GameTime&)
 
 void LightDemo::Draw(const Library::GameTime& aGameTime)
 {
-	auto renderer = light_renderer_factory_.get(mRenderId);
+	auto renderer = mLightRendererFactory->get(mRenderId);
 	renderer->render();
 }
-
-LightDemo::light_renderer_factory LightDemo::light_renderer_factory_;
 
 }

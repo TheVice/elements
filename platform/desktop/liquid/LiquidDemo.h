@@ -67,7 +67,7 @@ private:
 
 	int mRenderId;
 	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
-	static liquid_renderer_factory liquid_renderer_factory_;
+	std::unique_ptr<liquid_renderer_factory> mLiquidRendererFactory;
 
 	glm::vec2 mGravity;
 
