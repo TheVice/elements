@@ -1,6 +1,6 @@
 
 #include "FireDemo.h"
-#ifdef _MSC_VER
+#if defined (_MSC_VER) && !defined(__clang__)
 #include "renderer.h"
 #endif
 #include "Game.h"
@@ -10,8 +10,8 @@ namespace Rendering
 {
 RTTI_DEFINITIONS(FireDemo)
 
-FireDemo::FireDemo(Library::Game& aGame, Library::Camera& aCamera)
-	: DrawableGameComponent(aGame, aCamera),
+FireDemo::FireDemo(Library::Game& aGame)
+	: DrawableGameComponent(aGame),
 	  mRenderer(nullptr)
 {
 }

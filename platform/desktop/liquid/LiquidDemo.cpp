@@ -1,10 +1,10 @@
 
 #include "LiquidDemo.h"
-//#ifdef _MSC_VER
-//#include "renderer.h"
-//#include "elements/simulation/liquid/system.h"
-//#include "liquid_renderer.h"
-//#endif
+#if defined (_MSC_VER) && !defined(__clang__)
+#include "renderer.h"
+#include "elements/simulation/liquid/system.h"
+#include "liquid_renderer.h"
+#endif
 #include "Game.h"
 #include "elements/math/transform.h"
 #include <memory>
@@ -13,8 +13,8 @@ namespace Rendering
 {
 RTTI_DEFINITIONS(LiquidDemo)
 
-LiquidDemo::LiquidDemo(Library::Game& aGame, Library::Camera& aCamera)
-	: DrawableGameComponent(aGame, aCamera),
+LiquidDemo::LiquidDemo(Library::Game& aGame)
+	: DrawableGameComponent(aGame),
 	  mSystem(nullptr),
 	  mRenderer(nullptr),
 	  mTransform(),
@@ -133,7 +133,6 @@ void LiquidDemo::Update(const Library::GameTime&)
 
 		mPrevScreenPos = screen_pos;
 	}
-
 	mSystem->set_gravity(mGravity);
 #endif
 #ifdef B

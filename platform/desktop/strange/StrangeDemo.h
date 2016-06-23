@@ -2,7 +2,7 @@
 #define _STRANGE_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || defined(__clang__)
 #include "renderer.h"
 #endif
 #include <GL/glew.h>
@@ -14,7 +14,7 @@ class StrangeDemo : public Library::DrawableGameComponent
 	RTTI_DECLARATIONS(StrangeDemo, DrawableGameComponent)
 
 public:
-	StrangeDemo(Library::Game& aGame, Library::Camera& aCamera);
+	StrangeDemo(Library::Game& aGame);
 	~StrangeDemo();
 
 public:

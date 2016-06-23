@@ -2,7 +2,7 @@
 #define _LIGHT_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || defined(__clang__)
 #include "renderer.h"
 #include "elements/simulation/air/system.h"
 #endif
@@ -37,7 +37,7 @@ class LightDemo : public Library::DrawableGameComponent
 	RTTI_DECLARATIONS(LightDemo, DrawableGameComponent)
 
 public:
-	LightDemo(Library::Game& aGame, Library::Camera& aCamera);
+	LightDemo(Library::Game& aGame);
 	~LightDemo();
 
 public:

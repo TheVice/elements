@@ -1,6 +1,6 @@
 
 #include "LightDemo.h"
-#ifdef _MSC_VER
+#if defined (_MSC_VER) && !defined(__clang__)
 #include "renderer.h"
 #include "elements/simulation/air/system.h"
 #endif
@@ -11,11 +11,11 @@ namespace Rendering
 {
 RTTI_DEFINITIONS(LightDemo)
 
-LightDemo::LightDemo(Library::Game& aGame, Library::Camera& aCamera)
-	: DrawableGameComponent(aGame, aCamera),
+LightDemo::LightDemo(Library::Game& aGame)
+	: DrawableGameComponent(aGame),
 	  mSystem(nullptr),
 	  mRenderer(nullptr),
-	  mParticlesCount(100000),
+	  mParticlesCount(500),
 	  mTouchDown(false)
 {
 }

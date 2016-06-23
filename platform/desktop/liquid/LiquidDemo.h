@@ -2,11 +2,11 @@
 #define _LIQUID_DEMO_H_
 
 #include "DrawableGameComponent.h"
-//#ifndef _MSC_VER
+#if !defined(_MSC_VER) || defined(__clang__)
 #include "renderer.h"
 #include "elements/simulation/liquid/system.h"
 #include "liquid_renderer.h"
-//#endif
+#endif
 #include "renderer_factory.h"
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -42,7 +42,7 @@ class LiquidDemo : public Library::DrawableGameComponent
 	RTTI_DECLARATIONS(LiquidDemo, DrawableGameComponent)
 
 public:
-	LiquidDemo(Library::Game& aGame, Library::Camera& aCamera);
+	LiquidDemo(Library::Game& aGame);
 	~LiquidDemo();
 
 public:

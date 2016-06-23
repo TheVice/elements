@@ -2,18 +2,12 @@
 #define _RENDERING_GAME_H_
 
 #include "Game.h"
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || defined(__clang__)
 #include "desktop_asset_reader.h"
-#include "Camera.h"
 #include "AirDemo.h"
 #endif
 #include <glm/glm.hpp>
 #include <memory>
-
-namespace Library
-{
-class Camera;
-}
 
 namespace Rendering
 {
@@ -33,7 +27,6 @@ private:
 	void OnKey(int aKey, int aScancode, int aAction, int aMods);
 
 	KeyboardHandler mKeyboardHandler;
-	std::unique_ptr<Library::Camera> mCamera;
 	std::unique_ptr<AirDemo> mAirDemo;
 
 private:

@@ -1,9 +1,8 @@
 
 #include "RenderingGame.h"
-//#ifdef _MSC_VER
-//#include "Camera.h"
-//#include "LiquidDemo.h"
-//#endif
+#if defined (_MSC_VER) && !defined(__clang__)
+#include "LiquidDemo.h"
+#endif
 #include "desktop_asset_reader.h"
 #include "preferences.h"
 #include "metrics.h"
@@ -14,7 +13,6 @@ namespace Rendering
 RenderingGame::RenderingGame(const TCHAR* aWindowTitle)
 	: Game(aWindowTitle),
 	  mKeyboardHandler(nullptr),
-	  mCamera(nullptr),
 	  mLiquidDemo(nullptr)
 {
 	//mIsDepthStencilBufferEnabled = true;
@@ -34,11 +32,7 @@ void RenderingGame::Initialize()
 	//
 	eps::metrics::init<metrics>(1.0f);
 	//
-	mCamera = std::make_unique<Library::Camera>(*this);
-	mComponents.push_back(mCamera.get());
-	mServices.AddService(Library::Camera::TypeIdClass(), mCamera.get());
-	//
-	mLiquidDemo = std::make_unique<LiquidDemo>(*this, *mCamera);
+	mLiquidDemo = std::make_unique<LiquidDemo>(*this);
 	mComponents.push_back(mLiquidDemo.get());
 	//
 	Game::Initialize();

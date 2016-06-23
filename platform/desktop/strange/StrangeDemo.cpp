@@ -1,6 +1,6 @@
 
 #include "StrangeDemo.h"
-#ifdef _MSC_VER
+#if defined (_MSC_VER) && !defined(__clang__)
 #include "renderer.h"
 #endif
 #include "Game.h"
@@ -10,8 +10,8 @@ namespace Rendering
 {
 RTTI_DEFINITIONS(StrangeDemo)
 
-StrangeDemo::StrangeDemo(Library::Game& aGame, Library::Camera& aCamera)
-	: DrawableGameComponent(aGame, aCamera),
+StrangeDemo::StrangeDemo(Library::Game& aGame)
+	: DrawableGameComponent(aGame),
 	  mRenderer(nullptr),
 	  mParticlesCount(100000)
 {

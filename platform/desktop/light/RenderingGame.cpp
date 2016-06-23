@@ -1,8 +1,7 @@
 
 #include "RenderingGame.h"
-#ifdef _MSC_VER
+#if defined (_MSC_VER) && !defined(__clang__)
 #include "desktop_asset_reader.h"
-#include "Camera.h"
 #include "LightDemo.h"
 #endif
 #include <glm/gtc/constants.hpp>
@@ -12,7 +11,6 @@ namespace Rendering
 RenderingGame::RenderingGame(const TCHAR* aWindowTitle)
 	: Game(aWindowTitle),
 	  mKeyboardHandler(nullptr),
-	  mCamera(nullptr),
 	  mLightDemo(nullptr)
 {
 	//mIsDepthStencilBufferEnabled = true;
@@ -28,11 +26,7 @@ void RenderingGame::Initialize()
 	std::string path_to_asset = ".";
 	eps::assets_storage::init<desktop_asset_reader>(path_to_asset);
 	//
-	mCamera = std::make_unique<Library::Camera>(*this);
-	mComponents.push_back(mCamera.get());
-	mServices.AddService(Library::Camera::TypeIdClass(), mCamera.get());
-	//
-	mLightDemo = std::make_unique<LightDemo>(*this, *mCamera);
+	mLightDemo = std::make_unique<LightDemo>(*this);
 	mComponents.push_back(mLightDemo.get());
 	//
 	Game::Initialize();

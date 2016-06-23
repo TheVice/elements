@@ -2,7 +2,7 @@
 #define _FIRE_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || defined(__clang__)
 #include "renderer.h"
 #endif
 #include <GL/glew.h>
@@ -25,7 +25,7 @@ class FireDemo : public Library::DrawableGameComponent
 	RTTI_DECLARATIONS(FireDemo, DrawableGameComponent)
 
 public:
-	FireDemo(Library::Game& aGame, Library::Camera& aCamera);
+	FireDemo(Library::Game& aGame);
 	~FireDemo();
 
 public:
