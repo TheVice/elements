@@ -24,9 +24,7 @@ IN THE SOFTWARE.
 #include "liquid_renderer.h"
 #include "liquid_ui.h"
 #include "liquid_config.h"
-#ifdef ANDROID
 #include "logging.h"
-#endif
 
 #include <elements/ui/controls/button.h>
 #include <elements/ui/controls/panel.h>
@@ -52,10 +50,7 @@ const quality_params qualities[3] =
     {700, 512},
     {900, 748}
 };
-#ifndef ANDROID
-#define AMOTION_EVENT_ACTION_DOWN 0
-#define AMOTION_EVENT_ACTION_MOVE 2
-#endif
+
 static eps::ui::touch_action ui_touch_action(int action)
 {
     if(action == AMOTION_EVENT_ACTION_MOVE)
@@ -81,9 +76,7 @@ bool liquid_renderer::startup(const eps::math::uvec2 & size, size_t quality)
         local.reset(new eps::experiment::liquid::renderer());
         if(!local->initialize())
         {
-#ifdef ANDROID
             LOGE("[Liquid] can't initialize renderer \n");
-#endif
             return false;
         }
         renderer_.reset(local.release());

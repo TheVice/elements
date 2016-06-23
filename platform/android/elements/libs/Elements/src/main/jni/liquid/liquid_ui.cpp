@@ -22,9 +22,7 @@ IN THE SOFTWARE.
 */
 
 #include "liquid_ui.h"
-#ifdef ANDROID
 #include "logging.h"
-#endif
 #include <elements/math/common.h>
 
 
@@ -62,9 +60,7 @@ void viscosity_model::on_changed(const std::string & key, float value)
 {
     if(liquid_.expired())
     {
-#ifdef ANDROID
         LOGE("[Liquid] viscisity changed faled: simulation is expired");
-#endif
         return;
     }
     if(key == config_.key_sigma())
@@ -106,9 +102,7 @@ void density_model::on_changed(const std::string &key, float value)
 {
     if(liquid_.expired())
     {
-#ifdef ANDROID
         LOGE("[Liquid] density changed faled: simulation is expired");
-#endif
         return;
     }
 
@@ -152,9 +146,7 @@ void pressure_model::on_changed(const std::string & key, float value)
 {
     if(liquid_.expired())
     {
-#ifdef ANDROID
         LOGE("[Liquid] pressure changed faled: simulation is expired");
-#endif
         return;
     }
 
@@ -197,9 +189,7 @@ void elasticity_model::on_changed(const std::string &key, float value)
 {
     if(liquid_.expired())
     {
-#ifdef ANDROID
         LOGE("[Liquid] elasticity changed faled: simulation is expired");
-#endif
         return;
     }
 
