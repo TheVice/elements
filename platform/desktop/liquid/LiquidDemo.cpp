@@ -30,8 +30,29 @@ LiquidDemo::LiquidDemo(Library::Game& aGame)
 
 LiquidDemo::~LiquidDemo()
 {
+#ifdef A
+	mRenderer.reset(nullptr);
+	//
+	using namespace std::literals;
+	std::this_thread::sleep_for(5s);
+	//
+	mSystem.reset(nullptr);
+#endif
+#ifdef B
+	using namespace std::literals;
+	std::this_thread::sleep_for(2s);
+	//
+	mLiquidRenderer.reset(nullptr);
+	//
+	std::this_thread::sleep_for(5s);
+#endif
 #ifdef C
+	using namespace std::literals;
+	std::this_thread::sleep_for(2s);
+	//
 	mLiquidRendererFactory->close(mRenderId);
+	//
+	std::this_thread::sleep_for(5s);
 #endif
 }
 
