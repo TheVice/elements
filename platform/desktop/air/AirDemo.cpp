@@ -22,12 +22,6 @@ AirDemo::AirDemo(Library::Game& aGame)
 
 AirDemo::~AirDemo()
 {
-	mRenderer.reset(nullptr);
-	//
-	using namespace std::literals;
-	std::this_thread::sleep_for(5s);
-	//
-	mSystem.reset(nullptr);
 }
 
 void AirDemo::Initialize()

@@ -20,12 +20,7 @@ LightDemo::LightDemo(Library::Game& aGame)
 
 LightDemo::~LightDemo()
 {
-	using namespace std::literals;
-	std::this_thread::sleep_for(2s);
-	//
 	mLightRendererFactory->close(mRenderId);
-	//
-	std::this_thread::sleep_for(5s);
 }
 
 void LightDemo::Initialize()
