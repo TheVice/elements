@@ -4,7 +4,7 @@ In this folder located source files required for build for desktop platform
 
 ###Dependencies
 * [SwiftShader](https://swiftshader.googlesource.com/SwiftShader) - used as high-performance CPU-based implementation of the OpenGL ES
-* Modifier version of [https://swiftshader.googlesource.com/SwiftShader/+/3a795c66126616037657d03e52020213d91ba164/third_party/PowerVR_SDK/Examples/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp](https://github.com/glfw/glfw/releases) - used for cooperation with operation system
+* Modifier version of [PowerVR_SDK/Examples/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp](https://swiftshader.googlesource.com/SwiftShader/+/3a795c66126616037657d03e52020213d91ba164/third_party/PowerVR_SDK/Examples/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp) - used for cooperation with operation system
 * Other dependence from all project, not specific addition for desktop port do not required
 * For Linux globally project required install addition dependencies by package manager of your distributive. Check documentation of your system to know what to install. For Ubuntu this dependence may be install by next few commands: ```sudo apt-get install libglm-dev```, ```sudo apt-get install libpugixml-dev```, ```sudo apt-get install libpng16-dev```
 
@@ -22,7 +22,7 @@ In this folder located source files required for build for desktop platform
 * ~~To build project from terminal run ```make -C . all -j$(nproc) -s```~~. Not all targets, that added from SwiftShader, able to compile success
 * To build from terminal:
 * Type and execute: ```make -C . libEGL -j$(nproc) -s```
-* Type and execute: ```make -C . libGLESv2 -j$(nproc) -s```. Be patient, complete of this target depend of performance of your PC and may finish in few minutes
+* Type and execute: ```make -C . libGLESv2 -j$(nproc) -s```. Be patient, complete of this target depend on performance of your PC and may finish in few minutes
 * Type and execute: ```make -C . air -j$(nproc) -s```
 * Type and execute: ```make -C . fire -j$(nproc) -s```
 * Type and execute: ```make -C . liquid -j$(nproc) -s```
