@@ -25,6 +25,9 @@ IN THE SOFTWARE.
 #define RENDERING_BASE_BUFFER_H_INCLUDED
 
 #include "opengl.h"
+#ifndef ANDROID
+#include <cstddef>
+#endif
 
 namespace eps {
 namespace rendering {

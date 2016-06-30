@@ -20,7 +20,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
-
+#ifdef ANDROID
 #include <jni.h>
 
 #include "logging.h"
@@ -143,3 +143,4 @@ JNIEXPORT jboolean JNICALL Java_com_yegorov_alexey_elements_api_ElementsLiquid_d
     LOGI("[API][Liquid] destroy renderer (%d)", id);
     return true;
 }
+#endif

@@ -34,7 +34,9 @@ IN THE SOFTWARE.
 #include <elements/metrics/metrics.h>
 #include <elements/math/transform.h>
 
+#ifdef ANDROID
 #include <android/input.h>
+#endif
 
 struct quality_params
 {
