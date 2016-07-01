@@ -28,6 +28,7 @@ Game::Game(const TCHAR* aWindowTitle)
 	  mMinorVersion(0),
 	  mVersionOfGLSL(0),
 	  mIsDepthStencilBufferEnabled(false),
+	  mWindowShouldClose(false),
 	  mGameClock(),
 	  mGameTime(0.0, 0.0),
 	  mComponents(),
@@ -104,7 +105,7 @@ void Game::Run()
 	//
 	mGameClock.Reset();
 
-	while (1)//!glfwWindowShouldClose(mWindow))
+	while (!mWindowShouldClose)
 	{
 		mGameClock.UpdateGameTime(mGameTime);
 		Update(mGameTime);
@@ -116,7 +117,7 @@ void Game::Run()
 
 void Game::Exit()
 {
-	//glfwSetWindowShouldClose(mWindow, GL_TRUE);
+	mWindowShouldClose = true;
 }
 
 void Game::Initialize()
@@ -137,7 +138,7 @@ void Game::Update(const GameTime& aGameTime)
 		}
 	}
 
-	mOGLES2HelloAPI_LinuxX11->Update();
+	mOGLES2HelloAPI_LinuxX11->Update(mWindowShouldClose);
 }
 
 void Game::Draw(const GameTime& aGameTime)
@@ -212,7 +213,7 @@ void Game::InitializeWindow()
 
 void Game::InitializeOpenGL()
 {
-	mOGLES2HelloAPI_LinuxX11 = std::make_unique<OGLES2HelloAPI_LinuxX11>();
+	mOGLES2HelloAPI_LinuxX11 = std::make_unique<OGLES2HelloAPI_LinuxX11>(mWindowTitle.c_str(), mScreenWidth, mScreenHeight);
 
 	if (!mOGLES2HelloAPI_LinuxX11->Initialize())
 	{
@@ -222,8 +223,8 @@ void Game::InitializeOpenGL()
 #ifdef DesktopGL
 	glGetIntegerv(GL_MAJOR_VERSION, &mMajorVersion);
 	glGetIntegerv(GL_MINOR_VERSION, &mMinorVersion);
-#endif
 	mVersionOfGLSL = GetVersionOfGLSL_();
+#endif
 
 	if (mIsDepthStencilBufferEnabled)
 	{
@@ -240,36 +241,6 @@ void Game::Shutdown()
 //	glfwTerminate();
 }
 
-#ifndef WIN32
-std::pair<int, int> Game::CenterWindow(int aWindowWidth, int aWindowHeight)
-{
-	std::pair<int, int> center = std::make_pair(0, 0);
-	Display* display = XOpenDisplay(nullptr);
-
-	if (!display)
-	{
-		return center;
-	}
-
-	int screenNumber = XDefaultScreen(display);
-	int screenWidth = XDisplayWidth(display, screenNumber);
-	int screenHeight = XDisplayHeight(display, screenNumber);
-	XCloseDisplay(display);
-	std::get<0>(center) = static_cast<int>(static_cast<GLfloat>(screenWidth - aWindowWidth) / 2);
-	std::get<1>(center) = static_cast<int>(static_cast<GLfloat>(screenHeight - aWindowHeight) / 2);
-	return center;
-}
-#else
-POINT Game::CenterWindow(int aWindowWidth, int aWindowHeight)
-{
-	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	POINT center = { 0, 0 };
-	center.x = static_cast<LONG>(static_cast<GLfloat>(screenWidth - aWindowWidth) / 2);
-	center.y = static_cast<LONG>(static_cast<GLfloat>(screenHeight - aWindowHeight) / 2);
-	return center;
-}
-#endif
 void Game::glfwErrorCallback(int aError, const char* aDescription)
 {
 #ifdef NDEBUG

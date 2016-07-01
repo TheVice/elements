@@ -21,16 +21,28 @@
 
 class OGLES2HelloAPI_LinuxX11
 {
+private:
+	bool CreateNativeWindow(Display* nativeDisplay, Window* nativeWindow);
 
 public:
-	OGLES2HelloAPI_LinuxX11();
+	OGLES2HelloAPI_LinuxX11(const char* aApplicationName, int aWindowWidth, int aWindowHeight);
 	~OGLES2HelloAPI_LinuxX11();
 
-	void Update();
+	void Update(bool& aWindowShouldClose);
 	bool Initialize();
 	void Cleanup();
 
 private:
+	static void CenterWindow(Display* nativeDisplay, int aWindowWidth, int aWindowHeight, int& aCenterX, int& aCenterY);
+
+private:
+	// Name of the application
+	const char* mApplicationName;
+
+	// Width and height of the window
+	const int mWindowWidth;
+	const int mWindowHeight;
+
 	// X11 variables
 	Display* mNativeDisplay;
 	Window mNativeWindow;

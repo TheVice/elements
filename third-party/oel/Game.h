@@ -86,6 +86,8 @@ protected:
 
 	bool mIsDepthStencilBufferEnabled;
 
+	bool mWindowShouldClose;
+
 	GameClock mGameClock;
 	GameTime mGameTime;
 
@@ -99,11 +101,6 @@ private:
 	static std::ostringstream sGlfwErrors;
 
 	static GLshort GetVersionOfGLSL_();
-#ifndef WIN32
-	static std::pair<int, int> CenterWindow(int aWindowWidth, int aWindowHeight);
-#else
-	static POINT CenterWindow(int aWindowWidth, int aWindowHeight);
-#endif
 	static void glfwErrorCallback(int aError, const char* aDescription);
 };
 
