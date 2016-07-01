@@ -49,7 +49,7 @@ void AirDemo::Initialize()
 
 void AirDemo::Update(const Library::GameTime&)
 {
-	/*glm::dvec2 pos;
+	glm::dvec2 pos;
 	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
 	pos.y = mGame->GetScreenHeight() - pos.y;
 
@@ -62,7 +62,7 @@ void AirDemo::Update(const Library::GameTime&)
 	{
 		mTouchDown = false;
 		mSystem->touch_up(static_cast<float>(pos.x), static_cast<float>(pos.y));
-	}*/
+	}
 }
 
 void AirDemo::Draw(const Library::GameTime& aGameTime)

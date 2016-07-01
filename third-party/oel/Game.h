@@ -8,6 +8,7 @@
 #include "../PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.h"
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include <GLFW/glfw3.h>
 #include <functional>
 #include <vector>
 #include <sstream>
@@ -38,6 +39,12 @@ public:
 	Game& operator = (const Game& aRhs) = delete;
 
 public:
+#ifndef WIN32
+	Window GetWindowHandle() const;
+#else
+	HWND GetWindowHandle() const;
+#endif
+	GLFWwindow* GetWindow() const;
 	const TCHAR* GetWindowTitle() const;
 
 	GLuint GetScreenWidth() const;
@@ -76,6 +83,7 @@ protected:
 #endif
 	std::unique_ptr<OGLES2HelloAPI_LinuxX11> mOGLES2HelloAPI_LinuxX11;
 
+	GLFWwindow* mWindow;
 	GLuint mScreenWidth;
 	GLuint mScreenHeight;
 	bool mIsFullScreen;
@@ -85,8 +93,6 @@ protected:
 	GLshort mVersionOfGLSL;
 
 	bool mIsDepthStencilBufferEnabled;
-
-	bool mWindowShouldClose;
 
 	GameClock mGameClock;
 	GameTime mGameTime;
@@ -101,6 +107,12 @@ private:
 	static std::ostringstream sGlfwErrors;
 
 	static GLshort GetVersionOfGLSL_();
+	static void OnKey(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int aMods);
+#ifndef WIN32
+	static std::pair<int, int> CenterWindow(int aWindowWidth, int aWindowHeight);
+#else
+	static POINT CenterWindow(int aWindowWidth, int aWindowHeight);
+#endif
 	static void glfwErrorCallback(int aError, const char* aDescription);
 };
 

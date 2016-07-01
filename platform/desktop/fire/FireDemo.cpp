@@ -91,7 +91,7 @@ void FireDemo::Update(const Library::GameTime&)
 
 	renderer->set_covering(covering);*/
 	//
-	/*glm::dvec2 pos;
+	glm::dvec2 pos;
 	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
@@ -103,7 +103,7 @@ void FireDemo::Update(const Library::GameTime&)
 	{
 		mTouchDown = false;
 		renderer->touch(pos.x, pos.y, AMOTION_EVENT_ACTION_MOVE);
-	}*/
+	}
 }
 
 void FireDemo::Draw(const Library::GameTime& aGameTime)

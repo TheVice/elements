@@ -28,6 +28,13 @@
 /*******************************************************************************************************************************************
  Defines
 *******************************************************************************************************************************************/
+// Name of the application
+#define APPLICATION_NAME "HelloAPI"
+
+// Width and height of the window
+#define WINDOW_WIDTH	800
+#define WINDOW_HEIGHT	600
+
 // Index to bind the attributes to vertex shaders
 #define VERTEX_ARRAY	0
 
@@ -137,7 +144,7 @@ bool CreateNativeDisplay(Display** nativeDisplay)
  @Return		Whether the function succeeded or not.
  @Description	Creates a native window for the application to render into.
 *******************************************************************************************************************************************/
-bool OGLES2HelloAPI_LinuxX11::CreateNativeWindow(Display* nativeDisplay, Window* nativeWindow)
+bool CreateNativeWindow(Display* nativeDisplay, Window* nativeWindow)
 {
 	// Get the default screen for the display
 	int defaultScreen = XDefaultScreen(nativeDisplay);
@@ -172,15 +179,14 @@ bool OGLES2HelloAPI_LinuxX11::CreateNativeWindow(Display* nativeDisplay, Window*
 	//
 	int centerX = 0;
 	int centerY = 0;
-	CenterWindow(nativeDisplay, mWindowWidth, mWindowHeight, centerX, centerY);
 
 	// Create the window
 	*nativeWindow =XCreateWindow(nativeDisplay,               // The display used to create the window
 	                             rootWindow,                   // The parent (root) window - the desktop
 						  		 0,                            // The horizontal (x) origin of the window
 								 0,                            // The vertical (y) origin of the window
-								 mWindowWidth,                 // The width of the window
-								 mWindowHeight,                // The height of the window
+								 WINDOW_WIDTH,                 // The width of the window
+								 WINDOW_HEIGHT,                // The height of the window
 								 0,                            // Border size - set it to zero
 	                             visualInfo->depth,            // Depth from the visual info
 								 InputOutput,                  // Window type - this specifies InputOutput.
@@ -195,7 +201,7 @@ bool OGLES2HelloAPI_LinuxX11::CreateNativeWindow(Display* nativeDisplay, Window*
 	XMoveWindow(nativeDisplay, *nativeWindow, centerX, centerY);
 
 	// Set the window title
-	XStoreName(nativeDisplay, *nativeWindow, mApplicationName);
+	XStoreName(nativeDisplay, *nativeWindow, APPLICATION_NAME);
 
 	// Setup the window manager protocols to handle window deletion events
 	Atom windowManagerDelete = XInternAtom(nativeDisplay, "WM_DELETE_WINDOW", True);
@@ -739,12 +745,9 @@ void ReleaseNativeResources(Display* nativeDisplay, Window nativeWindow)
 	}
 }
 
-OGLES2HelloAPI_LinuxX11::OGLES2HelloAPI_LinuxX11(const char* aApplicationName, int aWindowWidth, int aWindowHeight) :
-	mApplicationName(aApplicationName),
-	mWindowWidth(aWindowWidth),
-	mWindowHeight(aWindowHeight),
+OGLES2HelloAPI_LinuxX11::OGLES2HelloAPI_LinuxX11(Window aNativeWindow) :
 	mNativeDisplay(nullptr),
-	mNativeWindow(0),
+	mNativeWindow(aNativeWindow),
 	mEglDisplay(nullptr),
 	mEglConfig(nullptr),
 	mEglSurface(nullptr),
@@ -757,37 +760,11 @@ OGLES2HelloAPI_LinuxX11::~OGLES2HelloAPI_LinuxX11()
 	Cleanup();
 }
 
-void OGLES2HelloAPI_LinuxX11::Update(bool& aWindowShouldClose)
+void OGLES2HelloAPI_LinuxX11::Update()
 {
 	if (!eglSwapBuffers(mEglDisplay, mEglSurface) )
 	{
 		TestEGLError("eglSwapBuffers");
-//		return false;
-	}
-	// Check for messages from the windowing system.
-	int numberOfMessages = XPending(mNativeDisplay);
-	for( int i = 0; i < numberOfMessages; i++ )
-	{
-		XEvent event;
-		XNextEvent(mNativeDisplay, &event);
-		switch( event.type )
-		{
-			// On window close
-		case ClientMessage:
-//			if (event.xclient.message_type == 336 && event.xclient.data.l[0] == 334)
-			{
-				aWindowShouldClose = true;
-			}
-
-			break;
-			// On mouse click
-		case ButtonPress:
-			break;
-		case DestroyNotify:
-			break;
-		default:
-			break;
-		}
 	}
 }
 
@@ -801,11 +778,11 @@ bool OGLES2HelloAPI_LinuxX11::Initialize()
 	}
 
 	// Setup the windowing system, create a window
-	if (!CreateNativeWindow(mNativeDisplay, &mNativeWindow))
+	/*if (!CreateNativeWindow(mNativeDisplay, &mNativeWindow))
 	{
 		Cleanup();
 		return false;
-	}
+	}*/
 
 	// Create and Initialise an EGLDisplay from the native display
 	if (!CreateEGLDisplay(mNativeDisplay, mEglDisplay))
@@ -847,27 +824,19 @@ void OGLES2HelloAPI_LinuxX11::Cleanup()
 		mEglDisplay = nullptr;
 	}
 
-	if (mNativeDisplay && mNativeWindow)
+	mNativeWindow = 0;
+
+	if (mNativeDisplay)
 	{
 		// Release the windowing system resources
 		ReleaseNativeResources(mNativeDisplay, mNativeWindow);
 	}
 
-	mNativeWindow = 0;
 	mNativeDisplay = nullptr;
 
 	mEglContext = nullptr;
 	mEglSurface = nullptr;
 	mEglConfig = nullptr;
-}
-
-void OGLES2HelloAPI_LinuxX11::CenterWindow(Display* nativeDisplay, int aWindowWidth, int aWindowHeight, int& aCenterX, int& aCenterY)
-{
-	int screenNumber = XDefaultScreen(nativeDisplay);
-	int screenWidth = XDisplayWidth(nativeDisplay, screenNumber);
-	int screenHeight = XDisplayHeight(nativeDisplay, screenNumber);
-	aCenterX = static_cast<int>(static_cast<GLfloat>(screenWidth - aWindowWidth) / 2);
-	aCenterY = static_cast<int>(static_cast<GLfloat>(screenHeight - aWindowHeight) / 2);
 }
 
 /*******************************************************************************************************************************************

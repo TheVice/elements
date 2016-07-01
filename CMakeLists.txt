@@ -122,6 +122,64 @@ endif()
 
   list(APPEND REQUIRED_INCLUDES ${SwiftShader_PATH}/include)
 
+# glfw
+if(UNIX)
+  add_definitions(-DGLFW_EXPOSE_NATIVE_X11)
+  add_definitions(-DGLFW_EXPOSE_NATIVE_EGL)
+else()
+  if(EXISTS ${CMAKE_SOURCE_DIR}/external/glfw)
+    set(glfw_Path ${CMAKE_SOURCE_DIR}/external/glfw)
+  elseif(DEFINED ENV{GLFW_PATH})
+    string(REPLACE "\\" "/" glfw_Path $ENV{GLFW_PATH})
+  elseif(DEFINED GLFW_PATH)
+    string(REPLACE "\\" "/" glfw_Path ${GLFW_PATH})
+   else()
+    message(FATAL_ERROR "Could not find glfw library, please check it at https://github.com/glfw/glfw/releases")
+   endif()
+ 
+  file(GLOB_RECURSE H_Files ${glfw_Path}/include/*.h)
+  file(GLOB_RECURSE C_Files ${glfw_Path}/src/*.c)
+  set(win_c_files)
+  foreach(C_File ${C_Files})
+    string(FIND ${C_File} "glx_" pos1 REVERSE)
+    string(FIND ${C_File} "x11_" pos2 REVERSE)
+    string(FIND ${C_File} "egl_" pos3 REVERSE)
+    string(FIND ${C_File} "nsgl_" pos4 REVERSE)
+    string(FIND ${C_File} "cocoa_" pos5 REVERSE)
+    #
+    string(FIND ${C_File} "linux_" pos6 REVERSE)
+    string(FIND ${C_File} "mir_" pos7 REVERSE)
+    string(FIND ${C_File} "posix_" pos8 REVERSE)
+    string(FIND ${C_File} "wl_" pos9 REVERSE)
+    string(FIND ${C_File} "xkb_" pos10 REVERSE)
+    #
+    string(FIND ${C_File} "mach_" pos11 REVERSE)
+
+    if((${pos1} GREATER -1) OR (${pos2} GREATER -1) OR (${pos3} GREATER -1) OR (${pos4} GREATER -1) OR (${pos5} GREATER -1) OR (${pos6} GREATER -1) OR (${pos7} GREATER -1) OR (${pos8} GREATER -1) OR (${pos9} GREATER -1) OR (${pos10} GREATER -1) OR (${pos11} GREATER -1))
+    else()
+      list(APPEND win_c_files ${C_File})
+    endif()
+  endforeach()
+
+  set(C_Files ${win_c_files})
+
+  add_library(glfw ${H_Files} ${C_Files})
+ 
+  target_include_directories(glfw SYSTEM PRIVATE ${glfw_Path}/include)
+  target_compile_definitions(glfw PRIVATE "_GLFW_USE_OPENGL")
+  target_compile_definitions(glfw PRIVATE "_GLFW_WIN32")
+  target_compile_definitions(glfw PRIVATE "_GLFW_WGL")
+  add_definitions(-DGLFW_EXPOSE_NATIVE_WIN32)
+  add_definitions(-DGLFW_EXPOSE_NATIVE_WGL)
+
+  if(MSVC)
+    set_target_properties(glfw PROPERTIES COMPILE_FLAGS "/W0")
+  else()
+    set_target_properties(glfw PROPERTIES COMPILE_FLAGS "-w")
+  endif(MSVC)
+  list(APPEND REQUIRED_INCLUDES ${glfw_Path}/include)
+endif()
+
 # glm
 if(WIN32)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/glm)
@@ -256,6 +314,7 @@ endif()
 list(APPEND REQUIRED_LIBRARIES z)
 list(APPEND REQUIRED_LIBRARIES pugixml)
 list(APPEND REQUIRED_LIBRARIES oel)
+list(APPEND REQUIRED_LIBRARIES glfw)
 
 if(WIN32)
 #   list(APPEND REQUIRED_LIBRARIES glu32)

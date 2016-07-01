@@ -118,7 +118,7 @@ void LiquidDemo::Update(const Library::GameTime&)
 {
 #ifdef A
 	//if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
-	/*{
+	{
 		glm::dvec2 screen_pos;
 		glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
 		screen_pos.y = mGame->GetScreenHeight() - screen_pos.y;
@@ -137,24 +137,24 @@ void LiquidDemo::Update(const Library::GameTime&)
 		}
 
 		mPrevScreenPos = screen_pos;
-	}*/
+	}
 	mSystem->set_gravity(mGravity);
 #endif
 #ifdef B
-//	glm::dvec2 screen_pos;
-//	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
-//	screen_pos.y = mGame->GetScreenHeight() - screen_pos.y;
+	glm::dvec2 screen_pos;
+	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
+	screen_pos.y = mGame->GetScreenHeight() - screen_pos.y;
 	//
 	mLiquidRenderer->acceleration(mGravity.x, mGravity.y, 0.0f);
-//	mLiquidRenderer->touch(screen_pos.x, screen_pos.y, 0);
+	mLiquidRenderer->touch(screen_pos.x, screen_pos.y, 0);
 #endif
 #ifdef C
-//	glm::dvec2 screen_pos;
-//	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
+	glm::dvec2 screen_pos;
+	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
 	//
 	auto renderer = mLiquidRendererFactory->get(mRenderId);
 	renderer->acceleration(mGravity.x, mGravity.y, 0.0f);
-//	renderer->touch(screen_pos.x, screen_pos.y, 0);
+	renderer->touch(screen_pos.x, screen_pos.y, 0);
 #endif
 }
 

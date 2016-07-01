@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "DrawableGameComponent.h"
 #include "Utility.h"
+#include <GLFW/glfw3native.h>
 #include <cassert>
 #ifndef _MSC_VER
 #include <iostream>
@@ -21,6 +22,7 @@ std::ostringstream Game::sGlfwErrors;
 Game::Game(const TCHAR* aWindowTitle)
 	: mWindowTitle(aWindowTitle),
 	  mOGLES2HelloAPI_LinuxX11(nullptr),
+	  mWindow(nullptr),
 	  mScreenWidth(sDefaultScreenWidth),
 	  mScreenHeight(sDefaultScreenHeight),
 	  mIsFullScreen(false),
@@ -28,7 +30,6 @@ Game::Game(const TCHAR* aWindowTitle)
 	  mMinorVersion(0),
 	  mVersionOfGLSL(0),
 	  mIsDepthStencilBufferEnabled(false),
-	  mWindowShouldClose(false),
 	  mGameClock(),
 	  mGameTime(0.0, 0.0),
 	  mComponents(),
@@ -53,6 +54,21 @@ Game::~Game()
 	}
 
 #endif
+}
+#ifndef WIN32
+Window Game::GetWindowHandle() const
+{
+	return glfwGetX11Window(mWindow);
+}
+#else
+HWND Game::GetWindowHandle() const
+{
+	return glfwGetWin32Window(mWindow);
+}
+#endif
+GLFWwindow* Game::GetWindow() const
+{
+	return mWindow;
 }
 
 const TCHAR* Game::GetWindowTitle() const
@@ -105,11 +121,13 @@ void Game::Run()
 	//
 	mGameClock.Reset();
 
-	while (!mWindowShouldClose)
+	while (!glfwWindowShouldClose(mWindow))
 	{
 		mGameClock.UpdateGameTime(mGameTime);
 		Update(mGameTime);
 		Draw(mGameTime);
+		//
+		glfwPollEvents();
 	}
 
 	Shutdown();
@@ -117,7 +135,7 @@ void Game::Run()
 
 void Game::Exit()
 {
-	mWindowShouldClose = true;
+	glfwSetWindowShouldClose(mWindow, GL_TRUE);
 }
 
 void Game::Initialize()
@@ -138,7 +156,7 @@ void Game::Update(const GameTime& aGameTime)
 		}
 	}
 
-	mOGLES2HelloAPI_LinuxX11->Update(mWindowShouldClose);
+	mOGLES2HelloAPI_LinuxX11->Update();
 }
 
 void Game::Draw(const GameTime& aGameTime)
@@ -209,11 +227,45 @@ GLshort Game::GetVersionOfGLSL_()
 
 void Game::InitializeWindow()
 {
+	glfwSetErrorCallback(glfwErrorCallback);
+
+	if (!glfwInit())
+	{
+		sGlfwErrors << ("glfwInit() failed") << std::endl;
+		throw std::runtime_error(sGlfwErrors.str());
+	}
+
+	GLFWmonitor* monitor = (mIsFullScreen ? glfwGetPrimaryMonitor() : nullptr);
+#ifdef UNICODE
+	const GLuint length = mWindowTitle.length();
+	std::string windowTitle(length + 1, '\0');
+	Utility::wchar2char(&mWindowTitle.front(), &windowTitle.front(), length);
+	mWindow = glfwCreateWindow(mScreenWidth, mScreenHeight, windowTitle.c_str(), monitor, nullptr);
+#else
+	mWindow = glfwCreateWindow(mScreenWidth, mScreenHeight, mWindowTitle.c_str(), monitor, nullptr);
+#endif
+
+	if (!mWindow)
+	{
+		Shutdown();
+		sGlfwErrors << ("glfwCreateWindow() failed") << std::endl;
+		throw std::runtime_error(sGlfwErrors.str());
+	}
+
+#ifndef WIN32
+	std::pair<int, int> center = CenterWindow(mScreenWidth, mScreenHeight);
+	glfwSetWindowPos(mWindow, std::get<0>(center), std::get<1>(center));
+#else
+	POINT center = CenterWindow(mScreenWidth, mScreenHeight);
+	glfwSetWindowPos(mWindow, center.x, center.y);
+#endif
 }
 
 void Game::InitializeOpenGL()
 {
-	mOGLES2HelloAPI_LinuxX11 = std::make_unique<OGLES2HelloAPI_LinuxX11>(mWindowTitle.c_str(), mScreenWidth, mScreenHeight);
+	glfwMakeContextCurrent(mWindow);
+
+	mOGLES2HelloAPI_LinuxX11 = std::make_unique<OGLES2HelloAPI_LinuxX11>(GetWindowHandle());
 
 	if (!mOGLES2HelloAPI_LinuxX11->Initialize())
 	{
@@ -233,14 +285,55 @@ void Game::InitializeOpenGL()
 	}
 
 	glViewport(0, 0, mScreenWidth, mScreenHeight);
+	//
+	glfwSetKeyCallback(mWindow, Game::OnKey);
 }
 
 void Game::Shutdown()
 {
-//	glfwDestroyWindow(mWindow);
-//	glfwTerminate();
+	glfwDestroyWindow(mWindow);
+	glfwTerminate();
 }
 
+void Game::OnKey(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int aMods)
+{
+	(void)aWindow;
+
+	for (auto handler : sInternalInstance->mKeyboardHandlers)
+	{
+		handler.second(aKey, aScancode, aAction, aMods);
+	}
+}
+#ifndef WIN32
+std::pair<int, int> Game::CenterWindow(int aWindowWidth, int aWindowHeight)
+{
+	std::pair<int, int> center = std::make_pair(0, 0);
+	Display* display = XOpenDisplay(nullptr);
+
+	if (!display)
+	{
+		return center;
+	}
+
+	int screenNumber = XDefaultScreen(display);
+	int screenWidth = XDisplayWidth(display, screenNumber);
+	int screenHeight = XDisplayHeight(display, screenNumber);
+	XCloseDisplay(display);
+	std::get<0>(center) = static_cast<int>(static_cast<GLfloat>(screenWidth - aWindowWidth) / 2);
+	std::get<1>(center) = static_cast<int>(static_cast<GLfloat>(screenHeight - aWindowHeight) / 2);
+	return center;
+}
+#else
+POINT Game::CenterWindow(int aWindowWidth, int aWindowHeight)
+{
+	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	POINT center = { 0, 0 };
+	center.x = static_cast<LONG>(static_cast<GLfloat>(screenWidth - aWindowWidth) / 2);
+	center.y = static_cast<LONG>(static_cast<GLfloat>(screenHeight - aWindowHeight) / 2);
+	return center;
+}
+#endif
 void Game::glfwErrorCallback(int aError, const char* aDescription)
 {
 #ifdef NDEBUG

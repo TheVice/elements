@@ -52,7 +52,7 @@ void LightDemo::Initialize()
 
 void LightDemo::Update(const Library::GameTime&)
 {
-	/*glm::dvec2 pos;
+	glm::dvec2 pos;
 	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
 	//
 	auto renderer = mLightRendererFactory->get(mRenderId);
@@ -66,7 +66,7 @@ void LightDemo::Update(const Library::GameTime&)
 	{
 		mTouchDown = false;
 		renderer->touch(pos.x, pos.y, AMOTION_EVENT_ACTION_UP);
-	}*/
+	}
 }
 
 void LightDemo::Draw(const Library::GameTime& aGameTime)
