@@ -23,11 +23,11 @@
             uniform sampler2D u_background;
             uniform vec2 u_texel;
 
-            vec3 fn_normal(sampler2D tex, vec2 coord, float strength)
+            vec3 fn_normal(vec2 coord, float strength)
             {
-                float center = texture2D(tex, coord).a;
-                float right = texture2D(tex, coord + vec2(u_texel.x, 0.0)).a;
-                float up = texture2D(tex, coord + vec2(0.0, u_texel.y)).a;
+                float center = texture2D(u_fire, coord).a;
+                float right = texture2D(u_fire, coord + vec2(u_texel.x, 0.0)).a;
+                float up = texture2D(u_fire, coord + vec2(0.0, u_texel.y)).a;
 
                 return normalize(cross(vec3(1.0, 0.0, (right - center) * strength),
                                        vec3(0.0, 1.0, (up - center) * strength)));
@@ -41,7 +41,7 @@
             void main()
             {
                 vec4 color = texture2D(u_fire, v_uv);
-                vec3 normal = fn_normal(u_fire, v_uv, 0.1);
+                vec3 normal = fn_normal(v_uv, 0.1);
                 gl_FragColor = fn_blend(color, texture2D(u_background, v_uv + normal.xy * 2.0));
             }
         ]]></fragment>
