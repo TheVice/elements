@@ -46,7 +46,6 @@ void FireDemo::Initialize()
 		throw std::runtime_error("renderer->set_background() failed");
 	}
 
-	//
 	renderer->set_color_hot(glm::vec3(1.0f, 0.0f, 0.0f));
 	//
 	renderer->set_color_cold(glm::vec3(0.0f, 1.0f, 1.0f));
@@ -56,57 +55,22 @@ void FireDemo::Update(const Library::GameTime&)
 {
 	auto renderer = mFireRendererFactory->get(mRenderId);
 	//
-	/*static GLfloat intensity = 0.0f;
-	static GLfloat intensityAddition = 0.005f;
-	static GLfloat covering = 0.0f;
-	static GLfloat coveringAddition = 0.005f;
-	//
-	intensity += intensityAddition;
-
-	if (intensity > 1.0f)
-	{
-		intensity = 1.0f;
-		intensityAddition *= -1;
-	}
-	else if (intensity < 0.0f)
-	{
-		intensity = 0.0f;
-		intensityAddition *= -1;
-	}
-
-	renderer->set_intensity(intensity);
-	//
-	covering += coveringAddition;
-
-	if (covering > 1.0f)
-	{
-		covering = 1.0f;
-		coveringAddition *= -1;
-	}
-	else if (covering < 0.0f)
-	{
-		covering = 0.0f;
-		coveringAddition *= -1;
-	}
-
-	renderer->set_covering(covering);*/
-	//
-	glm::dvec2 pos;
-	glfwGetCursorPos(mGame->GetWindow(), &pos.x, &pos.y);
+	glm::dvec2 screen_pos;
+	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		renderer->touch(pos.x, pos.y, AMOTION_EVENT_ACTION_DOWN);
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
 		mTouchDown = true;
 	}
 	else if (mTouchDown)
 	{
 		mTouchDown = false;
-		renderer->touch(pos.x, pos.y, AMOTION_EVENT_ACTION_MOVE);
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 	}
 }
 
-void FireDemo::Draw(const Library::GameTime& aGameTime)
+void FireDemo::Draw(const Library::GameTime&)
 {
 	auto renderer = mFireRendererFactory->get(mRenderId);
 	renderer->render();

@@ -3,37 +3,11 @@
 
 #include "DrawableGameComponent.h"
 #if !defined(_MSC_VER) || defined(__clang__)
-#include "renderer.h"
-#include "elements/simulation/liquid/system.h"
 #include "liquid_renderer.h"
 #endif
 #include "renderer_factory.h"
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-
-namespace eps
-{
-namespace experiment
-{
-namespace liquid
-{
-class renderer;
-}
-}
-}
-
-namespace eps
-{
-namespace simulation
-{
-namespace liquid
-{
-class system;
-}
-}
-}
-
-class liquid_renderer;
 
 namespace Rendering
 {
@@ -54,17 +28,8 @@ public:
 	virtual void Initialize() override;
 	virtual void Update(const Library::GameTime& aGameTime) override;
 	virtual void Draw(const Library::GameTime& aGameTime) override;
-	static GLboolean IsMove(glm::dvec2 aScreenPos, glm::dvec2 aPrevScreenPos);
 
 private:
-	std::unique_ptr<eps::simulation::liquid::system> mSystem;
-	std::unique_ptr<eps::experiment::liquid::renderer> mRenderer;
-	glm::mat4 mTransform;
-	glm::mat4 mTransformTouch;
-	glm::dvec2 mPrevScreenPos;
-	GLuint mParticlesCount;
-	std::unique_ptr<liquid_renderer> mLiquidRenderer;
-
 	int mRenderId;
 	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
 	std::unique_ptr<liquid_renderer_factory> mLiquidRendererFactory;
