@@ -3,32 +3,10 @@
 
 #include "DrawableGameComponent.h"
 #if !defined(_MSC_VER) || defined(__clang__)
-#include "renderer.h"
-#include "elements/simulation/air/system.h"
+#include "air_renderer.h"
 #endif
+#include "renderer_factory.h"
 #include <GLES2/gl2.h>
-
-namespace eps
-{
-namespace experiment
-{
-namespace air
-{
-class renderer;
-}
-}
-}
-
-namespace eps
-{
-namespace simulation
-{
-namespace air
-{
-class system;
-}
-}
-}
 
 namespace Rendering
 {
@@ -51,10 +29,15 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	std::unique_ptr<eps::simulation::air::system> mSystem;
-	std::unique_ptr<eps::experiment::air::renderer> mRenderer;
-	GLuint mParticlesCount;
-	GLboolean mTouchDown;
+	bool mTouchDown;
+	int mRenderId;
+	typedef renderer_factory<air_renderer> air_renderer_factory;
+	std::unique_ptr<air_renderer_factory> mAirRendererFactory;
+
+private:
+	static const glm::vec3 sColorSpeedDown;
+	static const glm::vec3 sColorSpeedUp;
+	static const int sQuantity;
 };
 }
 

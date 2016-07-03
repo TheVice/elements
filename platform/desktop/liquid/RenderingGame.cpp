@@ -45,7 +45,7 @@ void RenderingGame::Draw(const Library::GameTime& aGameTime)
 	glClearBufferfv(GL_DEPTH, 0, &one);
 	//
 	Game::Draw(aGameTime);
-//	glfwSwapBuffers(mWindow);
+	//	glfwSwapBuffers(mWindow);
 }
 
 void RenderingGame::Shutdown()

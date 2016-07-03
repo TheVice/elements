@@ -33,22 +33,19 @@ void FireDemo::Initialize()
 	mRenderId = mFireRendererFactory->open(preview);
 	//
 	auto renderer = mFireRendererFactory->get(mRenderId);
-	enum QUALITY { LOW = 0, MEDIUM = 1, HIGH = 2 };
-	size_t quality = MEDIUM;
 
-	if (!renderer->startup(size, quality))
+	if (!renderer->startup(size, sQuality))
 	{
 		throw std::runtime_error("renderer->startup() failed");
 	}
 
-	if (!renderer->set_background("textures/noise.png"))
+	if (!renderer->set_background(sBackground))
 	{
 		throw std::runtime_error("renderer->set_background() failed");
 	}
 
-	renderer->set_color_hot(glm::vec3(1.0f, 0.0f, 0.0f));
-	//
-	renderer->set_color_cold(glm::vec3(0.0f, 1.0f, 1.0f));
+	renderer->set_color_hot(sColorHot);
+	renderer->set_color_cold(sColorCold);
 }
 
 void FireDemo::Update(const Library::GameTime&)
@@ -75,5 +72,10 @@ void FireDemo::Draw(const Library::GameTime&)
 	auto renderer = mFireRendererFactory->get(mRenderId);
 	renderer->render();
 }
+
+const char* FireDemo::sBackground = "textures/background.png"; //"images/background.jpg";
+const glm::vec3 FireDemo::sColorHot = { 0.098f, 0.5f, 1.0f }; //# 1980ff
+const glm::vec3 FireDemo::sColorCold = { 1.0f, 0.5f, 0.098f }; //# ff8019
+const int FireDemo::sQuality = 1;
 
 }

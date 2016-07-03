@@ -1,9 +1,11 @@
 
 #include "RenderingGame.h"
 #if defined (_MSC_VER) && !defined(__clang__)
-#include "desktop_asset_reader.h"
 #include "AirDemo.h"
 #endif
+#include "desktop_asset_reader.h"
+#include "preferences.h"
+#include "metrics.h"
 #include <glm/gtc/constants.hpp>
 
 namespace Rendering
@@ -25,6 +27,10 @@ void RenderingGame::Initialize()
 	//
 	eps::assets_storage::init<desktop_asset_reader>();
 	//
+	eps::preferences::init<preferences>();
+	//
+	eps::metrics::init<metrics>(1.0f);
+	//
 	mAirDemo = std::make_unique<AirDemo>(*this);
 	mComponents.push_back(mAirDemo.get());
 	//
@@ -39,7 +45,7 @@ void RenderingGame::Draw(const Library::GameTime& aGameTime)
 	glClearBufferfv(GL_DEPTH, 0, &one);
 	//
 	Game::Draw(aGameTime);
-//	glfwSwapBuffers(mWindow);
+	//	glfwSwapBuffers(mWindow);
 }
 
 void RenderingGame::Shutdown()

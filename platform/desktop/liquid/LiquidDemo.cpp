@@ -13,8 +13,7 @@ RTTI_DEFINITIONS(LiquidDemo)
 LiquidDemo::LiquidDemo(Library::Game& aGame)
 	: DrawableGameComponent(aGame),
 	  mRenderId(-1),
-	  mLiquidRendererFactory(nullptr),
-	  mGravity(sDefaultGravity)
+	  mLiquidRendererFactory(nullptr)
 {
 }
 
@@ -33,22 +32,19 @@ void LiquidDemo::Initialize()
 	mRenderId = mLiquidRendererFactory->open(preview);
 	//
 	auto renderer = mLiquidRendererFactory->get(mRenderId);
-	enum QUALITY { LOW = 0, MEDIUM = 1, HIGH = 2};
-	size_t quality = MEDIUM;
 
-	if (!renderer->startup(size, quality))
+	if (!renderer->startup(size, sQuantity))
 	{
 		throw std::runtime_error("renderer->startup() failed");
 	}
 
-	if (!renderer->set_background("textures/noise.png"))
+	if (!renderer->set_background(sBackground))
 	{
 		throw std::runtime_error("renderer->set_background() failed");
 	}
 
-	renderer->set_color(1.0f, 0.65f, 0.95f, 1.0f);
-	//
-	renderer->acceleration(mGravity.x, mGravity.y, 0.0f);
+	renderer->set_color(sColor.x, sColor.y, sColor.z, sColor.w);
+	renderer->acceleration(sGravity.x, sGravity.y, sGravity.z);
 }
 
 void LiquidDemo::Update(const Library::GameTime&)
@@ -74,6 +70,9 @@ void LiquidDemo::Draw(const Library::GameTime&)
 	renderer->render();
 }
 
-const glm::vec2 LiquidDemo::sDefaultGravity(0.0f, -9.8f);
+const char* LiquidDemo::sBackground = "textures/background.png";
+const glm::vec4 LiquidDemo::sColor = { 0.33f, 0.098f, 0.38f, 0.44f }; //#55196271
+const int LiquidDemo::sQuantity = 1;
+const glm::vec3 LiquidDemo::sGravity = { 0.0f, -9.8f, 0.0f };
 
 }

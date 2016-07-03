@@ -33,21 +33,18 @@ void LightDemo::Initialize()
 	mRenderId = mLightRendererFactory->open(preview);
 	//
 	auto renderer = mLightRendererFactory->get(mRenderId);
-	size_t particles_count = 500;
 
-	if (!renderer->startup(size, particles_count))
+	if (!renderer->startup(size, sQuantity))
 	{
 		throw std::runtime_error("renderer->startup() failed");
 	}
 
-	const char* pathToTexture = "textures/noise.png";
-
-	if (!renderer->set_background(pathToTexture))
+	if (!renderer->set_background(sBackground))
 	{
 		throw std::runtime_error("renderer->set_background() failed");
 	}
 
-	renderer->set_color(glm::vec3(1.0f, 0.5f, 0.25f));
+	renderer->set_color(sColor);
 }
 
 void LightDemo::Update(const Library::GameTime&)
@@ -69,10 +66,14 @@ void LightDemo::Update(const Library::GameTime&)
 	}
 }
 
-void LightDemo::Draw(const Library::GameTime& aGameTime)
+void LightDemo::Draw(const Library::GameTime&)
 {
 	auto renderer = mLightRendererFactory->get(mRenderId);
 	renderer->render();
 }
+
+const char* LightDemo::sBackground =  "textures/background.png";
+const glm::vec3 LightDemo::sColor = { 1.0f, 1.0f, 1.0f }; //# FFFFFF
+const int LightDemo::sQuantity = 1000;
 
 }
