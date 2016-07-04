@@ -319,21 +319,49 @@ file(GLOB Experiments RELATIVE ${CMAKE_SOURCE_DIR}/experiments ${CMAKE_SOURCE_DI
 foreach(Experiment ${Experiments})
   if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/experiments/${Experiment})
     set(Experiment_Path ${CMAKE_SOURCE_DIR}/experiments/${Experiment})
-    file(GLOB SRC_FILES ${Experiment_Path}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.cpp ${Experiment_Path}/*.cpp)
+    set(ADDITION_SOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
 
-    if((Experiment STREQUAL fire) OR (Experiment STREQUAL light) OR (Experiment STREQUAL liquid))
-      set(ADDITION_SOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
-      file(GLOB ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/*.cpp ${ADDITION_SOURCE_PATH}/${Experiment}/*.h)
-      list(APPEND REQUIRED_INCLUDES ${ADDITION_SOURCE_PATH}/${Experiment}/)
-      list(APPEND REQUIRED_INCLUDES ${ADDITION_SOURCE_PATH})
-      list(APPEND SRC_FILES ${ADDITION_SRC_FILES})
-    endif()
+    file(GLOB SRC_FILES ${Experiment_Path}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.cpp ${Experiment_Path}/*.cpp)
+    file(GLOB ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/*.cpp ${ADDITION_SOURCE_PATH}/${Experiment}/*.h)
+
+    list(REMOVE_ITEM ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/${Experiment}_jni.cpp)
+    list(APPEND SRC_FILES ${ADDITION_SRC_FILES})
 
     add_executable(${Experiment} ${IS_SUBSYSTEM_WIN32} ${SRC_FILES})
 
     target_link_libraries(${Experiment} ${REQUIRED_LIBRARIES})
     target_include_directories(${Experiment} PRIVATE ${ELEMENTS_PATH} ${ELEMENTS_PATH}/.. ${CMAKE_SOURCE_DIR}/experiments/${Experiment} ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment})
-    target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_INCLUDES})
+    target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_INCLUDES} ${ADDITION_SOURCE_PATH}/${Experiment}/ ${ADDITION_SOURCE_PATH})
+
+    # Copy assets
+    file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/shaders/* ${CMAKE_SOURCE_DIR}/assets/textures/*)
+    foreach(RESOURCE_FILE ${RESOURCE_FILES})
+      string(REPLACE "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}" destination ${RESOURCE_FILE})
+      add_custom_command(TARGET ${Experiment} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
+    endforeach()
+
+    set(ADDITION_RESOURCE_PATH)
+    if(Experiment STREQUAL air)
+      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/AirWallpaper/src/main/assets)
+    endif()
+    if(Experiment STREQUAL fire)
+      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/FireWallpaper/src/main/assets)
+    endif()
+    if(Experiment STREQUAL light)
+      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/LightWallpaper/src/main/assets)
+    endif()
+    if(Experiment STREQUAL liquid)
+      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets)
+    endif()
+    if(Experiment STREQUAL strange)
+      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/StrangeWallpaper/src/main/assets)
+    endif()
+
+    file(GLOB_RECURSE RESOURCE_FILES ${ADDITION_RESOURCE_PATH}/*)
+    foreach(RESOURCE_FILE ${RESOURCE_FILES})
+      string(REPLACE "${ADDITION_RESOURCE_PATH}" "${CMAKE_BINARY_DIR}" destination ${RESOURCE_FILE})
+      add_custom_command(TARGET ${Experiment} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
+    endforeach()
   endif()
 endforeach()
 
@@ -366,18 +394,3 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++14")
   endif()
 endif()
-
-# Copy assets
-if(NOT (CMAKE_SOURCE_DIR STREQUAL ${CMAKE_BINARY_DIR}))
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets/shaders" "${CMAKE_BINARY_DIR}/shaders")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets/textures" "${CMAKE_BINARY_DIR}/textures")
-  #
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/FireWallpaper/src/main/assets/textures" "${CMAKE_BINARY_DIR}/textures")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/FireWallpaper/src/main/assets/ui" "${CMAKE_BINARY_DIR}/ui")
-  #
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LightWallpaper/src/main/assets/textures" "${CMAKE_BINARY_DIR}/textures")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LightWallpaper/src/main/assets/ui" "${CMAKE_BINARY_DIR}/ui")
-  #
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets/textures" "${CMAKE_BINARY_DIR}/textures")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets/ui" "${CMAKE_BINARY_DIR}/ui")
-endif(NOT (CMAKE_SOURCE_DIR STREQUAL ${CMAKE_BINARY_DIR}))

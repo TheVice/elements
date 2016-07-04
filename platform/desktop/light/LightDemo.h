@@ -33,6 +33,11 @@ private:
 	int mRenderId;
 	typedef renderer_factory<light_renderer> light_renderer_factory;
 	std::unique_ptr<light_renderer_factory> mLightRendererFactory;
+
+private:
+	static const char* sBackground;
+	static const glm::vec3 sColor;
+	static const int sQuantity;
 };
 }
 

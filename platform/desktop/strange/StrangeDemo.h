@@ -3,8 +3,9 @@
 
 #include "DrawableGameComponent.h"
 #if !defined(_MSC_VER) || defined(__clang__)
-#include "renderer.h"
+#include "strange_renderer.h"
 #endif
+#include "renderer_factory.h"
 #include <GL/glew.h>
 
 namespace Rendering
@@ -27,8 +28,15 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	std::unique_ptr<eps::experiment::strange::renderer> mRenderer;
-	GLuint mParticlesCount;
+	int mRenderId;
+	typedef renderer_factory<strange_renderer> strange_renderer_factory;
+	std::unique_ptr<strange_renderer_factory> mStrangeRendererFactory;
+
+private:
+	static const glm::vec3 sColorBackground;
+	static const glm::vec3 sColorGradient1;
+	static const glm::vec3 sColorGradient2;
+	static const int sQuantity;
 };
 }
 

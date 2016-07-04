@@ -7,7 +7,6 @@
 #endif
 #include "renderer_factory.h"
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 
 namespace Rendering
 {
@@ -34,9 +33,11 @@ private:
 	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
 	std::unique_ptr<liquid_renderer_factory> mLiquidRendererFactory;
 
-	glm::vec2 mGravity;
-
-	static const glm::vec2 sDefaultGravity;
+private:
+	static const char* sBackground;
+	static const glm::vec4 sColor;
+	static const int sQuantity;
+	static const glm::vec3 sGravity;
 };
 }
 

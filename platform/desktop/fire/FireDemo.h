@@ -33,6 +33,12 @@ private:
 	int mRenderId;
 	typedef renderer_factory<fire_renderer> fire_renderer_factory;
 	std::unique_ptr<fire_renderer_factory> mFireRendererFactory;
+
+private:
+	static const char* sBackground;
+	static const glm::vec3 sColorHot;
+	static const glm::vec3 sColorCold;
+	static const int sQuality;
 };
 }
 
