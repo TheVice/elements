@@ -7,7 +7,7 @@ In this folder located source files required for build for desktop platform
 * [SwiftShader](https://swiftshader.googlesource.com/SwiftShader) - used as high-performance CPU-based implementation of the OpenGL ES
 * Modifier version of [PowerVR_SDK/Examples/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp](https://swiftshader.googlesource.com/SwiftShader/+/3a795c66126616037657d03e52020213d91ba164/third_party/PowerVR_SDK/Examples/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp) - used for deal with [EGL](https://www.khronos.org/egl)
 * Other dependence from all project, not specific addition for desktop port do not required
-* For Linux globally project required install addition dependencies by package manager of your distributive. Check documentation of your system to know what to install. For Ubuntu this dependence may be install by next few commands: ```sudo apt-get install libglm-dev```, ```sudo apt-get install libpugixml-dev```, ```sudo apt-get install libpng16-dev```
+* For Linux globally project required install addition dependencies by package manager of your distributive. Check documentation of your system to know what to install. For Ubuntu this dependence may be install by next few commands: ```sudo apt-get install libglfw3-dev```, ```sudo apt-get install libglm-dev```, ```sudo apt-get install libpugixml-dev```, ```sudo apt-get install libpng16-dev```
 
 ###Build from Eclipse (Linux)
 * Clone the ```SwiftShader``` repository
@@ -26,6 +26,6 @@ In this folder located source files required for build for desktop platform
 * Type and execute: ```make -C . libGLESv2 -j$(nproc) -s```. Be patient, complete of this target depend on performance of your PC and may finish in few minutes
 * Type and execute: ```make -C . air -j$(nproc) -s```
 * Type and execute: ```make -C . fire -j$(nproc) -s```
-* Type and execute: ```make -C . liquid -j$(nproc) -s```
 * Type and execute: ```make -C . light -j$(nproc) -s```
+* Type and execute: ```make -C . liquid -j$(nproc) -s```
 * Type and execute: ```make -C . strange -j$(nproc) -s```
