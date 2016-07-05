@@ -234,6 +234,7 @@ list(APPEND REQUIRED_INCLUDES ${oel_Path})
 # elements
 set(elements_Path ${CMAKE_SOURCE_DIR}/elements)
 # file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp)
+# list(FILTER ELEMENTS_SRC_FILES EXCLUDE REGEX ${elements_Path}/simulation/*)
 set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/assets/assets_storage.cpp
                        ${elements_Path}/assets/assets_storage.h
@@ -438,9 +439,13 @@ foreach(SHADER_FILE ${SHADER_FILES})
     target_include_directories(${app_path} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
     target_include_directories(${app_path} PRIVATE ${REQUIRED_INCLUDES})
 
-    # Copy shaders
+    # Copy assets
     set(RESOURCE_FILE ${CMAKE_SOURCE_DIR}/assets/shaders/${SHADER_FILE})
     set(destination ${CMAKE_BINARY_DIR}/shaders/${SHADER_FILE})
+    add_custom_command(TARGET ${app_path} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
+
+    set(RESOURCE_FILE ${CMAKE_SOURCE_DIR}/assets/textures/noise.png)
+    set(destination ${CMAKE_BINARY_DIR}/textures/noise.png)
     add_custom_command(TARGET ${app_path} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
   endif()
 endforeach()

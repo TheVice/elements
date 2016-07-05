@@ -21,7 +21,7 @@ enum ProgramEnum
 
 CircleColorDemo::CircleColorDemo(Library::Game& aGame)
 	: DrawableGameComponent(aGame),
-	  mProgramCircleColor(),
+	  mProgram(),
 	  mSquare(eps::rendering::buffer_usage::STREAM_DRAW),
 	  mColor(),
 	  mTransform()
@@ -36,7 +36,7 @@ void CircleColorDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 
-	if (!eps::rendering::load_program("shaders/primitives/circle_color.prog", mProgramCircleColor))
+	if (!eps::rendering::load_program("shaders/primitives/circle_color.prog", mProgram))
 	{
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}
@@ -60,11 +60,11 @@ void CircleColorDemo::Initialize()
 
 void CircleColorDemo::Draw(const Library::GameTime&)
 {
-	EPS_STATE_PROGRAM(mProgramCircleColor.get_product());
-	mProgramCircleColor.uniform_value(
+	EPS_STATE_PROGRAM(mProgram.get_product());
+	mProgram.uniform_value(
 		eps::utils::to_int(ProgramEnum::FragmentUniformTransformation), mTransform);
-	mProgramCircleColor.uniform_value(eps::utils::to_int(ProgramEnum::FragmentUniformColor), mColor);
-	mSquare.render(mProgramCircleColor, eps::utils::to_int(ProgramEnum::VertexAttributePosition),
+	mProgram.uniform_value(eps::utils::to_int(ProgramEnum::FragmentUniformColor), mColor);
+	mSquare.render(mProgram, eps::utils::to_int(ProgramEnum::VertexAttributePosition),
 				   eps::utils::to_int(ProgramEnum::VertexAttributeTextureCoordinate));
 }
 

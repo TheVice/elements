@@ -26,7 +26,7 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	eps::rendering::program mProgramCircleColor;
+	eps::rendering::program mProgram;
 	eps::rendering::primitive::square mSquare;
 	glm::vec4 mColor;
 	glm::mat4 mTransform;
