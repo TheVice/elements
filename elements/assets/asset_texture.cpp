@@ -23,7 +23,11 @@ IN THE SOFTWARE.
 
 #include "asset_texture.h"
 #include "asset_operations.h"
+#ifdef ANDROID
 #include <GLES2/gl2.h>
+#else
+#include <GL/glew.h>
+#endif
 #include <png.h>
 #include <stdlib.h>
 #include <assert.h>
