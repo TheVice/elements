@@ -21,42 +21,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_BASE_SHADER_H_INCLUDED
-#define RENDERING_BASE_SHADER_H_INCLUDED
+#ifndef MATH_TRIGONOMETRIC_H_INCLUDED
+#define MATH_TRIGONOMETRIC_H_INCLUDED
 
-#include "opengl.h"
-#include <string>
+#include "types.h"
 
 namespace eps {
-namespace rendering {
+namespace math {
 
-enum class shader_type
+inline float radians(float angle)
 {
-    VERTEX   = GL_VERTEX_SHADER,
-    FRAGMENT = GL_FRAGMENT_SHADER
-};
+    return glm::radians(angle);
+}
 
-class shader
+inline float degrees(float angle)
 {
-public:
+    return glm::degrees(angle);
+}
 
-    shader(const char * source, shader_type type);
-    ~shader();
-
-    shader(const shader &) = delete;
-    shader & operator=(const shader &) = delete;
-    shader(shader &&) = default;
-    shader & operator=(shader &&) = default;
-
-    bool compile();
-    const product_type & get_product() const;
-
-private:
-
-    product_type product_;
-};
-
-} /* rendering */
+} /* math */
 } /* eps */
 
-#endif // RENDERING_BASE_SHADER_H_INCLUDED
+#endif // MATH_UTILS_H_INCLUDED

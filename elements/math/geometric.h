@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef MATH_UTILS_H_INCLUDED
-#define MATH_UTILS_H_INCLUDED
+#ifndef MATH_GEOMETRIC_H_INCLUDED
+#define MATH_GEOMETRIC_H_INCLUDED
 
 #include "types.h"
 
@@ -58,4 +58,4 @@ inline vec2 normalize(const vec2 & a)
 } /* math */
 } /* eps */
 
-#endif // MATH_UTILS_H_INCLUDED
+#endif // MATH_GEOMETRIC_H_INCLUDED

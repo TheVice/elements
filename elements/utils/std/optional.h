@@ -21,42 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_BASE_SHADER_H_INCLUDED
-#define RENDERING_BASE_SHADER_H_INCLUDED
+#ifndef STD_UTILS_OPTIONAL_H_INCLUDED
+#define STD_UTILS_OPTIONAL_H_INCLUDED
 
-#include "opengl.h"
-#include <string>
+#include <experimental/optional>
 
 namespace eps {
-namespace rendering {
+namespace utils {
 
-enum class shader_type
-{
-    VERTEX   = GL_VERTEX_SHADER,
-    FRAGMENT = GL_FRAGMENT_SHADER
-};
+template<typename _Type>
+using optional = std::experimental::optional<_Type>;
 
-class shader
-{
-public:
+constexpr std::experimental::nullopt_t nullopt = std::experimental::nullopt;
 
-    shader(const char * source, shader_type type);
-    ~shader();
-
-    shader(const shader &) = delete;
-    shader & operator=(const shader &) = delete;
-    shader(shader &&) = default;
-    shader & operator=(shader &&) = default;
-
-    bool compile();
-    const product_type & get_product() const;
-
-private:
-
-    product_type product_;
-};
-
-} /* rendering */
+} /* utils */
 } /* eps */
 
-#endif // RENDERING_BASE_SHADER_H_INCLUDED
+#endif // STD_UTILS_OPTIONAL_H_INCLUDED

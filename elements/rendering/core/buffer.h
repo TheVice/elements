@@ -50,6 +50,8 @@ public:
     explicit buffer(buffer_usage usage = buffer_usage::STATIC_DRAW);
     ~buffer();
 
+    buffer(const buffer &) = delete;
+    buffer & operator=(const buffer &) = delete;
     buffer(buffer &&) = default;
     buffer & operator=(buffer &&) = default;
 
@@ -78,12 +80,14 @@ inline buffer<_Type>::buffer(buffer_usage usage)
 template<buffer_type _Type>
 inline buffer<_Type>::~buffer()
 {
-    glDeleteBuffers(1, utils::ptr_product(product_));
+    if(!product_.invalid())
+        glDeleteBuffers(1, utils::ptr_product(product_));
 }
 
 template<buffer_type _Type>
 inline void buffer<_Type>::allocate(const void * data, size_t count, size_t size)
 {
+    count_ = count;
     glBindBuffer(static_cast<GLenum>(_Type), utils::raw_product(product_));
     glBufferData(static_cast<GLenum>(_Type), count * size, data,
                  static_cast<GLenum>(usage_));
