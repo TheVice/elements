@@ -46,60 +46,14 @@ if(WIN32 OR UNIX)
     message(FATAL_ERROR "Could not find freetype library, please check it at https://sourceforge.net/projects/freetype/files/")
   endif()
 
-  set(FREETYPE_INCLUDE_DIRS ${freetype_Path}/include ${freetype_Path}/include/freetype2)
-  set(FREETYPE_SRC_DIR ${freetype_Path}/src)
-
-  set(FREETYPE_SRC_FILES ${FREETYPE_SRC_DIR}/autofit/autofit.c
-                         ${FREETYPE_SRC_DIR}/base/ftbase.c
-                         ${FREETYPE_SRC_DIR}/base/ftbbox.c
-                         ${FREETYPE_SRC_DIR}/base/ftbdf.c
-                         ${FREETYPE_SRC_DIR}/base/ftbitmap.c
-                         ${FREETYPE_SRC_DIR}/base/ftcid.c
-                         ${FREETYPE_SRC_DIR}/base/ftfntfmt.c
-                         ${FREETYPE_SRC_DIR}/base/ftfstype.c
-                         ${FREETYPE_SRC_DIR}/base/ftgasp.c
-                         ${FREETYPE_SRC_DIR}/base/ftglyph.c
-                         ${FREETYPE_SRC_DIR}/base/ftgxval.c
-                         ${FREETYPE_SRC_DIR}/base/ftinit.c
-                         ${FREETYPE_SRC_DIR}/base/ftlcdfil.c
-                         ${FREETYPE_SRC_DIR}/base/ftmm.c
-                         ${FREETYPE_SRC_DIR}/base/ftotval.c
-                         ${FREETYPE_SRC_DIR}/base/ftpatent.c
-                         ${FREETYPE_SRC_DIR}/base/ftpfr.c
-                         ${FREETYPE_SRC_DIR}/base/ftstroke.c
-                         ${FREETYPE_SRC_DIR}/base/ftsynth.c
-                         ${FREETYPE_SRC_DIR}/base/ftsystem.c
-                         ${FREETYPE_SRC_DIR}/base/fttype1.c
-                         ${FREETYPE_SRC_DIR}/base/ftwinfnt.c
-                         ${FREETYPE_SRC_DIR}/bdf/bdf.c
-                         ${FREETYPE_SRC_DIR}/bzip2/ftbzip2.c
-                         ${FREETYPE_SRC_DIR}/cache/ftcache.c
-                         ${FREETYPE_SRC_DIR}/cff/cff.c
-                         ${FREETYPE_SRC_DIR}/cid/type1cid.c
-                         ${FREETYPE_SRC_DIR}/gzip/ftgzip.c
-                         ${FREETYPE_SRC_DIR}/lzw/ftlzw.c
-                         ${FREETYPE_SRC_DIR}/pcf/pcf.c
-                         ${FREETYPE_SRC_DIR}/pfr/pfr.c
-                         ${FREETYPE_SRC_DIR}/psaux/psaux.c
-                         ${FREETYPE_SRC_DIR}/pshinter/pshinter.c
-                         ${FREETYPE_SRC_DIR}/psnames/psnames.c
-                         ${FREETYPE_SRC_DIR}/raster/raster.c
-                         ${FREETYPE_SRC_DIR}/sfnt/sfnt.c
-                         ${FREETYPE_SRC_DIR}/smooth/smooth.c
-                         ${FREETYPE_SRC_DIR}/truetype/truetype.c
-                         ${FREETYPE_SRC_DIR}/type1/type1.c
-                         ${FREETYPE_SRC_DIR}/type42/type42.c
-                         ${FREETYPE_SRC_DIR}/winfonts/winfnt.c)
-
-  add_library(freetype SHARED ${FREETYPE_SRC_FILES})
-
   if(MSVC)
-    if(EXISTS "${freetype_Path}/config/ftoption.h")
-      target_compile_definitions(freetype PRIVATE FT_CONFIG_OPTIONS_H="${freetype_Path}/config/ftoption.h")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
     endif()
   endif()
-  target_compile_definitions(freetype PRIVATE FT2_BUILD_LIBRARY)
-  target_include_directories(freetype SYSTEM PRIVATE ${FREETYPE_INCLUDE_DIRS})
+
+  add_subdirectory(${freetype_Path} ${CMAKE_BINARY_DIR}/freetype)
+
   list(APPEND REQUIRED_SYS_INCLUDES ${freetype_Path}/include)
 endif()
 
@@ -456,7 +410,6 @@ if(MSVC)
     set(FLAGS "${FLAGS} -Wall -Wextra")# -Werror")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
-    add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
     add_definitions(-D__clang__)
   else()
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /EHsc /W4")
@@ -475,7 +428,6 @@ else()
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
-    add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++14")
   endif()
