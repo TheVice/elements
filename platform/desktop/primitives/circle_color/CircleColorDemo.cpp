@@ -22,7 +22,7 @@ enum ProgramEnum
 CircleColorDemo::CircleColorDemo(Library::Game& aGame)
 	: DrawableGameComponent(aGame),
 	  mProgram(),
-	  mSquare(eps::rendering::buffer_usage::STREAM_DRAW),
+	  mSquare(),
 	  mColor(),
 	  mTransform()
 {

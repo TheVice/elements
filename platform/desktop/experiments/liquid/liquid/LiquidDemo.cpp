@@ -64,8 +64,8 @@ void LiquidDemo::Initialize()
 
 void LiquidDemo::Draw(const Library::GameTime&)
 {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(eps::rendering::pass_input_slot::input_0));
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(eps::rendering::pass_input_slot::input_0));
 	glActiveTexture(GL_TEXTURE0 + 1);
 	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>
 				  (eps::rendering::pass_input_slot::input_1));//mSurfaceBackground.get_product());
