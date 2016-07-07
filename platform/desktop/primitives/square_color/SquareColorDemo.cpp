@@ -4,6 +4,7 @@
 #include "rendering/utils/program_loader.h"
 #include "utils/std/enum.h"
 #include "math/transform.h"
+#include "SettingsReader.h"
 #include "Game.h"
 
 namespace Rendering
@@ -41,7 +42,10 @@ void SquareColorDemo::Initialize()
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}
 
-	glm::vec2 pos = { 1.0f, 0.0f };
+	SettingsReader settings;
+	bool settingLoaded = load_data("settings/primitives/square_color.xml", settings);
+	//
+	glm::vec2 pos = settingLoaded ? settings.mPosition : glm::vec2(1.0f, 0.0f);
 	float offset = size.y * 0.5f;
 	glm::vec2 tracker(pos.x + (size.x - offset) * 0.5f, pos.y + (size.y - offset) * 0.5f);
 	GLfloat vertices[] =
@@ -52,7 +56,7 @@ void SquareColorDemo::Initialize()
 		(tracker.x), (tracker.y + offset), 0.0f, 0.0f
 	};
 	mSquare.construct(vertices);
-	mColor = { 0.33f, 0.098f, 0.38f, 0.44f };
+	mColor = settingLoaded ? settings.mColor : glm::vec4(0.33f, 0.098f, 0.38f, 0.44f);
 	mTransform = eps::math::translate(-1.0f, -1.0f, 0.0f) *
 				 eps::math::scale(2.0f, 2.0f, 1.0f) *
 				 eps::math::scale(1.0f / size.x, 1.0f / size.y, 1.0f);

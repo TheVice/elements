@@ -11,6 +11,7 @@
 struct desktop_asset_reader : public eps::asset_reader
 {
 	explicit desktop_asset_reader();
+	virtual ~desktop_asset_reader();
 
 	bool visit(eps::asset_texture& asset) final;
 	bool visit(eps::asset_blob& asset) final;

@@ -5,6 +5,10 @@ desktop_asset_reader::desktop_asset_reader()
 {
 }
 
+desktop_asset_reader::~desktop_asset_reader()
+{
+}
+
 bool desktop_asset_reader::visit(eps::asset_texture& asset)
 {
 	// path to asset, for example "shaders/experiments/air/particles.prog"
