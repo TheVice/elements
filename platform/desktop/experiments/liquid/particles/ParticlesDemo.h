@@ -1,5 +1,5 @@
-#ifndef _LIQUID_DEMO_H_
-#define _LIQUID_DEMO_H_
+#ifndef _PARTICLES_DEMO_H_
+#define _PARTICLES_DEMO_H_
 
 #include "DrawableGameComponent.h"
 #include "rendering/core/program.h"
@@ -10,18 +10,18 @@
 
 namespace Rendering
 {
-class LiquidDemo : public Library::DrawableGameComponent
+class ParticlesDemo : public Library::DrawableGameComponent
 {
-	RTTI_DECLARATIONS(LiquidDemo, DrawableGameComponent)
+	RTTI_DECLARATIONS(ParticlesDemo, DrawableGameComponent)
 
 public:
-	LiquidDemo(Library::Game& aGame);
-	~LiquidDemo();
+	ParticlesDemo(Library::Game& aGame);
+	~ParticlesDemo();
 
 public:
-	LiquidDemo() = delete;
-	LiquidDemo(const LiquidDemo& aRhs) = delete;
-	LiquidDemo& operator = (const LiquidDemo& aRhs) = delete;
+	ParticlesDemo() = delete;
+	ParticlesDemo(const ParticlesDemo& aRhs) = delete;
+	ParticlesDemo& operator = (const ParticlesDemo& aRhs) = delete;
 
 public:
 	virtual void Initialize() override;
@@ -30,10 +30,8 @@ public:
 private:
 	eps::rendering::program mProgram;
 	eps::rendering::primitive::square mSquare;
-	eps::rendering::texture<eps::rendering::default_texture_policy> mTexture;
-
-	glm::vec4 mSurfaceColor;
-	glm::vec2 mSurfaceTexel;
+	glm::mat4 mTransform;
+	float mSize;
 };
 }
 

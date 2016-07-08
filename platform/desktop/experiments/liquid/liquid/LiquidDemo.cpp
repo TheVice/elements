@@ -7,6 +7,7 @@
 #include "math/transform.h"
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
+#include "TestCard.h"
 #include "Game.h"
 
 namespace Rendering
@@ -28,7 +29,7 @@ LiquidDemo::LiquidDemo(Library::Game& aGame)
 	: DrawableGameComponent(aGame),
 	  mProgram(),
 	  mSquare(),
-	  mSurfaceBackground(),
+	  mTexture(),
 	  mSurfaceColor(),
 	  mSurfaceTexel()
 {
@@ -47,19 +48,15 @@ void LiquidDemo::Initialize()
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}
 
+	GLenum texture_format = GL_RGBA;
+	glm::uvec2 texture_size = size;
+	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
+	MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
+	mTexture.set_data(texture_data.get(), texture_size, texture_format);
+	//
 	mSurfaceColor = { 0.33f, 0.098f, 0.38f, 0.44f };
 	mSurfaceTexel.x = 1.0f / size.x;
 	mSurfaceTexel.y = 1.0f / size.y;
-	eps::asset_texture asset = eps::assets_storage::instance().read<eps::asset_texture>("textures/noise.png");
-
-	if (asset.pixels())
-	{
-		mSurfaceBackground.set_data(asset.pixels(), asset.size(), asset.format());
-	}
-	else
-	{
-		throw std::runtime_error("Failed to load texture");
-	}
 }
 
 void LiquidDemo::Draw(const Library::GameTime&)
@@ -67,15 +64,16 @@ void LiquidDemo::Draw(const Library::GameTime&)
 	//glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(eps::rendering::pass_input_slot::input_0));
 	glActiveTexture(GL_TEXTURE0 + 1);
-	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>
-				  (eps::rendering::pass_input_slot::input_1));//mSurfaceBackground.get_product());
+	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(eps::rendering::pass_input_slot::input_1));
+	//
 	EPS_STATE_PROGRAM(mProgram.get_product());
-	mProgram.uniform_value(eps::utils::to_int(ProgramEnum::FragmentUniformSurface), 0);
-	mProgram.uniform_value(eps::utils::to_int(ProgramEnum::FragmentUniformBackground), 1);
-	mProgram.uniform_value(eps::utils::to_int(ProgramEnum::FragmentUniformColor), mSurfaceColor);
-	mProgram.uniform_value(eps::utils::to_int(ProgramEnum::FragmentUniformTexel), mSurfaceTexel);
-	mSquare.render(mProgram, eps::utils::to_int(ProgramEnum::VertexAttributePosition),
-				   eps::utils::to_int(ProgramEnum::VertexAttributeTextureCoordinate));
+	//
+	mProgram.uniform_value(eps::utils::to_int(FragmentUniformSurface), 0);
+	mProgram.uniform_value(eps::utils::to_int(FragmentUniformBackground), 1);
+	mProgram.uniform_value(eps::utils::to_int(FragmentUniformColor), mSurfaceColor);
+	mProgram.uniform_value(eps::utils::to_int(FragmentUniformTexel), mSurfaceTexel);
+	mSquare.render(mProgram, eps::utils::to_int(VertexAttributePosition),
+				   eps::utils::to_int(VertexAttributeTextureCoordinate));
 }
 
 }

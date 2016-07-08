@@ -30,29 +30,9 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return false;
 	}
 
-	pugi::xml_node color_node = root_node.child("color");
+	pugi::xml_node size_node = root_node.child("size");
 
-	if (color_node.empty())
-	{
-		return false;
-	}
-
-	if (color_node.child("x").first_child().empty())
-	{
-		return false;
-	}
-
-	if (color_node.child("y").first_child().empty())
-	{
-		return false;
-	}
-
-	if (color_node.child("z").first_child().empty())
-	{
-		return false;
-	}
-
-	if (color_node.child("w").first_child().empty())
+	if (size_node.empty())
 	{
 		return false;
 	}
@@ -64,15 +44,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		mPosition = { x, y };
 	}
 
-	{
-		float x = std::atof(color_node.child("x").first_child().value());
-		float y = std::atof(color_node.child("y").first_child().value());
-		float z = std::atof(color_node.child("z").first_child().value());
-		float w = std::atof(color_node.child("w").first_child().value());
-		//
-		mColor = { x, y, z, w };
-	}
-
+	mSize = std::atof(size_node.child_value());
 	mIsEmpty = false;
 	return true;
 }
@@ -87,6 +59,6 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 	}
 
 	demo_data.mPosition = data.mPosition;
-	demo_data.mColor = data.mColor;
+	demo_data.mSize = data.mSize;
 	return true;
 }

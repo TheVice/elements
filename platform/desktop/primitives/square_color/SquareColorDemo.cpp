@@ -65,11 +65,10 @@ void SquareColorDemo::Initialize()
 void SquareColorDemo::Draw(const Library::GameTime&)
 {
 	EPS_STATE_PROGRAM(mProgram.get_product());
-	mProgram.uniform_value(
-		eps::utils::to_int(ProgramEnum::FragmentUniformTransformation), mTransform);
-	mProgram.uniform_value(eps::utils::to_int(ProgramEnum::FragmentUniformColor), mColor);
-	mSquare.render(mProgram, eps::utils::to_int(ProgramEnum::VertexAttributePosition),
-				   eps::utils::to_int(ProgramEnum::VertexAttributeTextureCoordinate));
+	mProgram.uniform_value(eps::utils::to_int(FragmentUniformTransformation), mTransform);
+	mProgram.uniform_value(eps::utils::to_int(FragmentUniformColor), mColor);
+	mSquare.render(mProgram, eps::utils::to_int(VertexAttributePosition),
+				   eps::utils::to_int(VertexAttributeTextureCoordinate));
 }
 
 }

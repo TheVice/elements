@@ -1,5 +1,5 @@
 
-#include "BlurDemo.h"
+#include "MetaballsDemo.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
 #include "rendering/passes/pass_base.h"
@@ -7,73 +7,59 @@
 #include "math/transform.h"
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
-#include "utils/std/product.h"
+#include "TestCard.h"
 #include "Game.h"
 
 namespace Rendering
 {
-RTTI_DEFINITIONS(BlurDemo)
+RTTI_DEFINITIONS(MetaballsDemo)
 
 enum ProgramEnum
 {
 	VertexAttributePosition = 0,
 	VertexAttributeTextureCoordinate = 1,
 	//
-	FragmentUniformSource = 0,
-	FragmentUniformOffset = 1
+	FragmentUniformSurface = 0
 };
 
-BlurDemo::BlurDemo(Library::Game& aGame)
+MetaballsDemo::MetaballsDemo(Library::Game& aGame)
 	: DrawableGameComponent(aGame),
 	  mProgram(),
-	  mTexture(),
 	  mSquare(),
-	  mOffset()
+	  mTexture()
 {
 }
 
-BlurDemo::~BlurDemo()
+MetaballsDemo::~MetaballsDemo()
 {
 }
 
-void BlurDemo::Initialize()
+void MetaballsDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 
-	// Build the shader program
-	if (!eps::rendering::load_program("shaders/effects/blur.prog", mProgram))
+	if (!eps::rendering::load_program("shaders/experiments/liquid/metaballs.prog", mProgram))
 	{
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}
 
-	// Load the texture
-	eps::asset_texture asset = eps::assets_storage::instance().read<eps::asset_texture>("textures/noise.png");
-
-	if (!asset.pixels())
-	{
-		throw std::runtime_error("Failed to load texture");
-	}
-
-	mTexture.set_data(asset.pixels(), asset.size(), asset.format());
-	//
-	mOffset.x = 0.5f;
-	mOffset.y = 0.75f;
+	GLenum texture_format = GL_RGBA;
+	glm::uvec2 texture_size = size;
+	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
+	MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
+	mTexture.set_data(texture_data.get(), texture_size, texture_format);
 }
 
-void BlurDemo::Draw(const Library::GameTime&)
+void MetaballsDemo::Draw(const Library::GameTime&)
 {
 	GLuint colorTexture = (*eps::utils::ptr_product(mTexture.get_product()));
 	//glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, colorTexture);
 	//
 	EPS_STATE_PROGRAM(mProgram.get_product());
-	//
-	mProgram.uniform_value(eps::utils::to_int(FragmentUniformSource), 0);
-	mProgram.uniform_value(eps::utils::to_int(FragmentUniformOffset), mOffset);
+	mProgram.uniform_value(eps::utils::to_int(FragmentUniformSurface), 0);
 	mSquare.render(mProgram, eps::utils::to_int(VertexAttributePosition),
 				   eps::utils::to_int(VertexAttributeTextureCoordinate));
-	//
-	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 }
