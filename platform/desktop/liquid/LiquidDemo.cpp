@@ -45,6 +45,9 @@ void LiquidDemo::Initialize()
 
 	renderer->set_color(sColor.x, sColor.y, sColor.z, sColor.w);
 	renderer->acceleration(sGravity.x, sGravity.y, sGravity.z);
+	//
+	glEnable(GL_POINT_SPRITE);
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 }
 
 void LiquidDemo::Update(const Library::GameTime&)

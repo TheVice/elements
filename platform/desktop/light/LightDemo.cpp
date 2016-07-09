@@ -45,6 +45,9 @@ void LightDemo::Initialize()
 	}
 
 	renderer->set_color(sColor);
+	//
+	glEnable(GL_POINT_SPRITE);
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 }
 
 void LightDemo::Update(const Library::GameTime&)
