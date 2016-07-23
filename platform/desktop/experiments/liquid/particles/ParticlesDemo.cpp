@@ -23,12 +23,22 @@ static std::atomic<int> mTranslateX(0);
 static std::atomic<int> mTranslateY(0);
 static std::atomic<int> mTranslateZ(0);
 static std::atomic<int> mSize_(0);
+
+static std::atomic<int> mX1(0);
+static std::atomic<int> mY1(0);
+static std::atomic<int> mX2(0);
+static std::atomic<int> mY2(0);
+static std::atomic<int> mX3(0);
+static std::atomic<int> mY3(0);
+static std::atomic<int> mX4(0);
+static std::atomic<int> mY4(0);
+
 static std::atomic<bool> mChanged(false);
 static std::atomic<bool> mStop(false);
 
 enum ElementIDs
 {
-	TextShearX = 1,
+	TextShearX = 100,
 	TextShearY,
 	TextShearZ,
 	TextScaleX,
@@ -39,7 +49,16 @@ enum ElementIDs
 	TextTranslateZ,
 	TextSize,
 	//
-	EditShearX = 100,
+	TextX1,
+	TextY1,
+	TextX2,
+	TextY2,
+	TextX3,
+	TextY3,
+	TextX4,
+	TextY4,
+	//
+	EditShearX = 200,
 	EditShearY,
 	EditShearZ,
 	EditScaleX,
@@ -50,7 +69,16 @@ enum ElementIDs
 	EditTranslateZ,
 	EditSize,
 	//
-	UpDownShearX = 1000,
+	EditX1,
+	EditY1,
+	EditX2,
+	EditY2,
+	EditX3,
+	EditY3,
+	EditX4,
+	EditY4,
+	//
+	UpDownShearX = 300,
 	UpDownShearY,
 	UpDownShearZ,
 	UpDownScaleX,
@@ -59,7 +87,16 @@ enum ElementIDs
 	UpDownTranslateX,
 	UpDownTranslateY,
 	UpDownTranslateZ,
-	UpDownSize
+	UpDownSize,
+	//
+	UpDownX1,
+	UpDownY1,
+	UpDownX2,
+	UpDownY2,
+	UpDownX3,
+	UpDownY3,
+	UpDownX4,
+	UpDownY4
 };
 
 void ProcessWindow(HWND aWindow, int aCmdShow, const TCHAR* aClassName, HINSTANCE aInstance)
@@ -199,6 +236,94 @@ LRESULT WINAPI WinProc(HWND aHwnd, UINT aMsg, WPARAM aWparam, LPARAM aLparam)
 
 						break;
 
+					case EditX1:
+						value = GetNumericUpDownValue(aHwnd, UpDownX1);
+
+						if (mX1.load() != value)
+						{
+							mX1.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
+					case EditY1:
+						value = GetNumericUpDownValue(aHwnd, UpDownY1);
+
+						if (mY1.load() != value)
+						{
+							mY1.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
+					case EditX2:
+						value = GetNumericUpDownValue(aHwnd, UpDownX2);
+
+						if (mX2.load() != value)
+						{
+							mX2.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
+					case EditY2:
+						value = GetNumericUpDownValue(aHwnd, UpDownY2);
+
+						if (mY2.load() != value)
+						{
+							mY2.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
+					case EditX3:
+						value = GetNumericUpDownValue(aHwnd, UpDownX3);
+
+						if (mX3.load() != value)
+						{
+							mX3.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
+					case EditY3:
+						value = GetNumericUpDownValue(aHwnd, UpDownY3);
+
+						if (mY3.load() != value)
+						{
+							mY3.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
+					case EditX4:
+						value = GetNumericUpDownValue(aHwnd, UpDownX4);
+
+						if (mX4.load() != value)
+						{
+							mX4.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
+					case EditY4:
+						value = GetNumericUpDownValue(aHwnd, UpDownY4);
+
+						if (mY4.load() != value)
+						{
+							mY4.store(value);
+							mChanged.store(true);
+						}
+
+						break;
+
 					default:
 						break;
 				}
@@ -220,7 +345,7 @@ void CreateAndProcessWindow(HINSTANCE aInstance, int aX, int aY)
 {
 	auto className = TEXT("Win32Controls");
 	auto windowTitle = TEXT("Matrix Elements");
-	const HWND window = MakeWindow(className, windowTitle, aInstance, aX, aY, 300, 320, WinProc);
+	const HWND window = MakeWindow(className, windowTitle, aInstance, aX, aY, 400, 320, WinProc);
 	//
 	{
 		int x = 10;
@@ -235,6 +360,49 @@ void CreateAndProcessWindow(HINSTANCE aInstance, int aX, int aY)
 		numericUpDownHeight = static_cast<int>(1.25 * dy);
 		NumericUpDown(dx, y, numericUpDownWidth, numericUpDownHeight, window, EditShearX, UpDownShearX,
 					  aInstance, -1000, 1000, mShearX.load());
+		{
+			int x1 = x + dx + numericUpDownWidth + 25;
+			int y1 = y;
+			int dx1 = x1 + 100;
+			Text(x1, y1, TEXT("Vertex X1"), window, TextX1, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditX1, UpDownX1,
+						  aInstance, -100, 100, mX1.load());
+			//
+			y1 += static_cast<int>(1.5 * dy);
+			Text(x1, y1, TEXT("Vertex Y1"), window, TextY1, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditY1, UpDownY1,
+						  aInstance, -100, 100, mY1.load());
+			//
+			y1 += static_cast<int>(1.5 * dy);
+			Text(x1, y1, TEXT("Vertex X2"), window, TextX2, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditX2, UpDownX2,
+						  aInstance, -100, 100, mX2.load());
+			//
+			y1 += static_cast<int>(1.5 * dy);
+			Text(x1, y1, TEXT("Vertex Y2"), window, TextY2, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditY2, UpDownY2,
+						  aInstance, -100, 100, mY2.load());
+			//
+			y1 += static_cast<int>(1.5 * dy);
+			Text(x1, y1, TEXT("Vertex X3"), window, TextX3, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditX3, UpDownX3,
+						  aInstance, -100, 100, mX3.load());
+			//
+			y1 += static_cast<int>(1.5 * dy);
+			Text(x1, y1, TEXT("Vertex Y3"), window, TextY3, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditY3, UpDownY3,
+						  aInstance, -100, 100, mY3.load());
+			//
+			y1 += static_cast<int>(1.5 * dy);
+			Text(x1, y1, TEXT("Vertex X4"), window, TextX4, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditX4, UpDownX4,
+						  aInstance, -100, 100, mX4.load());
+			//
+			y1 += static_cast<int>(1.5 * dy);
+			Text(x1, y1, TEXT("Vertex Y4"), window, TextY4, aInstance, hdc);
+			NumericUpDown(dx1, y1, numericUpDownWidth, numericUpDownHeight, window, EditY4, UpDownY4,
+						  aInstance, -100, 100, mY4.load());
+		}
 		//
 		y += static_cast<int>(1.5 * dy);
 		Text(x, y, TEXT("Y Shear:"), window, TextShearY, aInstance, hdc);
@@ -358,6 +526,15 @@ void ParticlesDemo::Initialize()
 	//
 	mSize_.store(100 * mSize);
 	//
+	mX1.store(0);
+	mY1.store(10);
+	mX2.store(10);
+	mY2.store(10);
+	mX3.store(10);
+	mY3.store(0);
+	mX4.store(0);
+	mY4.store(0);
+	//
 	glEnable(GL_POINT_SPRITE);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	//
@@ -380,6 +557,32 @@ void ParticlesDemo::Update(const Library::GameTime&)
 		SetTranslate(glm::vec3(mTranslateX.load() / 100, mTranslateY.load() / 100, mTranslateZ.load() / 100),
 					 mTransform);
 		mSize = mSize_.load() / 100;
+		//
+		const glm::vec2 positionVertices[] =
+		{
+			{ mX1.load() / 10, mY1.load() / 10 },
+			{ mX2.load() / 10, mY2.load() / 10 },
+			{ mX3.load() / 10, mY3.load() / 10 },
+			{ mX4.load() / 10, mY4.load() / 10 }
+		};
+		//
+		const glm::vec2 textureVertices[] =
+		{
+			{ 0.0f, 1.0f },
+			{ 1.0f, 1.0f },
+			{ 1.0f, 0.0f },
+			{ 0.0f, 0.0f }
+		};
+		//
+		GLfloat vertices[] =
+		{
+			positionVertices[0].x, positionVertices[0].y, textureVertices[0].x, textureVertices[0].y,
+			positionVertices[1].x, positionVertices[1].y, textureVertices[1].x, textureVertices[1].y,
+			positionVertices[2].x, positionVertices[2].y, textureVertices[2].x, textureVertices[2].y,
+			positionVertices[3].x, positionVertices[3].y, textureVertices[3].x, textureVertices[3].y
+		};
+		//
+		mSquare.construct(vertices);
 	}
 }
 #endif
