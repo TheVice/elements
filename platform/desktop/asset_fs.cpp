@@ -63,7 +63,7 @@ asset_fs::asset_fs()
 
 eps::io::file* asset_fs::open(const std::string& file)
 {
-	return nullptr;
+	return new asset_stream(file);
 }
 
 bool asset_fs::exists(const std::string& file)

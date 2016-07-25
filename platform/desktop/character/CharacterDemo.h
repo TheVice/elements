@@ -27,6 +27,7 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	glm::vec2 mThetaAndPhi;
 	int mRenderId;
 	typedef renderer_factory<character_renderer> character_renderer_factory;
 	std::unique_ptr<character_renderer_factory> mCharacterRendererFactory;
