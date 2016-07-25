@@ -8,9 +8,6 @@ endif()
 project("elements")
 
 if(MSVC)
-  # if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18.0)
-  #   message(FATAL_ERROR "Could not support Visual Studio less than 2013")
-  # endif()
   # if(NOT CHARACTER_SET)
   #   add_definitions(-D_UNICODE -DUNICODE)
   # else()
@@ -24,6 +21,7 @@ if(WIN32)
   add_definitions(-DWIN32)
   add_definitions(-D_WIN32)
   add_definitions(-D_WINDOWS)
+  add_definitions(-DNOCOMM)
   add_definitions(-DWIN32_LEAN_AND_MEAN)
   add_definitions(-D_WIN32_WINNT=0x0500)
 endif()
@@ -125,23 +123,6 @@ if(WIN32)
   list(APPEND REQUIRED_SYS_INCLUDES ${glm_Path})
 endif()
 
-# z
-if(WIN32)
-  if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/zlib)
-    set(zlib_Path ${CMAKE_SOURCE_DIR}/third-party/zlib)
-  elseif(DEFINED ENV{ZLIB_PATH})
-    string(REPLACE "\\" "/" zlib_Path $ENV{ZLIB_PATH})
-  elseif(DEFINED ZLIB_PATH)
-    string(REPLACE "\\" "/" zlib_Path ${ZLIB_PATH})
-  else()
-    message(FATAL_ERROR "Could not find zlib library, please check it at https://sourceforge.net/projects/libpng/files/zlib/")
-  endif()
-
-  file(GLOB ZLIB_SRC_FILES ${zlib_Path}/*.h ${zlib_Path}/*.c)
-  add_library(z STATIC ${ZLIB_SRC_FILES})
-  list(APPEND REQUIRED_SYS_INCLUDES ${zlib_Path})
-endif()
-
 # libpng
 if(WIN32)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/libpng)
@@ -178,6 +159,52 @@ if(WIN32)
   list(APPEND REQUIRED_SYS_INCLUDES ${pugixml_Path}/src)
 endif()
 
+# assimp
+if(WIN32)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/assimp/code)
+    set(assimp_Path ${CMAKE_SOURCE_DIR}/third-party/assimp)
+  elseif(EXISTS ${CMAKE_SOURCE_DIR}/third-party/assimp-3.2/code)
+    set(assimp_Path ${CMAKE_SOURCE_DIR}/third-party/assimp-3.2)
+  elseif(DEFINED ENV{ASSIMP_PATH})
+    string(REPLACE "\\" "/" assimp_Path $ENV{ASSIMP_PATH})
+  elseif(DEFINED ASSIMP_PATH)
+    string(REPLACE "\\" "/" assimp_Path ${ASSIMP_PATH})
+  else()
+    message(FATAL_ERROR "Could not find assimp library, please check it at https://github.com/assimp/assimp/releases")
+  endif()
+
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+  set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
+  set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+  # ASSIMP_NO_EXPORT
+  # ASSIMP_BUILD_ZLIB
+  # ASSIMP_BUILD_ASSIMP_VIEW
+  # ASSIMP_INSTALL_PDB
+  add_subdirectory(${assimp_Path} ${CMAKE_BINARY_DIR}/assimp)
+
+  list(APPEND REQUIRED_SYS_INCLUDES ${assimp_Path}/include)
+endif()
+
+# z
+if(WIN32)
+  if(EXISTS ${assimp_Path}/contrib/zlib)
+    set(zlib_Path ${assimp_Path}/contrib/zlib)
+  elseif(EXISTS ${CMAKE_SOURCE_DIR}/third-party/zlib)
+    set(zlib_Path ${CMAKE_SOURCE_DIR}/third-party/zlib)
+  elseif(DEFINED ENV{ZLIB_PATH})
+    string(REPLACE "\\" "/" zlib_Path $ENV{ZLIB_PATH})
+  elseif(DEFINED ZLIB_PATH)
+    string(REPLACE "\\" "/" zlib_Path ${ZLIB_PATH})
+  else()
+    message(FATAL_ERROR "Could not find zlib library, please check it at https://sourceforge.net/projects/libpng/files/zlib/")
+  endif()
+
+  file(GLOB ZLIB_SRC_FILES ${zlib_Path}/*.h ${zlib_Path}/*.c)
+  add_library(z STATIC ${ZLIB_SRC_FILES})
+  list(APPEND REQUIRED_SYS_INCLUDES ${zlib_Path})
+endif()
+
 # oel
 set(oel_Path ${CMAKE_SOURCE_DIR}/third-party/oel)
 file(GLOB OEL_SRC_FILES ${oel_Path}/*.cpp ${oel_Path}/*.h)
@@ -194,18 +221,26 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/assets/assets_storage.h
                        ${elements_Path}/assets/asset_blob.cpp
                        ${elements_Path}/assets/asset_blob.h
-                       ${elements_Path}/assets/asset_operations.h
-                       ${elements_Path}/assets/asset_operations_stream.cpp
-                       ${elements_Path}/assets/asset_operations_stream.h
+                       ${elements_Path}/assets/asset_model.cpp
+                       ${elements_Path}/assets/asset_model.h
                        ${elements_Path}/assets/asset_texture.cpp
                        ${elements_Path}/assets/asset_texture.h
                        ${elements_Path}/assets/asset_xml.cpp
                        ${elements_Path}/assets/asset_xml.h
 
+                       ${elements_Path}/io/file.h
+                       ${elements_Path}/io/path.cpp
+                       ${elements_Path}/io/path.h
+                       ${elements_Path}/io/system.h
+
+                       ${elements_Path}/io/utils/file_guard.h
+
                        ${elements_Path}/math/common.h
                        ${elements_Path}/math/constants.h
                        ${elements_Path}/math/geometric.h
+                       ${elements_Path}/math/matrix.h
                        ${elements_Path}/math/transform.h
+                       ${elements_Path}/math/trigonometry.h
                        ${elements_Path}/math/types.h
 
                        ${elements_Path}/metrics/metrics.cpp
@@ -244,6 +279,13 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/effects/tone.cpp
                        ${elements_Path}/rendering/effects/tone.h
 
+                       ${elements_Path}/rendering/models/model.cpp
+                       ${elements_Path}/rendering/models/model.h
+                       ${elements_Path}/rendering/models/model_warehouse.cpp
+                       ${elements_Path}/rendering/models/model_warehouse.h
+                       ${elements_Path}/rendering/models/process.cpp
+                       ${elements_Path}/rendering/models/process.h
+
                        ${elements_Path}/rendering/passes/pass_base.h
                        ${elements_Path}/rendering/passes/pass_composition.cpp
                        ${elements_Path}/rendering/passes/pass_composition.h
@@ -264,8 +306,30 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/state/state_macro.h
                        ${elements_Path}/rendering/state/state_traits.h
 
+                       ${elements_Path}/rendering/utils/model_loader.cpp
+                       ${elements_Path}/rendering/utils/model_loader.h
                        ${elements_Path}/rendering/utils/program_loader.cpp
                        ${elements_Path}/rendering/utils/program_loader.h
+
+                       ${elements_Path}/scene/world.cpp
+                       ${elements_Path}/scene/world.h
+
+                       ${elements_Path}/scene/camera/camera.cpp
+                       ${elements_Path}/scene/camera/camera.h
+
+                       ${elements_Path}/scene/graph/graph.cpp
+                       ${elements_Path}/scene/graph/graph.h
+                       ${elements_Path}/scene/graph/node.cpp
+                       ${elements_Path}/scene/graph/node.h
+                       ${elements_Path}/scene/graph/visitor.h
+
+                       ${elements_Path}/scene/light/light.cpp
+                       ${elements_Path}/scene/light/light.h
+
+                       ${elements_Path}/scene/object/materials.h
+                       ${elements_Path}/scene/object/mesh.h
+                       ${elements_Path}/scene/object/object.h
+                       ${elements_Path}/scene/object/vertices.h
 
                        # ${elements_Path}/simulation/air/system.cpp
                        # ${elements_Path}/simulation/air/system.h
@@ -316,8 +380,10 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/utils/std/dependency_index.h
                        ${elements_Path}/utils/std/enum.h
                        ${elements_Path}/utils/std/iterator_range.h
+                       ${elements_Path}/utils/std/optional.h
                        ${elements_Path}/utils/std/pointer.h
-                       ${elements_Path}/utils/std/product.h)
+                       ${elements_Path}/utils/std/product.h
+                       ${elements_Path}/utils/std/values.h)
 
 add_library(elements ${ELEMENTS_SRC_FILES})
 target_include_directories(elements PRIVATE ${elements_Path})
@@ -352,6 +418,7 @@ list(APPEND REQUIRED_LIBRARIES pugixml)
 list(APPEND REQUIRED_LIBRARIES oel)
 list(APPEND REQUIRED_LIBRARIES GLEW)
 list(APPEND REQUIRED_LIBRARIES glfw)
+list(APPEND REQUIRED_LIBRARIES assimp)
 if(WIN32)
   list(APPEND REQUIRED_LIBRARIES glu32)
   list(APPEND REQUIRED_LIBRARIES opengl32)
@@ -371,7 +438,6 @@ foreach(SHADER_FILE ${SHADER_FILES})
     string(FIND ${app_path} "/" pos1 REVERSE)
 
     if(${pos1} GREATER -1)
-      string(LENGTH ${app_path} string_length)
       string(SUBSTRING ${app_path} 0 ${pos1} tmp_path)
       string(FIND ${tmp_path} "/" pos2 REVERSE)
 
@@ -381,7 +447,7 @@ foreach(SHADER_FILE ${SHADER_FILES})
         set(pos2 0)
       endif()
 
-      string(SUBSTRING ${app_path} ${pos2} ${string_length} app_path)
+      string(SUBSTRING ${app_path} ${pos2} -1 app_path)
       string(REPLACE "/" "_" app_path ${app_path})
     endif()
 

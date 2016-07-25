@@ -1,6 +1,7 @@
 
 #include "RenderingGame.h"
-#include "desktop_asset_reader.h"
+#include "asset_fs.h"
+#include "assets/assets_storage.h"
 #include <glm/gtc/constants.hpp>
 
 namespace Rendering
@@ -19,7 +20,7 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::init<desktop_asset_reader>();
+	eps::assets_storage::instance().mount<asset_fs>("");
 	//
 	mSquareTextureAlphaDemo = std::make_unique<SquareTextureAlphaDemo>(*this);
 	mComponents.push_back(mSquareTextureAlphaDemo.get());

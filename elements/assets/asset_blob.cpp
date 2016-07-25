@@ -22,14 +22,20 @@ IN THE SOFTWARE.
 */
 
 #include "asset_blob.h"
-#include "asset_operations.h"
+#include "io/utils/file_guard.h"
 
 namespace eps {
 
-bool asset_blob::load(asset_read_operation * opt)
+bool asset_blob::load(utils::link<io::system> fs, const std::string & resource)
 {
-    blob_.resize(opt->size());
-    return opt->read(blob_.data(), blob_.size()) == opt->size();
+    io::file_guard stream(fs, resource);
+    if(stream.valid())
+    {
+        blob_.resize(stream.size());
+        return stream.read(blob_.data(), 1, blob_.size()) == stream.size();
+    }
+
+    return false;
 }
 
 }

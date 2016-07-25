@@ -25,64 +25,11 @@ IN THE SOFTWARE.
 #define ASSETS_ASSETS_H_INCLUDED
 
 #include <string>
+#include "utils/std/pointer.h"
 
 namespace eps {
 
-namespace details {
-
-    template<typename... _Types>
-    struct asset_visitor;
-
-    template<typename _T>
-    struct asset_visitor<_T>
-    {
-        virtual bool visit(_T & /*asset*/) { return false; }
-    };
-
-    template<typename _T, typename... _Types>
-    struct asset_visitor<_T, _Types...> : public asset_visitor<_Types...>
-    {
-        using asset_visitor<_Types...>::visit;
-        virtual bool visit(_T & /*asset*/) { return false; }
-    };
-
-    template<typename... _Types>
-    struct asset_dispatcher
-    {
-        virtual bool accept(asset_visitor<_Types...> & visitor) = 0;
-    };
-}
-
-struct asset;
-struct asset_texture;
-struct asset_blob;
-struct asset_xml;
-
-using asset_visitor_base = details::asset_visitor
-<
-    asset_texture,
-    asset_blob,
-    asset_xml
->;
-using asset_dispatcher_base = details::asset_dispatcher
-<
-    asset_texture,
-    asset_blob,
-    asset_xml
->;
-
-using asset_visitor = asset_visitor_base;
-
-template<typename _Asset>
-struct asset_dispatcher : public asset_dispatcher_base
-{
-    bool accept(asset_visitor & visitor) final
-    {
-        return visitor.visit(*static_cast<_Asset*>(this));
-    }
-};
-
-struct asset_read_operation;
+namespace io { struct system; }
 
 struct asset
 {
@@ -101,11 +48,11 @@ struct asset
     asset(asset &&) = default;
     asset & operator=(asset&&) = default;
 
-    const std::string & resource() const { return resource_; }
+    const std::string & get_resource() const { return resource_; }
 
 public:
 
-    virtual bool load(asset_read_operation * opt) = 0;
+    virtual bool load(utils::link<io::system> fs, const std::string & resource) = 0;
 
 private:
 

@@ -1,30 +1,7 @@
 
 #include "SettingsReader.h"
+#include "ReaderHelpers.h"
 #include "assets/assets_storage.h"
-#include <cstdlib>
-
-bool read_glm_vec2(const pugi::xml_node& aNode, glm::vec2& aValue)
-{
-	if (aNode.empty())
-	{
-		return false;
-	}
-
-	if (aNode.child("x").first_child().empty())
-	{
-		return false;
-	}
-
-	if (aNode.child("y").first_child().empty())
-	{
-		return false;
-	}
-
-	aValue.x = std::atof(aNode.child("x").first_child().value());
-	aValue.y = std::atof(aNode.child("y").first_child().value());
-	//
-	return true;
-}
 
 bool SettingsReader::read(const pugi::xml_document& doc)
 {
@@ -82,15 +59,15 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 {
 	auto data = eps::assets_storage::instance().read<SettingsReader>(demo_data_asset);
 
-	if (data.mIsEmpty)
+	if (!data || data.value().mIsEmpty)
 	{
 		return false;
 	}
 
-	demo_data.mExposure = data.mExposure;
-	demo_data.mDecay = data.mDecay;
-	demo_data.mDensity = data.mDensity;
-	demo_data.mWeight = data.mWeight;
-	demo_data.mLightPosition = data.mLightPosition;
+	demo_data.mExposure = data.value().mExposure;
+	demo_data.mDecay = data.value().mDecay;
+	demo_data.mDensity = data.value().mDensity;
+	demo_data.mWeight = data.value().mWeight;
+	demo_data.mLightPosition = data.value().mLightPosition;
 	return true;
 }

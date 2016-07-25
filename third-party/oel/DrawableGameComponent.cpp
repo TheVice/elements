@@ -5,24 +5,24 @@ namespace Library
 {
 RTTI_DEFINITIONS(DrawableGameComponent)
 
-DrawableGameComponent::DrawableGameComponent()
-	: GameComponent(),
-	  mVisible(true),
-	  mCamera(nullptr)
+DrawableGameComponent::DrawableGameComponent() :
+	GameComponent(),
+	mVisible(true),
+	mCamera(nullptr)
 {
 }
 
-DrawableGameComponent::DrawableGameComponent(Game& aGame)
-	: GameComponent(aGame),
-	  mVisible(true),
-	  mCamera(nullptr)
+DrawableGameComponent::DrawableGameComponent(Game& aGame) :
+	GameComponent(aGame),
+	mVisible(true),
+	mCamera(nullptr)
 {
 }
 
-DrawableGameComponent::DrawableGameComponent(Game& aGame, Camera& aCamera)
-	: GameComponent(aGame),
-	  mVisible(true),
-	  mCamera(&aCamera)
+DrawableGameComponent::DrawableGameComponent(Game& aGame, Camera& aCamera) :
+	GameComponent(aGame),
+	mVisible(true),
+	mCamera(&aCamera)
 {
 }
 

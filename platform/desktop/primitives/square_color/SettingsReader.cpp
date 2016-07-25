@@ -1,7 +1,7 @@
 
 #include "SettingsReader.h"
+#include "ReaderHelpers.h"
 #include "assets/assets_storage.h"
-#include <cstdlib>
 
 bool SettingsReader::read(const pugi::xml_document& doc)
 {
@@ -81,12 +81,12 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 {
 	auto data = eps::assets_storage::instance().read<SettingsReader>(demo_data_asset);
 
-	if (data.mIsEmpty)
+	if (!data || data.value().mIsEmpty)
 	{
 		return false;
 	}
 
-	demo_data.mPosition = data.mPosition;
-	demo_data.mColor = data.mColor;
+	demo_data.mPosition = data.value().mPosition;
+	demo_data.mColor = data.value().mColor;
 	return true;
 }

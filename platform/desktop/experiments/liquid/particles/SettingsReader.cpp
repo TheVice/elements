@@ -1,7 +1,7 @@
 
 #include "SettingsReader.h"
+#include "ReaderHelpers.h"
 #include "assets/assets_storage.h"
-#include <cstdlib>
 
 bool SettingsReader::read(const pugi::xml_document& doc)
 {
@@ -37,11 +37,9 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return false;
 	}
 
+	if (!read_glm_vec2(position_node, mPosition))
 	{
-		float x = std::atof(position_node.child("x").first_child().value());
-		float y = std::atof(position_node.child("y").first_child().value());
-		//
-		mPosition = { x, y };
+		return false;
 	}
 
 	mSize = std::atof(size_node.child_value());
@@ -53,12 +51,12 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 {
 	auto data = eps::assets_storage::instance().read<SettingsReader>(demo_data_asset);
 
-	if (data.mIsEmpty)
+	if (!data || data.value().mIsEmpty)
 	{
 		return false;
 	}
 
-	demo_data.mPosition = data.mPosition;
-	demo_data.mSize = data.mSize;
+	demo_data.mPosition = data.value().mPosition;
+	demo_data.mSize = data.value().mSize;
 	return true;
 }

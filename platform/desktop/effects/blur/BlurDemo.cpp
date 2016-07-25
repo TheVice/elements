@@ -47,14 +47,14 @@ void BlurDemo::Initialize()
 	}
 
 	// Load the texture
-	eps::asset_texture asset = eps::assets_storage::instance().read<eps::asset_texture>("textures/noise.png");
+	auto asset = eps::assets_storage::instance().read<eps::asset_texture>("textures/noise.png");
 
-	if (!asset.pixels())
+	if (!asset.value().pixels())
 	{
 		throw std::runtime_error("Failed to load texture");
 	}
 
-	mTexture.set_data(asset.pixels(), asset.size(), asset.format());
+	mTexture.set_data(asset.value().pixels(), asset.value().size(), asset.value().format());
 	//
 	mOffset.x = 0.5f;
 	mOffset.y = 0.75f;
