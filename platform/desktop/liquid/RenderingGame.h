@@ -2,15 +2,11 @@
 #define _RENDERING_GAME_H_
 
 #include "Game.h"
-#if !defined(_MSC_VER) || defined(__clang__)
 #include "LiquidDemo.h"
-#endif
 #include <glm/glm.hpp>
-#include <memory>
 
 namespace Rendering
 {
-class LiquidDemo;
 class RenderingGame : public Library::Game
 {
 public:

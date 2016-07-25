@@ -1,9 +1,8 @@
 
 #include "RenderingGame.h"
-#if defined (_MSC_VER) && !defined(__clang__)
-#include "LightDemo.h"
-#endif
-#include "desktop_asset_reader.h"
+#include "asset_fs.h"
+#include "assets/assets_storage.h"
+#include "preferences.h"
 #include "metrics.h"
 #include <glm/gtc/constants.hpp>
 
@@ -14,7 +13,6 @@ RenderingGame::RenderingGame(const TCHAR* aWindowTitle)
 	  mKeyboardHandler(nullptr),
 	  mLightDemo(nullptr)
 {
-	//mIsDepthStencilBufferEnabled = true;
 }
 
 void RenderingGame::Initialize()
@@ -24,7 +22,9 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::init<desktop_asset_reader>();
+	eps::assets_storage::instance().mount<asset_fs>("");
+	//
+	eps::preferences::init<preferences>();
 	//
 	eps::metrics::init<metrics>(1.0f);
 	//

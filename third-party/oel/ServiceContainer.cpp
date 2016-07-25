@@ -4,8 +4,8 @@
 namespace Library
 {
 
-ServiceContainer::ServiceContainer()
-	: mServices()
+ServiceContainer::ServiceContainer() :
+	mServices()
 {
 }
 

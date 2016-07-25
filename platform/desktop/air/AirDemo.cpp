@@ -4,7 +4,6 @@
 #include "air_renderer.h"
 #endif
 #include "Game.h"
-#include <memory>
 
 namespace Rendering
 {
