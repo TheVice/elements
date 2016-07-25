@@ -2,15 +2,16 @@
 #define _GAME_H_
 
 #include "RTTI.h"
-#include "GameTime.h"
-#include "GameClock.h"
 #include "ServiceContainer.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <functional>
 #include <vector>
 #include <sstream>
-#ifndef WIN32
+#ifdef WIN32
+#include <tchar.h>
+#include <windows.h>
+#else
 #include <X11/Xlib.h>
 #define TCHAR char
 #define TEXT(A) A
@@ -19,6 +20,12 @@
 namespace Library
 {
 class GameComponent;
+
+class GameTime
+{
+public:
+	GameTime() {};
+};
 
 class Game : public RTTI
 {
@@ -47,7 +54,6 @@ public:
 	GLuint GetScreenWidth() const;
 	GLuint GetScreenHeight() const;
 
-	bool IsDebthStencilBufferEnabled() const;
 	GLfloat GetAspectRatio() const;
 	bool IsFullScreen() const;
 
@@ -62,8 +68,6 @@ public:
 
 	void AddKeyboardHandler(KeyboardHandler aHandler);
 	void RemoveKeyboardHandler(KeyboardHandler aHandler);
-
-	GLshort GetVersionOfGLSL() const;
 
 protected:
 	virtual void InitializeWindow();
@@ -83,13 +87,6 @@ protected:
 	GLuint mScreenHeight;
 	bool mIsFullScreen;
 
-	GLint mMajorVersion;
-	GLint mMinorVersion;
-	GLshort mVersionOfGLSL;
-
-	bool mIsDepthStencilBufferEnabled;
-
-	GameClock mGameClock;
 	GameTime mGameTime;
 
 	std::vector<GameComponent*> mComponents;
@@ -101,7 +98,6 @@ private:
 	static Game* sInternalInstance;
 	static std::ostringstream sGlfwErrors;
 
-	static GLshort GetVersionOfGLSL_();
 	static void OnKey(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int aMods);
 #ifndef WIN32
 	static std::pair<int, int> CenterWindow(int aWindowWidth, int aWindowHeight);

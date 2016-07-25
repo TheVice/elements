@@ -1,20 +1,19 @@
 
 #include "GameComponent.h"
-#include "GameTime.h"
 
 namespace Library
 {
 RTTI_DEFINITIONS(GameComponent)
 
-GameComponent::GameComponent()
-	: mGame(nullptr),
-	  mEnabled(true)
+GameComponent::GameComponent() :
+	mGame(nullptr),
+	mEnabled(true)
 {
 }
 
-GameComponent::GameComponent(Game& aGame)
-	: mGame(&aGame),
-	  mEnabled(true)
+GameComponent::GameComponent(Game& aGame) :
+	mGame(&aGame),
+	mEnabled(true)
 {
 }
 

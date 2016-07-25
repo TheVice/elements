@@ -1,7 +1,7 @@
 #ifndef _PREFERENCES_H_
 #define _PREFERENCES_H_
 
-#include <elements/preferences/preferences.h>
+#include "preferences/preferences.h"
 
 struct preferences : public eps::preferences_interface
 {

@@ -8,14 +8,11 @@ endif()
 project("elements")
 
 if(MSVC)
-  # if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18.0)
-  #   message(FATAL_ERROR "Could not support Visual Studio less than 2013")
-  # endif()
-  if(NOT CHARACTER_SET)
-    add_definitions(-D_UNICODE -DUNICODE)
-  else()
+  # if(NOT CHARACTER_SET)
+  #   add_definitions(-D_UNICODE -DUNICODE)
+  # else()
     add_definitions(-D_MBCS)
-  endif()
+  # endif()
   add_definitions(-DNOMINMAX)
   # message(FATAL_ERROR "Could not support Visual Studio")
 endif()
@@ -24,12 +21,14 @@ if(WIN32)
   add_definitions(-DWIN32)
   add_definitions(-D_WIN32)
   add_definitions(-D_WINDOWS)
+  add_definitions(-DNOCOMM)
   add_definitions(-DWIN32_LEAN_AND_MEAN)
   add_definitions(-D_WIN32_WINNT=0x0500)
 endif()
 
 set(REQUIRED_INCLUDES)
 set(REQUIRED_LIBRARIES)
+set(REQUIRED_SYS_INCLUDES)
 
 # freetype
 if(WIN32 OR UNIX)
@@ -44,62 +43,16 @@ if(WIN32 OR UNIX)
   else()
     message(FATAL_ERROR "Could not find freetype library, please check it at https://sourceforge.net/projects/freetype/files/")
   endif()
-  list(APPEND REQUIRED_INCLUDES ${freetype_Path}/include)
-
-  set(FREETYPE_INCLUDE_DIRS ${freetype_Path}/include ${freetype_Path}/include/freetype2)
-  set(FREETYPE_SRC_DIR ${freetype_Path}/src)
-
-  set(FREETYPE_SRC_FILES ${FREETYPE_SRC_DIR}/autofit/autofit.c
-                         ${FREETYPE_SRC_DIR}/base/ftbase.c
-                         ${FREETYPE_SRC_DIR}/base/ftbbox.c
-                         ${FREETYPE_SRC_DIR}/base/ftbdf.c
-                         ${FREETYPE_SRC_DIR}/base/ftbitmap.c
-                         ${FREETYPE_SRC_DIR}/base/ftcid.c
-                         ${FREETYPE_SRC_DIR}/base/ftfntfmt.c
-                         ${FREETYPE_SRC_DIR}/base/ftfstype.c
-                         ${FREETYPE_SRC_DIR}/base/ftgasp.c
-                         ${FREETYPE_SRC_DIR}/base/ftglyph.c
-                         ${FREETYPE_SRC_DIR}/base/ftgxval.c
-                         ${FREETYPE_SRC_DIR}/base/ftinit.c
-                         ${FREETYPE_SRC_DIR}/base/ftlcdfil.c
-                         ${FREETYPE_SRC_DIR}/base/ftmm.c
-                         ${FREETYPE_SRC_DIR}/base/ftotval.c
-                         ${FREETYPE_SRC_DIR}/base/ftpatent.c
-                         ${FREETYPE_SRC_DIR}/base/ftpfr.c
-                         ${FREETYPE_SRC_DIR}/base/ftstroke.c
-                         ${FREETYPE_SRC_DIR}/base/ftsynth.c
-                         ${FREETYPE_SRC_DIR}/base/ftsystem.c
-                         ${FREETYPE_SRC_DIR}/base/fttype1.c
-                         ${FREETYPE_SRC_DIR}/base/ftwinfnt.c
-                         ${FREETYPE_SRC_DIR}/bdf/bdf.c
-                         ${FREETYPE_SRC_DIR}/bzip2/ftbzip2.c
-                         ${FREETYPE_SRC_DIR}/cache/ftcache.c
-                         ${FREETYPE_SRC_DIR}/cff/cff.c
-                         ${FREETYPE_SRC_DIR}/cid/type1cid.c
-                         ${FREETYPE_SRC_DIR}/gzip/ftgzip.c
-                         ${FREETYPE_SRC_DIR}/lzw/ftlzw.c
-                         ${FREETYPE_SRC_DIR}/pcf/pcf.c
-                         ${FREETYPE_SRC_DIR}/pfr/pfr.c
-                         ${FREETYPE_SRC_DIR}/psaux/psaux.c
-                         ${FREETYPE_SRC_DIR}/pshinter/pshinter.c
-                         ${FREETYPE_SRC_DIR}/psnames/psnames.c
-                         ${FREETYPE_SRC_DIR}/raster/raster.c
-                         ${FREETYPE_SRC_DIR}/sfnt/sfnt.c
-                         ${FREETYPE_SRC_DIR}/smooth/smooth.c
-                         ${FREETYPE_SRC_DIR}/truetype/truetype.c
-                         ${FREETYPE_SRC_DIR}/type1/type1.c
-                         ${FREETYPE_SRC_DIR}/type42/type42.c
-                         ${FREETYPE_SRC_DIR}/winfonts/winfnt.c)
-
-  add_library(freetype SHARED ${FREETYPE_SRC_FILES})
 
   if(MSVC)
-    if(EXISTS "${freetype_Path}/config/ftoption.h")
-      target_compile_definitions(freetype PRIVATE FT_CONFIG_OPTIONS_H="${freetype_Path}/config/ftoption.h")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
     endif()
   endif()
-  target_compile_definitions(freetype PRIVATE FT2_BUILD_LIBRARY)
-  target_include_directories(freetype SYSTEM PRIVATE ${FREETYPE_INCLUDE_DIRS})
+
+  add_subdirectory(${freetype_Path} ${CMAKE_BINARY_DIR}/freetype)
+
+  list(APPEND REQUIRED_SYS_INCLUDES ${freetype_Path}/include)
 endif()
 
 # glew
@@ -127,7 +80,7 @@ if(WIN32)
   else()
     set_target_properties(GLEW PROPERTIES COMPILE_FLAGS "-w")
   endif(MSVC)
-  list(APPEND REQUIRED_INCLUDES ${glew_Path}/include)
+  list(APPEND REQUIRED_SYS_INCLUDES ${glew_Path}/include)
 endif()
 list(APPEND REQUIRED_LIBRARIES GLEW)
 
@@ -136,8 +89,8 @@ if(UNIX)
   add_definitions(-DGLFW_EXPOSE_NATIVE_X11)
   add_definitions(-DGLFW_EXPOSE_NATIVE_GLX)
 else()
-  if(EXISTS ${CMAKE_SOURCE_DIR}/external/glfw)
-    set(glfw_Path ${CMAKE_SOURCE_DIR}/external/glfw)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/glfw)
+    set(glfw_Path ${CMAKE_SOURCE_DIR}/third-party/glfw)
   elseif(DEFINED ENV{GLFW_PATH})
     string(REPLACE "\\" "/" glfw_Path $ENV{GLFW_PATH})
   elseif(DEFINED GLFW_PATH)
@@ -154,7 +107,7 @@ else()
   set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
   add_subdirectory(${glfw_Path} ${CMAKE_BINARY_DIR}/glfw)
 
-  list(APPEND REQUIRED_INCLUDES ${glfw_Path}/include)
+  list(APPEND REQUIRED_SYS_INCLUDES ${glfw_Path}/include)
 endif()
 
 # glm
@@ -168,24 +121,7 @@ if(WIN32)
   else()
     message(FATAL_ERROR "Could not find glm library, please check it at https://github.com/g-truc/glm/releases")
   endif()
-  list(APPEND REQUIRED_INCLUDES ${glm_Path})
-endif()
-
-# z
-if(WIN32)
-  if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/zlib)
-    set(zlib_Path ${CMAKE_SOURCE_DIR}/third-party/zlib)
-  elseif(DEFINED ENV{ZLIB_PATH})
-    string(REPLACE "\\" "/" zlib_Path $ENV{ZLIB_PATH})
-  elseif(DEFINED ZLIB_PATH)
-    string(REPLACE "\\" "/" zlib_Path ${ZLIB_PATH})
-  else()
-    message(FATAL_ERROR "Could not find zlib library, please check it at https://sourceforge.net/projects/libpng/files/zlib/")
-  endif()
-
-  file(GLOB ZLIB_SRC_FILES ${zlib_Path}/*.c ${zlib_Path}/*.h)
-  add_library(z STATIC ${ZLIB_SRC_FILES})
-  list(APPEND REQUIRED_INCLUDES ${zlib_Path})
+  list(APPEND REQUIRED_SYS_INCLUDES ${glm_Path})
 endif()
 
 # libpng
@@ -200,11 +136,11 @@ if(WIN32)
     message(FATAL_ERROR "Could not find libpng library, please check it at https://sourceforge.net/projects/libpng/files/")
   endif()
 
-  file(GLOB LIBPNG_SRC_FILES ${libpng_Path}/*.c ${libpng_Path}/*.h)
+  file(GLOB LIBPNG_SRC_FILES ${libpng_Path}/*.h ${libpng_Path}/*.c)
   list(REMOVE_ITEM LIBPNG_SRC_FILES ${libpng_Path}/example.c ${libpng_Path}/pngtest.c)
   add_library(libpng STATIC ${LIBPNG_SRC_FILES})
   target_include_directories(libpng SYSTEM PRIVATE ${zlib_Path})
-  list(APPEND REQUIRED_INCLUDES ${libpng_Path})
+  list(APPEND REQUIRED_SYS_INCLUDES ${libpng_Path})
 endif()
 
 # pugixml
@@ -219,38 +155,80 @@ if(WIN32)
     message(FATAL_ERROR "Could not find pugixml library, please check it at https://github.com/zeux/pugixml/releases")
   endif()
 
-  file(GLOB PUGIXML_SRC_FILES ${pugixml_Path}/src/*.cpp ${pugixml_Path}/src/*.hpp)
+  file(GLOB PUGIXML_SRC_FILES ${pugixml_Path}/src/*.hpp ${pugixml_Path}/src/*.cpp)
   add_library(pugixml STATIC ${PUGIXML_SRC_FILES})
-  list(APPEND REQUIRED_INCLUDES ${pugixml_Path}/src)
+  list(APPEND REQUIRED_SYS_INCLUDES ${pugixml_Path}/src)
+endif()
+
+# assimp
+if(WIN32)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/assimp/code)
+    set(assimp_Path ${CMAKE_SOURCE_DIR}/third-party/assimp)
+  elseif(EXISTS ${CMAKE_SOURCE_DIR}/third-party/assimp-3.2/code)
+    set(assimp_Path ${CMAKE_SOURCE_DIR}/third-party/assimp-3.2)
+  elseif(DEFINED ENV{ASSIMP_PATH})
+    string(REPLACE "\\" "/" assimp_Path $ENV{ASSIMP_PATH})
+  elseif(DEFINED ASSIMP_PATH)
+    string(REPLACE "\\" "/" assimp_Path ${ASSIMP_PATH})
+  else()
+    message(FATAL_ERROR "Could not find assimp library, please check it at https://github.com/assimp/assimp/releases")
+  endif()
+
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+  set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
+  set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+  # ASSIMP_NO_EXPORT
+  # ASSIMP_BUILD_ZLIB
+  # ASSIMP_BUILD_ASSIMP_VIEW
+  # ASSIMP_INSTALL_PDB
+  add_subdirectory(${assimp_Path} ${CMAKE_BINARY_DIR}/assimp)
+
+  list(APPEND REQUIRED_SYS_INCLUDES ${assimp_Path}/include)
+endif()
+
+# z
+if(WIN32)
+  if(EXISTS ${assimp_Path}/contrib/zlib)
+    set(zlib_Path ${assimp_Path}/contrib/zlib)
+  elseif(EXISTS ${CMAKE_SOURCE_DIR}/third-party/zlib)
+    set(zlib_Path ${CMAKE_SOURCE_DIR}/third-party/zlib)
+  elseif(DEFINED ENV{ZLIB_PATH})
+    string(REPLACE "\\" "/" zlib_Path $ENV{ZLIB_PATH})
+  elseif(DEFINED ZLIB_PATH)
+    string(REPLACE "\\" "/" zlib_Path ${ZLIB_PATH})
+  else()
+    message(FATAL_ERROR "Could not find zlib library, please check it at https://sourceforge.net/projects/libpng/files/zlib/")
+  endif()
+
+  file(GLOB ZLIB_SRC_FILES ${zlib_Path}/*.h ${zlib_Path}/*.c)
+  add_library(z STATIC ${ZLIB_SRC_FILES})
+  list(APPEND REQUIRED_SYS_INCLUDES ${zlib_Path})
 endif()
 
 # oel
 set(oel_Path ${CMAKE_SOURCE_DIR}/third-party/oel)
 file(GLOB OEL_SRC_FILES ${oel_Path}/*.h ${oel_Path}/*.cpp)
 add_library(oel ${OEL_SRC_FILES})
-target_include_directories(oel SYSTEM PRIVATE ${REQUIRED_INCLUDES})
+target_include_directories(oel SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${oel_Path})
 
 # elements
-set(ELEMENTS_PATH ${CMAKE_SOURCE_DIR}/elements)
-file(GLOB_RECURSE H_Files ${ELEMENTS_PATH}/*.h)
-file(GLOB_RECURSE Cpp_Files ${ELEMENTS_PATH}/*.cpp)
+set(elements_Path ${CMAKE_SOURCE_DIR}/elements)
+file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp)
 
-add_library(elements ${Cpp_Files} ${H_Files})
-target_include_directories(elements PRIVATE ${ELEMENTS_PATH})
-target_include_directories(elements SYSTEM PRIVATE ${REQUIRED_INCLUDES})
+add_library(elements ${ELEMENTS_SRC_FILES})
+target_include_directories(elements PRIVATE ${elements_Path})
+target_include_directories(elements SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
+list(APPEND REQUIRED_INCLUDES ${elements_Path})
 
 # platform library
-set(PLATFORM)
-if(WIN32 OR UNIX)
-  set(PLATFORM desktop)
-endif()
-
-file(GLOB PLATFORM_SRC_FILES ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/*.cpp)
-add_library(${PLATFORM} ${PLATFORM_SRC_FILES})
-target_include_directories(${PLATFORM} PRIVATE ${ELEMENTS_PATH} ${ELEMENTS_PATH}/..)
-target_include_directories(${PLATFORM} SYSTEM PRIVATE ${REQUIRED_INCLUDES})
-list(APPEND REQUIRED_INCLUDES ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/)
+set(platform_Path ${CMAKE_SOURCE_DIR}/platform/desktop)
+file(GLOB PLATFORM_SRC_FILES ${platform_Path}/*.h ${platform_Path}/*.cpp)
+add_library(desktop ${PLATFORM_SRC_FILES})
+target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES})
+target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
+list(APPEND REQUIRED_INCLUDES ${platform_Path})
 
 # experiments
 set(IS_SUBSYSTEM_WIN32)
@@ -258,7 +236,7 @@ if(MSVC)
   set(IS_SUBSYSTEM_WIN32 WIN32)
 endif()
 
-list(APPEND REQUIRED_LIBRARIES ${PLATFORM})
+list(APPEND REQUIRED_LIBRARIES desktop)
 list(APPEND REQUIRED_LIBRARIES elements)
 list(APPEND REQUIRED_LIBRARIES freetype)
 
@@ -271,6 +249,7 @@ list(APPEND REQUIRED_LIBRARIES z)
 list(APPEND REQUIRED_LIBRARIES pugixml)
 list(APPEND REQUIRED_LIBRARIES oel)
 list(APPEND REQUIRED_LIBRARIES glfw)
+list(APPEND REQUIRED_LIBRARIES assimp)
 if(WIN32)
   list(APPEND REQUIRED_LIBRARIES glu32)
   list(APPEND REQUIRED_LIBRARIES opengl32)
@@ -287,28 +266,46 @@ foreach(Experiment ${Experiments})
     set(Experiment_Path ${CMAKE_SOURCE_DIR}/experiments/${Experiment})
     set(ADDITION_SOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
 
-    file(GLOB SRC_FILES ${Experiment_Path}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.h ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment}/*.cpp ${Experiment_Path}/*.cpp)
-    file(GLOB ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/*.cpp ${ADDITION_SOURCE_PATH}/${Experiment}/*.h)
+    file(GLOB SRC_FILES ${Experiment_Path}/*.h
+                        ${Experiment_Path}/*.cpp
+                        ${CMAKE_SOURCE_DIR}/platform/desktop/${Experiment}/*.h
+                        ${CMAKE_SOURCE_DIR}/platform/desktop/${Experiment}/*.cpp)
 
+    file(GLOB ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/*.h
+                                 ${ADDITION_SOURCE_PATH}/${Experiment}/*.cpp)
     list(REMOVE_ITEM ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/${Experiment}_jni.cpp)
     list(APPEND SRC_FILES ${ADDITION_SRC_FILES})
 
     add_executable(${Experiment} ${IS_SUBSYSTEM_WIN32} ${SRC_FILES})
 
+    target_compile_definitions(${Experiment} PRIVATE GL_API=)
+    target_compile_definitions(${Experiment} PRIVATE GL_APICALL=)
+    target_compile_definitions(${Experiment} PRIVATE GL_GLEXT_PROTOTYPES)
+    target_compile_definitions(${Experiment} PRIVATE _USRDLL)
+    target_compile_definitions(${Experiment} PRIVATE LIBGLESV2_EXPORTS)
+
+    target_include_directories(${Experiment} PRIVATE ${REQUIRED_INCLUDES}
+                                                     ${elements_Path}/..
+                                                     ${CMAKE_SOURCE_DIR}/experiments/${Experiment}
+                                                     ${CMAKE_SOURCE_DIR}/platform/desktop/${Experiment}
+                                                     ${ADDITION_SOURCE_PATH}
+                                                     ${ADDITION_SOURCE_PATH}/${Experiment})
+    target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
     target_link_libraries(${Experiment} ${REQUIRED_LIBRARIES})
-    target_include_directories(${Experiment} PRIVATE ${ELEMENTS_PATH} ${ELEMENTS_PATH}/.. ${CMAKE_SOURCE_DIR}/experiments/${Experiment} ${CMAKE_SOURCE_DIR}/platform/${PLATFORM}/${Experiment})
-    target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_INCLUDES} ${ADDITION_SOURCE_PATH}/${Experiment}/ ${ADDITION_SOURCE_PATH})
 
     # Copy assets
     file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/shaders/* ${CMAKE_SOURCE_DIR}/assets/textures/*)
     foreach(RESOURCE_FILE ${RESOURCE_FILES})
-      string(REPLACE "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}" destination ${RESOURCE_FILE})
+      string(REPLACE "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}/assets" destination ${RESOURCE_FILE})
       add_custom_command(TARGET ${Experiment} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
     endforeach()
 
     set(ADDITION_RESOURCE_PATH)
     if(Experiment STREQUAL air)
       set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/AirWallpaper/src/main/assets)
+    endif()
+    if(Experiment STREQUAL character)
+      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/CharacterWallpaper/src/main/assets)
     endif()
     if(Experiment STREQUAL fire)
       set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/FireWallpaper/src/main/assets)
@@ -325,7 +322,7 @@ foreach(Experiment ${Experiments})
 
     file(GLOB_RECURSE RESOURCE_FILES ${ADDITION_RESOURCE_PATH}/*)
     foreach(RESOURCE_FILE ${RESOURCE_FILES})
-      string(REPLACE "${ADDITION_RESOURCE_PATH}" "${CMAKE_BINARY_DIR}" destination ${RESOURCE_FILE})
+      string(REPLACE "${ADDITION_RESOURCE_PATH}" "${CMAKE_BINARY_DIR}/assets" destination ${RESOURCE_FILE})
       add_custom_command(TARGET ${Experiment} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
     endforeach()
   endif()
@@ -337,7 +334,6 @@ if(MSVC)
     set(FLAGS "${FLAGS} -Wall -Wextra")# -Werror")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
-    add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
     add_definitions(-D__clang__)
   else()
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /EHsc /W4")

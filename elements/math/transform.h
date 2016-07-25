@@ -70,7 +70,7 @@ inline mat4 perspective(float fovy, float aspect, float near_, float far_)
     return glm::perspective(fovy, aspect, near_, far_);
 }
 #endif
-inline mat4 lookAt(const vec3 & eye, const vec3 & center, const vec3 & up)
+inline mat4 look_at(const vec3 & eye, const vec3 & center, const vec3 & up)
 {
     return glm::lookAt(eye, center, up);
 }

@@ -195,7 +195,7 @@ bool liquid_renderer::create_diagnostic_ui(const eps::math::uvec2 &)
         {
             label->set_size(128_dp, 18_dp);
             label->set_position(8_dp, 58_dp);
-            label->set_font("ui/fonts/OpenSans-Bold.ttf", std::floor(18_dp));
+            label->set_font("assets/ui/fonts/OpenSans-Bold.ttf", std::floor(18_dp));
             label->set_color(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
         }
     }
@@ -241,7 +241,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
             {
                 label->set_size(panel->get_size().x - 16_dp, 16_dp);
                 label->set_position(8_dp, panel->get_size().y - 30_dp);
-                label->set_font("ui/fonts/OpenSans-Bold.ttf", std::floor(16_dp));
+                label->set_font("assets/ui/fonts/OpenSans-Bold.ttf", std::floor(16_dp));
                 label->set_color(eps::math::vec4(0.8f, 0.8f, 0.8f, 1.0f));
                 label->set_text("Physics");
             }
@@ -251,7 +251,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
             {
                 label->set_size(panel->get_size().x - 32_dp, 16_dp);
                 label->set_position(16_dp, panel->get_size().y - 80_dp);
-                label->set_font("ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
+                label->set_font("assets/ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
                 label->set_color(eps::math::vec4(0.8f, 0.8f, 0.8f, 1.0f));
                 label->set_text("Viscosity");
             }
@@ -269,7 +269,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
             {
                 label->set_size(panel->get_size().x - 32_dp, 16_dp);
                 label->set_position(16_dp, panel->get_size().y - 116_dp);
-                label->set_font("ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
+                label->set_font("assets/ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
                 label->set_color(eps::math::vec4(0.8f, 0.8f, 0.8f, 1.0f));
                 label->set_text("Density");
             }
@@ -287,7 +287,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
             {
                 label->set_size(panel->get_size().x - 32_dp, 16_dp);
                 label->set_position(16_dp, panel->get_size().y - 150_dp);
-                label->set_font("ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
+                label->set_font("assets/ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
                 label->set_color(eps::math::vec4(0.8f, 0.8f, 0.8f, 1.0f));
                 label->set_text("Pressure");
             }
@@ -305,7 +305,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
             {
                 label->set_size(panel->get_size().x - 32_dp, 16_dp);
                 label->set_position(16_dp, panel->get_size().y - 188_dp);
-                label->set_font("ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
+                label->set_font("assets/ui/fonts/OpenSans-Regular.ttf", std::floor(16_dp));
                 label->set_color(eps::math::vec4(0.8f, 0.8f, 0.8f, 1.0f));
                 label->set_text("Elasticity");
             }
@@ -321,7 +321,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
             // restore button
             if(auto button = panel->add<eps::ui::button>().lock())
             {
-                button->set_asset("ui/textures/restore.png");
+                button->set_asset("assets/ui/textures/restore.png");
                 button->set_size(40_dp, 40_dp);
                 button->set_position(panel->get_size().x - 48_dp, 2_dp);
                 button->set_click([this]()
@@ -334,7 +334,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
             // settings button
             if(auto button = ui_->add<eps::ui::button>().lock())
             {
-                button->set_asset("ui/textures/settings.png");
+                button->set_asset("assets/ui/textures/settings.png");
                 button->set_size(40_dp, 40_dp);
                 button->set_position(size.x - 50_dp, size.y - 70_dp);
                 button->set_click([link = std::move(panel_link)]()
