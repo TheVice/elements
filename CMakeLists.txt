@@ -207,7 +207,7 @@ endif()
 
 # oel
 set(oel_Path ${CMAKE_SOURCE_DIR}/third-party/oel)
-file(GLOB OEL_SRC_FILES ${oel_Path}/*.cpp ${oel_Path}/*.h)
+file(GLOB OEL_SRC_FILES ${oel_Path}/*.h ${oel_Path}/*.cpp)
 add_library(oel ${OEL_SRC_FILES})
 target_include_directories(oel SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${oel_Path})
@@ -398,6 +398,26 @@ target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES})
 target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${platform_Path})
 
+# Copy assets
+file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper)
+file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/*
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*)
+
+add_custom_target(copyAssets)
+
+foreach(RESOURCE_FILE ${RESOURCE_FILES})
+  string(REPLACE "//" "/" sourcePath ${RESOURCE_FILE})
+  string(REPLACE ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets destination ${sourcePath})
+
+  foreach(WALLPAPER ${WALLPAPER_FOLDERS})
+    set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/${WALLPAPER}/src/main/assets)
+    string(REPLACE ${ADDITION_RESOURCE_PATH} ${CMAKE_BINARY_DIR}/assets destination ${destination})
+  endforeach()
+
+  add_custom_command(TARGET copyAssets PRE_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${sourcePath}" "${destination}")
+endforeach()
+
 # apps
 set(IS_SUBSYSTEM_WIN32)
 if(MSVC)
@@ -459,14 +479,7 @@ foreach(SHADER_FILE ${SHADER_FILES})
     target_include_directories(${app_path} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
     target_include_directories(${app_path} PRIVATE ${REQUIRED_INCLUDES})
 
-    # Copy assets
-    set(RESOURCE_FILE ${CMAKE_SOURCE_DIR}/assets/shaders/${SHADER_FILE})
-    set(destination ${CMAKE_BINARY_DIR}/shaders/${SHADER_FILE})
-    add_custom_command(TARGET ${app_path} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
-
-    set(RESOURCE_FILE ${CMAKE_SOURCE_DIR}/assets/textures/noise.png)
-    set(destination ${CMAKE_BINARY_DIR}/textures/noise.png)
-    add_custom_command(TARGET ${app_path} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
+    add_dependencies(${app_path} copyAssets)
   endif()
 endforeach()
 

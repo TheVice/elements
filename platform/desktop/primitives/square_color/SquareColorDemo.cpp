@@ -37,7 +37,7 @@ void SquareColorDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 
-	if (!eps::rendering::load_program("shaders/primitives/square_color.prog", mProgram))
+	if (!eps::rendering::load_program("assets/shaders/primitives/square_color.prog", mProgram))
 	{
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}

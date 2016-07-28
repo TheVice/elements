@@ -41,13 +41,13 @@ void BlurDemo::Initialize()
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 
 	// Build the shader program
-	if (!eps::rendering::load_program("shaders/effects/blur.prog", mProgram))
+	if (!eps::rendering::load_program("assets/shaders/effects/blur.prog", mProgram))
 	{
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}
 
 	// Load the texture
-	auto asset = eps::assets_storage::instance().read<eps::asset_texture>("textures/noise.png");
+	auto asset = eps::assets_storage::instance().read<eps::asset_texture>("assets/textures/noise.png");
 
 	if (!asset.value().pixels())
 	{

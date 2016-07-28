@@ -36,7 +36,7 @@ void SquareTextureDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 
-	if (!eps::rendering::load_program("shaders/primitives/square_texture.prog", mProgram))
+	if (!eps::rendering::load_program("assets/shaders/primitives/square_texture.prog", mProgram))
 	{
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}

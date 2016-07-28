@@ -38,7 +38,7 @@ void MetaballsDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 
-	if (!eps::rendering::load_program("shaders/experiments/liquid/metaballs.prog", mProgram))
+	if (!eps::rendering::load_program("assets/shaders/experiments/liquid/metaballs.prog", mProgram))
 	{
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}

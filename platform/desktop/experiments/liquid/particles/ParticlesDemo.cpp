@@ -36,6 +36,25 @@ static std::atomic<int> mY4(0);
 static std::atomic<bool> mChanged(false);
 static std::atomic<bool> mStop(false);
 
+/*
+void CreateAndProcessWindow(int aX, int aY)
+{
+	auto game = std::make_unique<Rendering::RenderingGame2>(TEXT("Matrices"), aX, aY);
+	game->Run();
+//	try
+//	{
+//		game->Run();
+//	}
+//	catch (const std::runtime_error& aExc)
+//	{
+//#ifndef WIN32
+//		std::cerr << aExc.what() << std::endl;
+//#else
+//		MessageBoxA(game->GetWindowHandle(), aExc.what(), "", MB_ABORTRETRYIGNORE);
+//#endif
+//	}
+*/
+
 enum ElementIDs
 {
 	TextShearX = 100,
@@ -502,7 +521,7 @@ void ParticlesDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 
-	if (!eps::rendering::load_program("shaders/experiments/liquid/particles.prog", mProgram))
+	if (!eps::rendering::load_program("assets/shaders/experiments/liquid/particles.prog", mProgram))
 	{
 		throw std::runtime_error("eps::rendering::load_program() failed");
 	}
@@ -540,6 +559,10 @@ void ParticlesDemo::Initialize()
 	//
 	mSettingsWindowThread = std::make_unique<std::thread>(CreateAndProcessWindow, GetModuleHandle(nullptr),
 							CW_USEDEFAULT, CW_USEDEFAULT);
+	/*glm::ivec2 windowPos;
+	glfwGetWindowPos(mGame->GetWindow(), &windowPos.x, &windowPos.y);
+	windowPos.x += mGame->GetScreenWidth();
+	mSettingsWindowThread = std::make_unique<std::thread>(CreateAndProcessWindow, windowPos.x, windowPos.y);*/
 #endif
 }
 #ifdef _WIN32
