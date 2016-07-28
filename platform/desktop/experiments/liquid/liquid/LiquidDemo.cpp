@@ -2,6 +2,8 @@
 #include "LiquidDemo.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "rendering/core/texture_maker.h"
+#include "rendering/core/texture_policy.h"
 #include "rendering/passes/pass_base.h"
 #include "utils/std/enum.h"
 #include "math/transform.h"
@@ -25,13 +27,13 @@ enum ProgramEnum
 	FragmentUniformTexel = 3
 };
 
-LiquidDemo::LiquidDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mProgram(),
-	  mSquare(),
-	  mTexture(),
-	  mSurfaceColor(),
-	  mSurfaceTexel()
+LiquidDemo::LiquidDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mProgram(),
+	mSquare(),
+	mTexture(),
+	mSurfaceColor(),
+	mSurfaceTexel()
 {
 }
 
@@ -52,7 +54,9 @@ void LiquidDemo::Initialize()
 	glm::uvec2 texture_size = size;
 	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
 	MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
-	mTexture.set_data(texture_data.get(), texture_size, texture_format);
+	//
+	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>(texture_format);
+	mTexture = maker.construct(texture_data.get(), size);
 	//
 	mSurfaceColor = { 0.33f, 0.098f, 0.38f, 0.44f };
 	mSurfaceTexel.x = 1.0f / size.x;

@@ -2,6 +2,8 @@
 #include "LightScatteredDemo.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "rendering/core/texture_maker.h"
+#include "rendering/core/texture_policy.h"
 #include "utils/std/enum.h"
 #include "SettingsReader.h"
 #include "TestCard.h"
@@ -24,16 +26,16 @@ enum ProgramEnum
 	FragmentUniformLightPosition = 5
 };
 
-LightScatteredDemo::LightScatteredDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mProgram(),
-	  mSquare(),
-	  mTexture(),
-	  mExposure(),
-	  mDecay(),
-	  mDensity(),
-	  mWeight(),
-	  mLightPosition()
+LightScatteredDemo::LightScatteredDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mProgram(),
+	mSquare(),
+	mTexture(),
+	mExposure(),
+	mDecay(),
+	mDensity(),
+	mWeight(),
+	mLightPosition()
 {
 }
 
@@ -54,7 +56,9 @@ void LightScatteredDemo::Initialize()
 	glm::uvec2 texture_size = size;
 	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
 	MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
-	mTexture.set_data(texture_data.get(), texture_size, texture_format);
+	//
+	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>(texture_format);
+	mTexture = maker.construct(texture_data.get(), size);
 	//
 	SettingsReader settings;
 	bool settingLoaded = load_data("settings/effects/light_scattered.xml", settings);

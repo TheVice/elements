@@ -260,9 +260,15 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/core/program.h
                        ${elements_Path}/rendering/core/shader.cpp
                        ${elements_Path}/rendering/core/shader.h
+                       ${elements_Path}/rendering/core/target.cpp
                        ${elements_Path}/rendering/core/target.h
-                       ${elements_Path}/rendering/core/target_db.h
+                       ${elements_Path}/rendering/core/target_buffered.cpp
+                       ${elements_Path}/rendering/core/target_buffered.h
+                       ${elements_Path}/rendering/core/target_maker.cpp
+                       ${elements_Path}/rendering/core/target_maker.h
+                       ${elements_Path}/rendering/core/texture.cpp
                        ${elements_Path}/rendering/core/texture.h
+                       ${elements_Path}/rendering/core/texture_maker.h
                        ${elements_Path}/rendering/core/texture_policy.h
 
                        ${elements_Path}/rendering/effects/blend.cpp

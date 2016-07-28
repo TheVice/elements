@@ -5,8 +5,6 @@
 #include "rendering/core/program.h"
 #include "rendering/core/texture.h"
 #include "rendering/primitives/square.h"
-#include "rendering/core/texture_policy.h"
-#include <GL/glew.h>
 
 namespace Rendering
 {
@@ -30,7 +28,7 @@ public:
 private:
 	eps::rendering::program mProgram;
 	eps::rendering::primitive::square mSquare;
-	eps::rendering::texture<eps::rendering::default_texture_policy> mTexture;
+	eps::rendering::texture mTexture;
 	float mExposure;
 	float mDecay;
 	float mDensity;

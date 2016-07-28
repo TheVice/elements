@@ -4,10 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "rendering/core/program.h"
 #include "rendering/core/texture.h"
-#include "rendering/core/texture_policy.h"
 #include "rendering/primitives/square.h"
-#include <GL/glew.h>
-#include <memory>
 
 namespace Rendering
 {
@@ -31,7 +28,7 @@ public:
 
 private:
 	eps::rendering::program mProgram;
-	eps::rendering::texture<eps::rendering::default_texture_policy> mTexture;
+	eps::rendering::texture mTexture;
 	eps::rendering::primitive::square mSquare;
 	glm::vec2 mOffset;
 };

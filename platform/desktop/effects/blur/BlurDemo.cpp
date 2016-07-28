@@ -2,6 +2,8 @@
 #include "BlurDemo.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "rendering/core/texture_maker.h"
+#include "rendering/core/texture_policy.h"
 #include "rendering/passes/pass_base.h"
 #include "utils/std/enum.h"
 #include "math/transform.h"
@@ -23,12 +25,12 @@ enum ProgramEnum
 	FragmentUniformOffset = 1
 };
 
-BlurDemo::BlurDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mProgram(),
-	  mTexture(),
-	  mSquare(),
-	  mOffset()
+BlurDemo::BlurDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mProgram(),
+	mTexture(),
+	mSquare(),
+	mOffset()
 {
 }
 
@@ -54,7 +56,8 @@ void BlurDemo::Initialize()
 		throw std::runtime_error("Failed to load texture");
 	}
 
-	mTexture.set_data(asset.value().pixels(), asset.value().size(), asset.value().format());
+	auto maker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>(asset->format());
+	mTexture = maker.construct(asset->pixels(), asset->size());
 	//
 	mOffset.x = 0.5f;
 	mOffset.y = 0.75f;
