@@ -1,19 +1,17 @@
 
 #include "AirDemo.h"
-#if defined (_MSC_VER) && !defined(__clang__)
-#include "air_renderer.h"
-#endif
 #include "Game.h"
+#include "android/input.h"
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(AirDemo)
 
-AirDemo::AirDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mTouchDown(false),
-	  mRenderId(-1),
-	  mAirRendererFactory(nullptr)
+AirDemo::AirDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mTouchDown(false),
+	mRenderId(-1),
+	mAirRendererFactory(nullptr)
 {
 }
 

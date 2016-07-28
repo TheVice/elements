@@ -1,20 +1,17 @@
 
 #include "FireDemo.h"
-#if defined (_MSC_VER) && !defined(__clang__)
-#include "fire_renderer.h"
-#endif
 #include "Game.h"
-#include <memory>
+#include "android/input.h"
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(FireDemo)
 
-FireDemo::FireDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mTouchDown(false),
-	  mRenderId(-1),
-	  mFireRendererFactory(nullptr)
+FireDemo::FireDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mTouchDown(false),
+	mRenderId(-1),
+	mFireRendererFactory(nullptr)
 {
 }
 
@@ -57,14 +54,16 @@ void FireDemo::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
 		mTouchDown = true;
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
 	}
 	else if (mTouchDown)
 	{
 		mTouchDown = false;
-		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP);
 	}
+
+	renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 }
 
 void FireDemo::Draw(const Library::GameTime&)
@@ -73,7 +72,7 @@ void FireDemo::Draw(const Library::GameTime&)
 	renderer->render();
 }
 
-const char* FireDemo::sBackground = "textures/background.png"; //"images/background.jpg";
+const char* FireDemo::sBackground = "assets/textures/background.png"; //"images/background.jpg";
 const glm::vec3 FireDemo::sColorHot = { 0.098f, 0.5f, 1.0f }; //# 1980ff
 const glm::vec3 FireDemo::sColorCold = { 1.0f, 0.5f, 0.098f }; //# ff8019
 const int FireDemo::sQuality = 1;

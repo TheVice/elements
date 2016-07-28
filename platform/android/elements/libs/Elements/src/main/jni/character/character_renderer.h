@@ -30,12 +30,6 @@ IN THE SOFTWARE.
 #include <elements/ui/controls/label.h>
 #include <experiments/character/renderer.h>
 
-#ifndef ANDROID
-#define AMOTION_EVENT_ACTION_DOWN 0
-#define AMOTION_EVENT_ACTION_UP   1
-#define AMOTION_EVENT_ACTION_MOVE 2
-#endif
-
 class character_renderer
 {
 public:

@@ -3,8 +3,7 @@
 
 #include "DrawableGameComponent.h"
 #include "character_renderer.h"
-#include "renderer_factory.h"
-#include <GLES2/gl2.h>
+#include "../renderer_factory.h"
 
 namespace Rendering
 {
@@ -27,6 +26,7 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	glm::vec2 mThetaAndPhi;
 	int mRenderId;
 	typedef renderer_factory<character_renderer> character_renderer_factory;
 	std::unique_ptr<character_renderer_factory> mCharacterRendererFactory;

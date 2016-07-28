@@ -102,6 +102,7 @@ const ServiceContainer& Game::GetServices() const
 
 void Game::Run()
 {
+	assert(!sInternalInstance);
 	sInternalInstance = this;
 	//
 	InitializeWindow();

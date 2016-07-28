@@ -24,25 +24,10 @@ IN THE SOFTWARE.
 #ifndef PLATFORM_ANDROID_LOGGING_H_INCLUDED
 #define PLATFORM_ANDROID_LOGGING_H_INCLUDED
 
-#ifdef ANDROID
 #include <android/log.h>
 
 #define  LOG_TAG  "Elements"
 #define  LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-
-#elif defined(WIN32)
-#include <windows.h>
-
-#define LOGI(aFormat) OutputDebugStringA(aFormat)
-#define LOGE(aFormat) LOGI(aFormat)
-
-#elif defined(__linux)
-#include <iostream>
-
-#define LOGI(aFormat) std::cout << (aFormat) << std::endl
-#define LOGE(aFormat) std::cerr << (aFormat) << std::endl
-
-#endif
 
 #endif // PLATFORM_ANDROID_LOGGING_H_INCLUDED

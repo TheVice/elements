@@ -242,6 +242,26 @@ target_compile_definitions(desktop PRIVATE GL_GLEXT_PROTOTYPES)
 target_compile_definitions(desktop PRIVATE _USRDLL)
 target_compile_definitions(desktop PRIVATE LIBGLESV2_EXPORTS)
 
+# Copy assets
+file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper)
+file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/*
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*)
+
+add_custom_target(copyAssets)
+
+foreach(RESOURCE_FILE ${RESOURCE_FILES})
+  string(REPLACE "//" "/" sourcePath ${RESOURCE_FILE})
+  string(REPLACE ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets destination ${sourcePath})
+
+  foreach(WALLPAPER ${WALLPAPER_FOLDERS})
+    set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/${WALLPAPER}/src/main/assets)
+    string(REPLACE ${ADDITION_RESOURCE_PATH} ${CMAKE_BINARY_DIR}/assets destination ${destination})
+  endforeach()
+
+  add_custom_command(TARGET copyAssets PRE_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${sourcePath}" "${destination}")
+endforeach()
+
 # experiments
 set(IS_SUBSYSTEM_WIN32)
 if(MSVC)
@@ -297,43 +317,11 @@ foreach(Experiment ${Experiments})
                                                      ${elements_Path}/..
                                                      ${CMAKE_SOURCE_DIR}/experiments/${Experiment}
                                                      ${CMAKE_SOURCE_DIR}/platform/desktop/${Experiment}
-                                                     ${ADDITION_SOURCE_PATH}
                                                      ${ADDITION_SOURCE_PATH}/${Experiment})
     target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
     target_link_libraries(${Experiment} ${REQUIRED_LIBRARIES})
 
-    # Copy assets
-    file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/shaders/* ${CMAKE_SOURCE_DIR}/assets/textures/*)
-    foreach(RESOURCE_FILE ${RESOURCE_FILES})
-      string(REPLACE "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}/assets" destination ${RESOURCE_FILE})
-      add_custom_command(TARGET ${Experiment} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
-    endforeach()
-
-    set(ADDITION_RESOURCE_PATH)
-    if(Experiment STREQUAL air)
-      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/AirWallpaper/src/main/assets)
-    endif()
-    if(Experiment STREQUAL character)
-      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/CharacterWallpaper/src/main/assets)
-    endif()
-    if(Experiment STREQUAL fire)
-      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/FireWallpaper/src/main/assets)
-    endif()
-    if(Experiment STREQUAL light)
-      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/LightWallpaper/src/main/assets)
-    endif()
-    if(Experiment STREQUAL liquid)
-      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/LiquidWallpaper/src/main/assets)
-    endif()
-    if(Experiment STREQUAL strange)
-      set(ADDITION_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/platform/android/elements/StrangeWallpaper/src/main/assets)
-    endif()
-
-    file(GLOB_RECURSE RESOURCE_FILES ${ADDITION_RESOURCE_PATH}/*)
-    foreach(RESOURCE_FILE ${RESOURCE_FILES})
-      string(REPLACE "${ADDITION_RESOURCE_PATH}" "${CMAKE_BINARY_DIR}/assets" destination ${RESOURCE_FILE})
-      add_custom_command(TARGET ${Experiment} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RESOURCE_FILE}" "${destination}")
-    endforeach()
+    add_dependencies(${Experiment} copyAssets)
   endif()
 endforeach()
 
