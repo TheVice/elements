@@ -2,11 +2,8 @@
 #define _LIQUID_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#if !defined(_MSC_VER) || defined(__clang__)
 #include "liquid_renderer.h"
-#endif
-#include "renderer_factory.h"
-#include <GL/glew.h>
+#include "../renderer_factory.h"
 
 namespace Rendering
 {
@@ -29,6 +26,7 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	bool mTouchDown;
 	int mRenderId;
 	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
 	std::unique_ptr<liquid_renderer_factory> mLiquidRendererFactory;

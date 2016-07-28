@@ -52,11 +52,7 @@ public:
     void set_gravity(const math::vec2 & value) { config_.gravity(value); }
     void set_density(float value) { config_.density(value); }
     void set_viscosity(float sigma, float beta) { config_.viscosty(sigma, beta); }
-#if !defined(near)
     void set_pressure(float value, float near) { config_.pressure(value, near); }
-#else
-    void set_pressure(float value, float near_) { config_.pressure(value, near_); }
-#endif
     void set_elasticity(float value) { config_.spring(value); }
 
 private:

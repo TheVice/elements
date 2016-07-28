@@ -27,9 +27,7 @@ IN THE SOFTWARE.
 #include "logging.h"
 #include <chrono>
 
-#ifdef ANDROID
 #include <android/input.h>
-#endif
 #include <elements/ui/controls/button.h>
 #include <elements/ui/controls/panel.h>
 #include <elements/ui/controls/slider.h>

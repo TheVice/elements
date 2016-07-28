@@ -3,7 +3,6 @@
 #include <memory>
 
 #ifdef WIN32
-#include <tchar.h>
 #if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>

@@ -6,11 +6,11 @@ namespace Rendering
 {
 RTTI_DEFINITIONS(CharacterDemo)
 
-CharacterDemo::CharacterDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mThetaAndPhi(),
-	  mRenderId(-1),
-	  mCharacterRendererFactory(nullptr)
+CharacterDemo::CharacterDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mThetaAndPhi(),
+	mRenderId(-1),
+	mCharacterRendererFactory(nullptr)
 {
 }
 

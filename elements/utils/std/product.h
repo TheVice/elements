@@ -55,8 +55,10 @@ public:
 
     bool invalid() const;
 
-    friend bool operator==(const product & l, const product & r);
-    friend bool operator!=(const product & l, const product & r);
+    template<typename _Type2, _Type2 _Default2>
+    friend bool operator==(const product<_Type2, _Default2> & l, const product<_Type2, _Default2> & r);
+    template<typename _Type2, _Type2 _Default2>
+    friend bool operator!=(const product<_Type2, _Default2> & l, const product<_Type2, _Default2> & r);
 
 private:
 

@@ -1,19 +1,17 @@
 
 #include "LiquidDemo.h"
-#if defined (_MSC_VER) && !defined(__clang__)
-#include "liquid_renderer.h"
-#endif
 #include "Game.h"
-#include <memory>
+#include "android/input.h"
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(LiquidDemo)
 
-LiquidDemo::LiquidDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mRenderId(-1),
-	  mLiquidRendererFactory(nullptr)
+LiquidDemo::LiquidDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mTouchDown(false),
+	mRenderId(-1),
+	mLiquidRendererFactory(nullptr)
 {
 }
 
@@ -59,12 +57,16 @@ void LiquidDemo::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
-	}
-	else
-	{
+		mTouchDown = true;
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
 	}
+	else if (mTouchDown)
+	{
+		mTouchDown = false;
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP);
+	}
+
+	renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 }
 
 void LiquidDemo::Draw(const Library::GameTime&)
@@ -73,7 +75,7 @@ void LiquidDemo::Draw(const Library::GameTime&)
 	renderer->render();
 }
 
-const char* LiquidDemo::sBackground = "textures/background.png";
+const char* LiquidDemo::sBackground = "assets/textures/background.png";
 const glm::vec4 LiquidDemo::sColor = { 0.33f, 0.098f, 0.38f, 0.44f }; //#55196271
 const int LiquidDemo::sQuantity = 1;
 const glm::vec3 LiquidDemo::sGravity = { 0.0f, -9.8f, 0.0f };

@@ -2,11 +2,8 @@
 #define _AIR_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#if !defined(_MSC_VER) || defined(__clang__)
 #include "air_renderer.h"
-#endif
-#include "renderer_factory.h"
-#include <GL/glew.h>
+#include "../renderer_factory.h"
 
 namespace Rendering
 {

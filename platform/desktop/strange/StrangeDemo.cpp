@@ -1,19 +1,15 @@
 
 #include "StrangeDemo.h"
-#if defined (_MSC_VER) && !defined(__clang__)
-#include "strange_renderer.h"
-#endif
 #include "Game.h"
-#include <memory>
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(StrangeDemo)
 
-StrangeDemo::StrangeDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mRenderId(-1),
-	  mStrangeRendererFactory(nullptr)
+StrangeDemo::StrangeDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mRenderId(-1),
+	mStrangeRendererFactory(nullptr)
 {
 }
 

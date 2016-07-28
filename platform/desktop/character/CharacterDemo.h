@@ -3,8 +3,7 @@
 
 #include "DrawableGameComponent.h"
 #include "character_renderer.h"
-#include "renderer_factory.h"
-#include <GL/glew.h>
+#include "../renderer_factory.h"
 
 namespace Rendering
 {
