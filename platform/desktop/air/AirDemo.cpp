@@ -48,13 +48,19 @@ void AirDemo::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
-		mTouchDown = true;
+		if (!mTouchDown)
+		{
+			renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
+			mTouchDown = true;
+		}
+
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 	}
 	else if (mTouchDown)
 	{
-		mTouchDown = false;
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP);
+		mTouchDown = false;
 	}
 }
 

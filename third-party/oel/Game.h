@@ -14,6 +14,8 @@
 #ifdef WIN32
 #include <tchar.h>
 #include <windows.h>
+#undef far
+#undef near
 #else
 #include <X11/Xlib.h>
 #define TCHAR char

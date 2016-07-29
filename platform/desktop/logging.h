@@ -1,6 +1,8 @@
 
 #if defined(WIN32)
 #include <windows.h>
+#undef far
+#undef near
 
 #define LOGI(aFormat) OutputDebugStringA(aFormat)
 #define LOGE(aFormat) LOGI(aFormat)

@@ -1,7 +1,6 @@
 
 #include "CharacterDemo.h"
 #include "Game.h"
-#include "android/input.h"
 
 namespace Rendering
 {

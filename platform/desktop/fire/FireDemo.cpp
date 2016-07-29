@@ -54,16 +54,20 @@ void FireDemo::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		mTouchDown = true;
-		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
+		if (!mTouchDown)
+		{
+			renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
+			mTouchDown = true;
+		}
+
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 	}
 	else if (mTouchDown)
 	{
-		mTouchDown = false;
+		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP);
+		mTouchDown = false;
 	}
-
-	renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 }
 
 void FireDemo::Draw(const Library::GameTime&)
