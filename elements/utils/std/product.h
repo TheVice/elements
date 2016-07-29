@@ -55,10 +55,14 @@ public:
 
     bool invalid() const;
 
-    template<typename _Type2, _Type2 _Default2>
-    friend bool operator==(const product<_Type2, _Default2> & l, const product<_Type2, _Default2> & r);
-    template<typename _Type2, _Type2 _Default2>
-    friend bool operator!=(const product<_Type2, _Default2> & l, const product<_Type2, _Default2> & r);
+    friend bool operator==(const product & l, const product & r)
+    {
+        return l.value_ == r.value_;
+    }
+    friend bool operator!=(const product & l, const product & r)
+    {
+        return l.value_ != r.value_;
+    }
 
 private:
 
@@ -135,20 +139,6 @@ template<typename _Type, _Type _Default>
 inline void product<_Type, _Default>::swap(product<_Type, _Default> & r)
 {
     std::swap(value_, r.value_);
-}
-
-template<typename _Type, _Type _Default>
-inline bool operator==(const product<_Type, _Default> & l,
-                       const product<_Type, _Default> & r)
-{
-    return l.value_ == r.value_;
-}
-
-template<typename _Type, _Type _Default>
-inline bool operator!=(const product<_Type, _Default> & l,
-                       const product<_Type, _Default> & r)
-{
-    return l.value_ != r.value_;
 }
 
 template<typename _Product>
