@@ -262,6 +262,7 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/core/shader.h
                        ${elements_Path}/rendering/core/target.cpp
                        ${elements_Path}/rendering/core/target.h
+                       ${elements_Path}/rendering/core/target_attachment.h
                        ${elements_Path}/rendering/core/target_buffered.cpp
                        ${elements_Path}/rendering/core/target_buffered.h
                        ${elements_Path}/rendering/core/target_maker.cpp
@@ -295,7 +296,7 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/passes/pass_base.h
                        ${elements_Path}/rendering/passes/pass_composition.cpp
                        ${elements_Path}/rendering/passes/pass_composition.h
-                       ${elements_Path}/rendering/passes/pass_input_slot.h
+                       ${elements_Path}/rendering/passes/pass_slot.h
                        ${elements_Path}/rendering/passes/pass_target.cpp
                        ${elements_Path}/rendering/passes/pass_target.h
                        ${elements_Path}/rendering/passes/pass_target_input.cpp
