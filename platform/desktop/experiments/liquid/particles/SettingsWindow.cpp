@@ -423,16 +423,20 @@ void SettingsWindow::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		mTouchDown = true;
-		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::DOWN);
+		if (!mTouchDown)
+		{
+			mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::DOWN);
+			mTouchDown = true;
+		}
+
+		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
 	}
 	else if (mTouchDown)
 	{
-		mTouchDown = false;
+		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
 		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::UP);
+		mTouchDown = false;
 	}
-
-	mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
 }
 
 void SettingsWindow::Draw(const Library::GameTime&)
