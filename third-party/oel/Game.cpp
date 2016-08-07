@@ -37,7 +37,7 @@ Game::~Game()
 #ifndef NDEBUG
 	std::string glfwErrors = sGlfwErrors.str();
 
-	if (glfwErrors.length())
+	if (!glfwErrors.empty())
 	{
 #ifdef _MSC_VER
 		OutputDebugStringA(glfwErrors.c_str());
@@ -168,7 +168,9 @@ void Game::RemoveKeyboardHandler(KeyboardHandler aHandler)
 
 void Game::InitializeWindow()
 {
+#ifndef NDEBUG
 	glfwSetErrorCallback(glfwErrorCallback);
+#endif
 
 	if (!glfwInit())
 	{
@@ -207,7 +209,7 @@ void Game::InitializeWindow()
 void Game::InitializeOpenGL()
 {
 	glfwMakeContextCurrent(mWindow);
-	GLenum ret = glewInit();
+	const GLenum ret = glewInit();
 
 	if (GLEW_OK != ret)
 	{
@@ -266,14 +268,10 @@ POINT Game::CenterWindow(int aWindowWidth, int aWindowHeight)
 	return center;
 }
 #endif
+#ifndef NDEBUG
 void Game::glfwErrorCallback(int aError, const char* aDescription)
 {
-#ifdef NDEBUG
-	(void)aError;
-	(void)aDescription;
-#else
 	sGlfwErrors << aDescription << " (Error #" << aError << ")" << std::endl;
-#endif
 }
-
+#endif
 }

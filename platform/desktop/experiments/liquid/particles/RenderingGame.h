@@ -29,27 +29,6 @@ private:
 	static const glm::vec4 sBackgroundColor;
 };
 
-class RenderingGame2 : public Library::Game
-{
-public:
-	RenderingGame2(const TCHAR* aWindowTitle, int aX, int aY);
-
-	virtual void Run() override;
-	virtual void Initialize() override;
-
-protected:
-	virtual void InitializeOpenGL() override;
-
-private:
-	int mX;
-	int mY;
-
-	std::unique_ptr<Library::DrawableGameComponent> mGameComponent;
-
-private:
-	static Game* sInternalInstance2;
-};
-
 }
 
 #endif

@@ -1,14 +1,17 @@
 #ifndef _SETTINGS_WINDOW_H_
 #define _SETTINGS_WINDOW_H_
 
-#include "DrawableGameComponent.h"
+#include "GameComponent.h"
 #include "ui/system.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <thread>
 
 namespace Rendering
 {
-class SettingsWindow : public Library::DrawableGameComponent
+class SettingsWindow : public Library::GameComponent
 {
-	RTTI_DECLARATIONS(SettingsWindow, DrawableGameComponent)
+	RTTI_DECLARATIONS(SettingsWindow, GameComponent)
 
 public:
 	SettingsWindow(Library::Game& aGame);
@@ -22,7 +25,13 @@ public:
 public:
 	virtual void Initialize() override;
 	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+
+public:
+	GLFWwindow* GetWindow() const;
+
+private:
+	GLFWwindow* mWindow;
+	std::unique_ptr<std::thread> mWindowThread;
 
 public:
 	bool mTouchDown;

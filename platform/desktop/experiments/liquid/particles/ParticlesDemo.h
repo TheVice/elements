@@ -6,11 +6,7 @@
 #include "rendering/core/texture.h"
 #include "rendering/core/texture_policy.h"
 #include "rendering/primitives/square.h"
-#include <GL/glew.h>
-#ifdef _WIN32
 #include <memory>
-#include <thread>
-#endif
 
 namespace Rendering
 {
@@ -29,19 +25,15 @@ public:
 
 public:
 	virtual void Initialize() override;
-#ifdef _WIN32
 	virtual void Update(const Library::GameTime& aGameTime) override;
-#endif
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	std::unique_ptr<GameComponent> mSettingsWindow;
 	eps::rendering::program mProgram;
 	eps::rendering::primitive::square mSquare;
 	glm::mat4 mTransform;
 	float mSize;
-#ifdef _WIN32
-	std::unique_ptr<std::thread> mSettingsWindowThread;
-#endif
 };
 }
 

@@ -7,29 +7,123 @@
 //#include "ui/controls/panel.h"
 #include "ui/controls/slider.h"
 #include "Game.h"
+#include <atomic>
+
+static const glm::vec4 gCornflowerBlue = { 0.392f, 0.584f, 0.929f, 1.0f };
+
+extern std::atomic<float> gShearX;
+extern std::atomic<float> gShearY;
+extern std::atomic<float> gShearZ;
+
+extern std::atomic<float> gScaleX;
+extern std::atomic<float> gScaleY;
+extern std::atomic<float> gScaleZ;
+
+extern std::atomic<float> gTranslateX;
+extern std::atomic<float> gTranslateY;
+extern std::atomic<float> gTranslateZ;
+
+extern std::atomic<float> gSize;
+
+extern std::atomic<float> gX1;
+extern std::atomic<float> gY1;
+
+extern std::atomic<float> gX2;
+extern std::atomic<float> gY2;
+
+extern std::atomic<float> gX3;
+extern std::atomic<float> gY3;
+
+extern std::atomic<float> gX4;
+extern std::atomic<float> gY4;
+
+extern std::atomic<bool> gChanged;
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(SettingsWindow)
 
-class s_model : public eps::ui::slider_model
+class SliderModel : public eps::ui::slider_model
 {
 private:
 	float mValue;
+	const float mMin;
+	const float mDelta;
+private:
+	static const float sDefaultMin;
+	static const float sDefaultMax;
 public:
-	s_model() : slider_model(), mValue(0.0f) {}
-	float get_value()  const
+	SliderModel() :
+		slider_model(),
+		mValue(sDefaultMin),
+		mMin(sDefaultMin),
+		mDelta(sDefaultMax)
+	{
+	}
+
+	SliderModel(float aMin, float aMax) :
+		slider_model(),
+		mValue(sDefaultMin),
+		mMin(aMin),
+		mDelta(aMax - aMin)
+	{
+		assert(aMin < aMax);
+	}
+
+	float get_value() const override
 	{
 		return mValue;
 	}
-	void set_value(float aValue)
+
+	void set_value(float aValue) override
 	{
 		mValue = aValue;
+	}
+
+	float getRealValue() const
+	{
+		return mMin + (mDelta * mValue) / sDefaultMax;
+	}
+
+	void setRealValue(float aValue)
+	{
+		mValue = (sDefaultMax * (aValue - mMin)) / mDelta;
+	}
+};
+
+const float SliderModel::sDefaultMin = 0.0f;
+const float SliderModel::sDefaultMax = 1.0f;
+
+class CustomSliderModel : public SliderModel
+{
+private:
+	std::atomic<float>* mModelValue;
+public:
+	CustomSliderModel(float aMin, float aMax, std::atomic<float>* aModelValue) :
+		SliderModel(aMin, aMax),
+		mModelValue(aModelValue)
+	{
+		setRealValue(mModelValue->load());
+	}
+
+	float get_value() const override
+	{
+		float value = getRealValue();
+
+		if (std::abs(value - mModelValue->load()) > 100 * std::numeric_limits<float>::epsilon())
+		{
+			mModelValue->store(value);
+			gChanged.store(true);
+		}
+
+		return SliderModel::get_value();
 	}
 };
 
 SettingsWindow::SettingsWindow(Library::Game& aGame) :
-	DrawableGameComponent(aGame),
+	GameComponent(aGame),
+	mWindow(nullptr),
+	mWindowThread(nullptr),
 	mTouchDown(false),
 	mTransformTouch(),
 	mUiSystem(nullptr)
@@ -38,20 +132,65 @@ SettingsWindow::SettingsWindow(Library::Game& aGame) :
 
 SettingsWindow::~SettingsWindow()
 {
+	/*if (mWindow)
+	{
+		glfwSetWindowShouldClose(mWindow, GL_TRUE);
+		mWindowThread->join();
+		glfwDestroyWindow(mWindow);
+	}*/
 }
+
+void ProcessWindow(GLFWwindow* aWindow, SettingsWindow* aSettingsWindow);
 
 void SettingsWindow::Initialize()
 {
-	const eps::math::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	mUiSystem = std::make_unique<eps::ui::system>();
+	if (mGame->IsFullScreen())
+	{
+		throw std::runtime_error("Setting window can not be created for full screen main window");
+	}
 
-	if (!mUiSystem->construct(size))
+	mWindow = glfwCreateWindow(560, 600, "Matrix Elements", nullptr, mGame->GetWindow());
+	assert(mWindow);
+	//
+	glm::ivec2 windowPos;
+	glfwGetWindowPos(mGame->GetWindow(), &windowPos.x, &windowPos.y);
+	windowPos.x += mGame->GetScreenWidth();
+	glfwSetWindowPos(mWindow, windowPos.x, windowPos.y);
+	//
+	mWindowThread = std::make_unique<std::thread>(ProcessWindow, mWindow, this);
+}
+
+void SettingsWindow::Update(const Library::GameTime&)
+{
+	if (glfwWindowShouldClose(mWindow))
+	{
+		mWindowThread->join();
+		glfwDestroyWindow(mWindow);
+		mGame->Exit();
+	}
+}
+
+GLFWwindow* SettingsWindow::GetWindow() const
+{
+	return mWindow;
+}
+
+void Initialize(SettingsWindow* aSettingsWindow)
+{
+	int width = 0;
+	int height = 0;
+	glfwGetWindowSize(aSettingsWindow->GetWindow(), &width, &height);
+	const eps::math::uvec2 size(width, height);
+	//
+	aSettingsWindow->mUiSystem = std::make_unique<eps::ui::system>();
+
+	if (!aSettingsWindow->mUiSystem->construct(size))
 	{
 		throw std::runtime_error("mUiSystem->construct() failed");
 	}
 
 	using namespace eps::metric_literals;
-	eps::utils::link<eps::ui::label> labelControl = mUiSystem->add<eps::ui::label>();
+	eps::utils::link<eps::ui::label> labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -62,7 +201,7 @@ void SettingsWindow::Initialize()
 		label->set_text("X Shear:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -73,7 +212,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Y Shear:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -84,7 +223,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Z Shear:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -95,7 +234,7 @@ void SettingsWindow::Initialize()
 		label->set_text("X Scale:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -106,7 +245,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Y Scale:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -117,7 +256,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Z Scale:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -128,7 +267,7 @@ void SettingsWindow::Initialize()
 		label->set_text("X Translate:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -139,7 +278,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Y Translate:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -150,7 +289,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Z Translate:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -161,7 +300,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Size:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -172,7 +311,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex X1:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -183,7 +322,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex Y1");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -194,7 +333,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex X2:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -205,7 +344,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex Y2:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -216,7 +355,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex X3:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -227,7 +366,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex Y3:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -238,7 +377,7 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex X4:");
 	}
 
-	labelControl = mUiSystem->add<eps::ui::label>();
+	labelControl = aSettingsWindow->mUiSystem->add<eps::ui::label>();
 
 	if (auto label = labelControl.lock())
 	{
@@ -249,7 +388,8 @@ void SettingsWindow::Initialize()
 		label->set_text("Vertex Y4:");
 	}
 
-	eps::utils::link<eps::ui::slider> sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	CustomSliderModel* model = new CustomSliderModel(-10.0f, 10.0f, &gShearX);
+	eps::utils::link<eps::ui::slider> sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -258,7 +398,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gShearY);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -267,7 +408,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gShearZ);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -276,7 +418,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gScaleX);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -285,7 +428,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gScaleY);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -294,7 +438,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gScaleZ);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -303,7 +448,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gTranslateX);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -312,7 +458,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gTranslateY);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -321,7 +468,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gTranslateZ);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -330,7 +478,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(0.1f, 100.0f, &gSize);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -339,7 +488,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gX1);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -348,7 +498,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gY1);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -357,7 +508,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gX2);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -366,7 +518,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gY2);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -375,7 +528,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gX3);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -384,7 +538,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gY3);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -393,7 +548,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gX4);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -402,7 +558,8 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	sliderControl = mUiSystem->add<eps::ui::slider>(new s_model());
+	model = new CustomSliderModel(-10.0f, 10.0f, &gY4);
+	sliderControl = aSettingsWindow->mUiSystem->add<eps::ui::slider>(model);
 
 	if (auto slider = sliderControl.lock())
 	{
@@ -411,37 +568,56 @@ void SettingsWindow::Initialize()
 		slider->set_color_tracker(eps::math::vec4(0.0f, 0.65f, 0.95f, 1.0f));
 	}
 
-	mTransformTouch = eps::math::translate(0.0f, size.y, 0.0f) * eps::math::scale(1.0f, -1.0f, 1.0f);
+	aSettingsWindow->mTransformTouch = eps::math::translate(0.0f, size.y, 0.0f) * eps::math::scale(1.0f, -1.0f,
+									   1.0f);
 }
 
-void SettingsWindow::Update(const Library::GameTime&)
+void Update(SettingsWindow* aSettingsWindow)
 {
 	glm::dvec2 screenPos;
-	glfwGetCursorPos(mGame->GetWindow(), &screenPos.x, &screenPos.y);
+	glfwGetCursorPos(aSettingsWindow->GetWindow(), &screenPos.x, &screenPos.y);
 	//
-	const eps::math::vec4 posTouch = mTransformTouch * eps::math::vec4(screenPos.x, screenPos.y, 1.0f, 1.0f);
+	const eps::math::vec4 posTouch = aSettingsWindow->mTransformTouch * eps::math::vec4(screenPos.x, screenPos.y,
+									 1.0f, 1.0f);
 
-	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
+	if (glfwGetMouseButton(aSettingsWindow->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		if (!mTouchDown)
+		if (!aSettingsWindow->mTouchDown)
 		{
-			mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::DOWN);
-			mTouchDown = true;
+			aSettingsWindow->mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::DOWN);
+			aSettingsWindow->mTouchDown = true;
 		}
 
-		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
+		aSettingsWindow->mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
 	}
-	else if (mTouchDown)
+	else if (aSettingsWindow->mTouchDown)
 	{
-		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
-		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::UP);
-		mTouchDown = false;
+		aSettingsWindow->mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
+		aSettingsWindow->mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::UP);
+		aSettingsWindow->mTouchDown = false;
 	}
 }
 
-void SettingsWindow::Draw(const Library::GameTime&)
+void Draw(SettingsWindow* aSettingsWindow)
 {
-	mUiSystem->draw();
+	aSettingsWindow->mUiSystem->draw();
+}
+
+void ProcessWindow(GLFWwindow* aWindow, SettingsWindow* aSettingsWindow)
+{
+	glfwMakeContextCurrent(aWindow);
+	//
+	Initialize(aSettingsWindow);
+
+	while (!glfwWindowShouldClose(aWindow))
+	{
+		glClearBufferfv(GL_COLOR, 0, &gCornflowerBlue[0]);
+		//
+		Update(aSettingsWindow);
+		Draw(aSettingsWindow);
+		//
+		glfwSwapBuffers(aWindow);
+	}
 }
 
 }
