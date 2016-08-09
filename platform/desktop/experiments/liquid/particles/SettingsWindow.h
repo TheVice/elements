@@ -25,6 +25,7 @@ public:
 public:
 	virtual void Initialize() override;
 	virtual void Update(const Library::GameTime& aGameTime) override;
+	virtual void Release() override;
 
 public:
 	GLFWwindow* GetWindow() const;

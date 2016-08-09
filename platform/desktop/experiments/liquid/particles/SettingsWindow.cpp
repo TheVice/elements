@@ -132,12 +132,6 @@ SettingsWindow::SettingsWindow(Library::Game& aGame) :
 
 SettingsWindow::~SettingsWindow()
 {
-	/*if (mWindow)
-	{
-		glfwSetWindowShouldClose(mWindow, GL_TRUE);
-		mWindowThread->join();
-		glfwDestroyWindow(mWindow);
-	}*/
 }
 
 void ProcessWindow(GLFWwindow* aWindow, SettingsWindow* aSettingsWindow);
@@ -166,7 +160,19 @@ void SettingsWindow::Update(const Library::GameTime&)
 	{
 		mWindowThread->join();
 		glfwDestroyWindow(mWindow);
+		mWindow = nullptr;
 		mGame->Exit();
+	}
+}
+
+void SettingsWindow::Release()
+{
+	if (mWindow)
+	{
+		glfwSetWindowShouldClose(mWindow, GL_TRUE);
+		mWindowThread->join();
+		glfwDestroyWindow(mWindow);
+		mWindow = nullptr;
 	}
 }
 

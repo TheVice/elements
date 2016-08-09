@@ -29,7 +29,6 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	std::unique_ptr<GameComponent> mSettingsWindow;
 	eps::rendering::program mProgram;
 	eps::rendering::primitive::square mSquare;
 	glm::mat4 mTransform;

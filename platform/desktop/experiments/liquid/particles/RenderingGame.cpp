@@ -6,6 +6,7 @@
 #include "preferences.h"
 #include "metrics.h"
 #include "assets/assets_storage.h"
+#include "SettingsWindow.h"
 #include <glm/gtc/constants.hpp>
 
 namespace Rendering
@@ -13,7 +14,8 @@ namespace Rendering
 RenderingGame::RenderingGame(const TCHAR* aWindowTitle) :
 	Game(aWindowTitle),
 	mKeyboardHandler(nullptr),
-	mGameComponent(nullptr)
+	mGameComponent(nullptr),
+	mSettingsWindow(nullptr)
 {
 }
 
@@ -32,6 +34,9 @@ void RenderingGame::Initialize()
 	//
 	mGameComponent = std::make_unique<ParticlesDemo>(*this);
 	mComponents.push_back(mGameComponent.get());
+	//
+	mSettingsWindow = std::make_unique<Rendering::SettingsWindow>(*this);
+	mComponents.push_back(mSettingsWindow.get());
 	//
 	Game::Initialize();
 }

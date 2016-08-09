@@ -8,9 +8,7 @@
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
 #include "SettingsReader.h"
-#include "SettingsWindow.h"
 #include "RenderingGame.h"
-
 #include <atomic>
 
 std::atomic<float> gShearX(0);
@@ -34,7 +32,6 @@ std::atomic<float> gX4(0);
 std::atomic<float> gY4(0);
 
 std::atomic<bool> gChanged(false);
-//static std::atomic<bool> mStop(false);
 
 #define GetShear(MAT4) (glm::vec3(MAT4[1].x, MAT4[0].y, MAT4[0].z))
 #define GetScale(MAT4) (glm::vec3(MAT4[0].x, MAT4[1].y, MAT4[2].z))
@@ -58,7 +55,6 @@ enum ProgramEnum
 
 ParticlesDemo::ParticlesDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mSettingsWindow(nullptr),
 	mProgram(),
 	mSquare(),
 	mTransform(),
@@ -106,22 +102,12 @@ void ParticlesDemo::Initialize()
 	gX4.store(0);
 	gY4.store(0);
 	//
-	mSettingsWindow = std::make_unique<Rendering::SettingsWindow>(*mGame);
-	mSettingsWindow->Initialize();
-	//
 	glEnable(GL_POINT_SPRITE);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 }
 
 void ParticlesDemo::Update(const Library::GameTime& aGameTime)
 {
-	mSettingsWindow->Update(aGameTime);
-
-	/*if (mStop.load())
-	{
-		mGame->Exit();
-	}*/
-
 	if (gChanged.load())
 	{
 		SetShear(glm::vec3(gShearX.load(), gShearY.load(), gShearZ.load()), mTransform);

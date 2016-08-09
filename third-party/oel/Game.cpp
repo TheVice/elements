@@ -116,6 +116,7 @@ void Game::Run()
 		glfwPollEvents();
 	}
 
+	Release();
 	Shutdown();
 }
 
@@ -153,6 +154,14 @@ void Game::Draw(const GameTime& aGameTime)
 		{
 			drawableGameComponent->Draw(aGameTime);
 		}
+	}
+}
+
+void Game::Release()
+{
+	for (GameComponent* component : mComponents)
+	{
+		component->Release();
 	}
 }
 
