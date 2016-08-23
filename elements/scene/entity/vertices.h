@@ -21,33 +21,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_PROCESS_H_INCLUDED
-#define RENDERING_MODELS_PROCESS_H_INCLUDED
+#ifndef SCENE_ENTITY_VERTICES_H_INCLUDED
+#define SCENE_ENTITY_VERTICES_H_INCLUDED
 
-#include "model.h"
-#include "rendering/core/program.h"
-#include "utils/std/pointer.h"
-#include "scene/camera/camera.h"
-#include "scene/light/light.h"
+#include "math/types.h"
 
 namespace eps {
-namespace rendering {
+namespace scene {
 
-class process_model_rendering
+struct vertex
 {
-public:
-
-    bool initialize();
-    void operator()(const utils::pointer<model> & node,
-                    const utils::link<scene::camera> & camera,
-                    const utils::link<scene::light> & light);
-
-private:
-
-    program program_;
+    math::vec3 position;
+    math::vec3 normal;
+    math::vec3 tangent;
+    math::vec2 tex;
 };
 
-} /* rendering */
+static_assert(offsetof(vertex, position) == 0, "failed");
+static_assert(offsetof(vertex, normal) == sizeof(math::vec3), "failed");
+static_assert(offsetof(vertex, tangent) == sizeof(math::vec3) * 2, "failed");
+static_assert(offsetof(vertex, tex) == sizeof(math::vec3) * 3, "failed");
+
+struct face
+{
+    static const short FACE_INDICES_COUNT = 3;
+    unsigned short indices[FACE_INDICES_COUNT];
+};
+
+static_assert(face::FACE_INDICES_COUNT == 3, "failed");
+
+} /* scene */
 } /* eps */
 
-#endif // RENDERING_MODELS_PROCESS_H_INCLUDED
+#endif // SCENE_ENTITY_VERTICES_H_INCLUDED

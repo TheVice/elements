@@ -70,6 +70,16 @@ inline mat4 look_at(const vec3 & eye, const vec3 & center, const vec3 & up)
     return glm::lookAt(eye, center, up);
 }
 
+inline mat4 inverse(const mat4 & mat)
+{
+    return glm::inverse(mat);
+}
+
+inline float aspect(const uvec2 & size)
+{
+    return static_cast<float>(size.x) / static_cast<float>(size.y);
+}
+
 } /* math */
 } /* eps */
 

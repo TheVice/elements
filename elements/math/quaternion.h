@@ -21,43 +21,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef EXPERIMENTS_CHARATER_PASS_CHARACTER_H_INCLUDED
-#define EXPERIMENTS_CHARATER_PASS_CHARACTER_H_INCLUDED
+#ifndef MATH_QUATERNION_H_INCLUDED
+#define MATH_QUATERNION_H_INCLUDED
 
-#include <elements/rendering/passes/pass_base.h>
-#include <elements/rendering/models/process.h>
-#include <elements/scene/world.h>
+#include <glm/gtc/quaternion.hpp>
 
 namespace eps {
-namespace experiment {
-namespace character {
+namespace math {
 
-class pass_character : public rendering::pass_base
+using quat = glm::fquat;
+
+inline quat rotate(const quat & q, const vec3 & axis, float degree)
 {
-public:
+    return glm::rotate(q, degree, axis);
+}
 
-    using rendering::pass_base::pass_base;
+inline mat4 to_mat4(const quat & q)
+{
+    return glm::mat4_cast(q);
+}
 
-public:
-
-    bool initialize() final;
-    void process(float dt) final;
-
-    utils::unique<rendering::pass_target> construct(const math::uvec2 & size) final;
-
-    bool set_model(const std::string & asset);
-    void set_rotation(float theta, float phi);
-
-private:
-
-    scene::world world_;
-    rendering::process_model_rendering process_;
-
-};
-
-} /* character */
-} /* experiment */
+} /* math */
 } /* eps */
 
-
-#endif // EXPERIMENTS_CHARATER_PASS_CHARACTER_H_INCLUDED
+#endif // MATH_QUATERNION_H_INCLUDED

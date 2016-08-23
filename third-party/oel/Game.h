@@ -67,6 +67,7 @@ public:
 	virtual void Initialize();
 	virtual void Update(const GameTime& aGameTime);
 	virtual void Draw(const GameTime& aGameTime);
+	virtual void Release();
 
 	void AddKeyboardHandler(KeyboardHandler aHandler);
 	void RemoveKeyboardHandler(KeyboardHandler aHandler);

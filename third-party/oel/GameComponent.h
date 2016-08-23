@@ -29,6 +29,7 @@ public:
 
 	virtual void Initialize();
 	virtual void Update(const GameTime& aGameTime);
+	virtual void Release();
 
 protected:
 	Game* mGame;

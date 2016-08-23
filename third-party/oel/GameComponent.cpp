@@ -49,4 +49,8 @@ void GameComponent::Update(const GameTime&)
 {
 }
 
+void GameComponent::Release()
+{
+}
+
 }

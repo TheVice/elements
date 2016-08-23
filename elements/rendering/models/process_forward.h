@@ -21,50 +21,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_OBJECT_MATERIALS_H_INCLUDED
-#define SCENE_OBJECT_MATERIALS_H_INCLUDED
+#ifndef RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
+#define RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
 
-#include "utils/std/enum.h"
-#include "utils/std/optional.h"
-#include <string>
-#include <array>
+#include "rendering/core/program.h"
+#include "utils/std/pointer.h"
+#include "design/visitor.h"
+#include "scene/scene.h"
+#include "model.h"
 
 namespace eps {
-namespace scene {
+namespace rendering {
 
-struct material
+class process_forward : public design::visitor<process_forward, scene::entity, scene::scene &>
 {
 public:
 
-    enum class type : short
-    {
-        diffuse,
-        specular,
-        normals,
-        COUNT
-    };
+    EPS_DESIGN_VISIT(model);
 
-    void set_texture(type id, const std::string & path)
-    {
-        textures_[utils::to_int(id)] = path;
-    }
+public:
 
-    const utils::optional<std::string> & get_texture(type id) const
-    {
-        return textures_[utils::to_int(id)];
-    }
+    bool initialize();
+    bool visit(model & m, scene::scene & scene);
 
 private:
 
-    std::array
-    <
-        utils::optional<std::string>,
-        utils::to_int(type::COUNT)
-    >
-    textures_;
+    program program_;
 };
 
-} /* scene */
+} /* rendering */
 } /* eps */
 
-#endif // SCENE_OBJECT_MATERIALS_H_INCLUDED
+#endif // RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
