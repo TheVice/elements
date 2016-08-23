@@ -38,7 +38,7 @@ Game::~Game()
 #ifndef NDEBUG
 	std::string glfwErrors = sGlfwErrors.str();
 
-	if (glfwErrors.length())
+	if (!glfwErrors.empty())
 	{
 #ifdef _MSC_VER
 		OutputDebugStringA(glfwErrors.c_str());
@@ -117,6 +117,7 @@ void Game::Run()
 		glfwPollEvents();
 	}
 
+	Release();
 	Shutdown();
 }
 
@@ -159,6 +160,14 @@ void Game::Draw(const GameTime& aGameTime)
 	}
 }
 
+void Game::Release()
+{
+	for (GameComponent* component : mComponents)
+	{
+		component->Release();
+	}
+}
+
 void Game::AddKeyboardHandler(KeyboardHandler aHandler)
 {
 	mKeyboardHandlers[&aHandler] = aHandler;
@@ -171,7 +180,9 @@ void Game::RemoveKeyboardHandler(KeyboardHandler aHandler)
 
 void Game::InitializeWindow()
 {
+#ifndef NDEBUG
 	glfwSetErrorCallback(glfwErrorCallback);
+#endif
 
 	if (!glfwInit())
 	{
@@ -265,14 +276,10 @@ POINT Game::CenterWindow(int aWindowWidth, int aWindowHeight)
 	return center;
 }
 #endif
+#ifndef NDEBUG
 void Game::glfwErrorCallback(int aError, const char* aDescription)
 {
-#ifdef NDEBUG
-	(void)aError;
-	(void)aDescription;
-#else
 	sGlfwErrors << aDescription << " (Error #" << aError << ")" << std::endl;
-#endif
 }
-
+#endif
 }

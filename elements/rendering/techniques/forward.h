@@ -21,49 +21,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_GRAPH_H_INCLUDED
-#define SCENE_GRAPH_H_INCLUDED
+#ifndef ELEMENTS_TECHNIQUES_FORWARD_H_INCLUDED
+#define ELEMENTS_TECHNIQUES_FORWARD_H_INCLUDED
 
-#include "math/types.h"
-#include "utils/std/pointer.h"
-#include "visitor.h"
-#include "node.h"
+#include "rendering/passes/pass_base.h"
+#include "rendering/models/process_forward.h"
+#include "scene/scene.h"
 
 namespace eps {
-namespace scene {
+namespace rendering {
+namespace techniques {
 
-class graph
+class forward : public pass_base
 {
 public:
 
-    graph();
-    graph(graph&&) = default;
-    graph & operator=(graph&&) = default;
-    virtual ~graph() {}
+    using pass_base::pass_base;
 
-    void process(const math::mat4 & view);
+public:
 
-    template <typename... _Targets, typename _Operation, typename... _Args>
-    void process(visit_targets<_Targets...> targets, _Operation && ops, _Args&& ...args)
-    {
-        scene::visit(targets, root_, std::forward<_Operation>(ops),
-                     std::forward<_Args>(args)...);
-    }
+    bool initialize() final;
+    void process(float dt) final;
 
-    template<typename _Node, typename ..._Args>
-    auto add_node(_Args&& ...args)
-    {
-        return root_->add_node<_Node>(std::forward<_Args>(args)...);
-    }
-
-    void clear();
+    void set_scene(const utils::pointer<scene::scene> & scene);
 
 private:
 
-    utils::pointer<node> root_;
+    process_forward process_;
+    utils::pointer<scene::scene> scene_;
 };
 
-} /* scene */
+} /* techniques */
+} /* rendering */
 } /* eps */
 
-#endif // SCENE_GRAPH_H_INCLUDED
+
+#endif // ELEMENTS_TECHNIQUES_FORWARD_H_INCLUDED
