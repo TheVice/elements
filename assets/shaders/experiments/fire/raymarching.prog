@@ -15,6 +15,7 @@
         ]]></vertex>
 
         <fragment><![CDATA[
+            #version 100
             precision highp float;
 
             varying vec2 v_uv;

@@ -45,13 +45,8 @@ enum class program_enum : short
 
 bool pass_positions::initialize()
 {
-#ifdef ANDROID
     return rendering::load_program("assets/shaders/experiments/strange/positions_product_process.prog",
                                    program_process_);
-#else
-    return rendering::load_program("assets/shaders/experiments/strange/positions_product_process.desktop.prog",
-                                   program_process_);
-#endif
 }
 
 utils::unique<rendering::pass_target> pass_positions::construct(const math::uvec2 & size)

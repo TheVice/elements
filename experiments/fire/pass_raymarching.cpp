@@ -82,11 +82,8 @@ bool pass_raymarching::initialize()
 
     auto maker = get_texture_maker<repeat_texture_policy>(asset->format());
     noise_ = maker.construct(asset->pixels(), asset->size());
-#ifdef ANDROID
+
     return load_program("assets/shaders/experiments/fire/raymarching.prog", program_);
-#else
-    return load_program("assets/shaders/experiments/fire/raymarching.desktop.prog", program_);
-#endif
 }
 
 void pass_raymarching::process(float dt)
