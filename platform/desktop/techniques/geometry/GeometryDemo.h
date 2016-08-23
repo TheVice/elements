@@ -2,11 +2,9 @@
 #define _GEOMETRY_DEMO_H_
 
 #include "DrawableGameComponent.h"
+#include "GeometryEffect.h"
 #include "SettingsReader.h"
-#include "rendering/core/program.h"
 #include "rendering/core/texture.h"
-#include "rendering/core/texture_policy.h"
-#include "rendering/primitives/square.h"
 #include <memory>
 
 namespace Rendering
@@ -29,9 +27,12 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	eps::rendering::program mProgram;
+	Library::GeometryEffect mGeometryEffect;
+	GLuint mVertexArrayObject;
+	GLuint mVertexBuffer;
+	GLuint mVertexCount;
+
 	eps::rendering::texture mTexture;
-	eps::rendering::primitive::square mSquare;
 	std::unique_ptr<SettingsReader> mSettings;
 };
 }
