@@ -21,20 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "world.h"
-#include <assert.h>
+#ifndef SCENE_MODIFIER_H_INCLUDED
+#define SCENE_MODIFIER_H_INCLUDED
+
+#include "scene/graph/node.h"
 
 namespace eps {
 namespace scene {
 
-void world::process()
+class modifier
 {
-    assert(component_camera_);
-    assert(component_graph_);
+public:
 
-    component_camera_->process();
-    component_graph_->process(component_camera_->get_view());
-}
+    explicit modifier(const utils::link<node> & parent)
+        : node_(parent)
+    {}
+
+    virtual ~modifier()
+    {}
+
+    modifier(modifier &&) = default;
+    modifier & operator=(modifier &&) = default;
+
+    virtual void process(float dt) = 0;
+    const utils::link<node> & get_node() const { return node_; }
+    
+private:
+
+    utils::link<node> node_;
+};
 
 } /* scene */
 } /* eps */
+
+#endif // SCENE_MODIFIER_H_INCLUDED

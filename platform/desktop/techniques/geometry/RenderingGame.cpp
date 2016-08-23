@@ -1,7 +1,6 @@
 
 #include "RenderingGame.h"
-#include "ParticlesDemo.h"
-#include "SettingsWindow.h"
+#include "GeometryDemo.h"
 #include "asset_fs.h"
 #include "preferences.h"
 #include "metrics.h"
@@ -13,8 +12,7 @@ namespace Rendering
 RenderingGame::RenderingGame(const TCHAR* aWindowTitle) :
 	Game(aWindowTitle),
 	mKeyboardHandler(nullptr),
-	mGameComponent(nullptr),
-	mSettingsWindow(nullptr)
+	mGameComponent(nullptr)
 {
 }
 
@@ -31,11 +29,8 @@ void RenderingGame::Initialize()
 	//
 	eps::metrics::init<metrics>(1.0f);
 	//
-	mGameComponent = std::make_unique<ParticlesDemo>(*this);
+	mGameComponent = std::make_unique<GeometryDemo>(*this);
 	mComponents.push_back(mGameComponent.get());
-	//
-	mSettingsWindow = std::make_unique<Rendering::SettingsWindow>(*this);
-	mComponents.push_back(mSettingsWindow.get());
 	//
 	Game::Initialize();
 }

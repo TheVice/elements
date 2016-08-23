@@ -21,37 +21,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_MODEL_H_INCLUDED
-#define RENDERING_MODELS_MODEL_H_INCLUDED
+#ifndef SCENE_MODIFIER_POSITIONING_H_INCLUDED
+#define SCENE_MODIFIER_POSITIONING_H_INCLUDED
 
-#include "scene/entity/geometry.h"
-#include "utils/std/pointer.h"
+#include "modifier.h"
+#include "math/types.h"
+#include "math/quaternion.h"
 
 namespace eps {
-namespace rendering {
+namespace scene {
 
-class model_warehouse;
-
-class model : public scene::geometry
+class modifier_positioning : public modifier
 {
 public:
 
-    EPS_DESIGN_VISITABLE();
+    using modifier::modifier;
+    void process(float dt) override;
 
 public:
 
-    model(const utils::link<scene::node> & parent,
-          const std::vector<scene::mesh> & meshes,
-          const utils::pointer<model_warehouse> & warehouse);
+    void set_position(const math::vec3 & pos) { position_ = pos; }
+    void set_rotation(const math::quat & quat) { rotation_ = quat; }
+    void set_rotation(const math::vec3 & axis, float degree);
 
-    utils::link<model_warehouse> get_warehouse() const;
+    const math::vec3 & get_position() const { return position_; }
+    const math::quat & get_rotation() const { return rotation_; }
+
+    void look_at(const math::vec3 & pos,
+                 const math::vec3 & target,
+                 const math::vec3 & up);
+    void look_at(const math::vec3 & target,
+                 const math::vec3 & up);
 
 private:
 
-    utils::pointer<model_warehouse> warehouse_;
+    math::vec3 position_;
+    math::quat rotation_;
 };
 
-} /* rendering */
+} /* scene */
 } /* eps */
 
-#endif // RENDERING_MODELS_MODEL_H_INCLUDED
+#endif // SCENE_MODIFIER_POSITIONING_H_INCLUDED

@@ -228,6 +228,8 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/assets/asset_xml.cpp
                        ${elements_Path}/assets/asset_xml.h
 
+                       ${elements_Path}/design/visitor.h
+
                        ${elements_Path}/io/file.h
                        ${elements_Path}/io/path.cpp
                        ${elements_Path}/io/path.h
@@ -239,6 +241,7 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/math/constants.h
                        ${elements_Path}/math/geometric.h
                        ${elements_Path}/math/matrix.h
+                       ${elements_Path}/math/quaternion.h
                        ${elements_Path}/math/transform.h
                        ${elements_Path}/math/trigonometry.h
                        ${elements_Path}/math/types.h
@@ -290,8 +293,8 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/models/model.h
                        ${elements_Path}/rendering/models/model_warehouse.cpp
                        ${elements_Path}/rendering/models/model_warehouse.h
-                       ${elements_Path}/rendering/models/process.cpp
-                       ${elements_Path}/rendering/models/process.h
+                       ${elements_Path}/rendering/models/process_forward.cpp
+                       ${elements_Path}/rendering/models/process_forward.h
 
                        ${elements_Path}/rendering/passes/pass_base.h
                        ${elements_Path}/rendering/passes/pass_composition.cpp
@@ -313,30 +316,35 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/state/state_macro.h
                        ${elements_Path}/rendering/state/state_traits.h
 
+                       ${elements_Path}/rendering/techniques/forward.cpp
+                       ${elements_Path}/rendering/techniques/forward.h
+
                        ${elements_Path}/rendering/utils/model_loader.cpp
                        ${elements_Path}/rendering/utils/model_loader.h
                        ${elements_Path}/rendering/utils/program_loader.cpp
                        ${elements_Path}/rendering/utils/program_loader.h
 
-                       ${elements_Path}/scene/world.cpp
-                       ${elements_Path}/scene/world.h
+                       ${elements_Path}/scene/scene.cpp
+                       ${elements_Path}/scene/scene.h
 
                        ${elements_Path}/scene/camera/camera.cpp
                        ${elements_Path}/scene/camera/camera.h
 
-                       ${elements_Path}/scene/graph/graph.cpp
-                       ${elements_Path}/scene/graph/graph.h
+                       ${elements_Path}/scene/entity/entity.h
+                       ${elements_Path}/scene/entity/geometry.h
+                       ${elements_Path}/scene/entity/materials.h
+                       ${elements_Path}/scene/entity/mesh.h
+                       ${elements_Path}/scene/entity/vertices.h
+
                        ${elements_Path}/scene/graph/node.cpp
                        ${elements_Path}/scene/graph/node.h
-                       ${elements_Path}/scene/graph/visitor.h
 
                        ${elements_Path}/scene/light/light.cpp
                        ${elements_Path}/scene/light/light.h
 
-                       ${elements_Path}/scene/object/materials.h
-                       ${elements_Path}/scene/object/mesh.h
-                       ${elements_Path}/scene/object/object.h
-                       ${elements_Path}/scene/object/vertices.h
+                       ${elements_Path}/scene/modifier/modifier.h
+                       ${elements_Path}/scene/modifier/positioning.cpp
+                       ${elements_Path}/scene/modifier/positioning.h
 
                        # ${elements_Path}/simulation/air/system.cpp
                        # ${elements_Path}/simulation/air/system.h

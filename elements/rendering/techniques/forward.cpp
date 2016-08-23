@@ -21,48 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_MODEL_MESH_H_INCLUDED
-#define SCENE_MODEL_MESH_H_INCLUDED
-
-#include "utils/std/optional.h"
-#include "utils/std/enum.h"
-#include <array>
+#include "forward.h"
 
 namespace eps {
-namespace scene {
+namespace rendering {
+namespace techniques {
 
-struct mesh
+bool forward::initialize()
 {
-public:
+    return process_.initialize();
+}
 
-    enum class feature : short
-    {
-        geometry,
-        material,
-        COUNT
-    };
+void forward::set_scene(const utils::pointer<scene::scene> & scene)
+{
+    scene_ = scene;
+}
 
-    void set_feature(feature id, size_t index)
-    {
-        feature_[utils::to_int(id)] = index;
-    }
+void forward::process(float)
+{
+    if(scene_)
+        scene_->process_entities(process_, *scene_);
+}
 
-    size_t get_feature(feature id) const
-    {
-        return feature_[utils::to_int(id)];
-    }
 
-private:
-
-    std::array
-    <
-        size_t,
-        utils::to_int(feature::COUNT)
-    >
-    feature_;
-};
-
-} /* scene */
+} /* techniques */
+} /* rendering */
 } /* eps */
-
-#endif // SCENE_MODEL_MESH_H_INCLUDED

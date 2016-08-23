@@ -21,30 +21,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "graph.h"
+#ifndef SCENE_ENTITY_H_INCLUDED
+#define SCENE_ENTITY_H_INCLUDED
+
+#include "scene/graph/node.h"
+#include "design/visitor.h"
 
 namespace eps {
 namespace scene {
 
-graph::graph()
-    : root_(utils::make_shared<node>())
-{}
-
-void graph::process(const math::mat4 & view)
+class entity : public design::visitable<entity>
 {
-    process(visit_targets<scene::node>(), [&view](auto object)
-    {
-        if(auto parent = object->get_parent().lock())
-            object->set_world_matrix(parent->get_world_matrix() * object->get_local_matrix());
-        else
-            object->set_world_matrix(view);
-    });
-}
+public:
 
-void graph::clear()
-{
-    root_ = utils::make_shared<node>();
-}
+    EPS_DESIGN_VISITABLE();
+
+public:
+
+    explicit entity(const utils::link<node> & parent)
+        : node_(parent)
+    {}
+
+    virtual ~entity()
+    {}
+
+    entity(entity &&) = default;
+    entity & operator=(entity &&) = default;
+
+    const utils::link<node> & get_node() const { return node_; }
+
+private:
+
+    utils::link<node> node_;
+};
 
 } /* scene */
 } /* eps */
+
+#endif // SCENE_ENTITY_H_INCLUDED

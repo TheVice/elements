@@ -21,37 +21,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_MODEL_H_INCLUDED
-#define RENDERING_MODELS_MODEL_H_INCLUDED
+#ifndef SCENE_ENTITY_MATERIALS_H_INCLUDED
+#define SCENE_ENTITY_MATERIALS_H_INCLUDED
 
-#include "scene/entity/geometry.h"
-#include "utils/std/pointer.h"
+#include "utils/std/enum.h"
+#include "utils/std/optional.h"
+#include <string>
+#include <array>
 
 namespace eps {
-namespace rendering {
+namespace scene {
 
-class model_warehouse;
-
-class model : public scene::geometry
+class material
 {
 public:
 
-    EPS_DESIGN_VISITABLE();
+    enum class type : short
+    {
+        diffuse,
+        specular,
+        normals,
+        COUNT
+    };
 
-public:
+    void set_texture(type id, const std::string & path)
+    {
+        textures_[utils::to_int(id)] = path;
+    }
 
-    model(const utils::link<scene::node> & parent,
-          const std::vector<scene::mesh> & meshes,
-          const utils::pointer<model_warehouse> & warehouse);
-
-    utils::link<model_warehouse> get_warehouse() const;
+    const utils::optional<std::string> & get_texture(type id) const
+    {
+        return textures_[utils::to_int(id)];
+    }
 
 private:
 
-    utils::pointer<model_warehouse> warehouse_;
+    std::array
+    <
+        utils::optional<std::string>,
+        utils::to_int(type::COUNT)
+    >
+    textures_;
 };
 
-} /* rendering */
+} /* scene */
 } /* eps */
 
-#endif // RENDERING_MODELS_MODEL_H_INCLUDED
+#endif // SCENE_ENTITY_MATERIALS_H_INCLUDED
