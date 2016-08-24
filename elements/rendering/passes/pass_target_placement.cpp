@@ -24,8 +24,6 @@ IN THE SOFTWARE.
 #include "pass_target_placement.h"
 #include "rendering/core/texture_policy.h"
 #include <queue>
-#include <utility>
-#include <algorithm>
 
 namespace eps {
 namespace rendering {

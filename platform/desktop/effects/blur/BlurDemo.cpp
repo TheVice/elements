@@ -9,7 +9,6 @@
 #include "math/transform.h"
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
-#include "utils/std/product.h"
 #include "Game.h"
 
 namespace Rendering

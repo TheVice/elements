@@ -6,9 +6,7 @@
 #include "rendering/core/texture_policy.h"
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
-#include "utils/std/product.h"
 #include "utils/std/enum.h"
-#include "SettingsReader.h"
 #include "Game.h"
 
 namespace Rendering
