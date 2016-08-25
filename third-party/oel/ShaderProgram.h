@@ -24,8 +24,7 @@ public:
 	ShaderProgram& operator = (const ShaderProgram& aRhs) = delete;
 
 public:
-	static GLuint CompileShaderFromData(GLenum aShaderType, const char* aShaderSource);
-	static GLuint CompileShaderFromData(GLenum aShaderType, std::vector<char>& aShaderSource);
+	static GLuint CompileShaderFromData(GLenum aShaderType, const GLchar* aShaderSource);
 	static GLvoid IsShaderCompiled(GLuint aShader);
 	static GLvoid IsProgramLinked(GLuint aProgram);
 

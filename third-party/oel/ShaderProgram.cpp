@@ -29,30 +29,15 @@ ShaderProgram::~ShaderProgram()
 	}
 }
 
-GLuint ShaderProgram::CompileShaderFromData(GLenum aShaderType, const char* aShaderSource)
+GLuint ShaderProgram::CompileShaderFromData(GLenum aShaderType, const GLchar* aShaderSource)
 {
 	assert(aShaderSource);
 	//
-	const GLuint length = std::strlen(aShaderSource);
-	//
+	const auto length = static_cast<GLint>(std::strlen(aShaderSource));
 	assert(length);
 	//
-	std::vector<char> shaderSource(length);
-	shaderSource.resize(length);
-	std::memcpy(&shaderSource.front(), aShaderSource, length);
-	//
-	return CompileShaderFromData(aShaderType, shaderSource);
-}
-
-GLuint ShaderProgram::CompileShaderFromData(GLenum aShaderType, std::vector<char>& aShaderSource)
-{
-	assert(!aShaderSource.empty());
-	//
-	const GLchar* sourcePointer = &aShaderSource.front();
-	const GLint length = aShaderSource.size();
-	//
 	const GLuint shader = glCreateShader(aShaderType);
-	glShaderSource(shader, 1, &sourcePointer, &length);
+	glShaderSource(shader, 1, &aShaderSource, &length);
 	glCompileShader(shader);
 	//
 	IsShaderCompiled(shader);
