@@ -24,7 +24,6 @@ public:
 	ShaderProgram& operator = (const ShaderProgram& aRhs) = delete;
 
 public:
-	static GLuint CompileShaderFromFile(GLenum aShaderType, const std::string& aFileName);
 	static GLuint CompileShaderFromData(GLenum aShaderType, const char* aShaderSource);
 	static GLuint CompileShaderFromData(GLenum aShaderType, std::vector<char>& aShaderSource);
 	static GLvoid IsShaderCompiled(GLuint aShader);
@@ -36,7 +35,7 @@ public:
 	const std::vector<Variable*>& GetVariables() const;
 	const std::map<std::string, Variable*>& GetVariablesByName() const;
 
-	GLvoid BuildProgram(const std::vector<ShaderDefinition>& aShaderDefinitions, GLboolean aIsData);
+	GLvoid BuildProgram(const std::vector<ShaderDefinition>& aShaderDefinitions);
 
 	virtual GLvoid Initialize(GLuint aVertexArrayObject);
 	virtual GLvoid Use() const;

@@ -40,7 +40,7 @@ void ParticlesDemo::Initialize()
 	shaders.push_back(Library::ShaderDefinition(GL_VERTEX_SHADER, data.value().v_shader()));
 	shaders.push_back(Library::ShaderDefinition(GL_FRAGMENT_SHADER, data.value().f_shader()));
 	//
-	mParticlesEffect.BuildProgram(shaders, GL_TRUE);
+	mParticlesEffect.BuildProgram(shaders);
 	// Load the settings
 	mSettings = std::make_unique<SettingsReader>();
 	bool settingLoaded = load_data("settings/experiments/liquid/particles.xml", *mSettings.get());

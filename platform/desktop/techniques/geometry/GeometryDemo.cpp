@@ -46,7 +46,7 @@ void GeometryDemo::Initialize()
 	shaders.push_back(Library::ShaderDefinition(GL_VERTEX_SHADER, data.value().v_shader()));
 	shaders.push_back(Library::ShaderDefinition(GL_FRAGMENT_SHADER, data.value().f_shader()));
 	//
-	mGeometryEffect.BuildProgram(shaders, GL_TRUE);
+	mGeometryEffect.BuildProgram(shaders);
 	// Load the settings
 	mSettings = std::make_unique<SettingsReader>();
 	bool settingLoaded = load_data("settings/techniques/geometry.xml", *mSettings.get());

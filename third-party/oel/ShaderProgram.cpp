@@ -1,6 +1,5 @@
 
 #include "ShaderProgram.h"
-#include <fstream>
 #include <sstream>
 #include <cassert>
 #ifndef _MSC_VER
@@ -9,42 +8,6 @@
 
 namespace Library
 {
-namespace Utility
-{
-
-std::streamoff readFile(const std::string& aFileName, std::vector<char>& aFileContent)
-{
-	aFileContent.clear();
-	std::ifstream file(aFileName, std::fstream::binary);
-
-	if (file)
-	{
-		file.seekg(0, std::fstream::end);
-		const std::streamoff length = file.tellg();
-
-		if (!length)
-		{
-			file.close();
-			return length;
-		}
-
-		file.seekg(0, std::fstream::beg);
-		aFileContent.reserve(static_cast<std::string::size_type>(length));
-		aFileContent.resize(static_cast<std::string::size_type>(length));
-		file.read(&aFileContent.front(), length);
-		file.close();
-		return length;
-	}
-
-	return 0;
-}
-
-std::streamoff readFile(const char* aFileName, std::vector<char>& aFileContent)
-{
-	return readFile(std::string(aFileName), aFileContent);
-}
-
-}
 
 RTTI_DEFINITIONS(ShaderProgram)
 
@@ -66,37 +29,18 @@ ShaderProgram::~ShaderProgram()
 	}
 }
 
-GLuint ShaderProgram::CompileShaderFromFile(GLenum aShaderType, const std::string& aFileName)
-{
-	std::vector<char> shaderSource;
-	Utility::readFile(aFileName, shaderSource);
-
-	if (shaderSource.empty())
-	{
-		std::stringstream errorMessage;
-		errorMessage << "Unable to read shader file: " << aFileName << std::endl;
-		errorMessage << "CompileShaderFromFile() failed" << std::endl;
-		throw std::runtime_error(errorMessage.str());
-	}
-
-	return CompileShaderFromData(aShaderType, shaderSource);
-}
-
 GLuint ShaderProgram::CompileShaderFromData(GLenum aShaderType, const char* aShaderSource)
 {
+	assert(aShaderSource);
+	//
 	const GLuint length = std::strlen(aShaderSource);
-
-	if (!length)
-	{
-		std::stringstream errorMessage;
-		errorMessage << "Shader data are empty" << std::endl;
-		errorMessage << "CompileShaderFromData() failed" << std::endl;
-		throw std::runtime_error(errorMessage.str());
-	}
-
+	//
+	assert(length);
+	//
 	std::vector<char> shaderSource(length);
 	shaderSource.resize(length);
 	std::memcpy(&shaderSource.front(), aShaderSource, length);
+	//
 	return CompileShaderFromData(aShaderType, shaderSource);
 }
 
@@ -107,7 +51,7 @@ GLuint ShaderProgram::CompileShaderFromData(GLenum aShaderType, std::vector<char
 	const GLchar* sourcePointer = &aShaderSource.front();
 	const GLint length = aShaderSource.size();
 	//
-	GLuint shader = glCreateShader(aShaderType);
+	const GLuint shader = glCreateShader(aShaderType);
 	glShaderSource(shader, 1, &sourcePointer, &length);
 	glCompileShader(shader);
 	//
@@ -175,25 +119,16 @@ const std::map<std::string, Variable*>& ShaderProgram::GetVariablesByName() cons
 	return mVariablesByName;
 }
 
-GLvoid ShaderProgram::BuildProgram(const std::vector<ShaderDefinition>& aShaderDefinitions, GLboolean aIsData)
+GLvoid ShaderProgram::BuildProgram(const std::vector<ShaderDefinition>& aShaderDefinitions)
 {
-	std::vector<GLuint> compiledShaders;
-	compiledShaders.reserve(aShaderDefinitions.size());
+	assert(!aShaderDefinitions.empty());
+	//
+	std::vector<GLuint> compiledShaders(aShaderDefinitions.size());
 	compiledShaders.clear();
 
-	for (ShaderDefinition shaderDefinition : aShaderDefinitions)
+	for (const auto& shaderDefinition : aShaderDefinitions)
 	{
-		GLuint compiledShader = 0;
-
-		if (aIsData)
-		{
-			compiledShader = CompileShaderFromData(shaderDefinition.first, &shaderDefinition.second.front());
-		}
-		else
-		{
-			compiledShader = CompileShaderFromFile(shaderDefinition.first, shaderDefinition.second);
-		}
-
+		const GLuint compiledShader = CompileShaderFromData(shaderDefinition.first, &shaderDefinition.second.front());
 		glAttachShader(mProgram, compiledShader);
 		compiledShaders.push_back(compiledShader);
 	}
@@ -202,7 +137,7 @@ GLvoid ShaderProgram::BuildProgram(const std::vector<ShaderDefinition>& aShaderD
 	//
 	IsProgramLinked(mProgram);
 
-	for (GLuint compileShader : compiledShaders)
+	for (auto compileShader : compiledShaders)
 	{
 		glDeleteShader(compileShader);
 	}
@@ -228,12 +163,13 @@ GLvoid ShaderProgram::CreateVertexBuffer(const GLvoid* aVertices, GLuint aVertex
 
 GLuint ShaderProgram::GetVertexSize() const
 {
-	throw std::runtime_error("ShaderProgram::GetVertexSize() not implemented for base class");
+	throw std::runtime_error("GetVertexSize() method not implemented for ShaderProgram class");
 }
 
 GLint ShaderProgram::GetAttrib(const GLchar* aAttribName)
 {
-	GLint attrib = glGetAttribLocation(mProgram, aAttribName);
+	assert(aAttribName);
+	const GLint attrib = glGetAttribLocation(mProgram, aAttribName);
 
 	if (attrib == -1)
 	{
@@ -248,7 +184,8 @@ GLint ShaderProgram::GetAttrib(const GLchar* aAttribName)
 
 GLint ShaderProgram::GetUniform(const GLchar* aUniformName)
 {
-	GLint uniform = glGetUniformLocation(mProgram, aUniformName);
+	assert(aUniformName);
+	const GLint uniform = glGetUniformLocation(mProgram, aUniformName);
 
 	if (uniform == -1)
 	{
