@@ -2,13 +2,15 @@
 #define _SETTINGS_READER_H_
 
 #include "assets/asset_xml.h"
-#include <glm/glm.hpp>
+#include "VertexStructure.h"
+#include <vector>
 
 struct SettingsReader : public eps::asset_xml
 {
 public:
 
-	glm::vec2 mPosition;
+	std::vector<VertexStructure> mVertices;
+	glm::mat4 mTransform;
 	float mSize;
 	bool mIsEmpty;
 

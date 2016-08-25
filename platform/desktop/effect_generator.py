@@ -20,6 +20,10 @@ def read_location(a_location):
 def read_program(a_path_2_xml_shader):
 
     program = {}
+
+    for e in ['a_locations', 'u_locations']:
+        program[e] = list()
+
     tree = ET.parse(a_path_2_xml_shader)
     root = tree.getroot()
 
@@ -51,10 +55,6 @@ def read_program(a_path_2_xml_shader):
 
             for location in element:
 
-                if element.tag not in program:
-
-                    program[element.tag] = list()
-
                 program[element.tag].append(read_location(location))
 
         else:
@@ -73,7 +73,7 @@ def get_class_name(a_program):
 
 def generate_effect_h(a_program):
 
-    head_template = (
+    effect_h_template = (
         '#ifndef _{0}_EFFECT_H_{1}'
         '#define _{0}_EFFECT_H_{1}'
         '{1}'
@@ -85,73 +85,54 @@ def generate_effect_h(a_program):
         '{{{1}'
         '{2}RTTI_DECLARATIONS({3}Effect, ShaderProgram){1}'
         '{1}'
+        '{2}{4}{1}'     # uniform_declaration
+        '{1}'
+        'public:{1}'
+        '{2}{3}Effect();{1}'
+        '{1}'
+        'public:{1}'
+        '{2}{3}Effect(const {3}Effect& aRhs) = delete;{1}'
+        '{2}{3}Effect& operator = (const {3}Effect& aRhs) = delete;{1}'
+        '{1}'
+        'public:{1}'
+        '{2}virtual GLvoid Initialize(GLuint aVertexArrayObject) override;{1}'
+        '{2}virtual GLuint GetVertexSize() const override;{1}'
+        '{1}'
+        'private:{1}'
+        '{2}enum VertexAttribute{1}'
+        '{2}{{'
+        '{1}'
+        '{2}{2}{5}'     # attribute_enumeration
+        '{1}'
+        '{2}}};'
+        '{1}'
+        '}};{1}'
+        '}}{1}'
+        '{1}'
+        '#endif{1}'
+        '{1}'
     )
 
     head_name = a_program['name'].upper()
     class_name = get_class_name(a_program)
 
-    head = head_template.format(head_name, os.linesep, '\t', class_name)
-
-    uniform_declaration = ''
+    uniform_declaration = []
 
     for location in a_program['u_locations']:
 
-        declaration = '{}SHADER_VARIABLE_DECLARATION({}){}'.format('\t', location[0], os.linesep)
-        uniform_declaration = '{}{}'.format(uniform_declaration, declaration)
+        uniform_declaration.append('SHADER_VARIABLE_DECLARATION({})'.format(location[0], os.linesep))
 
-    body_template = (
-        '{0}'
-        'public:{0}'
-        '{1}{2}Effect();{0}'
-        '{0}'
-        'public:{0}'
-        '{1}{2}Effect(const {2}Effect& aRhs) = delete;{0}'
-        '{1}{2}Effect& operator = (const {2}Effect& aRhs) = delete;{0}'
-        '{0}'
-        'public:{0}'
-        '{1}virtual GLvoid Initialize(GLuint aVertexArrayObject) override;{0}'
-        '{1}virtual GLuint GetVertexSize() const override;{0}'
-        '{0}'
-    )
+    uniform_declaration = '{}{}'.format(os.linesep, '\t').join(uniform_declaration)
 
-    body = body_template.format(os.linesep, '\t', class_name)
-
-    attribute_enumeration = ''
+    attribute_enumeration = []
 
     for location in a_program['a_locations']:
 
-        enumeration = '{0}{0}{1}_location = {2},{3}'.format('\t', location[0], location[1], os.linesep)
-        attribute_enumeration = '{}{}'.format(attribute_enumeration, enumeration)
+        attribute_enumeration.append('{}_location = {}'.format(location[0], location[1]))
 
-    attribute_template = (
-        'private:{0}'
-        '{1}enum VertexAttribute{0}'
-        '{1}{{{0}'
-        '{2}{0}'
-        '{1}}};'
-    )
+    attribute_enumeration = '{}{}{}'.format(',', os.linesep, '\t\t').join(attribute_enumeration)
 
-    if len(attribute_enumeration) > 0:
-
-        pos = attribute_enumeration.rfind(',')
-        attribute_enumeration = attribute_enumeration[:pos]
-
-        attribute_enumeration = attribute_template.format(os.linesep, '\t', attribute_enumeration)
-
-    footer_template = (
-        '{0}'
-        '}};{0}'
-        '}}{0}'
-        '{0}'
-        '#endif{0}'
-        '{0}'
-    )
-
-    footer = footer_template.format(os.linesep)
-
-    full_document = '{}{}{}{}{}'.format(head, uniform_declaration, body, attribute_enumeration, footer)
-
-    return full_document
+    return effect_h_template.format(head_name, os.linesep, '\t', class_name, uniform_declaration, attribute_enumeration)
 
 
 def convert_type_from_glsl_to_cpp(a_type):
@@ -206,130 +187,93 @@ def get_attribute_type(a_attribute, a_vertex):
 
 def generate_effect_cpp(a_program):
 
-    head_template = (
+    effect_cpp_template = (
         '{0}'
         '#include "{1}Effect.h"{0}'
         '#include "VertexStructure.h"{0}'
         '{0}'
         'namespace Library{0}'
         '{{{0}'
-        'RTTI_DEFINITIONS({1}Effect)'
+        'RTTI_DEFINITIONS({1}Effect){0}'
+        '{0}'
+        '{2}{0}'        # uniform_definition
+        '{0}'
+        '{1}Effect::{1}Effect() :{0}'
+        '{3}ShaderProgram(),{0}'
+        '{3}{4}'        # uniform_initialization
+        '{0}'
+        '{{{0}'
+        '}}{0}'
+        '{0}'
+        'GLvoid {1}Effect::Initialize(GLuint aVertexArrayObject){0}'
+        '{{{0}'
+        '{3}ShaderProgram::Initialize(aVertexArrayObject);{0}'
+        '{3}//{0}'
+        '{3}{5}{0}'     # uniform_instantiate
+        '{3}//{0}'
+        '#ifdef GET_ATTRIB{0}'
+        '{3}{6}{0}'     # attribute_location_get_attrib
+        '#else{0}'
+        '{3}{7}{0}'     # attribute_location
+        '#endif{0}'
+        '{3}//{0}'
+        '{8}'           # attribute_pointer
+        '}}{0}'
+        '{0}'
+        'GLuint {1}Effect::GetVertexSize() const{0}'
+        '{{{0}'
+        '{3}return sizeof(VertexStructure);{0}'
+        '}}{0}'
+        '{0}'
+        '}}{0}'
+    )
+
+    attribute_pointer_template = (
+        '{0}glVertexAttribPointer(vertexAttribute_{1}, {2}, GL_FLOAT, GL_FALSE,{3}'
+        '{0}{0}GetVertexSize(),{3}'
+        '{0}{0}reinterpret_cast<GLvoid*>(offsetof(VertexStructure, {1})));{3}'
+        '{0}glEnableVertexAttribArray(vertexAttribute_{1});{3}'
     )
 
     class_name = get_class_name(a_program)
 
-    head = head_template.format(os.linesep, class_name)
-    uniform_definition = ''
+    uniform_definition = []
+    uniform_initialization = []
+    uniform_instantiate = []
+    attribute_location_get_attrib = []
+    attribute_location = []
+    attribute_pointer = []
 
     for location in a_program['u_locations']:
 
-        definition = 'SHADER_VARIABLE_DEFINITION({}Effect, {}){}'.format(class_name, location[0], os.linesep)
-        uniform_definition = '{}{}'.format(uniform_definition, definition)
+        uniform_definition.append('SHADER_VARIABLE_DEFINITION({}Effect, {})'.format(class_name, location[0]))
+        uniform_initialization.append('SHADER_VARIABLE_INITIALIZATION({})'.format(location[0]))
+        uniform_instantiate.append('SHADER_VARIABLE_INSTANTIATE({})'.format(location[0]))
 
-    constructor_template = (
-        '{0}Effect::{0}Effect() :{1}'
-        '{2}ShaderProgram(){3}{1}'
-        '{{{1}'
-        '}}'
-    )
-
-    uniform_initialization = ''
-
-    for location in a_program['u_locations']:
-
-        initialization = '{}SHADER_VARIABLE_INITIALIZATION({}),{}'.format('\t', location[0], os.linesep)
-        uniform_initialization = '{}{}'.format(uniform_initialization, initialization)
-
-    if len(uniform_initialization) > 1:
-
-        pos = uniform_initialization.rfind(',')
-        uniform_initialization = uniform_initialization[:pos]
-        uniform_initialization = '{}{}{}'.format(',', os.linesep, uniform_initialization)
-
-    constructor = constructor_template.format(class_name, os.linesep, '\t', uniform_initialization)
-
-    initialize_method_template = (
-        'GLvoid {0}Effect::Initialize(GLuint aVertexArrayObject){1}'
-        '{{{1}'
-        '{2}ShaderProgram::Initialize(aVertexArrayObject);{1}'
-        '{2}//{1}'
-        '{3}'   # uniform_instantiate
-        '{2}//{1}'
-        '{4}'   # attribute_location
-        '{2}//{1}'
-        '{5}'   # attribute_pointer
-        '}}'
-    )
-
-    uniform_instantiate = ''
-
-    for location in a_program['u_locations']:
-
-        instantiate = '{}SHADER_VARIABLE_INSTANTIATE({}){}'.format('\t', location[0], os.linesep)
-        uniform_instantiate = '{}{}'.format(uniform_instantiate, instantiate)
-
-    location_template_get_attrib = '{0}const GLint vertexAttribute_{1} = GetAttrib("{1}");{2}'
-    location_template = '{0}const GLint vertexAttribute_{1} = {1}_location;{2}'
-
-    attribute_location_get_attrib = ''
-    attribute_location = ''
+    uniform_definition = '{}'.format(os.linesep).join(uniform_definition)
+    uniform_initialization = '{}{}{}'.format(',', os.linesep, '\t').join(uniform_initialization)
+    uniform_instantiate = '{}{}'.format(os.linesep, '\t').join(uniform_instantiate)
 
     for location in a_program['a_locations']:
 
-        a_location = location_template_get_attrib.format('\t', location[0], os.linesep)
-        attribute_location_get_attrib = '{}{}'.format(attribute_location_get_attrib, a_location)
+        a_location = 'const GLint vertexAttribute_{0} = GetAttrib("{0}");'.format(location[0])
+        attribute_location_get_attrib.append(a_location)
 
-        a_location = location_template.format('\t', location[0], os.linesep)
-        attribute_location = '{}{}'.format(attribute_location, a_location)
-
-    attribute_location = '#ifdef GET_ATTRIB{0}{1}#else{0}{2}#endif{0}'.format(os.linesep,
-                                                                              attribute_location_get_attrib,
-                                                                              attribute_location)
-
-    attribute_pointer = ''
-
-    for location in a_program['a_locations']:
+        a_location = 'const GLint vertexAttribute_{0} = {0}_location;'.format(location[0])
+        attribute_location.append(a_location)
 
         attribute_type = get_attribute_type(location[0], a_program['vertex'])
         attribute_length = get_type_length(attribute_type)
-        l = '{0}glVertexAttribPointer(vertexAttribute_{1}, {2}, GL_FLOAT, GL_FALSE,{3}'.format('\t',
-                                                                                               location[0],
-                                                                                               attribute_length,
-                                                                                               os.linesep)
-        l = '{0}{1}{1}GetVertexSize(),{2}'.format(l, '\t', os.linesep)
-        l = '{0}{1}{1}reinterpret_cast<GLvoid*>(offsetof(VertexStructure, {2})));{3}'.format(l,
-                                                                                             '\t',
-                                                                                             location[0],
-                                                                                             os.linesep)
-        l = '{0}{1}glEnableVertexAttribArray(vertexAttribute_{2});{3}'.format(l, '\t', location[0], os.linesep)
 
-        attribute_pointer = '{}{}{}//{}'.format(attribute_pointer, l, '\t', os.linesep)
+        attribute_pointer.append(attribute_pointer_template.format('\t', location[0], attribute_length, os.linesep))
 
-    if len(attribute_pointer) > 0:
+    attribute_location_get_attrib = '{}{}'.format(os.linesep, '\t').join(attribute_location_get_attrib)
+    attribute_location = '{}{}'.format(os.linesep, '\t').join(attribute_location)
+    attribute_pointer = '{}//{}'.format('\t', os.linesep).join(attribute_pointer)
 
-        pos = attribute_pointer.rfind('\t')
-        attribute_pointer = attribute_pointer[:pos]
-
-    initialize = initialize_method_template.format(class_name,
-                                                   os.linesep, '\t',
-                                                   uniform_instantiate,
-                                                   attribute_location,
-                                                   attribute_pointer)
-
-    vertex_size_template = (
-        'GLuint {1}Effect::GetVertexSize() const{2}'
-        '{{{2}'
-        '{0}return sizeof(VertexStructure);{2}'
-        '}}'
-    )
-
-    vertex_size = vertex_size_template.format('\t', class_name, os.linesep)
-
-    return '{0}{1}{1}{2}{1}{3}{1}{1}{4}{1}{1}{5}{1}{1}}}{1}'.format(head, os.linesep,
-                                                                    uniform_definition,
-                                                                    constructor,
-                                                                    initialize,
-                                                                    vertex_size)
+    return effect_cpp_template.format(os.linesep, class_name, uniform_definition,
+                                      '\t', uniform_initialization, uniform_instantiate,
+                                      attribute_location_get_attrib, attribute_location, attribute_pointer)
 
 
 def generate_vertex_structure(a_program):
@@ -342,17 +286,20 @@ def generate_vertex_structure(a_program):
         '{0}'
         'struct VertexStructure{0}'
         '{{'
-        '{1}{0}'   # structure_member
+        '{0}'
+        '{2}{1}{0}'     # structure_member
         '{0}'
         '{2}VertexStructure() :{0}'
-        '{3}'      # initialize list, default constructor
+        '{2}{2}{3}'     # initialize list, default constructor
+        '{0}'
         '{2}{{'
         '{0}'
         '{2}}}'
         '{0}'
         '{0}'
-        '{2}VertexStructure({4}) :{0}'
-        '{5}'      # initialize list, parameters constructor
+        '{2}VertexStructure({0}{2}{2}{4}) :{0}'
+        '{2}{2}{5}'     # initialize list, parameters constructor
+        '{0}'
         '{2}{{'
         '{0}'
         '{2}}}'
@@ -363,48 +310,35 @@ def generate_vertex_structure(a_program):
         '{0}'
     )
 
-    structure_member = ''
-    initialize_list = ''
-    argument_list = ''
-    argument_list_2nd = ''
+    structure_member = []
+    initialize_list = []
+    argument_list = []
+    initialize_list_2nd = []
 
     for location in a_program['a_locations']:
 
         attribute_type = get_attribute_type(location[0], a_program['vertex'])
-        structure_member = '{}{}{}{} {};'.format(structure_member, os.linesep, '\t', attribute_type, location[0])
-        initialize_list = '{}{}{}(),{}'.format(initialize_list, '\t\t', location[0], os.linesep)
-        argument_list = '{}{}{}const {}& argument_{},'.format(argument_list, os.linesep, '\t\t\t',
-                                                              attribute_type, location[0])
-        argument_list_2nd = '{}{}{}(argument_{}),{}'.format(argument_list_2nd, '\t\t', location[0],
-                                                            location[0], os.linesep)
 
-    if len(initialize_list) > 0:
+        structure_member.append('{} {};'.format(attribute_type, location[0]))
+        initialize_list.append('{}()'.format(location[0]))
+        argument_list.append('const {}& argument_{}'.format(attribute_type, location[0]))
+        initialize_list_2nd.append('{0}(argument_{0})'.format(location[0]))
 
-        pos = initialize_list.rfind(',')
-        initialize_list = initialize_list[:pos]
-        initialize_list = '{}{}'.format(initialize_list, os.linesep)
-
-    if len(argument_list) > 0:
-
-        pos = argument_list.rfind(',')
-        argument_list = argument_list[:pos]
-
-    if len(argument_list_2nd) > 0:
-
-        pos = argument_list_2nd.rfind(',')
-        argument_list_2nd = argument_list_2nd[:pos]
-        argument_list_2nd = '{}{}'.format(argument_list_2nd, os.linesep)
+    structure_member = '{}{}'.format(os.linesep, '\t').join(structure_member)
+    initialize_list = '{}{}{}'.format(',', os.linesep, '\t\t').join(initialize_list)
+    argument_list = '{}{}{}'.format(',', os.linesep, '\t\t').join(argument_list)
+    initialize_list_2nd = '{}{}{}'.format(',', os.linesep, '\t\t').join(initialize_list_2nd)
 
     return vertex_structure_template.format(os.linesep, structure_member,
                                             '\t', initialize_list,
-                                            argument_list, argument_list_2nd)
+                                            argument_list, initialize_list_2nd)
 
 
 if __name__ == '__main__':
 
     if len(sys.argv) < 2:
 
-        print('Using: {} <prog file>'.format(sys.argv[0]))
+        print('Using: {} <shader file>'.format(sys.argv[0]))
 
     else:
 

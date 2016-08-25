@@ -1,48 +1,84 @@
 
 #include "SettingsReader.h"
-#include "ReaderHelpers.h"
 #include "assets/assets_storage.h"
+#include <cstring>
 
 bool SettingsReader::read(const pugi::xml_document& doc)
 {
 	mIsEmpty = true;
-	pugi::xml_node root_node = doc.child("program");
+	auto root_node = doc.child("program");
 
 	if (root_node.empty())
 	{
 		return false;
 	}
 
-	pugi::xml_node position_node = root_node.child("position");
+	auto vertices_node = root_node.child("vertices");
 
-	if (position_node.empty())
+	if (vertices_node.empty())
 	{
 		return false;
 	}
 
-	if (position_node.child("x").first_child().empty())
+	auto transform_node = root_node.child("transform");
+
+	if (transform_node.empty())
 	{
 		return false;
 	}
 
-	if (position_node.child("y").first_child().empty())
-	{
-		return false;
-	}
-
-	pugi::xml_node size_node = root_node.child("size");
+	auto size_node = root_node.child("size");
 
 	if (size_node.empty())
 	{
 		return false;
 	}
 
-	if (!read_glm_vec2(position_node, mPosition))
+	mVertices.reserve(6);
+	mVertices.resize(0);
+
+	for (auto vertex = vertices_node.begin(); vertex != vertices_node.end(); ++vertex)
 	{
-		return false;
+		if (std::strcmp(vertex->name(), "vertex"))
+		{
+			continue;
+		}
+
+		auto pos_node = vertex->child("pos");
+
+		if (pos_node.empty())
+		{
+			return false;
+		}
+
+		auto a_vertex_pos = glm::vec2(
+								pos_node.attribute("x").as_float(),
+								pos_node.attribute("y").as_float());
+		auto vertex_data = VertexStructure(a_vertex_pos);
+		mVertices.push_back(vertex_data);
 	}
 
-	mSize = std::atof(size_node.child_value());
+	mTransform = glm::mat4(
+					 transform_node.attribute("m00").as_float(),
+					 transform_node.attribute("m01").as_float(),
+					 transform_node.attribute("m02").as_float(),
+					 transform_node.attribute("m03").as_float(),
+					 //
+					 transform_node.attribute("m10").as_float(),
+					 transform_node.attribute("m11").as_float(),
+					 transform_node.attribute("m12").as_float(),
+					 transform_node.attribute("m13").as_float(),
+					 //
+					 transform_node.attribute("m20").as_float(),
+					 transform_node.attribute("m21").as_float(),
+					 transform_node.attribute("m22").as_float(),
+					 transform_node.attribute("m23").as_float(),
+					 //
+					 transform_node.attribute("m30").as_float(),
+					 transform_node.attribute("m31").as_float(),
+					 transform_node.attribute("m32").as_float(),
+					 transform_node.attribute("m33").as_float());
+	mSize = size_node.attribute("value").as_float();
 	mIsEmpty = false;
 	return true;
 }
@@ -56,7 +92,9 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 		return false;
 	}
 
-	demo_data.mPosition = data.value().mPosition;
+	demo_data.mVertices = data.value().mVertices;
+	demo_data.mTransform = data.value().mTransform;
 	demo_data.mSize = data.value().mSize;
+	//
 	return true;
 }

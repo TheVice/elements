@@ -2,10 +2,8 @@
 #define _PARTICLES_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#include "rendering/core/program.h"
-#include "rendering/core/texture.h"
-#include "rendering/core/texture_policy.h"
-#include "rendering/primitives/square.h"
+#include "ParticlesEffect.h"
+#include "SettingsReader.h"
 #include <memory>
 
 namespace Rendering
@@ -25,14 +23,15 @@ public:
 
 public:
 	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	eps::rendering::program mProgram;
-	eps::rendering::primitive::square mSquare;
-	glm::mat4 mTransform;
-	float mSize;
+	Library::ParticlesEffect mParticlesEffect;
+	GLuint mVertexArrayObject;
+	GLuint mVertexBuffer;
+	GLuint mVertexCount;
+
+	std::unique_ptr<SettingsReader> mSettings;
 };
 }
 

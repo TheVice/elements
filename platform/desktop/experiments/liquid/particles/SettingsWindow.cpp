@@ -1,4 +1,4 @@
-
+#ifdef A
 #include "SettingsWindow.h"
 #include "metrics/metrics.h"
 #include "math/transform.h"
@@ -627,3 +627,4 @@ void ProcessWindow(GLFWwindow* aWindow, SettingsWindow* aSettingsWindow)
 }
 
 }
+#endif

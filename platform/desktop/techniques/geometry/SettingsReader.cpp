@@ -152,5 +152,6 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 	demo_data.mMatrixMvp = data.value().mMatrixMvp;
 	demo_data.mMatrixNormal = data.value().mMatrixNormal;
 	demo_data.mTexturePath = data.value().mTexturePath;
+	//
 	return true;
 }

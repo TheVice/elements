@@ -7,7 +7,6 @@
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
 #include "utils/std/enum.h"
-#include "Game.h"
 
 namespace Rendering
 {
@@ -38,7 +37,7 @@ void GeometryDemo::Initialize()
 
 	if (!data || !data.value().v_shader() || !data.value().f_shader())
 	{
-		throw std::runtime_error("load shader program failed");
+		throw std::runtime_error("Failed to load shader");
 	}
 
 	std::vector<Library::ShaderDefinition> shaders(2);
@@ -54,7 +53,7 @@ void GeometryDemo::Initialize()
 
 	if (!settingLoaded)
 	{
-		mGame->Exit();
+		throw std::runtime_error("Failed to load settings");
 	}
 
 	// Load the texture
