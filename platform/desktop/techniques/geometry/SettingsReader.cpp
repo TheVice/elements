@@ -20,6 +20,13 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return false;
 	}
 
+	auto indices_node = root_node.child("indices");
+
+	if (indices_node.empty())
+	{
+		return false;
+	}
+
 	auto m_mvp_node = root_node.child("matrix_mvp");
 
 	if (m_mvp_node.empty())
@@ -40,9 +47,6 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 	{
 		return false;
 	}
-
-	mVertices.reserve(6);
-	mVertices.resize(0);
 
 	for (auto vertex = vertices_node.begin(); vertex != vertices_node.end(); ++vertex)
 	{
@@ -99,6 +103,17 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		mVertices.push_back(vertex_data);
 	}
 
+	for (auto index = indices_node.begin(); index != indices_node.end(); ++index)
+	{
+		if (std::strcmp(index->name(), "index"))
+		{
+			continue;
+		}
+
+		auto index_data = index->attribute("value").as_uint();
+		mIndices.push_back(index_data);
+	}
+
 	mMatrixMvp = glm::mat4(
 					 m_mvp_node.attribute("m00").as_float(),
 					 m_mvp_node.attribute("m01").as_float(),
@@ -149,6 +164,7 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 	}
 
 	demo_data.mVertices = data.value().mVertices;
+	demo_data.mIndices = data.value().mIndices;
 	demo_data.mMatrixMvp = data.value().mMatrixMvp;
 	demo_data.mMatrixNormal = data.value().mMatrixNormal;
 	demo_data.mTexturePath = data.value().mTexturePath;

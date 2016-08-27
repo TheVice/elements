@@ -10,6 +10,7 @@ struct SettingsReader : public eps::asset_xml
 public:
 
 	std::vector<VertexStructure> mVertices;
+	std::vector<unsigned int> mIndices;
 	glm::mat4 mMatrixMvp;
 	glm::mat3 mMatrixNormal;
 	std::string mTexturePath;

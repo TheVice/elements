@@ -32,7 +32,7 @@ private:
 	Library::GeometryEffect mGeometryEffect;
 	GLuint mVertexArrayObject;
 	GLuint mVertexBuffer;
-	GLuint mVertexCount;
+	GLuint mIndexBuffer;
 	GLuint mColorTexture;
 
 	eps::rendering::texture mTexture;
