@@ -28,7 +28,7 @@ void RenderingGame::Initialize()
 	eps::preferences::init<Desktop::preferences>();
 	eps::metrics::init<Desktop::metrics>(1.0f);
 	//
-	mUiComponent = std::make_unique<CustomUi>(*this, "settings/techniques/geometry_ui.xml");
+	mUiComponent = std::make_unique<CustomUi>(*this, "assets/settings/techniques/geometry_ui.xml");
 	mComponents.push_back(mUiComponent.get());
 	mServices.AddService(Rendering::CustomUi::TypeIdClass(), mUiComponent.get());
 	//

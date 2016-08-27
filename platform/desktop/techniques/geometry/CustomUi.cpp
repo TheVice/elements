@@ -59,9 +59,9 @@ CustomUi::~CustomUi()
 {
 }
 
-#define IS_CONTROL_EXIST(CONTROL_NAME)	\
-	if (!mControls.count(CONTROL_NAME))	\
-	{																\
+#define IS_CONTROL_EXIST(CONTROL_NAME)														\
+	if (!mControls.count(CONTROL_NAME))														\
+	{																						\
 		throw std::runtime_error(std::string(CONTROL_NAME) + std::string(" not exist"));	\
 	}
 

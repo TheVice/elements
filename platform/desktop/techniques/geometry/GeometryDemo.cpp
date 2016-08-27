@@ -52,7 +52,7 @@ void GeometryDemo::Initialize()
 	mGeometryEffect.BuildProgram(shaders);
 	// Load the settings
 	mSettings = std::make_unique<SettingsReader>();
-	bool settingLoaded = load_data("settings/techniques/geometry.xml", *mSettings.get());
+	bool settingLoaded = load_data("assets/settings/techniques/geometry.xml", *mSettings.get());
 
 	if (!settingLoaded)
 	{
