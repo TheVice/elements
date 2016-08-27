@@ -33,6 +33,7 @@ private:
 	GLuint mVertexArrayObject;
 	GLuint mVertexBuffer;
 	GLuint mVertexCount;
+	GLuint mColorTexture;
 
 	eps::rendering::texture mTexture;
 	std::unique_ptr<SettingsReader> mSettings;

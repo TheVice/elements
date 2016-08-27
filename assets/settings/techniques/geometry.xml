@@ -2,23 +2,23 @@
 <program name="Geometry Demo [techniques/geometry]">
   <vertices>
     <vertex>
-      <pos x="-1.0" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="1.0"/>
+      <pos x="-0.55" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="1.0"/>
     </vertex>
     <vertex>
-      <pos x="1.0" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="1.0"/>
+      <pos x="0.55" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="1.0"/>
     </vertex>
     <vertex>
-      <pos x="1.0" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="0.0"/>
+      <pos x="0.55" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="0.0"/>
     </vertex>
     <!---->
     <vertex>
-      <pos x="1.0" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="0.0"/>
+      <pos x="0.55" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="0.0"/>
     </vertex>
     <vertex>
-      <pos x="-1.0" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="0.0"/>
+      <pos x="-0.55" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="0.0"/>
     </vertex>
     <vertex>
-      <pos x="-1.0" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="1.0"/>
+      <pos x="-0.55" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="1.0"/>
     </vertex>
   </vertices>
   <matrix_mvp m00="1.0" m01="0.0" m02="0.0" m03="0.0"

@@ -54,6 +54,10 @@
 
     <slider position_x="250" position_y="10" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="17" min="-1.0" max="1.0" control_name="mMatrixNormal21_Slider"/>
     <label position_x="420" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixNormal21_Label"/>
+    <!-- -->
+    <label position_x="10" position_y="460" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" text="Left Top vertex" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0"/>
+    <label position_x="120" position_y="443" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mNormalLT_x_Label"/>
+    <slider position_x="10" position_y="440" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="18" min="-1.0" max="1.0" control_name="mNormalLT_x_Slider"/>
   </controls>
 </ui>
 <!-- Sample using of controls

@@ -51,7 +51,14 @@ RTTI_DEFINITIONS(CustomUi)
 CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 	Ui(aGame, aAssetPath),
 	mMatrixMvp(),
-	mMatrixNormal()
+	mMatrixNormal(),
+	mVertices(
+{
+	VertexStructure(),
+					VertexStructure(),
+					VertexStructure(),
+					VertexStructure()
+})
 {
 }
 
@@ -93,6 +100,8 @@ void CustomUi::Initialize()
 	//
 	IS_CONTROL_EXIST("mMatrixNormal20_Label")
 	IS_CONTROL_EXIST("mMatrixNormal21_Label")
+	//
+	IS_CONTROL_EXIST("mNormalLT_x_Label")
 }
 
 #define DISPLAY_VALUE_AT_LABEL(VALUE, LABEL)													\
@@ -131,6 +140,8 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 	//
 	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][0], "mMatrixNormal20_Label")
 	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][1], "mMatrixNormal21_Label")
+	//
+	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.x, "mNormalLT_x_Label")
 }
 
 void CustomUi::SetMatrixMvp(const glm::mat4& aMatrixMvp)
@@ -153,11 +164,22 @@ const glm::mat3& CustomUi::GetMatrixNormal() const
 	return mMatrixNormal;
 }
 
+void CustomUi::_setNormalLT_x(float aValue)
+{
+	mVertices[0].a_vertex_normal.x = aValue;
+}
+
+float CustomUi::_getNormalLT_x()
+{
+	return mVertices[0].a_vertex_normal.x;
+}
+
 Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
 {
 	Desktop::SliderModel* sliderModel = nullptr;
 	static std::bitset<12> mvpSet;
 	static std::bitset<6> normalSet;
+	static std::bitset<6> topLeftVertexSet;
 
 	if (aSliderId < static_cast<int>(mvpSet.size()))
 	{
@@ -222,11 +244,11 @@ Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float 
 
 		mvpSet.set(aSliderId);
 	}
-	else
+	else if (aSliderId < static_cast<int>(mvpSet.size() + normalSet.size()))
 	{
 		const auto localSliderId = aSliderId - mvpSet.size();
 
-		if (localSliderId > static_cast<int>(normalSet.size() - 1) || normalSet.test(localSliderId))
+		if (normalSet.test(localSliderId))
 		{
 			return sliderModel;
 		}
@@ -262,6 +284,27 @@ Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float 
 		}
 
 		normalSet.set(localSliderId);
+	}
+	else if (aSliderId < static_cast<int>(mvpSet.size() + normalSet.size() + topLeftVertexSet.size()))
+	{
+		const auto localSliderId = aSliderId - mvpSet.size() - normalSet.size();
+
+		if (topLeftVertexSet.test(localSliderId))
+		{
+			return sliderModel;
+		}
+
+		switch (localSliderId)
+		{
+			case 0:
+				sliderModel = new CustomSliderModel(mVertices[0].a_vertex_normal.x, aMin, aMax);
+				break;
+
+			default:
+				return sliderModel;
+		}
+
+		topLeftVertexSet.set(localSliderId);
 	}
 
 	return sliderModel;

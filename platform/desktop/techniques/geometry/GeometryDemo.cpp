@@ -20,6 +20,7 @@ GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	mVertexArrayObject(0),
 	mVertexBuffer(0),
 	mVertexCount(0),
+	mColorTexture(0),
 	mTexture(),
 	mSettings(nullptr),
 	mUi(nullptr)
@@ -69,6 +70,7 @@ void GeometryDemo::Initialize()
 
 	auto maker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>(asset->format());
 	mTexture = maker.construct(asset->pixels(), asset->size());
+	mColorTexture = (*eps::utils::ptr_product(mTexture.get_product()));
 	// Create the vertex buffer object
 	mVertexCount = mSettings->mVertices.size();
 	mGeometryEffect.CreateVertexBuffer(&mSettings->mVertices.front(), mVertexCount, mVertexBuffer);
@@ -76,25 +78,32 @@ void GeometryDemo::Initialize()
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mGeometryEffect.Initialize(mVertexArrayObject);
 	glBindVertexArray(0);
-	//
+	// Retry the UI service and set the values from settings class
 	mUi = static_cast<Rendering::CustomUi*>(mGame->GetServices().GetService(Rendering::CustomUi::TypeIdClass()));
 	assert(mUi);
 	mUi->SetMatrixMvp(mSettings->mMatrixMvp);
 	mUi->SetMatrixNormal(mSettings->mMatrixNormal);
+	//	mUi->SetVertices(mSettings->mVertices);
+	mUi->_setNormalLT_x(mSettings->mVertices[0].a_vertex_normal.x);
 }
 
 void GeometryDemo::Update(const Library::GameTime&)
 {
 	mSettings->mMatrixMvp = mUi->GetMatrixMvp();
 	mSettings->mMatrixNormal = mUi->GetMatrixNormal();
+	//	mSettings->mVertices = mUi->GetVertices();
+	// Non index model required set same value common vertex
+	mSettings->mVertices.begin()->a_vertex_normal.x = mUi->_getNormalLT_x();
+	mSettings->mVertices.rbegin()->a_vertex_normal.x = mUi->_getNormalLT_x();
 }
 
 void GeometryDemo::Draw(const Library::GameTime&)
 {
-	GLuint colorTexture = (*eps::utils::ptr_product(mTexture.get_product()));
 	glBindVertexArray(mVertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-	glBindTexture(GL_TEXTURE_2D, colorTexture);
+	glBufferData(GL_ARRAY_BUFFER, mGeometryEffect.GetVertexSize() * mVertexCount, &mSettings->mVertices.front(),
+				 GL_STATIC_DRAW);
+	glBindTexture(GL_TEXTURE_2D, mColorTexture);
 	//
 	mGeometryEffect.Use();
 	mGeometryEffect.u_matrix_mvp() << mSettings->mMatrixMvp;
