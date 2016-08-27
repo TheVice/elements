@@ -97,16 +97,16 @@ def generate_effect_h(a_program):
         'public:{1}'
         '{2}virtual GLvoid Initialize(GLuint aVertexArrayObject) override;{1}'
         '{2}virtual GLuint GetVertexSize() const override;{1}'
-        '{1}'
-        'private:{1}'
-        '{2}enum VertexAttribute{1}'
-        '{2}{{'
-        '{1}'
-        '{2}{2}{5}'     # attribute_enumeration
-        '{1}'
-        '{2}}};'
-        '{1}'
-        '}};{1}'
+        # '{1}'
+        # 'private:{1}'
+        # '{2}enum VertexAttribute{1}'
+        # '{2}{{'
+        # '{1}'
+        # '{2}{2}{5}'     # attribute_enumeration
+        # '{1}'
+        # '{2}}};'
+        # '{1}'
+        # '}};{1}'
         '}}{1}'
         '{1}'
         '#endif{1}'
@@ -124,15 +124,15 @@ def generate_effect_h(a_program):
 
     uniform_declaration = '{}{}'.format(os.linesep, '\t').join(uniform_declaration)
 
-    attribute_enumeration = []
+    # attribute_enumeration = []
+    #
+    # for location in a_program['a_locations']:
+    #
+    #     attribute_enumeration.append('{}_location = {}'.format(location[0], location[1]))
+    #
+    # attribute_enumeration = '{}{}{}'.format(',', os.linesep, '\t\t').join(attribute_enumeration)
 
-    for location in a_program['a_locations']:
-
-        attribute_enumeration.append('{}_location = {}'.format(location[0], location[1]))
-
-    attribute_enumeration = '{}{}{}'.format(',', os.linesep, '\t\t').join(attribute_enumeration)
-
-    return effect_h_template.format(head_name, os.linesep, '\t', class_name, uniform_declaration, attribute_enumeration)
+    return effect_h_template.format(head_name, os.linesep, '\t', class_name, uniform_declaration, '')
 
 
 def convert_type_from_glsl_to_cpp(a_type):
@@ -211,11 +211,11 @@ def generate_effect_cpp(a_program):
         '{3}//{0}'
         '{3}{5}{0}'     # uniform_instantiate
         '{3}//{0}'
-        '#ifdef GET_ATTRIB{0}'
+        # '#ifdef GET_ATTRIB{0}'
         '{3}{6}{0}'     # attribute_location_get_attrib
-        '#else{0}'
-        '{3}{7}{0}'     # attribute_location
-        '#endif{0}'
+        # '#else{0}'
+        '{7}' # '{3}{7}{0}'     # attribute_location
+        # '#endif{0}'
         '{3}//{0}'
         '{8}'           # attribute_pointer
         '}}{0}'
@@ -241,7 +241,7 @@ def generate_effect_cpp(a_program):
     uniform_initialization = []
     uniform_instantiate = []
     attribute_location_get_attrib = []
-    attribute_location = []
+    # attribute_location = []
     attribute_pointer = []
 
     for location in a_program['u_locations']:
@@ -259,8 +259,8 @@ def generate_effect_cpp(a_program):
         a_location = 'const GLint vertexAttribute_{0} = GetAttrib("{0}");'.format(location[0])
         attribute_location_get_attrib.append(a_location)
 
-        a_location = 'const GLint vertexAttribute_{0} = {0}_location;'.format(location[0])
-        attribute_location.append(a_location)
+        # a_location = 'const GLint vertexAttribute_{0} = {0}_location;'.format(location[0])
+        # attribute_location.append(a_location)
 
         attribute_type = get_attribute_type(location[0], a_program['vertex'])
         attribute_length = get_type_length(attribute_type)
@@ -268,12 +268,12 @@ def generate_effect_cpp(a_program):
         attribute_pointer.append(attribute_pointer_template.format('\t', location[0], attribute_length, os.linesep))
 
     attribute_location_get_attrib = '{}{}'.format(os.linesep, '\t').join(attribute_location_get_attrib)
-    attribute_location = '{}{}'.format(os.linesep, '\t').join(attribute_location)
+    # attribute_location = '{}{}'.format(os.linesep, '\t').join(attribute_location)
     attribute_pointer = '{}//{}'.format('\t', os.linesep).join(attribute_pointer)
 
     return effect_cpp_template.format(os.linesep, class_name, uniform_definition,
                                       '\t', uniform_initialization, uniform_instantiate,
-                                      attribute_location_get_attrib, attribute_location, attribute_pointer)
+                                      attribute_location_get_attrib, '', attribute_pointer)
 
 
 def generate_vertex_structure(a_program):

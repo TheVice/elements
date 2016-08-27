@@ -54,7 +54,7 @@ protected:
 	public:											\
 	Variable& VariableName() const;					\
 	private:										\
-	Variable* m ## VariableName;
+	Variable *m ## VariableName;
 
 #define SHADER_VARIABLE_DEFINITION(ShaderProgram, VariableName)	\
 	Variable& ShaderProgram::VariableName() const				\

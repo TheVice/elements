@@ -9,6 +9,7 @@
 
 namespace Rendering
 {
+class CustomUi;
 class GeometryDemo : public Library::DrawableGameComponent
 {
 	RTTI_DECLARATIONS(GeometryDemo, DrawableGameComponent)
@@ -24,6 +25,7 @@ public:
 
 public:
 	virtual void Initialize() override;
+	virtual void Update(const Library::GameTime& aGameTime) override;
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
@@ -34,6 +36,8 @@ private:
 
 	eps::rendering::texture mTexture;
 	std::unique_ptr<SettingsReader> mSettings;
+
+	CustomUi* mUi;
 };
 }
 

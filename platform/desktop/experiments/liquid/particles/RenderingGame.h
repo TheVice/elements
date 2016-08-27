@@ -23,7 +23,7 @@ private:
 	void OnKey(int aKey, int aScancode, int aAction, int aMods);
 
 	KeyboardHandler mKeyboardHandler;
-	std::unique_ptr<Library::DrawableGameComponent> mGameComponent;
+	std::unique_ptr<Library::DrawableGameComponent> mDrawableGameComponent;
 
 private:
 	static const glm::vec4 sBackgroundColor;

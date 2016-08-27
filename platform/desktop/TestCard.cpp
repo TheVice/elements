@@ -1,6 +1,9 @@
 
 #include "TestCard.h"
 
+namespace Desktop
+{
+
 void MakeColorBars(GLubyte* aImage, GLsizei aWidth, GLsizei aHeight)
 {
 #define threeDimension2OneIndex(A, B, C) (A * aWidth * 4 + B * 4 + C)
@@ -35,4 +38,6 @@ void MakeColorBars(GLubyte* aImage, GLsizei aWidth, GLsizei aHeight)
 			aImage[threeDimension2OneIndex(i, j, 3)] = (GLubyte)colors[colorNumber][3];
 		}
 	}
+}
+
 }

@@ -3,6 +3,11 @@
 
 #include <GL/glew.h>
 
+namespace Desktop
+{
+
 void MakeColorBars(GLubyte* aImage, GLsizei aWidth, GLsizei aHeight);
+
+}
 
 #endif

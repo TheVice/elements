@@ -48,7 +48,7 @@ void MetaballsDemo::Initialize()
 	GLenum texture_format = GL_RGBA;
 	glm::uvec2 texture_size = size;
 	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
-	MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
+	Desktop::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
 	//
 	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>(texture_format);
 	mTexture = maker.construct(texture_data.get(), size);

@@ -7,6 +7,8 @@
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
 #include "utils/std/enum.h"
+#include "Game.h"
+#include "CustomUi.h"
 
 namespace Rendering
 {
@@ -19,7 +21,8 @@ GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	mVertexBuffer(0),
 	mVertexCount(0),
 	mTexture(),
-	mSettings(nullptr)
+	mSettings(nullptr),
+	mUi(nullptr)
 {
 }
 
@@ -73,6 +76,15 @@ void GeometryDemo::Initialize()
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mGeometryEffect.Initialize(mVertexArrayObject);
 	glBindVertexArray(0);
+	//
+	mUi = static_cast<Rendering::CustomUi*>(mGame->GetServices().GetService(Rendering::CustomUi::TypeIdClass()));
+	assert(mUi);
+	mUi->SetMatrixMvp(mSettings->mMatrixMvp);
+}
+
+void GeometryDemo::Update(const Library::GameTime&)
+{
+	mSettings->mMatrixMvp = mUi->GetMatrixMvp();
 }
 
 void GeometryDemo::Draw(const Library::GameTime&)

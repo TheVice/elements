@@ -16,7 +16,7 @@ ShaderProgram& Variable::GetShaderProgram()
 	return mShaderProgram;
 }
 
-const GLint& Variable::GetLocation() const
+GLint Variable::GetLocation() const
 {
 	return mLocation;
 }

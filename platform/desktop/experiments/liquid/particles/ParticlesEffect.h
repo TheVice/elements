@@ -22,12 +22,6 @@ public:
 public:
 	virtual GLvoid Initialize(GLuint aVertexArrayObject) override;
 	virtual GLuint GetVertexSize() const override;
-
-private:
-	enum VertexAttribute
-	{
-		a_vertex_xy_location = 0
-	};
 };
 }
 

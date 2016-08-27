@@ -20,7 +20,7 @@ public:
 
 public:
 	ShaderProgram& GetShaderProgram();
-	const GLint& GetLocation() const;
+	GLint GetLocation() const;
 	const std::string& GetName() const;
 
 	Variable& operator << (const glm::mat4& aValue);
@@ -33,8 +33,8 @@ public:
 
 private:
 	ShaderProgram& mShaderProgram;
-	GLint mLocation;
-	std::string mName;
+	const GLint mLocation;
+	const std::string mName;
 };
 }
 

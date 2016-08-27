@@ -3,6 +3,9 @@
 
 #include "metrics/metrics.h"
 
+namespace Desktop
+{
+
 struct metrics : public eps::metrics_interface
 {
 public:
@@ -16,5 +19,7 @@ private:
 
 	float density_;
 };
+
+}
 
 #endif

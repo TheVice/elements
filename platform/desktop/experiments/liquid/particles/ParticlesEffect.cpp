@@ -23,11 +23,7 @@ GLvoid ParticlesEffect::Initialize(GLuint aVertexArrayObject)
 	SHADER_VARIABLE_INSTANTIATE(u_transform)
 	SHADER_VARIABLE_INSTANTIATE(u_size)
 	//
-#ifdef GET_ATTRIB
 	const GLint vertexAttribute_a_vertex_xy = GetAttrib("a_vertex_xy");
-#else
-	const GLint vertexAttribute_a_vertex_xy = a_vertex_xy_location;
-#endif
 	//
 	glVertexAttribPointer(vertexAttribute_a_vertex_xy, glm::vec2().length(), GL_FLOAT, GL_FALSE,
 						  GetVertexSize(),

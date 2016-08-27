@@ -1,6 +1,7 @@
 
 #include "RenderingGame.h"
 #include "GeometryDemo.h"
+#include "CustomUi.h"
 #include "asset_fs.h"
 #include "preferences.h"
 #include "metrics.h"
@@ -12,7 +13,7 @@ namespace Rendering
 RenderingGame::RenderingGame(const TCHAR* aWindowTitle) :
 	Game(aWindowTitle),
 	mKeyboardHandler(nullptr),
-	mGameComponent(nullptr)
+	mDrawableGameComponent(nullptr)
 {
 }
 
@@ -23,14 +24,16 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::instance().mount<asset_fs>("");
+	eps::assets_storage::instance().mount<Desktop::asset_fs>("");
+	eps::preferences::init<Desktop::preferences>();
+	eps::metrics::init<Desktop::metrics>(1.0f);
 	//
-	eps::preferences::init<preferences>();
+	mUiComponent = std::make_unique<CustomUi>(*this, "settings/techniques/geometry_ui.xml");
+	mComponents.push_back(mUiComponent.get());
+	mServices.AddService(Rendering::CustomUi::TypeIdClass(), mUiComponent.get());
 	//
-	eps::metrics::init<metrics>(1.0f);
-	//
-	mGameComponent = std::make_unique<GeometryDemo>(*this);
-	mComponents.push_back(mGameComponent.get());
+	mDrawableGameComponent = std::make_unique<GeometryDemo>(*this);
+	mComponents.push_back(mDrawableGameComponent.get());
 	//
 	Game::Initialize();
 }

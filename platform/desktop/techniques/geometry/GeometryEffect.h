@@ -23,15 +23,6 @@ public:
 public:
 	virtual GLvoid Initialize(GLuint aVertexArrayObject) override;
 	virtual GLuint GetVertexSize() const override;
-
-private:
-	enum VertexAttribute
-	{
-		a_vertex_pos_location = 0,
-		a_vertex_normal_location = 1,
-		a_vertex_tangent_location = 2,
-		a_vertex_uv_location = 3
-	};
 };
 }
 
