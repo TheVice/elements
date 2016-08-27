@@ -84,95 +84,53 @@ void CustomUi::Initialize()
 	IS_CONTROL_EXIST("mMatrixMvp30_Label")
 	IS_CONTROL_EXIST("mMatrixMvp31_Label")
 	IS_CONTROL_EXIST("mMatrixMvp32_Label")
+	//
+	IS_CONTROL_EXIST("mMatrixNormal00_Label")
+	IS_CONTROL_EXIST("mMatrixNormal01_Label")
+	//
+	IS_CONTROL_EXIST("mMatrixNormal10_Label")
+	IS_CONTROL_EXIST("mMatrixNormal11_Label")
+	//
+	IS_CONTROL_EXIST("mMatrixNormal20_Label")
+	IS_CONTROL_EXIST("mMatrixNormal21_Label")
 }
+
+#define DISPLAY_VALUE_AT_LABEL(VALUE, LABEL)													\
+	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls[LABEL].lock()))	\
+	{																							\
+		std::ostringstream message;																\
+		message << std::setprecision(2) << VALUE;												\
+		directLabel->set_text(message.str());													\
+	}
 
 void CustomUi::Update(const Library::GameTime& aGameTime)
 {
 	Ui::Update(aGameTime);
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp00_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[0][0];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp01_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[0][1];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp02_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[0][2];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp10_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[1][0];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp11_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[1][1];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp12_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[1][2];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp20_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[2][0];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp21_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[2][1];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp22_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[2][2];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp30_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[3][0];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp31_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[3][1];
-		directLabel->set_text(message.str());
-	}
-
-	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls["mMatrixMvp32_Label"].lock()))
-	{
-		std::ostringstream message;
-		message << std::setprecision(2) << mMatrixMvp[3][2];
-		directLabel->set_text(message.str());
-	}
+	//
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][0], "mMatrixMvp00_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][1], "mMatrixMvp01_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][2], "mMatrixMvp02_Label")
+	//
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][0], "mMatrixMvp10_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][1], "mMatrixMvp11_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][2], "mMatrixMvp12_Label")
+	//
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][0], "mMatrixMvp20_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][1], "mMatrixMvp21_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][2], "mMatrixMvp22_Label")
+	//
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][0], "mMatrixMvp30_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][1], "mMatrixMvp31_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][2], "mMatrixMvp32_Label")
+	//
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[0][0], "mMatrixNormal00_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[0][1], "mMatrixNormal01_Label")
+	//
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[1][0], "mMatrixNormal10_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[1][1], "mMatrixNormal11_Label")
+	//
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][0], "mMatrixNormal20_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][1], "mMatrixNormal21_Label")
 }
 
 void CustomUi::SetMatrixMvp(const glm::mat4& aMatrixMvp)
@@ -185,72 +143,127 @@ const glm::mat4& CustomUi::GetMatrixMvp() const
 	return mMatrixMvp;
 }
 
+void CustomUi::SetMatrixNormal(const glm::mat3& aMatrixNormal)
+{
+	mMatrixNormal = aMatrixNormal;
+}
+
+const glm::mat3& CustomUi::GetMatrixNormal() const
+{
+	return mMatrixNormal;
+}
+
 Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
 {
 	Desktop::SliderModel* sliderModel = nullptr;
 	static std::bitset<12> mvpSet;
+	static std::bitset<6> normalSet;
 
-	if (aSliderId > static_cast<int>(mvpSet.size() - 1) || mvpSet.test(aSliderId))
+	if (aSliderId < static_cast<int>(mvpSet.size()))
 	{
-		return sliderModel;
-	}
-
-	switch (aSliderId)
-	{
-		case 0:
-			sliderModel = new CustomSliderModel(mMatrixMvp[0][0], aMin, aMax);
-			break;
-
-		case 1:
-			sliderModel = new CustomSliderModel(mMatrixMvp[0][1], aMin, aMax);
-			break;
-
-		case 2:
-			sliderModel = new CustomSliderModel(mMatrixMvp[0][2], aMin, aMax);
-			break;
-
-		case 3:
-			sliderModel = new CustomSliderModel(mMatrixMvp[1][0], aMin, aMax);
-			break;
-
-		case 4:
-			sliderModel = new CustomSliderModel(mMatrixMvp[1][1], aMin, aMax);
-			break;
-
-		case 5:
-			sliderModel = new CustomSliderModel(mMatrixMvp[1][2], aMin, aMax);
-			break;
-
-		case 6:
-			sliderModel = new CustomSliderModel(mMatrixMvp[2][0], aMin, aMax);
-			break;
-
-		case 7:
-			sliderModel = new CustomSliderModel(mMatrixMvp[2][1], aMin, aMax);
-			break;
-
-		case 8:
-			sliderModel = new CustomSliderModel(mMatrixMvp[2][2], aMin, aMax);
-			break;
-
-		case 9:
-			sliderModel = new CustomSliderModel(mMatrixMvp[3][0], aMin, aMax);
-			break;
-
-		case 10:
-			sliderModel = new CustomSliderModel(mMatrixMvp[3][1], aMin, aMax);
-			break;
-
-		case 11:
-			sliderModel = new CustomSliderModel(mMatrixMvp[3][2], aMin, aMax);
-			break;
-
-		default:
+		if (mvpSet.test(aSliderId))
+		{
 			return sliderModel;
+		}
+
+		switch (aSliderId)
+		{
+			case 0:
+				sliderModel = new CustomSliderModel(mMatrixMvp[0][0], aMin, aMax);
+				break;
+
+			case 1:
+				sliderModel = new CustomSliderModel(mMatrixMvp[0][1], aMin, aMax);
+				break;
+
+			case 2:
+				sliderModel = new CustomSliderModel(mMatrixMvp[0][2], aMin, aMax);
+				break;
+
+			case 3:
+				sliderModel = new CustomSliderModel(mMatrixMvp[1][0], aMin, aMax);
+				break;
+
+			case 4:
+				sliderModel = new CustomSliderModel(mMatrixMvp[1][1], aMin, aMax);
+				break;
+
+			case 5:
+				sliderModel = new CustomSliderModel(mMatrixMvp[1][2], aMin, aMax);
+				break;
+
+			case 6:
+				sliderModel = new CustomSliderModel(mMatrixMvp[2][0], aMin, aMax);
+				break;
+
+			case 7:
+				sliderModel = new CustomSliderModel(mMatrixMvp[2][1], aMin, aMax);
+				break;
+
+			case 8:
+				sliderModel = new CustomSliderModel(mMatrixMvp[2][2], aMin, aMax);
+				break;
+
+			case 9:
+				sliderModel = new CustomSliderModel(mMatrixMvp[3][0], aMin, aMax);
+				break;
+
+			case 10:
+				sliderModel = new CustomSliderModel(mMatrixMvp[3][1], aMin, aMax);
+				break;
+
+			case 11:
+				sliderModel = new CustomSliderModel(mMatrixMvp[3][2], aMin, aMax);
+				break;
+
+			default:
+				return sliderModel;
+		}
+
+		mvpSet.set(aSliderId);
+	}
+	else
+	{
+		const auto localSliderId = aSliderId - mvpSet.size();
+
+		if (localSliderId > static_cast<int>(normalSet.size() - 1) || normalSet.test(localSliderId))
+		{
+			return sliderModel;
+		}
+
+		switch (localSliderId)
+		{
+			case 0:
+				sliderModel = new CustomSliderModel(mMatrixNormal[0][0], aMin, aMax);
+				break;
+
+			case 1:
+				sliderModel = new CustomSliderModel(mMatrixNormal[0][1], aMin, aMax);
+				break;
+
+			case 2:
+				sliderModel = new CustomSliderModel(mMatrixNormal[1][0], aMin, aMax);
+				break;
+
+			case 3:
+				sliderModel = new CustomSliderModel(mMatrixNormal[1][1], aMin, aMax);
+				break;
+
+			case 4:
+				sliderModel = new CustomSliderModel(mMatrixNormal[2][0], aMin, aMax);
+				break;
+
+			case 5:
+				sliderModel = new CustomSliderModel(mMatrixNormal[2][1], aMin, aMax);
+				break;
+
+			default:
+				return sliderModel;
+		}
+
+		normalSet.set(localSliderId);
 	}
 
-	mvpSet.set(aSliderId);
-	//
 	return sliderModel;
 }
 

@@ -80,11 +80,13 @@ void GeometryDemo::Initialize()
 	mUi = static_cast<Rendering::CustomUi*>(mGame->GetServices().GetService(Rendering::CustomUi::TypeIdClass()));
 	assert(mUi);
 	mUi->SetMatrixMvp(mSettings->mMatrixMvp);
+	mUi->SetMatrixNormal(mSettings->mMatrixNormal);
 }
 
 void GeometryDemo::Update(const Library::GameTime&)
 {
 	mSettings->mMatrixMvp = mUi->GetMatrixMvp();
+	mSettings->mMatrixNormal = mUi->GetMatrixNormal();
 }
 
 void GeometryDemo::Draw(const Library::GameTime&)

@@ -26,6 +26,9 @@ public:
 	void SetMatrixMvp(const glm::mat4& aMatrixMvp);
 	const glm::mat4& GetMatrixMvp() const;
 
+	void SetMatrixNormal(const glm::mat3& aMatrixNormal);
+	const glm::mat3& GetMatrixNormal() const;
+
 protected:
 	virtual Desktop::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
 
