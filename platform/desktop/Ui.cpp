@@ -228,9 +228,9 @@ Ui::~Ui()
 void Ui::Initialize()
 {
 	const eps::math::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	mUiSystem = std::make_unique<eps::ui::system>();
+	mUiSystem = std::make_shared<eps::ui::system>();
 
-	if (!mUiSystem->construct(size))
+	if (!std::static_pointer_cast<eps::ui::system>(mUiSystem)->construct(size))
 	{
 		throw std::runtime_error("mUiSystem->construct() failed");
 	}
@@ -238,41 +238,35 @@ void Ui::Initialize()
 	auto data =
 		eps::assets_storage::instance().read<UiReader>(mAssetPath);
 
-	if (!data || data.value().mIsEmpty)
+	if (!data || data->mIsEmpty)
 	{
 		throw std::runtime_error("Failed to load UI asset");
 	}
 
-	for (const auto& controlInfo : data.value().mControlsInfo)
+	for (const auto& controlInfo : data->mControlsInfo)
 	{
-		std::ostringstream controlName;
 		std::weak_ptr<eps::ui::control> control;
-		{
-			auto search = std::get<1>(controlInfo).find("control_name");
+		auto parentControl = mUiSystem;
+		auto search = std::get<1>(controlInfo).find("parent");
 
-			if (search != std::get<1>(controlInfo).end() && !search->second.empty() && !mControls.count(search->second))
-			{
-				controlName << search->second;
-			}
-			else
-			{
-				controlName << &controlInfo;
-			}
+		if (search != std::get<1>(controlInfo).end())
+		{
+			parentControl = mControls[search->second].lock();
 		}
 
 		if (std::get<0>(controlInfo) == "button")
 		{
-			control = mUiSystem->add<eps::ui::button>();
+			control = parentControl->add<eps::ui::button>();
 			SET_BUTTON(control)
 		}
 		else if (std::get<0>(controlInfo) == "label")
 		{
-			control = mUiSystem->add<eps::ui::label>();
+			control = parentControl->add<eps::ui::label>();
 			SET_LABEL(control)
 		}
 		else if (std::get<0>(controlInfo) == "panel")
 		{
-			control = mUiSystem->add<eps::ui::panel>();
+			control = parentControl->add<eps::ui::panel>();
 			SET_PANEL(control)
 		}
 		else if (std::get<0>(controlInfo) == "slider")
@@ -310,7 +304,7 @@ void Ui::Initialize()
 
 			if (sliderModel)
 			{
-				control = mUiSystem->add<eps::ui::slider>(sliderModel);
+				control = parentControl->add<eps::ui::slider>(sliderModel);
 				SET_SLIDER(control)
 			}
 		}
@@ -318,7 +312,8 @@ void Ui::Initialize()
 		if (!control.expired())
 		{
 			SET_CONTROL(control)
-			mControls[controlName.str()] = control;
+			const auto controlName = std::get<1>(controlInfo).find("control_name")->second;
+			mControls[controlName] = control;
 		}
 	}
 

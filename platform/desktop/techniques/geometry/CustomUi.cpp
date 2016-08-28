@@ -66,6 +66,25 @@ CustomUi::~CustomUi()
 {
 }
 
+#define MATRIX_MVP_00_LABEL "MatrixMvp_Panel/mMatrixMvp00_Label"
+#define MATRIX_MVP_01_LABEL "MatrixMvp_Panel/mMatrixMvp01_Label"
+#define MATRIX_MVP_02_LABEL "MatrixMvp_Panel/mMatrixMvp02_Label"
+#define MATRIX_MVP_10_LABEL "MatrixMvp_Panel/mMatrixMvp10_Label"
+#define MATRIX_MVP_11_LABEL "MatrixMvp_Panel/mMatrixMvp11_Label"
+#define MATRIX_MVP_12_LABEL "MatrixMvp_Panel/mMatrixMvp12_Label"
+#define MATRIX_MVP_20_LABEL "MatrixMvp_Panel/mMatrixMvp20_Label"
+#define MATRIX_MVP_21_LABEL "MatrixMvp_Panel/mMatrixMvp21_Label"
+#define MATRIX_MVP_22_LABEL "MatrixMvp_Panel/mMatrixMvp22_Label"
+#define MATRIX_MVP_30_LABEL "MatrixMvp_Panel/mMatrixMvp30_Label"
+#define MATRIX_MVP_31_LABEL "MatrixMvp_Panel/mMatrixMvp31_Label"
+#define MATRIX_MVP_32_LABEL "MatrixMvp_Panel/mMatrixMvp32_Label"
+#define MATRIX_NORMAL_00_LABEL "mMatrixNormal_Panel/mMatrixNormal00_Label"
+#define MATRIX_NORMAL_01_LABEL "mMatrixNormal_Panel/mMatrixNormal01_Label"
+#define MATRIX_NORMAL_10_LABEL "mMatrixNormal_Panel/mMatrixNormal10_Label"
+#define MATRIX_NORMAL_11_LABEL "mMatrixNormal_Panel/mMatrixNormal11_Label"
+#define MATRIX_NORMAL_20_LABEL "mMatrixNormal_Panel/mMatrixNormal20_Label"
+#define MATRIX_NORMAL_21_LABEL "mMatrixNormal_Panel/mMatrixNormal21_Label"
+
 #define IS_CONTROL_EXIST(CONTROL_NAME)														\
 	if (!mControls.count(CONTROL_NAME))														\
 	{																						\
@@ -76,30 +95,30 @@ void CustomUi::Initialize()
 {
 	Ui::Initialize();
 	//
-	IS_CONTROL_EXIST("mMatrixMvp00_Label")
-	IS_CONTROL_EXIST("mMatrixMvp01_Label")
-	IS_CONTROL_EXIST("mMatrixMvp02_Label")
+	IS_CONTROL_EXIST(MATRIX_MVP_00_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_01_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_02_LABEL)
 	//
-	IS_CONTROL_EXIST("mMatrixMvp10_Label")
-	IS_CONTROL_EXIST("mMatrixMvp11_Label")
-	IS_CONTROL_EXIST("mMatrixMvp12_Label")
+	IS_CONTROL_EXIST(MATRIX_MVP_10_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_11_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_12_LABEL)
 	//
-	IS_CONTROL_EXIST("mMatrixMvp20_Label")
-	IS_CONTROL_EXIST("mMatrixMvp21_Label")
-	IS_CONTROL_EXIST("mMatrixMvp22_Label")
+	IS_CONTROL_EXIST(MATRIX_MVP_20_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_21_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_22_LABEL)
 	//
-	IS_CONTROL_EXIST("mMatrixMvp30_Label")
-	IS_CONTROL_EXIST("mMatrixMvp31_Label")
-	IS_CONTROL_EXIST("mMatrixMvp32_Label")
+	IS_CONTROL_EXIST(MATRIX_MVP_30_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_31_LABEL)
+	IS_CONTROL_EXIST(MATRIX_MVP_32_LABEL)
 	//
-	IS_CONTROL_EXIST("mMatrixNormal00_Label")
-	IS_CONTROL_EXIST("mMatrixNormal01_Label")
+	IS_CONTROL_EXIST(MATRIX_NORMAL_00_LABEL)
+	IS_CONTROL_EXIST(MATRIX_NORMAL_01_LABEL)
 	//
-	IS_CONTROL_EXIST("mMatrixNormal10_Label")
-	IS_CONTROL_EXIST("mMatrixNormal11_Label")
+	IS_CONTROL_EXIST(MATRIX_NORMAL_10_LABEL)
+	IS_CONTROL_EXIST(MATRIX_NORMAL_11_LABEL)
 	//
-	IS_CONTROL_EXIST("mMatrixNormal20_Label")
-	IS_CONTROL_EXIST("mMatrixNormal21_Label")
+	IS_CONTROL_EXIST(MATRIX_NORMAL_20_LABEL)
+	IS_CONTROL_EXIST(MATRIX_NORMAL_21_LABEL)
 	//
 	IS_CONTROL_EXIST("mNormalLT_x_Label")
 }
@@ -116,30 +135,30 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 {
 	Ui::Update(aGameTime);
 	//
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][0], "mMatrixMvp00_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][1], "mMatrixMvp01_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][2], "mMatrixMvp02_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][0], MATRIX_MVP_00_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][1], MATRIX_MVP_01_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][2], MATRIX_MVP_02_LABEL)
 	//
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][0], "mMatrixMvp10_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][1], "mMatrixMvp11_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][2], "mMatrixMvp12_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][0], MATRIX_MVP_10_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][1], MATRIX_MVP_11_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[1][2], MATRIX_MVP_12_LABEL)
 	//
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][0], "mMatrixMvp20_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][1], "mMatrixMvp21_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][2], "mMatrixMvp22_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][0], MATRIX_MVP_20_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][1], MATRIX_MVP_21_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[2][2], MATRIX_MVP_22_LABEL)
 	//
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][0], "mMatrixMvp30_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][1], "mMatrixMvp31_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][2], "mMatrixMvp32_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][0], MATRIX_MVP_30_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][1], MATRIX_MVP_31_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[3][2], MATRIX_MVP_32_LABEL)
 	//
-	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[0][0], "mMatrixNormal00_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[0][1], "mMatrixNormal01_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[0][0], MATRIX_NORMAL_00_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[0][1], MATRIX_NORMAL_01_LABEL)
 	//
-	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[1][0], "mMatrixNormal10_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[1][1], "mMatrixNormal11_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[1][0], MATRIX_NORMAL_10_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[1][1], MATRIX_NORMAL_11_LABEL)
 	//
-	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][0], "mMatrixNormal20_Label")
-	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][1], "mMatrixNormal21_Label")
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][0], MATRIX_NORMAL_20_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][1], MATRIX_NORMAL_21_LABEL)
 	//
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.x, "mNormalLT_x_Label")
 }

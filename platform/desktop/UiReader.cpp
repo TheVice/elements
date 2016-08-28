@@ -1,51 +1,79 @@
 
 #include "UiReader.h"
+#include <sstream>
 
 namespace Desktop
 {
+
+void UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
+{
+	std::map<std::string, std::string> attribAndValue;
+
+	for (const auto& attrib : node.attributes())
+	{
+		attribAndValue[attrib.name()] = attrib.value();
+	}
+
+	if (!attribAndValue.empty())
+	{
+		auto info = std::make_pair(node.name(), attribAndValue);
+		mControlsInfo.push_back(info);
+
+		std::ostringstream controlName;
+
+		if (!parent.empty())
+		{
+			mControlsInfo.back().second["parent"] = parent;
+			controlName << parent;
+			controlName << "/";
+		}
+
+		auto search = attribAndValue.find("control_name");
+
+		if (search != attribAndValue.end())
+		{
+			controlName << search->second;
+		}
+		else
+		{
+			controlName << &mControlsInfo.back();
+		}
+
+		mControlsInfo.back().second["control_name"] = controlName.str();
+
+		for (const auto& sub_node : node)
+		{
+			addControl(sub_node, controlName.str());
+		}
+	}
+}
 
 bool UiReader::read(const pugi::xml_document& doc)
 {
 	mControlsInfo.clear();
 	mIsEmpty = true;
 	//
-	auto root_node = doc.child("ui");
+	auto ui_node = doc.child("ui");
 
-	if (root_node.empty())
+	if (ui_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto controls_node = root_node.child("controls");
+	auto controls_node = ui_node.child("controls");
 
 	if (controls_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	for (auto control = controls_node.begin(); control != controls_node.end(); ++control)
+	for (const auto& control : controls_node)
 	{
-		std::map<std::string, std::string> attribAndValue;
-
-		for (auto attrib = control->attributes_begin(); attrib != control->attributes_end(); ++attrib)
-		{
-			attribAndValue[attrib->name()] = attrib->value();
-		}
-
-		if (!attribAndValue.empty())
-		{
-			auto c = std::make_pair(control->name(), attribAndValue);
-			mControlsInfo.push_back(c);
-		}
+		addControl(control, "");
 	}
 
-	if (mControlsInfo.empty())
-	{
-		return false;
-	}
-
-	mIsEmpty = false;
-	return true;
+	mIsEmpty = mControlsInfo.empty();
+	return !mIsEmpty;
 }
 
 }

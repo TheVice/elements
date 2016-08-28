@@ -22,7 +22,7 @@ GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	mIndexBuffer(0),
 	mColorTexture(0),
 	mTexture(),
-	mSettings(nullptr),
+	mSettings(),
 	mUi(nullptr)
 {
 }
@@ -53,14 +53,13 @@ void GeometryDemo::Initialize()
 	//
 	mGeometryEffect.BuildProgram(shaders);
 	// Load the settings
-	mSettings = std::make_unique<SettingsReader>();
-	bool settingLoaded = load_data("assets/settings/techniques/geometry.xml", *mSettings.get());
+	auto assetPath = "assets/settings/techniques/geometry.xml";
+	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
 
-	if (!settingLoaded)
+	if (!mSettings || mSettings->mIsEmpty)
 	{
 		throw std::runtime_error("Failed to load settings");
 	}
-
 	// Load the texture
 	auto asset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mTexturePath);
 

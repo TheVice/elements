@@ -25,6 +25,4 @@ private:
 	bool read(const pugi::xml_document& doc) final;
 };
 
-bool load_data(const char* demo_data_asset, SettingsReader& demo_data);
-
 #endif

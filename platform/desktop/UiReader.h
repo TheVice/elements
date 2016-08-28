@@ -17,6 +17,7 @@ public:
 	bool mIsEmpty;
 
 private:
+	void addControl(const pugi::xml_node& node, const std::string& parent);
 	bool read(const pugi::xml_document& doc) final;
 };
 }

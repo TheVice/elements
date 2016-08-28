@@ -153,21 +153,3 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 	mIsEmpty = false;
 	return true;
 }
-
-bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
-{
-	auto data = eps::assets_storage::instance().read<SettingsReader>(demo_data_asset);
-
-	if (!data || data.value().mIsEmpty)
-	{
-		return false;
-	}
-
-	demo_data.mVertices = data.value().mVertices;
-	demo_data.mIndices = data.value().mIndices;
-	demo_data.mMatrixMvp = data.value().mMatrixMvp;
-	demo_data.mMatrixNormal = data.value().mMatrixNormal;
-	demo_data.mTexturePath = data.value().mTexturePath;
-	//
-	return true;
-}

@@ -5,6 +5,7 @@
 #include "GeometryEffect.h"
 #include "SettingsReader.h"
 #include "rendering/core/texture.h"
+#include "utils/std/optional.h"
 #include <memory>
 
 namespace Rendering
@@ -36,7 +37,7 @@ private:
 	GLuint mColorTexture;
 
 	eps::rendering::texture mTexture;
-	std::unique_ptr<SettingsReader> mSettings;
+	eps::utils::optional<SettingsReader> mSettings;
 
 	CustomUi* mUi;
 };

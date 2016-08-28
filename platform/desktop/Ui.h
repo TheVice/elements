@@ -34,7 +34,7 @@ private:
 	const std::string mAssetPath;
 	bool mTouchDown;
 	eps::math::mat4 mTransformTouch;
-	std::unique_ptr<eps::ui::system> mUiSystem;
+	std::shared_ptr<eps::ui::control> mUiSystem;
 
 protected:
 	std::map<std::string, std::weak_ptr<eps::ui::control>> mControls;

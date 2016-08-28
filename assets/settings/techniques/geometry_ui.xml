@@ -1,42 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui name="Geometry Demo [techniques/geometry]">
   <controls>
-    <slider position_x="10" position_y="570" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="0" min="-1.0" max="1.0" control_name="mMatrixMvp00_Slider"/>
-    <label position_x="180" position_y="573" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp00_Label"/>
+    <panel position_x="10" position_y="470" size_w="780" size_h="125" visible="true" color_r="0.9" color_g="0.25" color_b="0.2" color_a="0.5" control_name="MatrixMvp_Panel">
+    <slider position_x="10" position_y="100" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="0" min="-1.0" max="1.0" control_name="mMatrixMvp00_Slider"/>
+    <label position_x="180" position_y="103" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp00_Label"/>
 
-    <slider position_x="250" position_y="570" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="1" min="-1.0" max="1.0" control_name="mMatrixMvp01_Slider"/>
-    <label position_x="420" position_y="573" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp01_Label"/>
+    <slider position_x="250" position_y="100" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="1" min="-1.0" max="1.0" control_name="mMatrixMvp01_Slider"/>
+    <label position_x="420" position_y="103" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp01_Label"/>
 
-    <slider position_x="490" position_y="570" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="2" min="-1.0" max="1.0" control_name="mMatrixMvp02_Slider"/>
-    <label position_x="660" position_y="573" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp02_Label"/>
+    <slider position_x="490" position_y="100" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="2" min="-1.0" max="1.0" control_name="mMatrixMvp02_Slider"/>
+    <label position_x="660" position_y="103" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp02_Label"/>
     <!-- -->
-    <slider position_x="10" position_y="540" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="3" min="-1.0" max="1.0" control_name="mMatrixMvp10_Slider"/>
-    <label position_x="180" position_y="543" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp10_Label"/>
+    <slider position_x="10" position_y="70" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="3" min="-1.0" max="1.0" control_name="mMatrixMvp10_Slider"/>
+    <label position_x="180" position_y="73" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp10_Label"/>
 
-    <slider position_x="250" position_y="540" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="4" min="-1.0" max="1.0" control_name="mMatrixMvp11_Slider"/>
-    <label position_x="420" position_y="543" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp11_Label"/>
+    <slider position_x="250" position_y="70" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="4" min="-1.0" max="1.0" control_name="mMatrixMvp11_Slider"/>
+    <label position_x="420" position_y="73" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp11_Label"/>
 
-    <slider position_x="490" position_y="540" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="5" min="-1.0" max="1.0" control_name="mMatrixMvp12_Slider"/>
-    <label position_x="660" position_y="543" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp12_Label"/>
+    <slider position_x="490" position_y="70" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="5" min="-1.0" max="1.0" control_name="mMatrixMvp12_Slider"/>
+    <label position_x="660" position_y="73" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp12_Label"/>
     <!-- -->
-    <slider position_x="10" position_y="510" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="6" min="-1.0" max="1.0" control_name="mMatrixMvp20_Slider"/>
-    <label position_x="180" position_y="513" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp20_Label"/>
+    <slider position_x="10" position_y="40" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="6" min="-1.0" max="1.0" control_name="mMatrixMvp20_Slider"/>
+    <label position_x="180" position_y="43" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp20_Label"/>
 
-    <slider position_x="250" position_y="510" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="7" min="-1.0" max="1.0" control_name="mMatrixMvp21_Slider"/>
-    <label position_x="420" position_y="513" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp21_Label"/>
+    <slider position_x="250" position_y="40" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="7" min="-1.0" max="1.0" control_name="mMatrixMvp21_Slider"/>
+    <label position_x="420" position_y="43" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp21_Label"/>
 
-    <slider position_x="490" position_y="510" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="8" min="-1.0" max="1.0" control_name="mMatrixMvp22_Slider"/>
-    <label position_x="660" position_y="513" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp22_Label"/>
+    <slider position_x="490" position_y="40" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="8" min="-1.0" max="1.0" control_name="mMatrixMvp22_Slider"/>
+    <label position_x="660" position_y="43" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp22_Label"/>
     <!-- -->
-    <slider position_x="10" position_y="480" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="9" min="-1.0" max="1.0" control_name="mMatrixMvp30_Slider"/>
-    <label position_x="180" position_y="483" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp30_Label"/>
+    <slider position_x="10" position_y="10" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="9" min="-1.0" max="1.0" control_name="mMatrixMvp30_Slider"/>
+    <label position_x="180" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp30_Label"/>
 
-    <slider position_x="250" position_y="480" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="10" min="-1.0" max="1.0" control_name="mMatrixMvp31_Slider"/>
-    <label position_x="420" position_y="483" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp31_Label"/>
+    <slider position_x="250" position_y="10" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="10" min="-1.0" max="1.0" control_name="mMatrixMvp31_Slider"/>
+    <label position_x="420" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp31_Label"/>
 
-    <slider position_x="490" position_y="480" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="11" min="-1.0" max="1.0" control_name="mMatrixMvp32_Slider"/>
-    <label position_x="660" position_y="483" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp32_Label"/>
+    <slider position_x="490" position_y="10" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="11" min="-1.0" max="1.0" control_name="mMatrixMvp32_Slider"/>
+    <label position_x="660" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixMvp32_Label"/>
+    </panel>
     <!-- -->
+    <panel position_x="10" position_y="5" size_w="500" size_h="95" visible="true" color_r="0.9" color_g="0.25" color_b="0.2" color_a="0.5" control_name="mMatrixNormal_Panel">
     <slider position_x="10" position_y="70" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="12" min="-1.0" max="1.0" control_name="mMatrixNormal00_Slider"/>
     <label position_x="180" position_y="73" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixNormal00_Label"/>
 
@@ -54,6 +57,7 @@
 
     <slider position_x="250" position_y="10" size_w="150" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="17" min="-1.0" max="1.0" control_name="mMatrixNormal21_Slider"/>
     <label position_x="420" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixNormal21_Label"/>
+    </panel>
     <!-- -->
     <label position_x="10" position_y="460" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" text="Left Top vertex" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0"/>
     <label position_x="120" position_y="443" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mNormalLT_x_Label"/>
