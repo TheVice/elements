@@ -78,16 +78,14 @@ void GeometryDemo::Initialize()
 	assert(mUi);
 	mUi->SetMatrixMvp(mSettings->mMatrixMvp);
 	mUi->SetMatrixNormal(mSettings->mMatrixNormal);
-	//	mUi->SetVertices(mSettings->mVertices);
-	mUi->_setNormalLT_x(mSettings->mVertices[0].a_vertex_normal.x);
+	mUi->SetVertices(mSettings->mVertices);
 }
 
 void GeometryDemo::Update(const Library::GameTime&)
 {
 	mSettings->mMatrixMvp = mUi->GetMatrixMvp();
 	mSettings->mMatrixNormal = mUi->GetMatrixNormal();
-	//	mSettings->mVertices = mUi->GetVertices();
-	mSettings->mVertices.begin()->a_vertex_normal.x = mUi->_getNormalLT_x();
+	mSettings->mVertices = mUi->GetVertices();
 }
 
 void GeometryDemo::Draw(const Library::GameTime&)

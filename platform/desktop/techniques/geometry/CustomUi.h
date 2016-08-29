@@ -3,7 +3,6 @@
 
 #include "Ui.h"
 #include "VertexStructure.h"
-#include <array>
 
 namespace Rendering
 {
@@ -31,16 +30,17 @@ public:
 	void SetMatrixNormal(const glm::mat3& aMatrixNormal);
 	const glm::mat3& GetMatrixNormal() const;
 
-	void _setNormalLT_x(float aValue);
-	float _getNormalLT_x();
-
+	void SetVertices(const std::vector<VertexStructure>& aVertices);
+	const std::vector<VertexStructure>& GetVertices();
 protected:
 	virtual Desktop::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
 
 private:
 	glm::mat4 mMatrixMvp;
 	glm::mat3 mMatrixNormal;
-	std::array<VertexStructure, 4> mVertices;
+	std::vector<VertexStructure> mVertices;
+
+    std::vector<Desktop::SliderModel*> mSliderModels;
 };
 }
 
