@@ -40,7 +40,7 @@ private:
 	glm::mat3 mMatrixNormal;
 	std::vector<VertexStructure> mVertices;
 
-    std::vector<Desktop::SliderModel*> mSliderModels;
+	std::vector<Desktop::SliderModel*> mSliderModels;
 };
 }
 
