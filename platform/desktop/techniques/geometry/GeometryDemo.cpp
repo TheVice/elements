@@ -67,12 +67,15 @@ void GeometryDemo::Initialize()
 	mColorTexture = (*eps::utils::ptr_product(mTexture.get_product()));
 	// Create the vertex buffer object
 	mGeometryEffect.CreateVertexBuffer(&mSettings->mVertices.front(), mSettings->mVertices.size(), mVertexBuffer);
-	// Create the index buffer
+	// Create the index buffer object
 	mGeometryEffect.CreateIndexBuffer(&mSettings->mIndices.front(), mSettings->mIndices.size(), mIndexBuffer);
 	// Create the vertex array object
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mGeometryEffect.Initialize(mVertexArrayObject);
 	glBindVertexArray(0);
+	//
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	// Retry the UI service and set the values from settings class
 	mUi = static_cast<Rendering::CustomUi*>(mGame->GetServices().GetService(Rendering::CustomUi::TypeIdClass()));
 	assert(mUi);
@@ -83,24 +86,28 @@ void GeometryDemo::Initialize()
 
 void GeometryDemo::Update(const Library::GameTime&)
 {
-	mSettings->mMatrixMvp = mUi->GetMatrixMvp();
-	mSettings->mMatrixNormal = mUi->GetMatrixNormal();
-	mSettings->mVertices = mUi->GetVertices();
+	if (mUi->IsNeedRestrore())
+	{
+		mUi->SetMatrixMvp(mSettings->mMatrixMvp);
+		mUi->SetMatrixNormal(mSettings->mMatrixNormal);
+		mUi->SetVertices(mSettings->mVertices);
+	}
 }
 
 void GeometryDemo::Draw(const Library::GameTime&)
 {
 	glBindVertexArray(mVertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, mGeometryEffect.GetVertexSize() * mSettings->mVertices.size(),
-				 &mSettings->mVertices.front(),
+	glBufferData(GL_ARRAY_BUFFER,
+				 mGeometryEffect.GetVertexSize() * mUi->GetVertices().size(),
+				 &mUi->GetVertices().front(),
 				 GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);
 	//
 	mGeometryEffect.Use();
-	mGeometryEffect.u_matrix_mvp() << mSettings->mMatrixMvp;
-	mGeometryEffect.u_matrix_normal() << mSettings->mMatrixNormal;
+	mGeometryEffect.u_matrix_mvp() << mUi->GetMatrixMvp();
+	mGeometryEffect.u_matrix_normal() << mUi->GetMatrixNormal();
 	//
 	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 	//

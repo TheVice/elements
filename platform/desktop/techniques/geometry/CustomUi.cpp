@@ -59,13 +59,16 @@ CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 					VertexStructure(),
 					VertexStructure()
 }),
-mSliderModels()
+mSliderModels(),
+mIsRestoreNeed(false)
 {
 }
 
 CustomUi::~CustomUi()
 {
 }
+
+#define RESTORE_BUTTON				"RestoreButton"
 
 #define MATRIX_MVP_00_SLIDER		0
 #define MATRIX_MVP_01_SLIDER		1
@@ -133,6 +136,16 @@ void CustomUi::Initialize()
 {
 	Ui::Initialize();
 	//
+	IS_CONTROL_EXIST(RESTORE_BUTTON)
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
+	{
+		directButton->set_click([this]
+		{
+			this->mIsRestoreNeed = !this->mIsRestoreNeed;
+		});
+	}
+
 	IS_CONTROL_EXIST(MATRIX_MVP_00_LABEL)
 	IS_CONTROL_EXIST(MATRIX_MVP_01_LABEL)
 	IS_CONTROL_EXIST(MATRIX_MVP_02_LABEL)
@@ -232,6 +245,8 @@ void CustomUi::SetMatrixMvp(const glm::mat4& aMatrixMvp)
 	SET_REAL_SLIDER_VALUE(mMatrixMvp[3][0], MATRIX_MVP_30_SLIDER)
 	SET_REAL_SLIDER_VALUE(mMatrixMvp[3][1], MATRIX_MVP_31_SLIDER)
 	SET_REAL_SLIDER_VALUE(mMatrixMvp[3][2], MATRIX_MVP_32_SLIDER)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::mat4& CustomUi::GetMatrixMvp() const
@@ -249,6 +264,8 @@ void CustomUi::SetMatrixNormal(const glm::mat3& aMatrixNormal)
 	SET_REAL_SLIDER_VALUE(mMatrixNormal[1][1], MATRIX_NORMAL_11_SLIDER)
 	SET_REAL_SLIDER_VALUE(mMatrixNormal[2][0], MATRIX_NORMAL_20_SLIDER)
 	SET_REAL_SLIDER_VALUE(mMatrixNormal[1][1], MATRIX_NORMAL_21_SLIDER)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::mat3& CustomUi::GetMatrixNormal() const
@@ -266,11 +283,18 @@ void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.x, VEC_TANGENT_LT_X_SLIDER)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.y, VEC_TANGENT_LT_Y_SLIDER)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.z, VEC_TANGENT_LT_Z_SLIDER)
+	//
+	mIsRestoreNeed = false;
 }
 
-const std::vector<VertexStructure>& CustomUi::GetVertices()
+const std::vector<VertexStructure>& CustomUi::GetVertices() const
 {
 	return mVertices;
+}
+
+bool CustomUi::IsNeedRestrore() const
+{
+	return mIsRestoreNeed;
 }
 
 #define SLIDER_MODEL_COUNT 24

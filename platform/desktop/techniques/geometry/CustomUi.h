@@ -31,7 +31,10 @@ public:
 	const glm::mat3& GetMatrixNormal() const;
 
 	void SetVertices(const std::vector<VertexStructure>& aVertices);
-	const std::vector<VertexStructure>& GetVertices();
+	const std::vector<VertexStructure>& GetVertices() const;
+
+	bool IsNeedRestrore() const;
+
 protected:
 	virtual Desktop::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
 
@@ -41,6 +44,8 @@ private:
 	std::vector<VertexStructure> mVertices;
 
 	std::vector<Desktop::SliderModel*> mSliderModels;
+
+	bool mIsRestoreNeed;
 };
 }
 
