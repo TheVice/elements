@@ -16,76 +16,13 @@ ShaderProgram::ShaderProgram() :
 	mVariables(),
 	mVariablesByName()
 {
-	mProgram = glCreateProgram();
 }
 
 ShaderProgram::~ShaderProgram()
 {
-	glDeleteProgram(mProgram);
-
 	for (Variable* variable : mVariables)
 	{
 		delete variable;
-	}
-}
-
-GLuint ShaderProgram::CompileShaderFromData(GLenum aShaderType, const GLchar* aShaderSource)
-{
-	assert(aShaderSource);
-	//
-	const auto length = static_cast<GLint>(std::strlen(aShaderSource));
-	assert(length);
-	//
-	const GLuint shader = glCreateShader(aShaderType);
-	glShaderSource(shader, 1, &aShaderSource, &length);
-	glCompileShader(shader);
-	//
-	IsShaderCompiled(shader);
-	//
-	return shader;
-}
-
-GLvoid ShaderProgram::IsShaderCompiled(GLuint aShader)
-{
-	GLint compileStatus = GL_FALSE;
-	glGetShaderiv(aShader, GL_COMPILE_STATUS, &compileStatus);
-
-	if (GL_FALSE == compileStatus)
-	{
-		GLint logLength = 0;
-		glGetShaderiv(aShader, GL_INFO_LOG_LENGTH, &logLength);
-		//
-		std::string log(logLength + 1, '\0');
-		//
-		glGetShaderInfoLog(aShader, logLength, nullptr, &log.front());
-		//
-		std::stringstream errorMessage;
-		errorMessage << log.c_str() << std::endl;
-		errorMessage << "glCompileShader() failed" << std::endl;
-		//
-		throw std::runtime_error(errorMessage.str());
-	}
-}
-
-GLvoid ShaderProgram::IsProgramLinked(GLuint aProgram)
-{
-	GLint linkStatus = GL_FALSE;
-	glGetProgramiv(aProgram, GL_LINK_STATUS, &linkStatus);
-
-	if (GL_FALSE == linkStatus)
-	{
-		GLint logLength = 0;
-		glGetProgramiv(aProgram, GL_INFO_LOG_LENGTH, &logLength);
-		//
-		std::string log(logLength + 1, '\0');
-		//
-		glGetProgramInfoLog(aProgram, logLength, nullptr, &log.front());
-		//
-		std::stringstream errorMessage;
-		errorMessage << log.c_str() << std::endl;
-		errorMessage << "glLinkProgram() failed" << std::endl;
-		//
-		throw std::runtime_error(errorMessage.str());
 	}
 }
 
@@ -104,28 +41,10 @@ const std::map<std::string, Variable*>& ShaderProgram::GetVariablesByName() cons
 	return mVariablesByName;
 }
 
-GLvoid ShaderProgram::BuildProgram(const std::vector<ShaderDefinition>& aShaderDefinitions)
+GLvoid ShaderProgram::SetProgram(GLuint aProgram)
 {
-	assert(!aShaderDefinitions.empty());
-	//
-	std::vector<GLuint> compiledShaders(aShaderDefinitions.size());
-	compiledShaders.clear();
-
-	for (const auto& shaderDefinition : aShaderDefinitions)
-	{
-		const GLuint compiledShader = CompileShaderFromData(shaderDefinition.first, &shaderDefinition.second.front());
-		glAttachShader(mProgram, compiledShader);
-		compiledShaders.push_back(compiledShader);
-	}
-
-	glLinkProgram(mProgram);
-	//
-	IsProgramLinked(mProgram);
-
-	for (auto compileShader : compiledShaders)
-	{
-		glDeleteShader(compileShader);
-	}
+	assert(aProgram);
+	mProgram = aProgram;
 }
 
 GLvoid ShaderProgram::Initialize(GLuint aVertexArrayObject)

@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "ParticlesEffect.h"
 #include "SettingsReader.h"
+#include "rendering/core/program.h"
 #include <memory>
 
 namespace Rendering
@@ -26,6 +27,7 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	eps::rendering::program mProgram;
 	Library::ParticlesEffect mParticlesEffect;
 	GLuint mVertexArrayObject;
 	GLuint mVertexBuffer;

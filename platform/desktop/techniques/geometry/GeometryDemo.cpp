@@ -7,6 +7,7 @@
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
 #include "utils/std/enum.h"
+#include "utils/std/product.h"
 #include "Game.h"
 #include "CustomUi.h"
 
@@ -16,6 +17,7 @@ RTTI_DEFINITIONS(GeometryDemo)
 
 GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
+	mProgram(),
 	mGeometryEffect(),
 	mVertexArrayObject(0),
 	mVertexBuffer(0),
@@ -37,21 +39,12 @@ GeometryDemo::~GeometryDemo()
 void GeometryDemo::Initialize()
 {
 	// Build the shader program
-	auto data =
-		eps::assets_storage::instance().read<eps::rendering::program_data>("assets/shaders/techniques/geometry.prog");
-
-	if (!data || !data.value().v_shader() || !data.value().f_shader())
+	if (!eps::rendering::load_program("assets/shaders/techniques/geometry.prog", mProgram))
 	{
 		throw std::runtime_error("Failed to load shader");
 	}
 
-	std::vector<Library::ShaderDefinition> shaders(2);
-	shaders.clear();
-	//
-	shaders.push_back(Library::ShaderDefinition(GL_VERTEX_SHADER, data.value().v_shader()));
-	shaders.push_back(Library::ShaderDefinition(GL_FRAGMENT_SHADER, data.value().f_shader()));
-	//
-	mGeometryEffect.BuildProgram(shaders);
+	mGeometryEffect.SetProgram(eps::utils::raw_product(mProgram.get_product()));
 	// Load the settings
 	auto assetPath = "assets/settings/techniques/geometry.xml";
 	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);

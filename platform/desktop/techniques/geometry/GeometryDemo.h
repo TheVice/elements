@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "GeometryEffect.h"
 #include "SettingsReader.h"
+#include "rendering/core/program.h"
 #include "rendering/core/texture.h"
 #include "utils/std/optional.h"
 #include <memory>
@@ -30,6 +31,7 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	eps::rendering::program mProgram;
 	Library::GeometryEffect mGeometryEffect;
 	GLuint mVertexArrayObject;
 	GLuint mVertexBuffer;

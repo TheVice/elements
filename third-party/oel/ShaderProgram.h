@@ -8,8 +8,6 @@
 
 namespace Library
 {
-//typedef std::pair<GLenum, std::string> ShaderDefinition;
-using ShaderDefinition = std::pair<GLenum, std::string>;
 
 class ShaderProgram : public RTTI
 {
@@ -24,18 +22,13 @@ public:
 	ShaderProgram& operator = (const ShaderProgram& aRhs) = delete;
 
 public:
-	static GLuint CompileShaderFromData(GLenum aShaderType, const GLchar* aShaderSource);
-	static GLvoid IsShaderCompiled(GLuint aShader);
-	static GLvoid IsProgramLinked(GLuint aProgram);
-
 	//Variable* operator [](const std::string& aVariableName);
 
 	GLuint GetProgram() const;
 	const std::vector<Variable*>& GetVariables() const;
 	const std::map<std::string, Variable*>& GetVariablesByName() const;
 
-	GLvoid BuildProgram(const std::vector<ShaderDefinition>& aShaderDefinitions);
-
+	GLvoid SetProgram(GLuint aProgram);
 	virtual GLvoid Initialize(GLuint aVertexArrayObject);
 	virtual GLvoid Use() const;
 	virtual GLvoid CreateVertexBuffer(const GLvoid* aVertices, GLuint aVertexCount, GLuint& aVertexBuffer) const;
