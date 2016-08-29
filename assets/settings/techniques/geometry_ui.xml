@@ -60,26 +60,41 @@
     <label position_x="420" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mMatrixNormal21_Label"/>
     </panel>
     <!-- -->
-    <panel position_x="10" position_y="200" size_w="160" size_h="265" visible="true" color_r="0.9" color_g="0.25" color_b="0.2" color_a="0.5" control_name="LT_Panel">
-    <label position_x="10" position_y="240" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" text="Left Top vertex" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0"/>
+    <panel position_x="10" position_y="110" size_w="160" size_h="355" visible="true" color_r="0.9" color_g="0.25" color_b="0.2" color_a="0.5" control_name="LT_Panel">
+    <label position_x="10" position_y="335" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" text="Left Top vertex" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0"/>
+    <!-- -->
+    <label position_x="120" position_y="313" font_path="assets/ui/fonts/OpenSans-Regular.ttf" text="0x000" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mPosLT_x_Label"/>
+    <slider position_x="10" position_y="310" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="18" min="-1.0" max="1.0" control_name="mPosLT_x_Slider"/>
+    <!-- -->
+    <label position_x="120" position_y="283" font_path="assets/ui/fonts/OpenSans-Regular.ttf" text="0x000" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mPosLT_y_Label"/>
+    <slider position_x="10" position_y="280" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="19" min="-1.0" max="1.0" control_name="mPosLT_y_Slider"/>
+    <!-- -->
+    <label position_x="120" position_y="253" font_path="assets/ui/fonts/OpenSans-Regular.ttf" text="0x000" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mPosLT_z_Label"/>
+    <slider position_x="10" position_y="250" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="20" min="-1.0" max="1.0" control_name="mPosLT_z_Slider"/>
     <!-- -->
     <label position_x="120" position_y="223" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mNormalLT_x_Label"/>
-    <slider position_x="10" position_y="220" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="18" min="-1.0" max="1.0" control_name="mNormalLT_x_Slider"/>
+    <slider position_x="10" position_y="220" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="21" min="-1.0" max="1.0" control_name="mNormalLT_x_Slider"/>
     <!-- -->
     <label position_x="120" position_y="193" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mNormalLT_y_Label"/>
-    <slider position_x="10" position_y="190" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="19" min="-1.0" max="1.0" control_name="mNormalLT_y_Slider"/>
+    <slider position_x="10" position_y="190" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="22" min="-1.0" max="1.0" control_name="mNormalLT_y_Slider"/>
     <!-- -->
     <label position_x="120" position_y="163" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mNormalLT_z_Label"/>
-    <slider position_x="10" position_y="160" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="20" min="-1.0" max="1.0" control_name="mNormalLT_z_Slider"/>
+    <slider position_x="10" position_y="160" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="23" min="-1.0" max="1.0" control_name="mNormalLT_z_Slider"/>
     <!-- -->
     <label position_x="120" position_y="133" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mTangentLT_x_Label"/>
-    <slider position_x="10" position_y="130" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="21" min="-1.0" max="1.0" control_name="mTangentLT_x_Slider"/>
+    <slider position_x="10" position_y="130" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="24" min="-1.0" max="1.0" control_name="mTangentLT_x_Slider"/>
     <!-- -->
     <label position_x="120" position_y="103" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mTangentLT_y_Label"/>
-    <slider position_x="10" position_y="100" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="22" min="-1.0" max="1.0" control_name="mTangentLT_y_Slider"/>
+    <slider position_x="10" position_y="100" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="25" min="-1.0" max="1.0" control_name="mTangentLT_y_Slider"/>
     <!-- -->
     <label position_x="120" position_y="73" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mTangentLT_z_Label"/>
-    <slider position_x="10" position_y="70" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="23" min="-1.0" max="1.0" control_name="mTangentLT_z_Slider"/>
+    <slider position_x="10" position_y="70" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="26" min="-1.0" max="1.0" control_name="mTangentLT_z_Slider"/>
+    <!-- -->
+    <label position_x="120" position_y="43" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mUvLT_x_Label"/>
+    <slider position_x="10" position_y="40" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="27" min="-1.0" max="1.0" control_name="mUvLT_x_Slider"/>
+    <!-- -->
+    <label position_x="120" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mUvLT_y_Label"/>
+    <slider position_x="10" position_y="10" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="28" min="-1.0" max="1.0" control_name="mUvLT_y_Slider"/>
     </panel>
   </controls>
 </ui>

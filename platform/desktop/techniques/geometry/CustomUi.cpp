@@ -4,7 +4,6 @@
 #include "ui/controls/label.h"
 #include "ui/controls/panel.h"
 #include "SliderModel.h"
-#include <bitset>
 #include <sstream>
 #include <iomanip>
 
@@ -44,6 +43,8 @@ public:
 
 const float CustomSliderModel::sEpsilon = 100 * std::numeric_limits<float>::epsilon();
 
+#define SLIDER_MODEL_COUNT			29
+
 namespace Rendering
 {
 RTTI_DEFINITIONS(CustomUi)
@@ -59,7 +60,7 @@ CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 					VertexStructure(),
 					VertexStructure()
 }),
-mSliderModels(),
+mSliderModels(SLIDER_MODEL_COUNT),
 mIsRestoreNeed(false)
 {
 }
@@ -90,13 +91,20 @@ CustomUi::~CustomUi()
 #define MATRIX_NORMAL_20_SLIDER		16
 #define MATRIX_NORMAL_21_SLIDER		17
 
-#define VEC_NORMAL_LT_X_SLIDER		18
-#define VEC_NORMAL_LT_Y_SLIDER		19
-#define VEC_NORMAL_LT_Z_SLIDER		20
+#define VEC_POS_LT_X_SLIDER			18
+#define VEC_POS_LT_Y_SLIDER			19
+#define VEC_POS_LT_Z_SLIDER			20
 
-#define VEC_TANGENT_LT_X_SLIDER		21
-#define VEC_TANGENT_LT_Y_SLIDER		22
-#define VEC_TANGENT_LT_Z_SLIDER		23
+#define VEC_NORMAL_LT_X_SLIDER		21
+#define VEC_NORMAL_LT_Y_SLIDER		22
+#define VEC_NORMAL_LT_Z_SLIDER		23
+
+#define VEC_TANGENT_LT_X_SLIDER		24
+#define VEC_TANGENT_LT_Y_SLIDER		25
+#define VEC_TANGENT_LT_Z_SLIDER		26
+
+#define VEC_UV_LT_X_SLIDER			27
+#define VEC_UV_LT_Y_SLIDER			28
 
 #define MATRIX_MVP_00_LABEL "MatrixMvp_Panel/mMatrixMvp00_Label"
 #define MATRIX_MVP_01_LABEL "MatrixMvp_Panel/mMatrixMvp01_Label"
@@ -118,6 +126,10 @@ CustomUi::~CustomUi()
 #define MATRIX_NORMAL_20_LABEL "mMatrixNormal_Panel/mMatrixNormal20_Label"
 #define MATRIX_NORMAL_21_LABEL "mMatrixNormal_Panel/mMatrixNormal21_Label"
 
+#define VEC_POS_LT_X_LABEL "LT_Panel/mPosLT_x_Label"
+#define VEC_POS_LT_Y_LABEL "LT_Panel/mPosLT_y_Label"
+#define VEC_POS_LT_Z_LABEL "LT_Panel/mPosLT_z_Label"
+
 #define VEC_NORMAL_LT_X_LABEL "LT_Panel/mNormalLT_x_Label"
 #define VEC_NORMAL_LT_Y_LABEL "LT_Panel/mNormalLT_y_Label"
 #define VEC_NORMAL_LT_Z_LABEL "LT_Panel/mNormalLT_z_Label"
@@ -125,6 +137,9 @@ CustomUi::~CustomUi()
 #define VEC_TANGENT_LT_X_LABEL "LT_Panel/mTangentLT_x_Label"
 #define VEC_TANGENT_LT_Y_LABEL "LT_Panel/mTangentLT_y_Label"
 #define VEC_TANGENT_LT_Z_LABEL "LT_Panel/mTangentLT_z_Label"
+
+#define VEC_UV_LT_X_LABEL "LT_Panel/mUvLT_x_Label"
+#define VEC_UV_LT_Y_LABEL "LT_Panel/mUvLT_y_Label"
 
 #define IS_CONTROL_EXIST(CONTROL_NAME)														\
 	if (!mControls.count(CONTROL_NAME))														\
@@ -171,6 +186,10 @@ void CustomUi::Initialize()
 	IS_CONTROL_EXIST(MATRIX_NORMAL_20_LABEL)
 	IS_CONTROL_EXIST(MATRIX_NORMAL_21_LABEL)
 	//
+	IS_CONTROL_EXIST(VEC_POS_LT_X_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_LT_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_LT_Z_LABEL)
+	//
 	IS_CONTROL_EXIST(VEC_NORMAL_LT_X_LABEL)
 	IS_CONTROL_EXIST(VEC_NORMAL_LT_Y_LABEL)
 	IS_CONTROL_EXIST(VEC_NORMAL_LT_Z_LABEL)
@@ -178,6 +197,9 @@ void CustomUi::Initialize()
 	IS_CONTROL_EXIST(VEC_TANGENT_LT_X_LABEL)
 	IS_CONTROL_EXIST(VEC_TANGENT_LT_Y_LABEL)
 	IS_CONTROL_EXIST(VEC_TANGENT_LT_Z_LABEL)
+	//
+	IS_CONTROL_EXIST(VEC_UV_LT_X_LABEL)
+	IS_CONTROL_EXIST(VEC_UV_LT_Y_LABEL)
 }
 
 #define DISPLAY_VALUE_AT_LABEL(VALUE, LABEL)													\
@@ -217,6 +239,10 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][0], MATRIX_NORMAL_20_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mMatrixNormal[2][1], MATRIX_NORMAL_21_LABEL)
 	//
+	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_pos.x, VEC_POS_LT_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_pos.y, VEC_POS_LT_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_pos.z, VEC_POS_LT_Z_LABEL)
+	//
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.x, VEC_NORMAL_LT_X_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.y, VEC_NORMAL_LT_Y_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.z, VEC_NORMAL_LT_Z_LABEL)
@@ -224,6 +250,9 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_tangent.x, VEC_TANGENT_LT_X_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_tangent.y, VEC_TANGENT_LT_Y_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_tangent.z, VEC_TANGENT_LT_Z_LABEL)
+	//
+	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_uv.x, VEC_UV_LT_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_uv.y, VEC_UV_LT_Y_LABEL)
 }
 
 #define SET_REAL_SLIDER_VALUE(VALUE, SLIDER)	\
@@ -277,12 +306,17 @@ void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 {
 	mVertices = aVertices;
 	//
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_pos.x, VEC_POS_LT_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_pos.y, VEC_POS_LT_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_pos.z, VEC_POS_LT_Z_SLIDER)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.x, VEC_NORMAL_LT_X_SLIDER)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.y, VEC_NORMAL_LT_Y_SLIDER)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.z, VEC_NORMAL_LT_Z_SLIDER)
-	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.x, VEC_TANGENT_LT_X_SLIDER)
-	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.y, VEC_TANGENT_LT_Y_SLIDER)
-	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_normal.z, VEC_TANGENT_LT_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_tangent.x, VEC_TANGENT_LT_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_tangent.y, VEC_TANGENT_LT_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_tangent.z, VEC_TANGENT_LT_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_uv.x, VEC_UV_LT_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_uv.y, VEC_UV_LT_Y_SLIDER)
 	//
 	mIsRestoreNeed = false;
 }
@@ -297,14 +331,11 @@ bool CustomUi::IsNeedRestrore() const
 	return mIsRestoreNeed;
 }
 
-#define SLIDER_MODEL_COUNT 24
-
 Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
 {
 	Desktop::SliderModel* sliderModel = nullptr;
-	static std::bitset<SLIDER_MODEL_COUNT> sliderModelsSet;
 
-	if (aSliderId > (SLIDER_MODEL_COUNT - 1) || sliderModelsSet.test(aSliderId))
+	if (aSliderId > (SLIDER_MODEL_COUNT - 1) || mSliderModels[aSliderId])
 	{
 		return sliderModel;
 	}
@@ -385,6 +416,18 @@ Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float 
 			modelValue = &mMatrixNormal[2][1];
 			break;
 
+		case VEC_POS_LT_X_SLIDER:
+			modelValue = &mVertices[0].a_vertex_pos.x;
+			break;
+
+		case VEC_POS_LT_Y_SLIDER:
+			modelValue = &mVertices[0].a_vertex_pos.y;
+			break;
+
+		case VEC_POS_LT_Z_SLIDER:
+			modelValue = &mVertices[0].a_vertex_pos.z;
+			break;
+
 		case VEC_NORMAL_LT_X_SLIDER:
 			modelValue = &mVertices[0].a_vertex_normal.x;
 			break;
@@ -409,13 +452,20 @@ Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float 
 			modelValue = &mVertices[0].a_vertex_tangent.z;
 			break;
 
+		case VEC_UV_LT_X_SLIDER:
+			modelValue = &mVertices[0].a_vertex_uv.x;
+			break;
+
+		case VEC_UV_LT_Y_SLIDER:
+			modelValue = &mVertices[0].a_vertex_uv.y;
+			break;
+
 		default:
 			return sliderModel;
 	}
 
 	sliderModel = new CustomSliderModel(*modelValue, aMin, aMax);
-	sliderModelsSet.set(aSliderId);
-	mSliderModels.push_back(sliderModel);
+	mSliderModels[aSliderId] = sliderModel;
 	return sliderModel;
 }
 
