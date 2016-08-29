@@ -60,6 +60,7 @@ void GeometryDemo::Initialize()
 	{
 		throw std::runtime_error("Failed to load settings");
 	}
+
 	// Load the texture
 	auto asset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mTexturePath);
 
@@ -100,7 +101,8 @@ void GeometryDemo::Draw(const Library::GameTime&)
 {
 	glBindVertexArray(mVertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, mGeometryEffect.GetVertexSize() * mSettings->mVertices.size(), &mSettings->mVertices.front(),
+	glBufferData(GL_ARRAY_BUFFER, mGeometryEffect.GetVertexSize() * mSettings->mVertices.size(),
+				 &mSettings->mVertices.front(),
 				 GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);

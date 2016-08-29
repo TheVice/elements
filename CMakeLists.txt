@@ -492,7 +492,6 @@ foreach(SHADER_FILE ${SHADER_FILES})
     target_link_libraries(${app_path} ${REQUIRED_LIBRARIES})
     target_include_directories(${app_path} PRIVATE ${REQUIRED_INCLUDES})
     target_include_directories(${app_path} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-    target_include_directories(${app_path} PRIVATE ${REQUIRED_INCLUDES})
 
     add_dependencies(${app_path} copyAssets)
   endif()

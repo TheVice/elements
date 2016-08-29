@@ -193,139 +193,104 @@ float CustomUi::_getNormalLT_x()
 	return mVertices[0].a_vertex_normal.x;
 }
 
+#define SLIDER_MODEL_COUNT 24
+
 Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
 {
 	Desktop::SliderModel* sliderModel = nullptr;
-	static std::bitset<12> mvpSet;
-	static std::bitset<6> normalSet;
-	static std::bitset<6> topLeftVertexSet;
+	static std::bitset<SLIDER_MODEL_COUNT> sliderModelsSet;
 
-	if (aSliderId < static_cast<int>(mvpSet.size()))
+	if (aSliderId > (SLIDER_MODEL_COUNT - 1) || sliderModelsSet.test(aSliderId))
 	{
-		if (mvpSet.test(aSliderId))
-		{
-			return sliderModel;
-		}
-
-		switch (aSliderId)
-		{
-			case 0:
-				sliderModel = new CustomSliderModel(mMatrixMvp[0][0], aMin, aMax);
-				break;
-
-			case 1:
-				sliderModel = new CustomSliderModel(mMatrixMvp[0][1], aMin, aMax);
-				break;
-
-			case 2:
-				sliderModel = new CustomSliderModel(mMatrixMvp[0][2], aMin, aMax);
-				break;
-
-			case 3:
-				sliderModel = new CustomSliderModel(mMatrixMvp[1][0], aMin, aMax);
-				break;
-
-			case 4:
-				sliderModel = new CustomSliderModel(mMatrixMvp[1][1], aMin, aMax);
-				break;
-
-			case 5:
-				sliderModel = new CustomSliderModel(mMatrixMvp[1][2], aMin, aMax);
-				break;
-
-			case 6:
-				sliderModel = new CustomSliderModel(mMatrixMvp[2][0], aMin, aMax);
-				break;
-
-			case 7:
-				sliderModel = new CustomSliderModel(mMatrixMvp[2][1], aMin, aMax);
-				break;
-
-			case 8:
-				sliderModel = new CustomSliderModel(mMatrixMvp[2][2], aMin, aMax);
-				break;
-
-			case 9:
-				sliderModel = new CustomSliderModel(mMatrixMvp[3][0], aMin, aMax);
-				break;
-
-			case 10:
-				sliderModel = new CustomSliderModel(mMatrixMvp[3][1], aMin, aMax);
-				break;
-
-			case 11:
-				sliderModel = new CustomSliderModel(mMatrixMvp[3][2], aMin, aMax);
-				break;
-
-			default:
-				return sliderModel;
-		}
-
-		mvpSet.set(aSliderId);
-	}
-	else if (aSliderId < static_cast<int>(mvpSet.size() + normalSet.size()))
-	{
-		const auto localSliderId = aSliderId - mvpSet.size();
-
-		if (normalSet.test(localSliderId))
-		{
-			return sliderModel;
-		}
-
-		switch (localSliderId)
-		{
-			case 0:
-				sliderModel = new CustomSliderModel(mMatrixNormal[0][0], aMin, aMax);
-				break;
-
-			case 1:
-				sliderModel = new CustomSliderModel(mMatrixNormal[0][1], aMin, aMax);
-				break;
-
-			case 2:
-				sliderModel = new CustomSliderModel(mMatrixNormal[1][0], aMin, aMax);
-				break;
-
-			case 3:
-				sliderModel = new CustomSliderModel(mMatrixNormal[1][1], aMin, aMax);
-				break;
-
-			case 4:
-				sliderModel = new CustomSliderModel(mMatrixNormal[2][0], aMin, aMax);
-				break;
-
-			case 5:
-				sliderModel = new CustomSliderModel(mMatrixNormal[2][1], aMin, aMax);
-				break;
-
-			default:
-				return sliderModel;
-		}
-
-		normalSet.set(localSliderId);
-	}
-	else if (aSliderId < static_cast<int>(mvpSet.size() + normalSet.size() + topLeftVertexSet.size()))
-	{
-		const auto localSliderId = aSliderId - mvpSet.size() - normalSet.size();
-
-		if (topLeftVertexSet.test(localSliderId))
-		{
-			return sliderModel;
-		}
-
-		switch (localSliderId)
-		{
-			case 0:
-				sliderModel = new CustomSliderModel(mVertices[0].a_vertex_normal.x, aMin, aMax);
-				break;
-
-			default:
-				return sliderModel;
-		}
-
-		topLeftVertexSet.set(localSliderId);
+		return sliderModel;
 	}
 
+	float* modelValue = nullptr;
+
+	switch (aSliderId)
+	{
+		case 0:
+			modelValue = &mMatrixMvp[0][0];
+			break;
+
+		case 1:
+			modelValue = &mMatrixMvp[0][1];
+			break;
+
+		case 2:
+			modelValue = &mMatrixMvp[0][2];
+			break;
+
+		case 3:
+			modelValue = &mMatrixMvp[1][0];
+			break;
+
+		case 4:
+			modelValue = &mMatrixMvp[1][1];
+			break;
+
+		case 5:
+			modelValue = &mMatrixMvp[1][2];
+			break;
+
+		case 6:
+			modelValue = &mMatrixMvp[2][0];
+			break;
+
+		case 7:
+			modelValue = &mMatrixMvp[2][1];
+			break;
+
+		case 8:
+			modelValue = &mMatrixMvp[2][2];
+			break;
+
+		case 9:
+			modelValue = &mMatrixMvp[3][0];
+			break;
+
+		case 10:
+			modelValue = &mMatrixMvp[3][1];
+			break;
+
+		case 11:
+			modelValue = &mMatrixMvp[3][2];
+			break;
+
+		case 12:
+			modelValue = &mMatrixNormal[0][0];
+			break;
+
+		case 13:
+			modelValue = &mMatrixNormal[0][1];
+			break;
+
+		case 14:
+			modelValue = &mMatrixNormal[1][0];
+			break;
+
+		case 15:
+			modelValue = &mMatrixNormal[1][1];
+			break;
+
+		case 16:
+			modelValue = &mMatrixNormal[2][0];
+			break;
+
+		case 17:
+			modelValue = &mMatrixNormal[2][1];
+			break;
+
+		case 18:
+			modelValue = &mVertices[0].a_vertex_normal.x;
+			break;
+
+		default:
+			return sliderModel;
+	}
+
+	sliderModel = new CustomSliderModel(*modelValue, aMin, aMax);
+	sliderModelsSet.set(aSliderId);
 	return sliderModel;
 }
 
