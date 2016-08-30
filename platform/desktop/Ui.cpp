@@ -245,6 +245,13 @@ void Ui::Initialize()
 
 	for (const auto& controlInfo : data->mControlsInfo)
 	{
+		const auto controlName = std::get<1>(controlInfo).find("control_name")->second;
+
+		if (mControls.count(controlName))
+		{
+			continue;
+		}
+
 		std::weak_ptr<eps::ui::control> control;
 		auto parentControl = mUiSystem;
 		auto search = std::get<1>(controlInfo).find("parent");
@@ -312,7 +319,6 @@ void Ui::Initialize()
 		if (!control.expired())
 		{
 			SET_CONTROL(control)
-			const auto controlName = std::get<1>(controlInfo).find("control_name")->second;
 			mControls[controlName] = control;
 		}
 	}

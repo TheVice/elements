@@ -4,6 +4,7 @@
 #include "ui/controls/label.h"
 #include "ui/controls/panel.h"
 #include "SliderModel.h"
+#include "CustomControls.h"
 #include <sstream>
 #include <iomanip>
 
@@ -43,8 +44,6 @@ public:
 
 const float CustomSliderModel::sEpsilon = 100 * std::numeric_limits<float>::epsilon();
 
-#define SLIDER_MODEL_COUNT			29
-
 namespace Rendering
 {
 RTTI_DEFINITIONS(CustomUi)
@@ -69,78 +68,6 @@ CustomUi::~CustomUi()
 {
 }
 
-#define RESTORE_BUTTON				"RestoreButton"
-
-#define MATRIX_MVP_00_SLIDER		0
-#define MATRIX_MVP_01_SLIDER		1
-#define MATRIX_MVP_02_SLIDER		2
-#define MATRIX_MVP_10_SLIDER		3
-#define MATRIX_MVP_11_SLIDER		4
-#define MATRIX_MVP_12_SLIDER		5
-#define MATRIX_MVP_20_SLIDER		6
-#define MATRIX_MVP_21_SLIDER		7
-#define MATRIX_MVP_22_SLIDER		8
-#define MATRIX_MVP_30_SLIDER		9
-#define MATRIX_MVP_31_SLIDER		10
-#define MATRIX_MVP_32_SLIDER		11
-
-#define MATRIX_NORMAL_00_SLIDER 	12
-#define MATRIX_NORMAL_01_SLIDER		13
-#define MATRIX_NORMAL_10_SLIDER		14
-#define MATRIX_NORMAL_11_SLIDER		15
-#define MATRIX_NORMAL_20_SLIDER		16
-#define MATRIX_NORMAL_21_SLIDER		17
-
-#define VEC_POS_LT_X_SLIDER			18
-#define VEC_POS_LT_Y_SLIDER			19
-#define VEC_POS_LT_Z_SLIDER			20
-
-#define VEC_NORMAL_LT_X_SLIDER		21
-#define VEC_NORMAL_LT_Y_SLIDER		22
-#define VEC_NORMAL_LT_Z_SLIDER		23
-
-#define VEC_TANGENT_LT_X_SLIDER		24
-#define VEC_TANGENT_LT_Y_SLIDER		25
-#define VEC_TANGENT_LT_Z_SLIDER		26
-
-#define VEC_UV_LT_X_SLIDER			27
-#define VEC_UV_LT_Y_SLIDER			28
-
-#define MATRIX_MVP_00_LABEL "MatrixMvp_Panel/mMatrixMvp00_Label"
-#define MATRIX_MVP_01_LABEL "MatrixMvp_Panel/mMatrixMvp01_Label"
-#define MATRIX_MVP_02_LABEL "MatrixMvp_Panel/mMatrixMvp02_Label"
-#define MATRIX_MVP_10_LABEL "MatrixMvp_Panel/mMatrixMvp10_Label"
-#define MATRIX_MVP_11_LABEL "MatrixMvp_Panel/mMatrixMvp11_Label"
-#define MATRIX_MVP_12_LABEL "MatrixMvp_Panel/mMatrixMvp12_Label"
-#define MATRIX_MVP_20_LABEL "MatrixMvp_Panel/mMatrixMvp20_Label"
-#define MATRIX_MVP_21_LABEL "MatrixMvp_Panel/mMatrixMvp21_Label"
-#define MATRIX_MVP_22_LABEL "MatrixMvp_Panel/mMatrixMvp22_Label"
-#define MATRIX_MVP_30_LABEL "MatrixMvp_Panel/mMatrixMvp30_Label"
-#define MATRIX_MVP_31_LABEL "MatrixMvp_Panel/mMatrixMvp31_Label"
-#define MATRIX_MVP_32_LABEL "MatrixMvp_Panel/mMatrixMvp32_Label"
-
-#define MATRIX_NORMAL_00_LABEL "mMatrixNormal_Panel/mMatrixNormal00_Label"
-#define MATRIX_NORMAL_01_LABEL "mMatrixNormal_Panel/mMatrixNormal01_Label"
-#define MATRIX_NORMAL_10_LABEL "mMatrixNormal_Panel/mMatrixNormal10_Label"
-#define MATRIX_NORMAL_11_LABEL "mMatrixNormal_Panel/mMatrixNormal11_Label"
-#define MATRIX_NORMAL_20_LABEL "mMatrixNormal_Panel/mMatrixNormal20_Label"
-#define MATRIX_NORMAL_21_LABEL "mMatrixNormal_Panel/mMatrixNormal21_Label"
-
-#define VEC_POS_LT_X_LABEL "LT_Panel/mPosLT_x_Label"
-#define VEC_POS_LT_Y_LABEL "LT_Panel/mPosLT_y_Label"
-#define VEC_POS_LT_Z_LABEL "LT_Panel/mPosLT_z_Label"
-
-#define VEC_NORMAL_LT_X_LABEL "LT_Panel/mNormalLT_x_Label"
-#define VEC_NORMAL_LT_Y_LABEL "LT_Panel/mNormalLT_y_Label"
-#define VEC_NORMAL_LT_Z_LABEL "LT_Panel/mNormalLT_z_Label"
-
-#define VEC_TANGENT_LT_X_LABEL "LT_Panel/mTangentLT_x_Label"
-#define VEC_TANGENT_LT_Y_LABEL "LT_Panel/mTangentLT_y_Label"
-#define VEC_TANGENT_LT_Z_LABEL "LT_Panel/mTangentLT_z_Label"
-
-#define VEC_UV_LT_X_LABEL "LT_Panel/mUvLT_x_Label"
-#define VEC_UV_LT_Y_LABEL "LT_Panel/mUvLT_y_Label"
-
 #define IS_CONTROL_EXIST(CONTROL_NAME)														\
 	if (!mControls.count(CONTROL_NAME))														\
 	{																						\
@@ -152,12 +79,126 @@ void CustomUi::Initialize()
 	Ui::Initialize();
 	//
 	IS_CONTROL_EXIST(RESTORE_BUTTON)
+	//
+	IS_CONTROL_EXIST(LEFT_TOP_BUTTON)
+	IS_CONTROL_EXIST(RIGHT_TOP_BUTTON)
+	IS_CONTROL_EXIST(LEFT_BOTTOM_BUTTON)
+	IS_CONTROL_EXIST(RIGHT_BOTTOM_BUTTON)
+	//
+	IS_CONTROL_EXIST(LEFT_TOP_PANEL)
+	IS_CONTROL_EXIST(RIGHT_TOP_PANEL)
+	IS_CONTROL_EXIST(LEFT_BOTTOM_PANEL)
+	IS_CONTROL_EXIST(RIGHT_BOTTOM_PANEL)
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
 	{
 		directButton->set_click([this]
 		{
 			this->mIsRestoreNeed = !this->mIsRestoreNeed;
+		});
+	}
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[LEFT_TOP_BUTTON].lock()))
+	{
+		directButton->set_click([this]
+		{
+			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_TOP_PANEL].lock()))
+			{
+				ltPanel->set_visible(!ltPanel->get_visible());
+			}
+
+			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_TOP_PANEL].lock()))
+			{
+				rtPanel->set_visible(false);
+			}
+
+			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_BOTTOM_PANEL].lock()))
+			{
+				rbPanel->set_visible(false);
+			}
+
+			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_BOTTOM_PANEL].lock()))
+			{
+				lbPanel->set_visible(false);
+			}
+		});
+	}
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RIGHT_TOP_BUTTON].lock()))
+	{
+		directButton->set_click([this]
+		{
+			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_TOP_PANEL].lock()))
+			{
+				ltPanel->set_visible(false);
+			}
+
+			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_TOP_PANEL].lock()))
+			{
+				rtPanel->set_visible(!rtPanel->get_visible());
+			}
+
+			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_BOTTOM_PANEL].lock()))
+			{
+				rbPanel->set_visible(false);
+			}
+
+			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_BOTTOM_PANEL].lock()))
+			{
+				lbPanel->set_visible(false);
+			}
+		});
+	}
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RIGHT_BOTTOM_BUTTON].lock()))
+	{
+		directButton->set_click([this]
+		{
+			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_TOP_PANEL].lock()))
+			{
+				ltPanel->set_visible(false);
+			}
+
+			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_TOP_PANEL].lock()))
+			{
+				rtPanel->set_visible(false);
+			}
+
+			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_BOTTOM_PANEL].lock()))
+			{
+				rbPanel->set_visible(!rbPanel->get_visible());
+			}
+
+			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_BOTTOM_PANEL].lock()))
+			{
+				lbPanel->set_visible(false);
+			}
+		});
+	}
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[LEFT_BOTTOM_BUTTON].lock()))
+	{
+		directButton->set_click([this]
+		{
+			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_TOP_PANEL].lock()))
+			{
+				ltPanel->set_visible(false);
+			}
+
+			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_TOP_PANEL].lock()))
+			{
+				rtPanel->set_visible(false);
+			}
+
+			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[RIGHT_BOTTOM_PANEL].lock()))
+			{
+				rbPanel->set_visible(false);
+			}
+
+			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[LEFT_BOTTOM_PANEL].lock()))
+			{
+				lbPanel->set_visible(!lbPanel->get_visible());
+			}
 		});
 	}
 
@@ -189,17 +230,55 @@ void CustomUi::Initialize()
 	IS_CONTROL_EXIST(VEC_POS_LT_X_LABEL)
 	IS_CONTROL_EXIST(VEC_POS_LT_Y_LABEL)
 	IS_CONTROL_EXIST(VEC_POS_LT_Z_LABEL)
-	//
 	IS_CONTROL_EXIST(VEC_NORMAL_LT_X_LABEL)
 	IS_CONTROL_EXIST(VEC_NORMAL_LT_Y_LABEL)
 	IS_CONTROL_EXIST(VEC_NORMAL_LT_Z_LABEL)
-	//
 	IS_CONTROL_EXIST(VEC_TANGENT_LT_X_LABEL)
 	IS_CONTROL_EXIST(VEC_TANGENT_LT_Y_LABEL)
 	IS_CONTROL_EXIST(VEC_TANGENT_LT_Z_LABEL)
-	//
 	IS_CONTROL_EXIST(VEC_UV_LT_X_LABEL)
 	IS_CONTROL_EXIST(VEC_UV_LT_Y_LABEL)
+	//
+	IS_CONTROL_EXIST(VEC_POS_RT_X_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_RT_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_RT_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_RT_X_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_RT_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_RT_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_RT_X_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_RT_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_RT_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_UV_RT_X_LABEL)
+	IS_CONTROL_EXIST(VEC_UV_RT_Y_LABEL)
+	//
+	IS_CONTROL_EXIST(VEC_POS_RB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_RB_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_RB_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_RB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_RB_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_RB_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_RB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_RB_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_RB_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_UV_RB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_UV_RB_Y_LABEL)
+	//
+	IS_CONTROL_EXIST(VEC_POS_LB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_LB_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_POS_LB_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_LB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_LB_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_NORMAL_LB_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_LB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_LB_Y_LABEL)
+	IS_CONTROL_EXIST(VEC_TANGENT_LB_Z_LABEL)
+	IS_CONTROL_EXIST(VEC_UV_LB_X_LABEL)
+	IS_CONTROL_EXIST(VEC_UV_LB_Y_LABEL)
+
+	for (const auto& sliderModel : mSliderModels)
+	{
+		assert(sliderModel);
+	}
 }
 
 #define DISPLAY_VALUE_AT_LABEL(VALUE, LABEL)													\
@@ -242,17 +321,50 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_pos.x, VEC_POS_LT_X_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_pos.y, VEC_POS_LT_Y_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_pos.z, VEC_POS_LT_Z_LABEL)
-	//
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.x, VEC_NORMAL_LT_X_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.y, VEC_NORMAL_LT_Y_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_normal.z, VEC_NORMAL_LT_Z_LABEL)
-	//
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_tangent.x, VEC_TANGENT_LT_X_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_tangent.y, VEC_TANGENT_LT_Y_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_tangent.z, VEC_TANGENT_LT_Z_LABEL)
-	//
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_uv.x, VEC_UV_LT_X_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_uv.y, VEC_UV_LT_Y_LABEL)
+	//
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_pos.x, VEC_POS_RT_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_pos.y, VEC_POS_RT_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_pos.z, VEC_POS_RT_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_normal.x, VEC_NORMAL_RT_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_normal.y, VEC_NORMAL_RT_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_normal.z, VEC_NORMAL_RT_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_tangent.x, VEC_TANGENT_RT_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_tangent.y, VEC_TANGENT_RT_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_tangent.z, VEC_TANGENT_RT_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_uv.x, VEC_UV_RT_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_uv.y, VEC_UV_RT_Y_LABEL)
+	//
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_pos.x, VEC_POS_RB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_pos.y, VEC_POS_RB_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_pos.z, VEC_POS_RB_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_normal.x, VEC_NORMAL_RB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_normal.y, VEC_NORMAL_RB_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_normal.z, VEC_NORMAL_RB_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_tangent.x, VEC_TANGENT_RB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_tangent.y, VEC_TANGENT_RB_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_tangent.z, VEC_TANGENT_RB_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_uv.x, VEC_UV_RB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_uv.y, VEC_UV_RB_Y_LABEL)
+	//
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_pos.x, VEC_POS_LB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_pos.y, VEC_POS_LB_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_pos.z, VEC_POS_LB_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_normal.x, VEC_NORMAL_LB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_normal.y, VEC_NORMAL_LB_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_normal.z, VEC_NORMAL_LB_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_tangent.x, VEC_TANGENT_LB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_tangent.y, VEC_TANGENT_LB_Y_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_tangent.z, VEC_TANGENT_LB_Z_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.x, VEC_UV_LB_X_LABEL)
+	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.y, VEC_UV_LB_Y_LABEL)
 }
 
 #define SET_REAL_SLIDER_VALUE(VALUE, SLIDER)	\
@@ -317,6 +429,42 @@ void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_tangent.z, VEC_TANGENT_LT_Z_SLIDER)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_uv.x, VEC_UV_LT_X_SLIDER)
 	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_uv.y, VEC_UV_LT_Y_SLIDER)
+	//
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_pos.x, VEC_POS_RT_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_pos.y, VEC_POS_RT_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_pos.z, VEC_POS_RT_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_normal.x, VEC_NORMAL_RT_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_normal.y, VEC_NORMAL_RT_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_normal.z, VEC_NORMAL_RT_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_tangent.x, VEC_TANGENT_RT_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_tangent.y, VEC_TANGENT_RT_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_tangent.z, VEC_TANGENT_RT_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_uv.x, VEC_UV_RT_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_uv.y, VEC_UV_RT_Y_SLIDER)
+	//
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_pos.x, VEC_POS_RB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_pos.y, VEC_POS_RB_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_pos.z, VEC_POS_RB_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_normal.x, VEC_NORMAL_RB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_normal.y, VEC_NORMAL_RB_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_normal.z, VEC_NORMAL_RB_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_tangent.x, VEC_TANGENT_RB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_tangent.y, VEC_TANGENT_RB_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_tangent.z, VEC_TANGENT_RB_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_uv.x, VEC_UV_RB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_uv.y, VEC_UV_RB_Y_SLIDER)
+	//
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_pos.x, VEC_POS_LB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_pos.y, VEC_POS_LB_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_pos.z, VEC_POS_LB_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_normal.x, VEC_NORMAL_LB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_normal.y, VEC_NORMAL_LB_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_normal.z, VEC_NORMAL_LB_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_tangent.x, VEC_TANGENT_LB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_tangent.y, VEC_TANGENT_LB_Y_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_tangent.z, VEC_TANGENT_LB_Z_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_uv.x, VEC_UV_LB_X_SLIDER)
+	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_uv.y, VEC_UV_LB_Y_SLIDER)
 	//
 	mIsRestoreNeed = false;
 }
@@ -460,10 +608,143 @@ Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float 
 			modelValue = &mVertices[0].a_vertex_uv.y;
 			break;
 
+		case VEC_POS_RT_X_SLIDER:
+			modelValue = &mVertices[1].a_vertex_pos.x;
+			break;
+
+		case VEC_POS_RT_Y_SLIDER:
+			modelValue = &mVertices[1].a_vertex_pos.y;
+			break;
+
+		case VEC_POS_RT_Z_SLIDER:
+			modelValue = &mVertices[1].a_vertex_pos.z;
+			break;
+
+		case VEC_NORMAL_RT_X_SLIDER:
+			modelValue = &mVertices[1].a_vertex_normal.x;
+			break;
+
+		case VEC_NORMAL_RT_Y_SLIDER	:
+			modelValue = &mVertices[1].a_vertex_normal.y;
+			break;
+
+		case VEC_NORMAL_RT_Z_SLIDER:
+			modelValue = &mVertices[1].a_vertex_normal.z;
+			break;
+
+		case VEC_TANGENT_RT_X_SLIDER:
+			modelValue = &mVertices[1].a_vertex_tangent.x;
+			break;
+
+		case VEC_TANGENT_RT_Y_SLIDER:
+			modelValue = &mVertices[1].a_vertex_tangent.y;
+			break;
+
+		case VEC_TANGENT_RT_Z_SLIDER:
+			modelValue = &mVertices[1].a_vertex_tangent.z;
+			break;
+
+		case VEC_UV_RT_X_SLIDER:
+			modelValue = &mVertices[1].a_vertex_uv.x;
+			break;
+
+		case VEC_UV_RT_Y_SLIDER:
+			modelValue = &mVertices[1].a_vertex_uv.y;
+			break;
+
+		case VEC_POS_RB_X_SLIDER:
+			modelValue = &mVertices[2].a_vertex_pos.x;
+			break;
+
+		case VEC_POS_RB_Y_SLIDER:
+			modelValue = &mVertices[2].a_vertex_pos.y;
+			break;
+
+		case VEC_POS_RB_Z_SLIDER:
+			modelValue = &mVertices[2].a_vertex_pos.z;
+			break;
+
+		case VEC_NORMAL_RB_X_SLIDER:
+			modelValue = &mVertices[2].a_vertex_normal.x;
+			break;
+
+		case VEC_NORMAL_RB_Y_SLIDER	:
+			modelValue = &mVertices[2].a_vertex_normal.y;
+			break;
+
+		case VEC_NORMAL_RB_Z_SLIDER:
+			modelValue = &mVertices[2].a_vertex_normal.z;
+			break;
+
+		case VEC_TANGENT_RB_X_SLIDER:
+			modelValue = &mVertices[2].a_vertex_tangent.x;
+			break;
+
+		case VEC_TANGENT_RB_Y_SLIDER:
+			modelValue = &mVertices[2].a_vertex_tangent.y;
+			break;
+
+		case VEC_TANGENT_RB_Z_SLIDER:
+			modelValue = &mVertices[2].a_vertex_tangent.z;
+			break;
+
+		case VEC_UV_RB_X_SLIDER:
+			modelValue = &mVertices[2].a_vertex_uv.x;
+			break;
+
+		case VEC_UV_RB_Y_SLIDER:
+			modelValue = &mVertices[2].a_vertex_uv.y;
+			break;
+
+		case VEC_POS_LB_X_SLIDER:
+			modelValue = &mVertices[3].a_vertex_pos.x;
+			break;
+
+		case VEC_POS_LB_Y_SLIDER:
+			modelValue = &mVertices[3].a_vertex_pos.y;
+			break;
+
+		case VEC_POS_LB_Z_SLIDER:
+			modelValue = &mVertices[3].a_vertex_pos.z;
+			break;
+
+		case VEC_NORMAL_LB_X_SLIDER:
+			modelValue = &mVertices[3].a_vertex_normal.x;
+			break;
+
+		case VEC_NORMAL_LB_Y_SLIDER	:
+			modelValue = &mVertices[3].a_vertex_normal.y;
+			break;
+
+		case VEC_NORMAL_LB_Z_SLIDER:
+			modelValue = &mVertices[3].a_vertex_normal.z;
+			break;
+
+		case VEC_TANGENT_LB_X_SLIDER:
+			modelValue = &mVertices[3].a_vertex_tangent.x;
+			break;
+
+		case VEC_TANGENT_LB_Y_SLIDER:
+			modelValue = &mVertices[3].a_vertex_tangent.y;
+			break;
+
+		case VEC_TANGENT_LB_Z_SLIDER:
+			modelValue = &mVertices[3].a_vertex_tangent.z;
+			break;
+
+		case VEC_UV_LB_X_SLIDER:
+			modelValue = &mVertices[3].a_vertex_uv.x;
+			break;
+
+		case VEC_UV_LB_Y_SLIDER:
+			modelValue = &mVertices[3].a_vertex_uv.y;
+			break;
+
 		default:
 			return sliderModel;
 	}
 
+	assert(modelValue);
 	sliderModel = new CustomSliderModel(*modelValue, aMin, aMax);
 	mSliderModels[aSliderId] = sliderModel;
 	return sliderModel;
