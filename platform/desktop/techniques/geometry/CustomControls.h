@@ -2,6 +2,8 @@
 #define _CUSTOM_CONTROLS_H_
 
 #define RESTORE_BUTTON				"RestoreButton"
+#define MVP_BUTTON					"Mvp_Button"
+#define NORMAL_BUTTON				"Normal_Button"
 
 #define LEFT_TOP_BUTTON				"LT_Button"
 #define RIGHT_TOP_BUTTON			"RT_Button"
@@ -12,6 +14,9 @@
 #define RIGHT_TOP_PANEL				"RT_Panel"
 #define LEFT_BOTTOM_PANEL			"LB_Panel"
 #define RIGHT_BOTTOM_PANEL			"RB_Panel"
+
+#define MVP_PANEL					"MatrixMvp_Panel"
+#define NORMAL_PANEL				"mMatrixNormal_Panel"
 
 #define MATRIX_MVP_00_SLIDER		0
 #define MATRIX_MVP_01_SLIDER		1

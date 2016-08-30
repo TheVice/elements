@@ -80,10 +80,16 @@ void CustomUi::Initialize()
 	//
 	IS_CONTROL_EXIST(RESTORE_BUTTON)
 	//
+	IS_CONTROL_EXIST(MVP_BUTTON)
+	IS_CONTROL_EXIST(NORMAL_BUTTON)
+	//
 	IS_CONTROL_EXIST(LEFT_TOP_BUTTON)
 	IS_CONTROL_EXIST(RIGHT_TOP_BUTTON)
 	IS_CONTROL_EXIST(LEFT_BOTTOM_BUTTON)
 	IS_CONTROL_EXIST(RIGHT_BOTTOM_BUTTON)
+	//
+	IS_CONTROL_EXIST(MVP_PANEL)
+	IS_CONTROL_EXIST(NORMAL_PANEL)
 	//
 	IS_CONTROL_EXIST(LEFT_TOP_PANEL)
 	IS_CONTROL_EXIST(RIGHT_TOP_PANEL)
@@ -95,6 +101,28 @@ void CustomUi::Initialize()
 		directButton->set_click([this]
 		{
 			this->mIsRestoreNeed = !this->mIsRestoreNeed;
+		});
+	}
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[MVP_BUTTON].lock()))
+	{
+		directButton->set_click([this]
+		{
+			if (auto mvpPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[MVP_PANEL].lock()))
+			{
+				mvpPanel->set_visible(!mvpPanel->get_visible());
+			}
+		});
+	}
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[NORMAL_BUTTON].lock()))
+	{
+		directButton->set_click([this]
+		{
+			if (auto normalPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[NORMAL_PANEL].lock()))
+			{
+				normalPanel->set_visible(!normalPanel->get_visible());
+			}
 		});
 	}
 
