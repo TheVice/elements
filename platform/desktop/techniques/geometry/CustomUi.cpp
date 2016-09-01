@@ -442,7 +442,7 @@ void CustomUi::SetMatrixNormal(const glm::mat3& aMatrixNormal)
 	SET_REAL_SLIDER_VALUE(mMatrixNormal[1][0], MATRIX_NORMAL_10_SLIDER)
 	SET_REAL_SLIDER_VALUE(mMatrixNormal[1][1], MATRIX_NORMAL_11_SLIDER)
 	SET_REAL_SLIDER_VALUE(mMatrixNormal[2][0], MATRIX_NORMAL_20_SLIDER)
-	SET_REAL_SLIDER_VALUE(mMatrixNormal[1][1], MATRIX_NORMAL_21_SLIDER)
+	SET_REAL_SLIDER_VALUE(mMatrixNormal[2][1], MATRIX_NORMAL_21_SLIDER)
 	//
 	mIsRestoreNeed = false;
 }

@@ -50,7 +50,7 @@ void GeometryDemo::Initialize()
 	mIsNonEncodeProgramLoaded = eps::rendering::load_program("assets/shaders/techniques/geometry_non_encode.prog", mProgramNonEncodeNormal);
 
 	// Load the settings
-	auto assetPath = "assets/settings/techniques/geometry.xml";
+	const auto assetPath = "assets/settings/techniques/geometry.xml";
 	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
 
 	if (!mSettings || mSettings->mIsEmpty)
@@ -59,16 +59,16 @@ void GeometryDemo::Initialize()
 	}
 
 	// Load the texture
-	auto asset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mTexturePath);
+	const auto textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mTexturePath);
 
-	if (!asset.value().pixels())
+	if (!textureAsset || !textureAsset->pixels())
 	{
 		throw std::runtime_error("Failed to load texture");
 	}
 
-	auto maker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>(asset->format());
-	mTexture = maker.construct(asset->pixels(), asset->size());
-	mColorTexture = (*eps::utils::ptr_product(mTexture.get_product()));
+	auto textureMaker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>(textureAsset->format());
+	mTexture = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
+	mColorTexture = eps::utils::raw_product(mTexture.get_product());
 	// Create the vertex buffer object
 	mGeometryEffect.CreateVertexBuffer(&mSettings->mVertices.front(), mSettings->mVertices.size(), mVertexBuffer);
 	// Create the index buffer object
