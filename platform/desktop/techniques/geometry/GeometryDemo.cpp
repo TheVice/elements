@@ -17,7 +17,8 @@ RTTI_DEFINITIONS(GeometryDemo)
 
 GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgram(),
+	mProgramEncodeNormal(),
+	mProgramNonEncodeNormal(),
 	mGeometryEffect(),
 	mVertexArrayObject(0),
 	mVertexBuffer(0),
@@ -25,7 +26,8 @@ GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	mColorTexture(0),
 	mTexture(),
 	mSettings(),
-	mUi(nullptr)
+	mUi(nullptr),
+	mIsNonEncodeProgramLoaded(false)
 {
 }
 
@@ -39,12 +41,14 @@ GeometryDemo::~GeometryDemo()
 void GeometryDemo::Initialize()
 {
 	// Build the shader program
-	if (!eps::rendering::load_program("assets/shaders/techniques/geometry.prog", mProgram))
+	if (!eps::rendering::load_program("assets/shaders/techniques/geometry.prog", mProgramEncodeNormal))
 	{
 		throw std::runtime_error("Failed to load shader");
 	}
 
-	mGeometryEffect.SetProgram(eps::utils::raw_product(mProgram.get_product()));
+	mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
+	mIsNonEncodeProgramLoaded = eps::rendering::load_program("assets/shaders/techniques/geometry_non_encode.prog", mProgramNonEncodeNormal);
+
 	// Load the settings
 	auto assetPath = "assets/settings/techniques/geometry.xml";
 	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
@@ -82,6 +86,11 @@ void GeometryDemo::Initialize()
 	mUi->SetMatrixMvp(mSettings->mMatrixMvp);
 	mUi->SetMatrixNormal(mSettings->mMatrixNormal);
 	mUi->SetVertices(mSettings->mVertices);
+
+	if (!mIsNonEncodeProgramLoaded)
+	{
+		mUi->SetEncodeNormalControlsVisible(false);
+	}
 }
 
 void GeometryDemo::Update(const Library::GameTime&)
@@ -99,12 +108,24 @@ void GeometryDemo::Draw(const Library::GameTime&)
 	glBindVertexArray(mVertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER,
-				 mGeometryEffect.GetVertexSize() * mUi->GetVertices().size(),
+				 sizeof(VertexStructure) * mUi->GetVertices().size(),
 				 &mUi->GetVertices().front(),
 				 GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);
-	//
+
+	if (mIsNonEncodeProgramLoaded)
+	{
+		if (mUi->IsEncodeNormal())
+		{
+			mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
+		}
+		else
+		{
+			mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramNonEncodeNormal.get_product()));
+		}
+	}
+
 	mGeometryEffect.Use();
 	mGeometryEffect.u_matrix_mvp() << mUi->GetMatrixMvp();
 	mGeometryEffect.u_matrix_normal() << mUi->GetMatrixNormal();

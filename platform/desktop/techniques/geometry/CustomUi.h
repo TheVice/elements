@@ -34,6 +34,9 @@ public:
 	const std::vector<VertexStructure>& GetVertices() const;
 
 	bool IsNeedRestrore() const;
+	bool IsEncodeNormal() const;
+
+	void SetEncodeNormalControlsVisible(bool aVisible);
 
 protected:
 	virtual Library::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
@@ -46,6 +49,7 @@ private:
 	std::vector<Library::SliderModel*> mSliderModels;
 
 	bool mIsRestoreNeed;
+	bool mIsEncodeNormal;
 };
 }
 

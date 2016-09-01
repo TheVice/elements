@@ -31,7 +31,8 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	eps::rendering::program mProgram;
+	eps::rendering::program mProgramEncodeNormal;
+	eps::rendering::program mProgramNonEncodeNormal;
 	Library::GeometryEffect mGeometryEffect;
 	GLuint mVertexArrayObject;
 	GLuint mVertexBuffer;
@@ -42,6 +43,8 @@ private:
 	eps::utils::optional<SettingsReader> mSettings;
 
 	CustomUi* mUi;
+
+	bool mIsNonEncodeProgramLoaded;
 };
 }
 

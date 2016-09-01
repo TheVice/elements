@@ -4,6 +4,7 @@
 #include "ui/controls/label.h"
 #include "ui/controls/panel.h"
 #include "SliderModel.h"
+#include "checkbox.h"
 #include "CustomControls.h"
 #include <sstream>
 #include <iomanip>
@@ -60,7 +61,8 @@ CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 					VertexStructure()
 }),
 mSliderModels(SLIDER_MODEL_COUNT),
-mIsRestoreNeed(false)
+mIsRestoreNeed(false),
+mIsEncodeNormal(true)
 {
 }
 
@@ -302,6 +304,9 @@ void CustomUi::Initialize()
 	IS_CONTROL_EXIST(VEC_TANGENT_LB_Z_LABEL)
 	IS_CONTROL_EXIST(VEC_UV_LB_X_LABEL)
 	IS_CONTROL_EXIST(VEC_UV_LB_Y_LABEL)
+	//
+	IS_CONTROL_EXIST(ENCODE_NORMAL)
+	IS_CONTROL_EXIST(ENCODE_NORMAL_LABEL)
 
 	for (const auto& sliderModel : mSliderModels)
 	{
@@ -393,6 +398,11 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_tangent.z, VEC_TANGENT_LB_Z_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.x, VEC_UV_LB_X_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.y, VEC_UV_LB_Y_LABEL)
+
+	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>(mControls[ENCODE_NORMAL].lock()))
+	{
+		mIsEncodeNormal = (Desktop::checkbox::state::CHECKED == directCheckbox->get_state());
+	}
 }
 
 #define SET_REAL_SLIDER_VALUE(VALUE, SLIDER)	\
@@ -505,6 +515,23 @@ const std::vector<VertexStructure>& CustomUi::GetVertices() const
 bool CustomUi::IsNeedRestrore() const
 {
 	return mIsRestoreNeed;
+}
+
+bool CustomUi::IsEncodeNormal() const
+{
+	return mIsEncodeNormal;
+}
+
+#define SET_VISIBLE(VALUE, CONTROL)							\
+	if (auto directControl = (mControls[CONTROL].lock()))	\
+	{														\
+		directControl->set_visible(VALUE);					\
+	}
+
+void CustomUi::SetEncodeNormalControlsVisible(bool aVisible)
+{
+	SET_VISIBLE(aVisible, ENCODE_NORMAL)
+	SET_VISIBLE(aVisible, ENCODE_NORMAL_LABEL)
 }
 
 Library::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)

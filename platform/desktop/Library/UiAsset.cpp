@@ -5,6 +5,7 @@
 #include "ui/controls/label.h"
 #include "ui/controls/panel.h"
 #include "SliderModel.h"
+#include "checkbox.h"
 #include "assets/assets_storage.h"
 #include "UiReader.h"
 #include "Game.h"
@@ -221,6 +222,28 @@ UiAsset::~UiAsset()
 		}																						\
 	}
 
+#define SET_CHECKBOX(C)																			\
+	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>(C.lock()))			\
+	{																							\
+		auto search = std::get<1>(controlInfo).find("state");									\
+		\
+		if (search != std::get<1>(controlInfo).end())											\
+		{																						\
+			if (search->second == "Checked")													\
+			{																					\
+				directCheckbox->set_state(Desktop::checkbox::state::CHECKED);					\
+			}																					\
+			else if (search->second == "Indeterminate")											\
+			{																					\
+				directCheckbox->set_state(Desktop::checkbox::state::INDETERMINATE);				\
+			}																					\
+			else if (search->second == "Unchecked")												\
+			{																					\
+				directCheckbox->set_state(Desktop::checkbox::state::UNCHECKED);					\
+			}																					\
+		}																						\
+	}
+
 void UiAsset::Initialize()
 {
 	DrawableUiGameComponent::Initialize();
@@ -303,6 +326,11 @@ void UiAsset::Initialize()
 				control = parentControl->add<eps::ui::slider>(sliderModel);
 				SET_SLIDER(control)
 			}
+		}
+		else if (std::get<0>(controlInfo) == "checkbox")
+		{
+			control = parentControl->add<Desktop::checkbox>();
+			SET_CHECKBOX(control)
 		}
 
 		if (!control.expired())

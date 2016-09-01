@@ -25,7 +25,7 @@ enum program_enum : short
 checkbox::checkbox(control* parent)
 	: control(parent)
 	, state_(state::UNCHECKED)
-	, square_(eps::rendering::primitive::square(eps::rendering::buffer_usage::STREAM_DRAW))
+	, square_(eps::rendering::buffer_usage::STREAM_DRAW)
 	, colors_{   eps::math::vec4(1.0f,    1.0f,     1.0f,    1.0f)
 			   , eps::math::vec4(0.5f,    0.5f,     0.5f,    1.0f)
 			   , eps::math::vec4(0.8314f, 0.81569f, 0.7843f, 1.0f)

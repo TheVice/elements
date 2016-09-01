@@ -213,6 +213,8 @@
       <label position_x="120" position_y="13" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" control_name="mUvLB_y_Label"/>
       <slider position_x="10" position_y="10" size_w="100" size_h="16" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="61" min="-1.0" max="1.0" control_name="mUvRB_y_Slider"/>
     </panel>
+    <checkbox position_x="180" position_y="110" size_w="13" size_h="13" state="Checked" control_name="ENCODE_NORMAL"/>
+    <label position_x="195" position_y="110" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" text="ENCODE NORMAL" control_name="ENCODE_NORMAL_LABEL"/>
   </controls>
 </ui>
 <!-- Sample using of controls
@@ -222,5 +224,6 @@
     <label position_x="10" position_y="10" size_w="10" size_h="50" visible="true" font_path="assets/ui/fonts/OpenSans-Regular.ttf" font_height="18" text="This is label" color_r="0.9" color_g="0.25" color_b="0.2" color_a="1.0" alignment_haling="RESERVED" alignment_valign="RESERVED" control_name=""/>
     <panel position_x="10" position_y="10" size_w="250" size_h="250" visible="true" color_r="0.9" color_g="0.25" color_b="0.2" color_a="0.5" control_name=""/>
     <slider position_x="400" position_y="400" size_w="150" size_h="16" visible="true" color_slider_r="0.8" color_slider_g="0.8" color_slider_b="0.8" color_slider_a="1.0" color_tracker_r="0.0" color_tracker_g="0.65" color_tracker_b="0.95" color_tracker_a="1.0" id="0" min="-1.0" max="1.0" control_name=""/>
+    <checkbox position_x="180" position_y="113" size_w="13" size_h="13" visible="true" state="Checked"/>
   </controls>
 -->

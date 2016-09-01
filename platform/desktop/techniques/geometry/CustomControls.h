@@ -180,4 +180,7 @@
 #define VEC_UV_LB_X_LABEL "LB_Panel/mUvLB_x_Label"
 #define VEC_UV_LB_Y_LABEL "LB_Panel/mUvLB_y_Label"
 
+#define ENCODE_NORMAL "ENCODE_NORMAL"
+#define ENCODE_NORMAL_LABEL "ENCODE_NORMAL_LABEL"
+
 #endif
