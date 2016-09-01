@@ -1,30 +1,26 @@
 
-#include "Ui.h"
+#include "UiAsset.h"
 #include "metrics/metrics.h"
-#include "math/transform.h"
 #include "ui/controls/button.h"
 #include "ui/controls/label.h"
 #include "ui/controls/panel.h"
-#include "assets/assets_storage.h"
 #include "SliderModel.h"
+#include "assets/assets_storage.h"
 #include "UiReader.h"
 #include "Game.h"
 
-namespace Desktop
+namespace Library
 {
-RTTI_DEFINITIONS(Ui)
+RTTI_DEFINITIONS(UiAsset)
 
-Ui::Ui(Library::Game& aGame, const std::string& aAssetPath) :
-	DrawableGameComponent(aGame),
+UiAsset::UiAsset(Game& aGame, const std::string& aAssetPath) :
+	DrawableUiGameComponent(aGame),
 	mAssetPath(aAssetPath),
-	mTouchDown(false),
-	mTransformTouch(),
-	mUiSystem(nullptr),
 	mControls()
 {
 }
 
-Ui::~Ui()
+UiAsset::~UiAsset()
 {
 }
 
@@ -225,16 +221,9 @@ Ui::~Ui()
 		}																						\
 	}
 
-void Ui::Initialize()
+void UiAsset::Initialize()
 {
-	const eps::math::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	mUiSystem = std::make_shared<eps::ui::system>();
-
-	if (!std::static_pointer_cast<eps::ui::system>(mUiSystem)->construct(size))
-	{
-		throw std::runtime_error("mUiSystem->construct() failed");
-	}
-
+	DrawableUiGameComponent::Initialize();
 	auto data =
 		eps::assets_storage::instance().read<UiReader>(mAssetPath);
 
@@ -322,47 +311,15 @@ void Ui::Initialize()
 			mControls[controlName] = control;
 		}
 	}
-
-	mTransformTouch = eps::math::translate(0.0f, size.y, 0.0f) * eps::math::scale(1.0f, -1.0f, 1.0f);
 }
 
-void Ui::Update(const Library::GameTime&)
-{
-	glm::dvec2 screenPos;
-	glfwGetCursorPos(mGame->GetWindow(), &screenPos.x, &screenPos.y);
-	//
-	const auto posTouch = mTransformTouch * eps::math::vec4(screenPos.x, screenPos.y, 1.0f, 1.0f);
-
-	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
-	{
-		if (!mTouchDown)
-		{
-			mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::DOWN);
-			mTouchDown = true;
-		}
-
-		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
-	}
-	else if (mTouchDown)
-	{
-		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::MOVE);
-		mUiSystem->touch(posTouch.x, posTouch.y, eps::ui::touch_action::UP);
-		mTouchDown = false;
-	}
-}
-
-void Ui::Draw(const Library::GameTime&)
-{
-	mUiSystem->draw();
-}
-
-SliderModel* Ui::GetSliderModel(int aSliderId)
+SliderModel* UiAsset::GetSliderModel(int aSliderId)
 {
 	(void)aSliderId;
 	return new SliderModel();
 }
 
-SliderModel* Ui::GetSliderModel(int aSliderId, float aMin, float aMax)
+SliderModel* UiAsset::GetSliderModel(int aSliderId, float aMin, float aMax)
 {
 	(void)aSliderId;
 	return new SliderModel(aMin, aMax);

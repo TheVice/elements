@@ -5,11 +5,11 @@
 #include "checkbox.h"
 #include <Game.h>
 
-namespace Desktop
+namespace Library
 {
 RTTI_DEFINITIONS(CapsView)
 
-CapsView::CapsView(Library::Game& aGame) :
+CapsView::CapsView(Game& aGame) :
 	DrawableUiGameComponent(aGame),
 	mControls()
 {
@@ -63,7 +63,7 @@ void CapsView::Initialize()
 	}
 }
 
-void CapsView::Update(const Library::GameTime& aGameTime)
+void CapsView::Update(const GameTime& aGameTime)
 {
 	DrawableUiGameComponent::Update(aGameTime);
 

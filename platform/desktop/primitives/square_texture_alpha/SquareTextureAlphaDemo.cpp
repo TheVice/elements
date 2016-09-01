@@ -49,16 +49,16 @@ void SquareTextureAlphaDemo::Initialize()
 	GLenum texture_format = GL_RGBA;
 	glm::uvec2 texture_size = size;
 	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
-	Desktop::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
+	Library::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
 	//
 	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>(texture_format);
 	mTexture = maker.construct(texture_data.get(), size);
 	//
-	SettingsReader settings;
-	bool settingLoaded = load_data("settings/primitives/square_texture_alpha.xml", settings);
+//	SettingsReader settings;
+//	bool settingLoaded = load_data("settings/primitives/square_texture_alpha.xml", settings);
 	//
-	mTransform = settingLoaded ? settings.mTransform : glm::mat4();
-	mColor = settingLoaded ? settings.mColor : glm::vec4(0.1f, 0.1f, 0.1f, 0.1f);
+	mTransform = eps::math::mat4();
+	mColor = eps::math::vec4(0.1f, 0.1f, 0.1f, 0.1f);
 }
 
 void SquareTextureAlphaDemo::Draw(const Library::GameTime&)

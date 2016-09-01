@@ -55,19 +55,19 @@ void LightScatteredDemo::Initialize()
 	GLenum texture_format = GL_RGBA;
 	glm::uvec2 texture_size = size;
 	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
-	Desktop::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
+	Library::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
 	//
 	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>(texture_format);
 	mTexture = maker.construct(texture_data.get(), size);
 	//
-	SettingsReader settings;
-	bool settingLoaded = load_data("settings/effects/light_scattered.xml", settings);
+//	SettingsReader settings;
+//	bool settingLoaded = load_data("settings/effects/light_scattered.xml", settings);
 	//
-	mExposure = settingLoaded ? settings.mExposure : 1.0f;
-	mDecay = settingLoaded ? settings.mDecay : 1.0f;
-	mDensity = settingLoaded ? settings.mDensity : 1.0f;
-	mWeight = settingLoaded ? settings.mWeight : 1.0f;
-	mLightPosition = settingLoaded ? settings.mLightPosition : glm::vec2(1.0f, 1.0f);
+	mExposure = 1.0f;
+	mDecay = 1.0f;
+	mDensity = 1.0f;
+	mWeight = 1.0f;
+	mLightPosition = eps::math::vec2(1.0f, 1.0f);
 }
 
 void LightScatteredDemo::Draw(const Library::GameTime&)

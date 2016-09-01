@@ -8,7 +8,7 @@
 #include <sstream>
 #include <iomanip>
 
-class CustomSliderModel : public Desktop::SliderModel
+class CustomSliderModel : public Library::SliderModel
 {
 private:
 	static const float sEpsilon;
@@ -49,7 +49,7 @@ namespace Rendering
 RTTI_DEFINITIONS(CustomUi)
 
 CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
-	Ui(aGame, aAssetPath),
+	UiAsset(aGame, aAssetPath),
 	mMatrixMvp(),
 	mMatrixNormal(),
 	mVertices(
@@ -76,7 +76,7 @@ CustomUi::~CustomUi()
 
 void CustomUi::Initialize()
 {
-	Ui::Initialize();
+	UiAsset::Initialize();
 	//
 	IS_CONTROL_EXIST(RESTORE_BUTTON)
 	//
@@ -319,7 +319,7 @@ void CustomUi::Initialize()
 
 void CustomUi::Update(const Library::GameTime& aGameTime)
 {
-	Ui::Update(aGameTime);
+	UiAsset::Update(aGameTime);
 	//
 	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][0], MATRIX_MVP_00_LABEL)
 	DISPLAY_VALUE_AT_LABEL(mMatrixMvp[0][1], MATRIX_MVP_01_LABEL)
@@ -507,9 +507,9 @@ bool CustomUi::IsNeedRestrore() const
 	return mIsRestoreNeed;
 }
 
-Desktop::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
+Library::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
 {
-	Desktop::SliderModel* sliderModel = nullptr;
+	Library::SliderModel* sliderModel = nullptr;
 
 	if (aSliderId > (SLIDER_MODEL_COUNT - 1) || mSliderModels[aSliderId])
 	{

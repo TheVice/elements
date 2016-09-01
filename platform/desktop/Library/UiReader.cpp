@@ -2,7 +2,7 @@
 #include "UiReader.h"
 #include <sstream>
 
-namespace Desktop
+namespace Library
 {
 
 void UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
@@ -16,19 +16,17 @@ void UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
 
 	if (!attribAndValue.empty())
 	{
-		auto info = std::make_pair(node.name(), attribAndValue);
+		const auto info = std::make_pair(node.name(), attribAndValue);
 		mControlsInfo.push_back(info);
-
 		std::ostringstream controlName;
 
 		if (!parent.empty())
 		{
 			mControlsInfo.back().second["parent"] = parent;
-			controlName << parent;
-			controlName << "/";
+			controlName << parent << "/";
 		}
 
-		auto search = attribAndValue.find("control_name");
+		const auto& search = attribAndValue.find("control_name");
 
 		if (search != attribAndValue.end())
 		{
@@ -43,7 +41,7 @@ void UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
 
 		for (const auto& sub_node : node)
 		{
-			addControl(sub_node, controlName.str());
+			UiReader::addControl(sub_node, controlName.str());
 		}
 	}
 }
@@ -53,14 +51,14 @@ bool UiReader::read(const pugi::xml_document& doc)
 	mControlsInfo.clear();
 	mIsEmpty = true;
 	//
-	auto ui_node = doc.child("ui");
+	const auto ui_node = doc.child("ui");
 
 	if (ui_node.empty())
 	{
 		return !mIsEmpty;
 	}
 
-	auto controls_node = ui_node.child("controls");
+	const auto controls_node = ui_node.child("controls");
 
 	if (controls_node.empty())
 	{
@@ -69,7 +67,7 @@ bool UiReader::read(const pugi::xml_document& doc)
 
 	for (const auto& control : controls_node)
 	{
-		addControl(control, "");
+		UiReader::addControl(control, "");
 	}
 
 	mIsEmpty = mControlsInfo.empty();

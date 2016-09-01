@@ -5,7 +5,7 @@
 #include <list>
 #include <map>
 
-namespace Desktop
+namespace Library
 {
 struct UiReader : public eps::asset_xml
 {

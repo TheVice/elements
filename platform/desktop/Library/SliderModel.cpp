@@ -1,7 +1,7 @@
 
 #include "SliderModel.h"
 
-namespace Desktop
+namespace Library
 {
 
 const float SliderModel::sDefaultMin = 0.0f;

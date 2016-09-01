@@ -4,14 +4,14 @@
 #include "DrawableUiGameComponent.h"
 #include <map>
 
-namespace Desktop
+namespace Library
 {
 class CapsView : public DrawableUiGameComponent
 {
 	RTTI_DECLARATIONS(CapsView, DrawableUiGameComponent)
 
 public:
-	CapsView(Library::Game& aGame);
+	CapsView(Game& aGame);
 	~CapsView();
 
 public:
@@ -21,7 +21,7 @@ public:
 
 public:
 	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
+	virtual void Update(const GameTime& aGameTime) override;
 
 private:
 	std::map<std::string, std::weak_ptr<eps::ui::control>> mControls;

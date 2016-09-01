@@ -1,4 +1,4 @@
-
+#ifdef A
 #include "SettingsReader.h"
 #include "ReaderHelpers.h"
 #include "assets/assets_storage.h"
@@ -90,3 +90,4 @@ bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
 	demo_data.mColor = data.value().mColor;
 	return true;
 }
+#endif

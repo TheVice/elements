@@ -4,14 +4,14 @@
 #include "DrawableGameComponent.h"
 #include "ui/system.h"
 
-namespace Desktop
+namespace Library
 {
-class DrawableUiGameComponent : public Library::DrawableGameComponent
+class DrawableUiGameComponent : public DrawableGameComponent
 {
 	RTTI_DECLARATIONS(DrawableUiGameComponent, DrawableGameComponent)
 
 public:
-	DrawableUiGameComponent(Library::Game& aGame);
+	DrawableUiGameComponent(Game& aGame);
 	~DrawableUiGameComponent();
 
 public:
@@ -21,8 +21,8 @@ public:
 
 public:
 	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual void Update(const GameTime& aGameTime) override;
+	virtual void Draw(const GameTime& aGameTime) override;
 
 private:
 	eps::math::mat4 mTransformTouch;

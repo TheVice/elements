@@ -412,11 +412,12 @@ list(APPEND REQUIRED_INCLUDES ${elements_Path})
 
 # platform library
 set(platform_Path ${CMAKE_SOURCE_DIR}/platform/desktop)
-file(GLOB PLATFORM_SRC_FILES ${platform_Path}/*.h ${platform_Path}/*.cpp)
+file(GLOB PLATFORM_SRC_FILES ${platform_Path}/*.h ${platform_Path}/*.cpp
+                             ${platform_Path}/Library/*.h ${platform_Path}/Library/*.cpp)
 add_library(desktop ${PLATFORM_SRC_FILES})
 target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES})
 target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-list(APPEND REQUIRED_INCLUDES ${platform_Path})
+list(APPEND REQUIRED_INCLUDES ${platform_Path} ${platform_Path}/Library)
 
 # Copy assets
 file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper)

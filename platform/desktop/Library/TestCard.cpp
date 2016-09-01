@@ -1,7 +1,7 @@
 
 #include "TestCard.h"
 
-namespace Desktop
+namespace Library
 {
 
 void MakeColorBars(GLubyte* aImage, GLsizei aWidth, GLsizei aHeight)

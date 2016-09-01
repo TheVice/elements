@@ -3,11 +3,11 @@
 #include "math/transform.h"
 #include "Game.h"
 
-namespace Desktop
+namespace Library
 {
 RTTI_DEFINITIONS(DrawableUiGameComponent)
 
-DrawableUiGameComponent::DrawableUiGameComponent(Library::Game& aGame) :
+DrawableUiGameComponent::DrawableUiGameComponent(Game& aGame) :
 	DrawableGameComponent(aGame),
 	mTransformTouch(),
 	mUiSystem(nullptr)
@@ -31,7 +31,7 @@ void DrawableUiGameComponent::Initialize()
 	mTransformTouch = eps::math::translate(0.0f, screenSize.y, 0.0f) * eps::math::scale(1.0f, -1.0f, 1.0f);
 }
 
-void DrawableUiGameComponent::Update(const Library::GameTime&)
+void DrawableUiGameComponent::Update(const GameTime&)
 {
 	static bool touchDown = false;
 	auto screenPos = glm::dvec2();
@@ -56,7 +56,7 @@ void DrawableUiGameComponent::Update(const Library::GameTime&)
 	}
 }
 
-void DrawableUiGameComponent::Draw(const Library::GameTime&)
+void DrawableUiGameComponent::Draw(const GameTime&)
 {
 	mUiSystem->draw();
 }

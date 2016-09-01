@@ -3,7 +3,7 @@
 
 #include "ui/controls/slider.h"
 
-namespace Desktop
+namespace Library
 {
 
 class SliderModel : public eps::ui::slider_model

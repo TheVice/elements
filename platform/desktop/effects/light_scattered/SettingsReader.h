@@ -1,3 +1,4 @@
+#ifdef A
 #ifndef _SETTINGS_READER_H_
 #define _SETTINGS_READER_H_
 
@@ -26,4 +27,5 @@ private:
 
 bool load_data(const char* demo_data_asset, SettingsReader& demo_data);
 
+#endif
 #endif

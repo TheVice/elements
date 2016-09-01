@@ -1,14 +1,14 @@
 #ifndef _CUSTOM_UI_H_
 #define _CUSTOM_UI_H_
 
-#include "Ui.h"
+#include "UiAsset.h"
 #include "VertexStructure.h"
 
 namespace Rendering
 {
-class CustomUi : public Desktop::Ui
+class CustomUi : public Library::UiAsset
 {
-	RTTI_DECLARATIONS(CustomUi, Ui)
+	RTTI_DECLARATIONS(CustomUi, UiAsset)
 
 public:
 	CustomUi(Library::Game& aGame, const std::string& aAssetPath);
@@ -36,14 +36,14 @@ public:
 	bool IsNeedRestrore() const;
 
 protected:
-	virtual Desktop::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
+	virtual Library::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
 
 private:
 	glm::mat4 mMatrixMvp;
 	glm::mat3 mMatrixNormal;
 	std::vector<VertexStructure> mVertices;
 
-	std::vector<Desktop::SliderModel*> mSliderModels;
+	std::vector<Library::SliderModel*> mSliderModels;
 
 	bool mIsRestoreNeed;
 };
