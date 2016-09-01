@@ -57,22 +57,6 @@ GLvoid ShaderProgram::Use() const
 	glUseProgram(mProgram);
 }
 
-GLvoid ShaderProgram::CreateVertexBuffer(const GLvoid* aVertices, GLuint aVertexCount,
-		GLuint& aVertexBuffer) const
-{
-	glGenBuffers(1, &aVertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, aVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, GetVertexSize() * aVertexCount, aVertices, GL_STATIC_DRAW);
-}
-
-GLvoid ShaderProgram::CreateIndexBuffer(const GLuint* aIndices, GLuint aIndexCount,
-		GLuint& aIndexBuffer) const
-{
-	glGenBuffers(1, &aIndexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, aIndexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * aIndexCount, aIndices, GL_STATIC_DRAW);
-}
-
 GLuint ShaderProgram::GetVertexSize() const
 {
 	throw std::runtime_error("GetVertexSize() method not implemented for ShaderProgram class");

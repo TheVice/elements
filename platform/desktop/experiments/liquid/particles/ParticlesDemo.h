@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "ParticlesEffect.h"
 #include "SettingsReader.h"
+#include "rendering/core/buffer.h"
 #include "rendering/core/program.h"
 #include <memory>
 
@@ -30,7 +31,7 @@ private:
 	eps::rendering::program mProgram;
 	Library::ParticlesEffect mParticlesEffect;
 	GLuint mVertexArrayObject;
-	GLuint mVertexBuffer;
+	eps::rendering::vertices mVertexBuffer;
 	GLuint mVertexCount;
 
 	std::unique_ptr<SettingsReader> mSettings;

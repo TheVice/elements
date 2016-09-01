@@ -9,42 +9,6 @@
 #include <sstream>
 #include <iomanip>
 
-class CustomSliderModel : public Library::SliderModel
-{
-private:
-	static const float sEpsilon;
-	float& mModelValue;
-
-public:
-	CustomSliderModel(float& aModelValue) :
-		SliderModel(),
-		mModelValue(aModelValue)
-	{
-		setRealValue(mModelValue);
-	}
-
-	CustomSliderModel(float& aModelValue, float aMin, float aMax) :
-		SliderModel(aMin, aMax),
-		mModelValue(aModelValue)
-	{
-		setRealValue(mModelValue);
-	}
-
-	float get_value() const override
-	{
-		const float value = getRealValue();
-
-		if (std::abs(value - mModelValue) > sEpsilon)
-		{
-			mModelValue = value;
-		}
-
-		return SliderModel::get_value();
-	}
-};
-
-const float CustomSliderModel::sEpsilon = 100 * std::numeric_limits<float>::epsilon();
-
 namespace Rendering
 {
 RTTI_DEFINITIONS(CustomUi)
@@ -800,7 +764,7 @@ Library::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float 
 	}
 
 	assert(modelValue);
-	sliderModel = new CustomSliderModel(*modelValue, aMin, aMax);
+	sliderModel = new Library::CustomSliderModel(*modelValue, aMin, aMax);
 	mSliderModels[aSliderId] = sliderModel;
 	return sliderModel;
 }

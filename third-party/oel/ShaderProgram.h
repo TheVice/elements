@@ -31,8 +31,6 @@ public:
 	GLvoid SetProgram(GLuint aProgram);
 	virtual GLvoid Initialize(GLuint aVertexArrayObject);
 	virtual GLvoid Use() const;
-	virtual GLvoid CreateVertexBuffer(const GLvoid* aVertices, GLuint aVertexCount, GLuint& aVertexBuffer) const;
-	virtual GLvoid CreateIndexBuffer(const GLuint* aIndices, GLuint aIndexCount, GLuint& aIndexBuffer) const;
 	virtual GLuint GetVertexSize() const;
 
 	GLint GetAttrib(const GLchar* aAttribName);

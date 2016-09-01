@@ -13,7 +13,7 @@ ParticlesDemo::ParticlesDemo(Library::Game& aGame) :
 	mProgram(),
 	mParticlesEffect(),
 	mVertexArrayObject(0),
-	mVertexBuffer(0),
+	mVertexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
 	mVertexCount(0),
 	mSettings(nullptr)
 {
@@ -21,7 +21,6 @@ ParticlesDemo::ParticlesDemo(Library::Game& aGame) :
 
 ParticlesDemo::~ParticlesDemo()
 {
-	glDeleteBuffers(1, &mVertexBuffer);
 	glDeleteVertexArrays(1, &mVertexArrayObject);
 }
 
@@ -36,7 +35,7 @@ void ParticlesDemo::Initialize()
 	mParticlesEffect.SetProgram(eps::utils::raw_product(mProgram.get_product()));
 	// Load the settings
 	mSettings = std::make_unique<SettingsReader>();
-	bool settingLoaded = load_data("settings/experiments/liquid/particles.xml", *mSettings.get());
+	bool settingLoaded = load_data("assets/settings/experiments/liquid/particles.xml", *mSettings.get());
 
 	if (!settingLoaded)
 	{
@@ -45,7 +44,7 @@ void ParticlesDemo::Initialize()
 
 	// Create the vertex buffer object
 	mVertexCount = mSettings->mVertices.size();
-	mParticlesEffect.CreateVertexBuffer(&mSettings->mVertices.front(), mVertexCount, mVertexBuffer);
+	mVertexBuffer.allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(), sizeof(mSettings->mVertices.front()));
 	// Create the vertex array object
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mParticlesEffect.Initialize(mVertexArrayObject);
@@ -58,7 +57,7 @@ void ParticlesDemo::Initialize()
 void ParticlesDemo::Draw(const Library::GameTime&)
 {
 	glBindVertexArray(mVertexArrayObject);
-	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, eps::utils::raw_product(mVertexBuffer.get_product()));
 	//
 	mParticlesEffect.Use();
 	mParticlesEffect.u_transform() << mSettings->mTransform;

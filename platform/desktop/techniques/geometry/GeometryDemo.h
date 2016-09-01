@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "GeometryEffect.h"
 #include "SettingsReader.h"
+#include "rendering/core/buffer.h"
 #include "rendering/core/program.h"
 #include "rendering/core/texture.h"
 #include "utils/std/optional.h"
@@ -35,8 +36,8 @@ private:
 	eps::rendering::program mProgramNonEncodeNormal;
 	Library::GeometryEffect mGeometryEffect;
 	GLuint mVertexArrayObject;
-	GLuint mVertexBuffer;
-	GLuint mIndexBuffer;
+	eps::rendering::vertices mVertexBuffer;
+	eps::rendering::indices mIndexBuffer;
 	GLuint mColorTexture;
 
 	eps::rendering::texture mTexture;

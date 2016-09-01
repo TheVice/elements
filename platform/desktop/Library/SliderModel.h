@@ -28,6 +28,19 @@ private:
 	static const float sDefaultMax;
 };
 
+class CustomSliderModel : public Library::SliderModel
+{
+private:
+	static const float sEpsilon;
+	float& mModelValue;
+
+public:
+	CustomSliderModel(float& aModelValue);
+	CustomSliderModel(float& aModelValue, float aMin, float aMax);
+
+	float get_value() const override;
+};
+
 }
 
 #endif

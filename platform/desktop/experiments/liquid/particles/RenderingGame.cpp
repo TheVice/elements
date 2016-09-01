@@ -1,7 +1,6 @@
 
 #include "RenderingGame.h"
-//#include "ParticlesDemo.h"
-#include "CapsView.h"
+#include "ParticlesDemo.h"
 #include "asset_fs.h"
 #include "preferences.h"
 #include "metrics.h"
@@ -28,7 +27,7 @@ void RenderingGame::Initialize()
 	eps::preferences::init<Desktop::preferences>();
 	eps::metrics::init<Desktop::metrics>(1.0f);
 	//
-	mDrawableGameComponent = std::make_unique<Library::CapsView>(*this);
+	mDrawableGameComponent = std::make_unique<ParticlesDemo>(*this);
 	mComponents.push_back(mDrawableGameComponent.get());
 	//
 	Game::Initialize();

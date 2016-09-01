@@ -1,6 +1,5 @@
 
 #include "GeometryDemo.h"
-#include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
 #include "rendering/core/texture_maker.h"
 #include "rendering/core/texture_policy.h"
@@ -21,8 +20,8 @@ GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	mProgramNonEncodeNormal(),
 	mGeometryEffect(),
 	mVertexArrayObject(0),
-	mVertexBuffer(0),
-	mIndexBuffer(0),
+	mVertexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
+	mIndexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
 	mColorTexture(0),
 	mTexture(),
 	mSettings(),
@@ -33,8 +32,6 @@ GeometryDemo::GeometryDemo(Library::Game& aGame) :
 
 GeometryDemo::~GeometryDemo()
 {
-	glDeleteBuffers(1, &mIndexBuffer);
-	glDeleteBuffers(1, &mVertexBuffer);
 	glDeleteVertexArrays(1, &mVertexArrayObject);
 }
 
@@ -70,9 +67,9 @@ void GeometryDemo::Initialize()
 	mTexture = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
 	mColorTexture = eps::utils::raw_product(mTexture.get_product());
 	// Create the vertex buffer object
-	mGeometryEffect.CreateVertexBuffer(&mSettings->mVertices.front(), mSettings->mVertices.size(), mVertexBuffer);
+	mVertexBuffer.allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(), sizeof(mSettings->mVertices.front()));
 	// Create the index buffer object
-	mGeometryEffect.CreateIndexBuffer(&mSettings->mIndices.front(), mSettings->mIndices.size(), mIndexBuffer);
+	mIndexBuffer.allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(), sizeof(mSettings->mIndices.front()));
 	// Create the vertex array object
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mGeometryEffect.Initialize(mVertexArrayObject);
@@ -106,24 +103,17 @@ void GeometryDemo::Update(const Library::GameTime&)
 void GeometryDemo::Draw(const Library::GameTime&)
 {
 	glBindVertexArray(mVertexArrayObject);
-	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER,
-				 sizeof(VertexStructure) * mUi->GetVertices().size(),
-				 &mUi->GetVertices().front(),
-				 GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+	mVertexBuffer.allocate(&mUi->GetVertices().front(), mUi->GetVertices().size(), sizeof(mUi->GetVertices().front()));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer.get_product()));
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);
 
-	if (mIsNonEncodeProgramLoaded)
+	if (!mIsNonEncodeProgramLoaded || mUi->IsEncodeNormal())
 	{
-		if (mUi->IsEncodeNormal())
-		{
-			mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
-		}
-		else
-		{
-			mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramNonEncodeNormal.get_product()));
-		}
+		mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
+	}
+	else
+	{
+		mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramNonEncodeNormal.get_product()));
 	}
 
 	mGeometryEffect.Use();
