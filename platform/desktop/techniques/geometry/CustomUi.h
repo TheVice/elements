@@ -33,7 +33,7 @@ public:
 	void SetVertices(const std::vector<VertexStructure>& aVertices);
 	const std::vector<VertexStructure>& GetVertices() const;
 
-	bool IsNeedRestrore() const;
+	bool IsNeedRestore() const;
 	bool IsEncodeNormal() const;
 
 	void SetEncodeNormalControlsVisible(bool aVisible);

@@ -22,7 +22,7 @@ public:
 	ShaderProgram& operator = (const ShaderProgram& aRhs) = delete;
 
 public:
-	//Variable* operator [](const std::string& aVariableName);
+	// Variable* operator [](const std::string& aVariableName);
 
 	GLuint GetProgram() const;
 	const std::vector<Variable*>& GetVariables() const;
@@ -46,7 +46,7 @@ protected:
 	public:											\
 	Variable& VariableName() const;					\
 	private:										\
-	Variable *m ## VariableName;
+	Variable* m ## VariableName;
 
 #define SHADER_VARIABLE_DEFINITION(ShaderProgram, VariableName)	\
 	Variable& ShaderProgram::VariableName() const				\

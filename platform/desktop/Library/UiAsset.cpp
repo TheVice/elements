@@ -16,8 +16,8 @@ RTTI_DEFINITIONS(UiAsset)
 
 UiAsset::UiAsset(Game& aGame, const std::string& aAssetPath) :
 	DrawableUiGameComponent(aGame),
-	mAssetPath(aAssetPath),
-	mControls()
+	mControls(),
+	mAssetPath(aAssetPath)
 {
 }
 

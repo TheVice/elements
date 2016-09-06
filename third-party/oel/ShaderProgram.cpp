@@ -8,7 +8,6 @@
 
 namespace Library
 {
-
 RTTI_DEFINITIONS(ShaderProgram)
 
 ShaderProgram::ShaderProgram() :
@@ -20,7 +19,7 @@ ShaderProgram::ShaderProgram() :
 
 ShaderProgram::~ShaderProgram()
 {
-	for (Variable* variable : mVariables)
+	for (const auto& variable : mVariables)
 	{
 		delete variable;
 	}
@@ -65,7 +64,7 @@ GLuint ShaderProgram::GetVertexSize() const
 GLint ShaderProgram::GetAttrib(const GLchar* aAttribName)
 {
 	assert(aAttribName);
-	const GLint attrib = glGetAttribLocation(mProgram, aAttribName);
+	const auto attrib = glGetAttribLocation(mProgram, aAttribName);
 
 	if (attrib == -1)
 	{
@@ -81,7 +80,7 @@ GLint ShaderProgram::GetAttrib(const GLchar* aAttribName)
 GLint ShaderProgram::GetUniform(const GLchar* aUniformName)
 {
 	assert(aUniformName);
-	const GLint uniform = glGetUniformLocation(mProgram, aUniformName);
+	const auto uniform = glGetUniformLocation(mProgram, aUniformName);
 
 	if (uniform == -1)
 	{

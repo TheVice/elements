@@ -92,7 +92,7 @@ void GeometryDemo::Initialize()
 
 void GeometryDemo::Update(const Library::GameTime&)
 {
-	if (mUi->IsNeedRestrore())
+	if (mUi->IsNeedRestore())
 	{
 		mUi->SetMatrixMvp(mSettings->mMatrixMvp);
 		mUi->SetMatrixNormal(mSettings->mMatrixNormal);
@@ -107,13 +107,16 @@ void GeometryDemo::Draw(const Library::GameTime&)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer.get_product()));
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);
 
-	if (!mIsNonEncodeProgramLoaded || mUi->IsEncodeNormal())
+	if (mIsNonEncodeProgramLoaded)
 	{
-		mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
-	}
-	else
-	{
-		mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramNonEncodeNormal.get_product()));
+		if (mUi->IsEncodeNormal())
+		{
+			mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
+		}
+		else
+		{
+			mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramNonEncodeNormal.get_product()));
+		}
 	}
 
 	mGeometryEffect.Use();

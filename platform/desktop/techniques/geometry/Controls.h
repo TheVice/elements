@@ -1,5 +1,5 @@
-#ifndef _CUSTOM_CONTROLS_H_
-#define _CUSTOM_CONTROLS_H_
+#ifndef _CONTROLS_H_
+#define _CONTROLS_H_
 
 #define RESTORE_BUTTON				"RestoreButton"
 #define MVP_BUTTON					"Mvp_Button"
