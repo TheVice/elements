@@ -38,6 +38,7 @@ void CustomUi::Initialize()
 {
 	UiAsset::Initialize();
 	//
+	IS_CONTROL_EXIST(RESTORE_BUTTON)
 	IS_CONTROL_EXIST(U_MATRIX_MVP_BUTTON_13)
 	IS_CONTROL_EXIST(U_MATRIX_NORMAL_BUTTON_22)
 	IS_CONTROL_EXIST(VERTEX_0_BUTTON_36)
@@ -118,16 +119,18 @@ void CustomUi::Initialize()
 	IS_CONTROL_EXIST(VERTEX_3_LABEL_76)
 	IS_CONTROL_EXIST(VERTEX_3_LABEL_77)
 	IS_CONTROL_EXIST(VERTEX_3_LABEL_80)
+	IS_CONTROL_EXIST(ENCODE_NORMAL_LABEL)
+	IS_CONTROL_EXIST(ENCODE_NORMAL_CHECKBOX)
 	//
 	IS_ALL_SLIDER_MODELS_SET(mSliderModels)
 
-	/*if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
 	{
 		directButton->set_click([this]
 		{
 			this->mIsRestoreNeed = !this->mIsRestoreNeed;
 		});
-	}*/
+	}
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[U_MATRIX_MVP_BUTTON_13].lock()))
 	{
@@ -324,10 +327,11 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.x, VERTEX_3_LABEL_76)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.y, VERTEX_3_LABEL_77)
 
-	/*if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>(mControls[ENCODE_NORMAL].lock()))
+	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>
+							  (mControls[ENCODE_NORMAL_CHECKBOX].lock()))
 	{
 		mIsEncodeNormal = (Desktop::checkbox::state::CHECKED == directCheckbox->get_state());
-	}*/
+	}
 }
 
 void CustomUi::Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp)
@@ -443,8 +447,8 @@ bool CustomUi::IsEncodeNormal() const
 
 void CustomUi::SetEncodeNormalControlsVisible(bool aVisible)
 {
-//	SET_VISIBLE(aVisible, ENCODE_NORMAL)
-//	SET_VISIBLE(aVisible, ENCODE_NORMAL_LABEL)
+	SET_VISIBLE(aVisible, ENCODE_NORMAL_CHECKBOX)
+	SET_VISIBLE(aVisible, ENCODE_NORMAL_LABEL)
 }
 
 Library::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)

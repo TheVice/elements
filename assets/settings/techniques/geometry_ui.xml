@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf8"?>
 <ui name="geometry">
   <controls>
+    <button asset_path="assets/ui/textures/settings.png" control_name="restore_button" position_x="725" position_y="525" size_h="75" size_w="75" visible="true"/>
     <button asset_path="assets/ui/textures/settings.png" control_name="u_matrix_mvp_button_13" position_x="10" position_y="5" size_h="75" size_w="75" visible="true"/>
     <panel color_a="0.5" color_b="0.2" color_g="0.25" color_r="0.9" control_name="u_matrix_mvp_panel_14" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
       <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_1" id="0" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
@@ -149,5 +150,7 @@
       <label color_a="1.0" color_b="0.2" color_g="0.25" color_r="0.9" control_name="vertex_3_label_77" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="13" visible="true"/>
       <label color_a="1.0" color_b="0.2" color_g="0.25" color_r="0.9" control_name="vertex_3_label_80" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Bottom" visible="true"/>
     </panel>
+    <checkbox position_x="180" position_y="110" size_w="13" size_h="13" state="Checked" control_name="encode_normal_checkbox"/>
+    <label color_a="1.0" color_b="0.2" color_g="0.25" color_r="0.9" control_name="encode_normal_label" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="195" position_y="110" text="ENCODE NORMAL" visible="true"/>
   </controls>
 </ui>

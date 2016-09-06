@@ -1,6 +1,7 @@
 #ifndef _CONTROLS_H_
 #define _CONTROLS_H_
 
+#define RESTORE_BUTTON			"restore_button"
 #define U_MATRIX_MVP_BUTTON_13			"u_matrix_mvp_button_13"
 #define U_MATRIX_NORMAL_BUTTON_22			"u_matrix_normal_button_22"
 #define VERTEX_0_BUTTON_36			"vertex_0_button_36"
@@ -148,5 +149,8 @@
 #define VERTEX_3_LABEL_76			"vertex_3_panel_79/vertex_3_label_76"
 #define VERTEX_3_LABEL_77			"vertex_3_panel_79/vertex_3_label_77"
 #define VERTEX_3_LABEL_80			"vertex_3_panel_79/vertex_3_label_80"
+#define ENCODE_NORMAL_LABEL			"encode_normal_label"
+
+#define ENCODE_NORMAL_CHECKBOX			"encode_normal_checkbox"
 
 #endif
