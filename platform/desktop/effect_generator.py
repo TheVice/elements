@@ -19,11 +19,6 @@ def read_location(a_location):
 
 def read_program(a_path_2_xml_shader):
 
-    program = {}
-
-    for e in ['a_locations', 'u_locations']:
-        program[e] = list()
-
     tree = ET.parse(a_path_2_xml_shader)
     root = tree.getroot()
 
@@ -35,6 +30,9 @@ def read_program(a_path_2_xml_shader):
 
         raise ValueError('No name in attribute at program at {}.'.format(a_path_2_xml_shader))
 
+    program = dict()
+    program['a_locations'] = list()
+    program['u_locations'] = list()
     program['name'] = root.attrib['name']
 
     for element in root:
@@ -121,8 +119,12 @@ def generate_effect_h(a_program):
 def convert_type_from_glsl_to_cpp(a_type):
 
     types = {
+        'mat3': 'glm::mat3',
+        'mat4': 'glm::mat4',
+        #
         'vec2': 'glm::vec2',
-        'vec3': 'glm::vec3'
+        'vec3': 'glm::vec3',
+        'vec4': 'glm::vec4'
     }
 
     if a_type not in types.keys():
@@ -136,7 +138,8 @@ def get_type_length(a_type):
 
     types = {
         'glm::vec2': 'glm::vec2().length()',
-        'glm::vec3': 'glm::vec3().length()'
+        'glm::vec3': 'glm::vec3().length()',
+        'glm::vec4': 'glm::vec4().length()'
     }
 
     if a_type not in types.keys():
@@ -146,26 +149,41 @@ def get_type_length(a_type):
     return types[a_type]
 
 
+def get_variable_type(a_declaration, a_variable, a_source):
+
+    pattern_template = '{}[ ,\t]*\w+[ ,\t]*{}'
+    pattern = pattern_template.format(a_declaration, a_variable)
+    match = re.search(pattern, a_source)
+
+    if match is None:
+
+        return ''
+
+    variable_type = match.group(0)
+
+    pos = variable_type.find(a_declaration)
+    pos += len(a_declaration)
+
+    variable_type = variable_type[pos:]
+    variable_type = variable_type.replace(a_variable, '')
+    variable_type = variable_type.replace(' ', '')
+    variable_type = variable_type.replace('\t', '')
+    variable_type = convert_type_from_glsl_to_cpp(variable_type)
+
+    return variable_type
+
+
 def get_attribute_type(a_attribute, a_vertex):
 
-    pattern_template = 'attribute[ ,\t]*\w+[ ,\t]*{}'
-    pattern = pattern_template.format(a_attribute)
-    match = re.search(pattern, a_vertex)
+    for declaration in ['attribute', 'in']:
 
-    if not match:
+        attribute_type = get_variable_type(declaration, a_attribute, a_vertex)
 
-        ValueError('Can not find attribute {} at vertex {}'.format(a_attribute, a_vertex))
+        if attribute_type is not '':
 
-    attribute_type = match.group(0)
-    pos = attribute_type.find('attribute')
-    pos += len('attribute')
-    attribute_type = attribute_type[pos:]
-    attribute_type = attribute_type.replace(a_attribute, '')
-    attribute_type = attribute_type.replace(' ', '')
-    attribute_type = attribute_type.replace('\t', '')
-    attribute_type = convert_type_from_glsl_to_cpp(attribute_type)
+            return attribute_type
 
-    return attribute_type
+    raise ValueError('Can not find attribute {} at vertex {}'.format(a_attribute, a_vertex))
 
 
 def generate_effect_cpp(a_program):

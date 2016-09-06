@@ -1,186 +1,152 @@
 #ifndef _CONTROLS_H_
 #define _CONTROLS_H_
 
-#define RESTORE_BUTTON				"RestoreButton"
-#define MVP_BUTTON					"Mvp_Button"
-#define NORMAL_BUTTON				"Normal_Button"
+#define U_MATRIX_MVP_BUTTON_13			"u_matrix_mvp_button_13"
+#define U_MATRIX_NORMAL_BUTTON_22			"u_matrix_normal_button_22"
+#define VERTEX_0_BUTTON_36			"vertex_0_button_36"
+#define VERTEX_1_BUTTON_50			"vertex_1_button_50"
+#define VERTEX_2_BUTTON_64			"vertex_2_button_64"
+#define VERTEX_3_BUTTON_78			"vertex_3_button_78"
 
-#define LEFT_TOP_BUTTON				"LT_Button"
-#define RIGHT_TOP_BUTTON			"RT_Button"
-#define LEFT_BOTTOM_BUTTON			"LB_Button"
-#define RIGHT_BOTTOM_BUTTON			"RB_Button"
+#define U_MATRIX_MVP_PANEL_14			"u_matrix_mvp_panel_14"
+#define U_MATRIX_NORMAL_PANEL_23			"u_matrix_normal_panel_23"
+#define VERTEX_0_PANEL_37			"vertex_0_panel_37"
+#define VERTEX_1_PANEL_51			"vertex_1_panel_51"
+#define VERTEX_2_PANEL_65			"vertex_2_panel_65"
+#define VERTEX_3_PANEL_79			"vertex_3_panel_79"
 
-#define LEFT_TOP_PANEL				"LT_Panel"
-#define RIGHT_TOP_PANEL				"RT_Panel"
-#define LEFT_BOTTOM_PANEL			"LB_Panel"
-#define RIGHT_BOTTOM_PANEL			"RB_Panel"
-
-#define MVP_PANEL					"MatrixMvp_Panel"
-#define NORMAL_PANEL				"mMatrixNormal_Panel"
-
-#define MATRIX_MVP_00_SLIDER		0
-#define MATRIX_MVP_01_SLIDER		1
-#define MATRIX_MVP_02_SLIDER		2
-#define MATRIX_MVP_10_SLIDER		3
-#define MATRIX_MVP_11_SLIDER		4
-#define MATRIX_MVP_12_SLIDER		5
-#define MATRIX_MVP_20_SLIDER		6
-#define MATRIX_MVP_21_SLIDER		7
-#define MATRIX_MVP_22_SLIDER		8
-#define MATRIX_MVP_30_SLIDER		9
-#define MATRIX_MVP_31_SLIDER		10
-#define MATRIX_MVP_32_SLIDER		11
-
-#define MATRIX_NORMAL_00_SLIDER 	12
-#define MATRIX_NORMAL_01_SLIDER		13
-#define MATRIX_NORMAL_10_SLIDER		14
-#define MATRIX_NORMAL_11_SLIDER		15
-#define MATRIX_NORMAL_20_SLIDER		16
-#define MATRIX_NORMAL_21_SLIDER		17
-
-#define VEC_POS_LT_X_SLIDER			18
-#define VEC_POS_LT_Y_SLIDER			19
-#define VEC_POS_LT_Z_SLIDER			20
-
-#define VEC_NORMAL_LT_X_SLIDER		21
-#define VEC_NORMAL_LT_Y_SLIDER		22
-#define VEC_NORMAL_LT_Z_SLIDER		23
-
-#define VEC_TANGENT_LT_X_SLIDER		24
-#define VEC_TANGENT_LT_Y_SLIDER		25
-#define VEC_TANGENT_LT_Z_SLIDER		26
-
-#define VEC_UV_LT_X_SLIDER			27
-#define VEC_UV_LT_Y_SLIDER			28
-
-#define VEC_POS_RT_X_SLIDER			29
-#define VEC_POS_RT_Y_SLIDER			30
-#define VEC_POS_RT_Z_SLIDER			31
-
-#define VEC_NORMAL_RT_X_SLIDER		32
-#define VEC_NORMAL_RT_Y_SLIDER		33
-#define VEC_NORMAL_RT_Z_SLIDER		34
-
-#define VEC_TANGENT_RT_X_SLIDER		35
-#define VEC_TANGENT_RT_Y_SLIDER		36
-#define VEC_TANGENT_RT_Z_SLIDER		37
-
-#define VEC_UV_RT_X_SLIDER			38
-#define VEC_UV_RT_Y_SLIDER			39
-
-#define VEC_POS_RB_X_SLIDER			40
-#define VEC_POS_RB_Y_SLIDER			41
-#define VEC_POS_RB_Z_SLIDER			42
-
-#define VEC_NORMAL_RB_X_SLIDER		43
-#define VEC_NORMAL_RB_Y_SLIDER		44
-#define VEC_NORMAL_RB_Z_SLIDER		45
-
-#define VEC_TANGENT_RB_X_SLIDER		46
-#define VEC_TANGENT_RB_Y_SLIDER		47
-#define VEC_TANGENT_RB_Z_SLIDER		48
-
-#define VEC_UV_RB_X_SLIDER			49
-#define VEC_UV_RB_Y_SLIDER			50
-
-#define VEC_POS_LB_X_SLIDER			51
-#define VEC_POS_LB_Y_SLIDER			52
-#define VEC_POS_LB_Z_SLIDER			53
-
-#define VEC_NORMAL_LB_X_SLIDER		54
-#define VEC_NORMAL_LB_Y_SLIDER		55
-#define VEC_NORMAL_LB_Z_SLIDER		56
-
-#define VEC_TANGENT_LB_X_SLIDER		57
-#define VEC_TANGENT_LB_Y_SLIDER		58
-#define VEC_TANGENT_LB_Z_SLIDER		59
-
-#define VEC_UV_LB_X_SLIDER			60
-#define VEC_UV_LB_Y_SLIDER			61
+#define U_MATRIX_MVP_SLIDER_1			0
+#define U_MATRIX_MVP_SLIDER_2			1
+#define U_MATRIX_MVP_SLIDER_3			2
+#define U_MATRIX_MVP_SLIDER_4			3
+#define U_MATRIX_MVP_SLIDER_5			4
+#define U_MATRIX_MVP_SLIDER_6			5
+#define U_MATRIX_MVP_SLIDER_7			6
+#define U_MATRIX_MVP_SLIDER_8			7
+#define U_MATRIX_MVP_SLIDER_9			8
+#define U_MATRIX_MVP_SLIDER_10			9
+#define U_MATRIX_MVP_SLIDER_11			10
+#define U_MATRIX_MVP_SLIDER_12			11
+#define U_MATRIX_NORMAL_SLIDER_16			12
+#define U_MATRIX_NORMAL_SLIDER_17			13
+#define U_MATRIX_NORMAL_SLIDER_18			14
+#define U_MATRIX_NORMAL_SLIDER_19			15
+#define U_MATRIX_NORMAL_SLIDER_20			16
+#define U_MATRIX_NORMAL_SLIDER_21			17
+#define VERTEX_0_SLIDER_25			18
+#define VERTEX_0_SLIDER_26			19
+#define VERTEX_0_SLIDER_27			20
+#define VERTEX_0_SLIDER_28			21
+#define VERTEX_0_SLIDER_29			22
+#define VERTEX_0_SLIDER_30			23
+#define VERTEX_0_SLIDER_31			24
+#define VERTEX_0_SLIDER_32			25
+#define VERTEX_0_SLIDER_33			26
+#define VERTEX_0_SLIDER_34			27
+#define VERTEX_0_SLIDER_35			28
+#define VERTEX_1_SLIDER_39			29
+#define VERTEX_1_SLIDER_40			30
+#define VERTEX_1_SLIDER_41			31
+#define VERTEX_1_SLIDER_42			32
+#define VERTEX_1_SLIDER_43			33
+#define VERTEX_1_SLIDER_44			34
+#define VERTEX_1_SLIDER_45			35
+#define VERTEX_1_SLIDER_46			36
+#define VERTEX_1_SLIDER_47			37
+#define VERTEX_1_SLIDER_48			38
+#define VERTEX_1_SLIDER_49			39
+#define VERTEX_2_SLIDER_53			40
+#define VERTEX_2_SLIDER_54			41
+#define VERTEX_2_SLIDER_55			42
+#define VERTEX_2_SLIDER_56			43
+#define VERTEX_2_SLIDER_57			44
+#define VERTEX_2_SLIDER_58			45
+#define VERTEX_2_SLIDER_59			46
+#define VERTEX_2_SLIDER_60			47
+#define VERTEX_2_SLIDER_61			48
+#define VERTEX_2_SLIDER_62			49
+#define VERTEX_2_SLIDER_63			50
+#define VERTEX_3_SLIDER_67			51
+#define VERTEX_3_SLIDER_68			52
+#define VERTEX_3_SLIDER_69			53
+#define VERTEX_3_SLIDER_70			54
+#define VERTEX_3_SLIDER_71			55
+#define VERTEX_3_SLIDER_72			56
+#define VERTEX_3_SLIDER_73			57
+#define VERTEX_3_SLIDER_74			58
+#define VERTEX_3_SLIDER_75			59
+#define VERTEX_3_SLIDER_76			60
+#define VERTEX_3_SLIDER_77			61
 
 #define SLIDER_MODEL_COUNT			62
 
-#define MATRIX_MVP_00_LABEL "MatrixMvp_Panel/mMatrixMvp00_Label"
-#define MATRIX_MVP_01_LABEL "MatrixMvp_Panel/mMatrixMvp01_Label"
-#define MATRIX_MVP_02_LABEL "MatrixMvp_Panel/mMatrixMvp02_Label"
-#define MATRIX_MVP_10_LABEL "MatrixMvp_Panel/mMatrixMvp10_Label"
-#define MATRIX_MVP_11_LABEL "MatrixMvp_Panel/mMatrixMvp11_Label"
-#define MATRIX_MVP_12_LABEL "MatrixMvp_Panel/mMatrixMvp12_Label"
-#define MATRIX_MVP_20_LABEL "MatrixMvp_Panel/mMatrixMvp20_Label"
-#define MATRIX_MVP_21_LABEL "MatrixMvp_Panel/mMatrixMvp21_Label"
-#define MATRIX_MVP_22_LABEL "MatrixMvp_Panel/mMatrixMvp22_Label"
-#define MATRIX_MVP_30_LABEL "MatrixMvp_Panel/mMatrixMvp30_Label"
-#define MATRIX_MVP_31_LABEL "MatrixMvp_Panel/mMatrixMvp31_Label"
-#define MATRIX_MVP_32_LABEL "MatrixMvp_Panel/mMatrixMvp32_Label"
-
-#define MATRIX_NORMAL_00_LABEL "mMatrixNormal_Panel/mMatrixNormal00_Label"
-#define MATRIX_NORMAL_01_LABEL "mMatrixNormal_Panel/mMatrixNormal01_Label"
-#define MATRIX_NORMAL_10_LABEL "mMatrixNormal_Panel/mMatrixNormal10_Label"
-#define MATRIX_NORMAL_11_LABEL "mMatrixNormal_Panel/mMatrixNormal11_Label"
-#define MATRIX_NORMAL_20_LABEL "mMatrixNormal_Panel/mMatrixNormal20_Label"
-#define MATRIX_NORMAL_21_LABEL "mMatrixNormal_Panel/mMatrixNormal21_Label"
-
-#define VEC_POS_LT_X_LABEL "LT_Panel/mPosLT_x_Label"
-#define VEC_POS_LT_Y_LABEL "LT_Panel/mPosLT_y_Label"
-#define VEC_POS_LT_Z_LABEL "LT_Panel/mPosLT_z_Label"
-
-#define VEC_NORMAL_LT_X_LABEL "LT_Panel/mNormalLT_x_Label"
-#define VEC_NORMAL_LT_Y_LABEL "LT_Panel/mNormalLT_y_Label"
-#define VEC_NORMAL_LT_Z_LABEL "LT_Panel/mNormalLT_z_Label"
-
-#define VEC_TANGENT_LT_X_LABEL "LT_Panel/mTangentLT_x_Label"
-#define VEC_TANGENT_LT_Y_LABEL "LT_Panel/mTangentLT_y_Label"
-#define VEC_TANGENT_LT_Z_LABEL "LT_Panel/mTangentLT_z_Label"
-
-#define VEC_UV_LT_X_LABEL "LT_Panel/mUvLT_x_Label"
-#define VEC_UV_LT_Y_LABEL "LT_Panel/mUvLT_y_Label"
-
-#define VEC_POS_RT_X_LABEL "RT_Panel/mPosRT_x_Label"
-#define VEC_POS_RT_Y_LABEL "RT_Panel/mPosRT_y_Label"
-#define VEC_POS_RT_Z_LABEL "RT_Panel/mPosRT_z_Label"
-
-#define VEC_NORMAL_RT_X_LABEL "RT_Panel/mNormalRT_x_Label"
-#define VEC_NORMAL_RT_Y_LABEL "RT_Panel/mNormalRT_y_Label"
-#define VEC_NORMAL_RT_Z_LABEL "RT_Panel/mNormalRT_z_Label"
-
-#define VEC_TANGENT_RT_X_LABEL "RT_Panel/mTangentRT_x_Label"
-#define VEC_TANGENT_RT_Y_LABEL "RT_Panel/mTangentRT_y_Label"
-#define VEC_TANGENT_RT_Z_LABEL "RT_Panel/mTangentRT_z_Label"
-
-#define VEC_UV_RT_X_LABEL "RT_Panel/mUvRT_x_Label"
-#define VEC_UV_RT_Y_LABEL "RT_Panel/mUvRT_y_Label"
-
-#define VEC_POS_RB_X_LABEL "RB_Panel/mPosRB_x_Label"
-#define VEC_POS_RB_Y_LABEL "RB_Panel/mPosRB_y_Label"
-#define VEC_POS_RB_Z_LABEL "RB_Panel/mPosRB_z_Label"
-
-#define VEC_NORMAL_RB_X_LABEL "RB_Panel/mNormalRB_x_Label"
-#define VEC_NORMAL_RB_Y_LABEL "RB_Panel/mNormalRB_y_Label"
-#define VEC_NORMAL_RB_Z_LABEL "RB_Panel/mNormalRB_z_Label"
-
-#define VEC_TANGENT_RB_X_LABEL "RB_Panel/mTangentRB_x_Label"
-#define VEC_TANGENT_RB_Y_LABEL "RB_Panel/mTangentRB_y_Label"
-#define VEC_TANGENT_RB_Z_LABEL "RB_Panel/mTangentRB_z_Label"
-
-#define VEC_UV_RB_X_LABEL "RB_Panel/mUvRB_x_Label"
-#define VEC_UV_RB_Y_LABEL "RB_Panel/mUvRB_y_Label"
-
-#define VEC_POS_LB_X_LABEL "LB_Panel/mPosLB_x_Label"
-#define VEC_POS_LB_Y_LABEL "LB_Panel/mPosLB_y_Label"
-#define VEC_POS_LB_Z_LABEL "LB_Panel/mPosLB_z_Label"
-
-#define VEC_NORMAL_LB_X_LABEL "LB_Panel/mNormalLB_x_Label"
-#define VEC_NORMAL_LB_Y_LABEL "LB_Panel/mNormalLB_y_Label"
-#define VEC_NORMAL_LB_Z_LABEL "LB_Panel/mNormalLB_z_Label"
-
-#define VEC_TANGENT_LB_X_LABEL "LB_Panel/mTangentLB_x_Label"
-#define VEC_TANGENT_LB_Y_LABEL "LB_Panel/mTangentLB_y_Label"
-#define VEC_TANGENT_LB_Z_LABEL "LB_Panel/mTangentLB_z_Label"
-
-#define VEC_UV_LB_X_LABEL "LB_Panel/mUvLB_x_Label"
-#define VEC_UV_LB_Y_LABEL "LB_Panel/mUvLB_y_Label"
-
-#define ENCODE_NORMAL "ENCODE_NORMAL"
-#define ENCODE_NORMAL_LABEL "ENCODE_NORMAL_LABEL"
+#define U_MATRIX_MVP_LABEL_1			"u_matrix_mvp_panel_14/u_matrix_mvp_label_1"
+#define U_MATRIX_MVP_LABEL_2			"u_matrix_mvp_panel_14/u_matrix_mvp_label_2"
+#define U_MATRIX_MVP_LABEL_3			"u_matrix_mvp_panel_14/u_matrix_mvp_label_3"
+#define U_MATRIX_MVP_LABEL_4			"u_matrix_mvp_panel_14/u_matrix_mvp_label_4"
+#define U_MATRIX_MVP_LABEL_5			"u_matrix_mvp_panel_14/u_matrix_mvp_label_5"
+#define U_MATRIX_MVP_LABEL_6			"u_matrix_mvp_panel_14/u_matrix_mvp_label_6"
+#define U_MATRIX_MVP_LABEL_7			"u_matrix_mvp_panel_14/u_matrix_mvp_label_7"
+#define U_MATRIX_MVP_LABEL_8			"u_matrix_mvp_panel_14/u_matrix_mvp_label_8"
+#define U_MATRIX_MVP_LABEL_9			"u_matrix_mvp_panel_14/u_matrix_mvp_label_9"
+#define U_MATRIX_MVP_LABEL_10			"u_matrix_mvp_panel_14/u_matrix_mvp_label_10"
+#define U_MATRIX_MVP_LABEL_11			"u_matrix_mvp_panel_14/u_matrix_mvp_label_11"
+#define U_MATRIX_MVP_LABEL_12			"u_matrix_mvp_panel_14/u_matrix_mvp_label_12"
+#define U_MATRIX_MVP_LABEL_15			"u_matrix_mvp_panel_14/u_matrix_mvp_label_15"
+#define U_MATRIX_NORMAL_LABEL_16			"u_matrix_normal_panel_23/u_matrix_normal_label_16"
+#define U_MATRIX_NORMAL_LABEL_17			"u_matrix_normal_panel_23/u_matrix_normal_label_17"
+#define U_MATRIX_NORMAL_LABEL_18			"u_matrix_normal_panel_23/u_matrix_normal_label_18"
+#define U_MATRIX_NORMAL_LABEL_19			"u_matrix_normal_panel_23/u_matrix_normal_label_19"
+#define U_MATRIX_NORMAL_LABEL_20			"u_matrix_normal_panel_23/u_matrix_normal_label_20"
+#define U_MATRIX_NORMAL_LABEL_21			"u_matrix_normal_panel_23/u_matrix_normal_label_21"
+#define U_MATRIX_NORMAL_LABEL_24			"u_matrix_normal_panel_23/u_matrix_normal_label_24"
+#define VERTEX_0_LABEL_25			"vertex_0_panel_37/vertex_0_label_25"
+#define VERTEX_0_LABEL_26			"vertex_0_panel_37/vertex_0_label_26"
+#define VERTEX_0_LABEL_27			"vertex_0_panel_37/vertex_0_label_27"
+#define VERTEX_0_LABEL_28			"vertex_0_panel_37/vertex_0_label_28"
+#define VERTEX_0_LABEL_29			"vertex_0_panel_37/vertex_0_label_29"
+#define VERTEX_0_LABEL_30			"vertex_0_panel_37/vertex_0_label_30"
+#define VERTEX_0_LABEL_31			"vertex_0_panel_37/vertex_0_label_31"
+#define VERTEX_0_LABEL_32			"vertex_0_panel_37/vertex_0_label_32"
+#define VERTEX_0_LABEL_33			"vertex_0_panel_37/vertex_0_label_33"
+#define VERTEX_0_LABEL_34			"vertex_0_panel_37/vertex_0_label_34"
+#define VERTEX_0_LABEL_35			"vertex_0_panel_37/vertex_0_label_35"
+#define VERTEX_0_LABEL_38			"vertex_0_panel_37/vertex_0_label_38"
+#define VERTEX_1_LABEL_39			"vertex_1_panel_51/vertex_1_label_39"
+#define VERTEX_1_LABEL_40			"vertex_1_panel_51/vertex_1_label_40"
+#define VERTEX_1_LABEL_41			"vertex_1_panel_51/vertex_1_label_41"
+#define VERTEX_1_LABEL_42			"vertex_1_panel_51/vertex_1_label_42"
+#define VERTEX_1_LABEL_43			"vertex_1_panel_51/vertex_1_label_43"
+#define VERTEX_1_LABEL_44			"vertex_1_panel_51/vertex_1_label_44"
+#define VERTEX_1_LABEL_45			"vertex_1_panel_51/vertex_1_label_45"
+#define VERTEX_1_LABEL_46			"vertex_1_panel_51/vertex_1_label_46"
+#define VERTEX_1_LABEL_47			"vertex_1_panel_51/vertex_1_label_47"
+#define VERTEX_1_LABEL_48			"vertex_1_panel_51/vertex_1_label_48"
+#define VERTEX_1_LABEL_49			"vertex_1_panel_51/vertex_1_label_49"
+#define VERTEX_1_LABEL_52			"vertex_1_panel_51/vertex_1_label_52"
+#define VERTEX_2_LABEL_53			"vertex_2_panel_65/vertex_2_label_53"
+#define VERTEX_2_LABEL_54			"vertex_2_panel_65/vertex_2_label_54"
+#define VERTEX_2_LABEL_55			"vertex_2_panel_65/vertex_2_label_55"
+#define VERTEX_2_LABEL_56			"vertex_2_panel_65/vertex_2_label_56"
+#define VERTEX_2_LABEL_57			"vertex_2_panel_65/vertex_2_label_57"
+#define VERTEX_2_LABEL_58			"vertex_2_panel_65/vertex_2_label_58"
+#define VERTEX_2_LABEL_59			"vertex_2_panel_65/vertex_2_label_59"
+#define VERTEX_2_LABEL_60			"vertex_2_panel_65/vertex_2_label_60"
+#define VERTEX_2_LABEL_61			"vertex_2_panel_65/vertex_2_label_61"
+#define VERTEX_2_LABEL_62			"vertex_2_panel_65/vertex_2_label_62"
+#define VERTEX_2_LABEL_63			"vertex_2_panel_65/vertex_2_label_63"
+#define VERTEX_2_LABEL_66			"vertex_2_panel_65/vertex_2_label_66"
+#define VERTEX_3_LABEL_67			"vertex_3_panel_79/vertex_3_label_67"
+#define VERTEX_3_LABEL_68			"vertex_3_panel_79/vertex_3_label_68"
+#define VERTEX_3_LABEL_69			"vertex_3_panel_79/vertex_3_label_69"
+#define VERTEX_3_LABEL_70			"vertex_3_panel_79/vertex_3_label_70"
+#define VERTEX_3_LABEL_71			"vertex_3_panel_79/vertex_3_label_71"
+#define VERTEX_3_LABEL_72			"vertex_3_panel_79/vertex_3_label_72"
+#define VERTEX_3_LABEL_73			"vertex_3_panel_79/vertex_3_label_73"
+#define VERTEX_3_LABEL_74			"vertex_3_panel_79/vertex_3_label_74"
+#define VERTEX_3_LABEL_75			"vertex_3_panel_79/vertex_3_label_75"
+#define VERTEX_3_LABEL_76			"vertex_3_panel_79/vertex_3_label_76"
+#define VERTEX_3_LABEL_77			"vertex_3_panel_79/vertex_3_label_77"
+#define VERTEX_3_LABEL_80			"vertex_3_panel_79/vertex_3_label_80"
 
 #endif

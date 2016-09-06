@@ -24,11 +24,11 @@ public:
 	virtual void Update(const Library::GameTime& aGameTime) override;
 
 public:
-	void SetMatrixMvp(const glm::mat4& aMatrixMvp);
-	const glm::mat4& GetMatrixMvp() const;
+	void Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp);
+	const glm::mat4& Get_u_matrix_mvp() const;
 
-	void SetMatrixNormal(const glm::mat3& aMatrixNormal);
-	const glm::mat3& GetMatrixNormal() const;
+	void Set_u_matrix_normal(const glm::mat3& a_u_matrix_normal);
+	const glm::mat3& Get_u_matrix_normal() const;
 
 	void SetVertices(const std::vector<VertexStructure>& aVertices);
 	const std::vector<VertexStructure>& GetVertices() const;
@@ -42,8 +42,8 @@ protected:
 	virtual Library::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
 
 private:
-	glm::mat4 mMatrixMvp;
-	glm::mat3 mMatrixNormal;
+	glm::mat4 m_u_matrix_mvp;
+	glm::mat3 m_u_matrix_normal;
 	std::vector<VertexStructure> mVertices;
 
 	std::vector<Library::SliderModel*> mSliderModels;

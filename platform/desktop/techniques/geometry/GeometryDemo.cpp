@@ -44,8 +44,8 @@ void GeometryDemo::Initialize()
 	}
 
 	mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
-	mIsNonEncodeProgramLoaded = eps::rendering::load_program("assets/shaders/techniques/geometry_non_encode.prog", mProgramNonEncodeNormal);
-
+	mIsNonEncodeProgramLoaded = eps::rendering::load_program("assets/shaders/techniques/geometry_non_encode.prog",
+								mProgramNonEncodeNormal);
 	// Load the settings
 	const auto assetPath = "assets/settings/techniques/geometry.xml";
 	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
@@ -63,13 +63,16 @@ void GeometryDemo::Initialize()
 		throw std::runtime_error("Failed to load texture");
 	}
 
-	auto textureMaker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>(textureAsset->format());
+	auto textureMaker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>
+						(textureAsset->format());
 	mTexture = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
 	mColorTexture = eps::utils::raw_product(mTexture.get_product());
 	// Create the vertex buffer object
-	mVertexBuffer.allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(), sizeof(mSettings->mVertices.front()));
+	mVertexBuffer.allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(),
+						   sizeof(mSettings->mVertices.front()));
 	// Create the index buffer object
-	mIndexBuffer.allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(), sizeof(mSettings->mIndices.front()));
+	mIndexBuffer.allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(),
+						  sizeof(mSettings->mIndices.front()));
 	// Create the vertex array object
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mGeometryEffect.Initialize(mVertexArrayObject);
@@ -80,8 +83,8 @@ void GeometryDemo::Initialize()
 	// Retry the UI service and set the values from settings class
 	mUi = static_cast<Rendering::CustomUi*>(mGame->GetServices().GetService(Rendering::CustomUi::TypeIdClass()));
 	assert(mUi);
-	mUi->SetMatrixMvp(mSettings->mMatrixMvp);
-	mUi->SetMatrixNormal(mSettings->mMatrixNormal);
+	mUi->Set_u_matrix_mvp(mSettings->mMatrixMvp);
+	mUi->Set_u_matrix_normal(mSettings->mMatrixNormal);
 	mUi->SetVertices(mSettings->mVertices);
 
 	if (!mIsNonEncodeProgramLoaded)
@@ -94,8 +97,8 @@ void GeometryDemo::Update(const Library::GameTime&)
 {
 	if (mUi->IsNeedRestore())
 	{
-		mUi->SetMatrixMvp(mSettings->mMatrixMvp);
-		mUi->SetMatrixNormal(mSettings->mMatrixNormal);
+		mUi->Set_u_matrix_mvp(mSettings->mMatrixMvp);
+		mUi->Set_u_matrix_normal(mSettings->mMatrixNormal);
 		mUi->SetVertices(mSettings->mVertices);
 	}
 }
@@ -103,7 +106,8 @@ void GeometryDemo::Update(const Library::GameTime&)
 void GeometryDemo::Draw(const Library::GameTime&)
 {
 	glBindVertexArray(mVertexArrayObject);
-	mVertexBuffer.allocate(&mUi->GetVertices().front(), mUi->GetVertices().size(), sizeof(mUi->GetVertices().front()));
+	mVertexBuffer.allocate(&mUi->GetVertices().front(), mUi->GetVertices().size(),
+						   sizeof(mUi->GetVertices().front()));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer.get_product()));
 	glBindTexture(GL_TEXTURE_2D, mColorTexture);
 
@@ -120,8 +124,8 @@ void GeometryDemo::Draw(const Library::GameTime&)
 	}
 
 	mGeometryEffect.Use();
-	mGeometryEffect.u_matrix_mvp() << mUi->GetMatrixMvp();
-	mGeometryEffect.u_matrix_normal() << mUi->GetMatrixNormal();
+	mGeometryEffect.u_matrix_mvp() << mUi->Get_u_matrix_mvp();
+	mGeometryEffect.u_matrix_normal() << mUi->Get_u_matrix_normal();
 	//
 	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 	//
