@@ -399,6 +399,16 @@ def get_uniform_list(a_type):
                         '[0][0]', '[0][1]',
                         '[1][0]', '[1][1]',
                         '[2][0]', '[2][1]'
+                     ],
+        #
+        'glm::vec4': [
+                        '[0]', '[1]', '[2]', '[3]'
+                     ],
+        'glm::vec3': [
+                        '[0]', '[1]', '[2]'
+                     ],
+        'glm::vec2': [
+                        '[0]', '[1]'
                      ]
     }
 
@@ -456,7 +466,7 @@ def get_uniform_with_corresponding_defines(a_program, a_controls, a_define):
 def get_vertices_with_corresponding_defines(a_program, a_controls, a_vertex_count, a_define):
 
     vertices = []
-    vertex_members = ['x', 'y', 'z']
+    vertex_members = ['x', 'y', 'z', 'w']
 
     for i in range(0, a_vertex_count):
 

@@ -168,7 +168,14 @@ def get_variable_type(a_declaration, a_variable, a_source):
     variable_type = variable_type.replace(a_variable, '')
     variable_type = variable_type.replace(' ', '')
     variable_type = variable_type.replace('\t', '')
-    variable_type = convert_type_from_glsl_to_cpp(variable_type)
+
+    try:
+
+        variable_type = convert_type_from_glsl_to_cpp(variable_type)
+
+    except ValueError:
+
+        return ''
 
     return variable_type
 
