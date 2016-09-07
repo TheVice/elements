@@ -10,15 +10,9 @@
     <vertex>
       <pos x="0.55" y="-0.55"/>
     </vertex>
-      <vertex>
-      <pos x="0.55" y="-0.55"/>
-      </vertex>
     <vertex>
       <pos x="-0.55" y="-0.55"/>
     </vertex>
-      <vertex>
-      <pos x="-0.55" y="0.55"/>
-      </vertex>
   </vertices>
   <indices>
     <index value="0"/>

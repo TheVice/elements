@@ -14,7 +14,7 @@ ParticlesDemo::ParticlesDemo(Library::Game& aGame) :
 	mParticlesEffect(),
 	mVertexArrayObject(0),
 	mVertexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
-	mVertexCount(0),
+	mIndexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
 	mSettings()
 {
 }
@@ -43,14 +43,17 @@ void ParticlesDemo::Initialize()
 	}
 
 	// Create the vertex buffer object
-	mVertexCount = mSettings->mVertices.size();
-	mVertexBuffer.allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(), sizeof(mSettings->mVertices.front()));
+	mVertexBuffer.allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(),
+						   sizeof(mSettings->mVertices.front()));
+	// Create the index buffer object
+	mIndexBuffer.allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(),
+						  sizeof(mSettings->mIndices.front()));
 	// Create the vertex array object
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mParticlesEffect.Initialize(mVertexArrayObject);
 	glBindVertexArray(0);
 	//
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//
 	glEnable(GL_POINT_SPRITE);
@@ -61,14 +64,15 @@ void ParticlesDemo::Draw(const Library::GameTime&)
 {
 	glBindVertexArray(mVertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, eps::utils::raw_product(mVertexBuffer.get_product()));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer.get_product()));
 	//
 	mParticlesEffect.Use();
 	mParticlesEffect.u_transform() << mSettings->mTransform;
 	mParticlesEffect.u_size() << mSettings->mSize;
 	//
-	glDrawArrays(GL_TRIANGLES, 0, mVertexCount);
+	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 	//
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }

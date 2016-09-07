@@ -46,7 +46,6 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-
 	for (const auto& vertex : vertices_node)
 	{
 		if (std::strcmp(vertex.name(), "vertex"))
@@ -62,8 +61,8 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		}
 
 		const auto a_vertex_pos = glm::vec2(
-								pos_node.attribute("x").as_float(),
-								pos_node.attribute("y").as_float());
+									  pos_node.attribute("x").as_float(),
+									  pos_node.attribute("y").as_float());
 		const auto vertex_data = VertexStructure(a_vertex_pos);
 		mVertices.push_back(vertex_data);
 	}

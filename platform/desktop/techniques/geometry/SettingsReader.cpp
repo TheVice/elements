@@ -90,22 +90,22 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		}
 
 		const auto a_vertex_pos = glm::vec3(
-								pos_node.attribute("x").as_float(),
-								pos_node.attribute("y").as_float(),
-								pos_node.attribute("z").as_float());
+									  pos_node.attribute("x").as_float(),
+									  pos_node.attribute("y").as_float(),
+									  pos_node.attribute("z").as_float());
 		const auto a_vertex_normal = glm::vec3(
-								   normal_node.attribute("x").as_float(),
-								   normal_node.attribute("y").as_float(),
-								   normal_node.attribute("z").as_float());
+										 normal_node.attribute("x").as_float(),
+										 normal_node.attribute("y").as_float(),
+										 normal_node.attribute("z").as_float());
 		const auto a_vertex_tangent = glm::vec3(
-									tangent_node.attribute("x").as_float(),
-									tangent_node.attribute("y").as_float(),
-									tangent_node.attribute("z").as_float());
+										  tangent_node.attribute("x").as_float(),
+										  tangent_node.attribute("y").as_float(),
+										  tangent_node.attribute("z").as_float());
 		const auto a_vertex_uv = glm::vec2(
-							   uv_node.attribute("u").as_float(),
-							   uv_node.attribute("v").as_float());
+									 uv_node.attribute("u").as_float(),
+									 uv_node.attribute("v").as_float());
 		const auto vertex_data = VertexStructure(
-							   a_vertex_pos, a_vertex_normal, a_vertex_tangent, a_vertex_uv);
+									 a_vertex_pos, a_vertex_normal, a_vertex_tangent, a_vertex_uv);
 		mVertices.push_back(vertex_data);
 	}
 

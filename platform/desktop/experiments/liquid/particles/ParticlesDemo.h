@@ -33,7 +33,7 @@ private:
 	Library::ParticlesEffect mParticlesEffect;
 	GLuint mVertexArrayObject;
 	eps::rendering::vertices mVertexBuffer;
-	GLuint mVertexCount;
+	eps::rendering::indices mIndexBuffer;
 
 	eps::utils::optional<SettingsReader> mSettings;
 };
