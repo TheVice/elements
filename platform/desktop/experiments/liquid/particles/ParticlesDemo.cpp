@@ -15,7 +15,7 @@ ParticlesDemo::ParticlesDemo(Library::Game& aGame) :
 	mVertexArrayObject(0),
 	mVertexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
 	mVertexCount(0),
-	mSettings(nullptr)
+	mSettings()
 {
 }
 
@@ -34,10 +34,10 @@ void ParticlesDemo::Initialize()
 
 	mParticlesEffect.SetProgram(eps::utils::raw_product(mProgram.get_product()));
 	// Load the settings
-	mSettings = std::make_unique<SettingsReader>();
-	bool settingLoaded = load_data("assets/settings/experiments/liquid/particles.xml", *mSettings.get());
+	const auto assetPath = "assets/settings/experiments/liquid/particles.xml";
+	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
 
-	if (!settingLoaded)
+	if (!mSettings || mSettings->mIsEmpty)
 	{
 		throw std::runtime_error("Failed to load settings");
 	}
@@ -49,6 +49,9 @@ void ParticlesDemo::Initialize()
 	glGenVertexArrays(1, &mVertexArrayObject);
 	mParticlesEffect.Initialize(mVertexArrayObject);
 	glBindVertexArray(0);
+	//
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//
 	glEnable(GL_POINT_SPRITE);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);

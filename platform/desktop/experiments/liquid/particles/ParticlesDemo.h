@@ -6,6 +6,7 @@
 #include "SettingsReader.h"
 #include "rendering/core/buffer.h"
 #include "rendering/core/program.h"
+#include "utils/std/optional.h"
 #include <memory>
 
 namespace Rendering
@@ -34,7 +35,7 @@ private:
 	eps::rendering::vertices mVertexBuffer;
 	GLuint mVertexCount;
 
-	std::unique_ptr<SettingsReader> mSettings;
+	eps::utils::optional<SettingsReader> mSettings;
 };
 }
 

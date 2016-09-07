@@ -23,11 +23,11 @@ public:
 	virtual void Initialize() override;
 	virtual void Update(const GameTime& aGameTime) override;
 
-private:
-	std::map<std::string, std::weak_ptr<eps::ui::control>> mControls;
+protected:
+	virtual const std::map<std::string, unsigned int>& GetCaps() const;
 
-private:
-	static const std::map<std::string, unsigned int> mCaps;
+protected:
+	std::map<std::string, std::weak_ptr<eps::ui::control>> mControls;
 };
 }
 

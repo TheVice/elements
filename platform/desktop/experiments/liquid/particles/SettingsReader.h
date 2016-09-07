@@ -10,6 +10,7 @@ struct SettingsReader : public eps::asset_xml
 public:
 
 	std::vector<VertexStructure> mVertices;
+	std::vector<unsigned int> mIndices;
 	glm::mat4 mTransform;
 	float mSize;
 	bool mIsEmpty;
@@ -22,7 +23,5 @@ private:
 
 	bool read(const pugi::xml_document& doc) final;
 };
-
-bool load_data(const char* demo_data_asset, SettingsReader& demo_data);
 
 #endif

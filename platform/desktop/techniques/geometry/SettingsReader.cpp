@@ -5,112 +5,118 @@
 
 bool SettingsReader::read(const pugi::xml_document& doc)
 {
+	mVertices.clear();
+	mIndices.clear();
+	mMatrixMvp = glm::mat4();
+	mMatrixNormal = glm::mat3();
+	mTexturePath = "";
 	mIsEmpty = true;
-	auto root_node = doc.child("program");
+	//
+	const auto root_node = doc.child("program");
 
 	if (root_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto vertices_node = root_node.child("vertices");
+	const auto vertices_node = root_node.child("vertices");
 
 	if (vertices_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto indices_node = root_node.child("indices");
+	const auto indices_node = root_node.child("indices");
 
 	if (indices_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto m_mvp_node = root_node.child("matrix_mvp");
+	const auto m_mvp_node = root_node.child("matrix_mvp");
 
 	if (m_mvp_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto m_normal_node = root_node.child("matrix_normal");
+	const auto m_normal_node = root_node.child("matrix_normal");
 
 	if (m_normal_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto texture_node = root_node.child("texture");
+	const auto texture_node = root_node.child("texture");
 
 	if (texture_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	for (auto vertex = vertices_node.begin(); vertex != vertices_node.end(); ++vertex)
+	for (const auto& vertex : vertices_node)
 	{
-		if (std::strcmp(vertex->name(), "vertex"))
+		if (std::strcmp(vertex.name(), "vertex"))
 		{
 			continue;
 		}
 
-		auto pos_node = vertex->child("pos");
+		const auto pos_node = vertex.child("pos");
 
 		if (pos_node.empty())
 		{
-			return false;
+			return !mIsEmpty;
 		}
 
-		auto normal_node = vertex->child("normal");
+		const auto normal_node = vertex.child("normal");
 
 		if (normal_node.empty())
 		{
-			return false;
+			return !mIsEmpty;
 		}
 
-		auto tangent_node = vertex->child("tangent");
+		const auto tangent_node = vertex.child("tangent");
 
 		if (tangent_node.empty())
 		{
-			return false;
+			return !mIsEmpty;
 		}
 
-		auto uv_node = vertex->child("uv");
+		const auto uv_node = vertex.child("uv");
 
 		if (uv_node.empty())
 		{
-			return false;
+			return !mIsEmpty;
 		}
 
-		auto a_vertex_pos = glm::vec3(
+		const auto a_vertex_pos = glm::vec3(
 								pos_node.attribute("x").as_float(),
 								pos_node.attribute("y").as_float(),
 								pos_node.attribute("z").as_float());
-		auto a_vertex_normal = glm::vec3(
+		const auto a_vertex_normal = glm::vec3(
 								   normal_node.attribute("x").as_float(),
 								   normal_node.attribute("y").as_float(),
 								   normal_node.attribute("z").as_float());
-		auto a_vertex_tangent = glm::vec3(
+		const auto a_vertex_tangent = glm::vec3(
 									tangent_node.attribute("x").as_float(),
 									tangent_node.attribute("y").as_float(),
 									tangent_node.attribute("z").as_float());
-		auto a_vertex_uv = glm::vec2(
+		const auto a_vertex_uv = glm::vec2(
 							   uv_node.attribute("u").as_float(),
 							   uv_node.attribute("v").as_float());
-		auto vertex_data = VertexStructure(
+		const auto vertex_data = VertexStructure(
 							   a_vertex_pos, a_vertex_normal, a_vertex_tangent, a_vertex_uv);
 		mVertices.push_back(vertex_data);
 	}
 
-	for (auto index = indices_node.begin(); index != indices_node.end(); ++index)
+	for (const auto& index : indices_node)
 	{
-		if (std::strcmp(index->name(), "index"))
+		if (std::strcmp(index.name(), "index"))
 		{
 			continue;
 		}
 
-		auto index_data = index->attribute("value").as_uint();
+		const auto index_data = index.attribute("value").as_uint();
 		mIndices.push_back(index_data);
 	}
 
@@ -151,5 +157,5 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 	mTexturePath = texture_node.attribute("path").as_string();
 	//
 	mIsEmpty = false;
-	return true;
+	return !mIsEmpty;
 }

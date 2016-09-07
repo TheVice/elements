@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="Particles Demo [experiments/liquid/particles]">
+  <vertices>
+    <vertex>
+      <pos x="-0.55" y="0.55"/>
+    </vertex>
+    <vertex>
+      <pos x="0.55" y="0.55"/>
+    </vertex>
+    <vertex>
+      <pos x="0.55" y="-0.55"/>
+    </vertex>
+      <vertex>
+      <pos x="0.55" y="-0.55"/>
+      </vertex>
+    <vertex>
+      <pos x="-0.55" y="-0.55"/>
+    </vertex>
+      <vertex>
+      <pos x="-0.55" y="0.55"/>
+      </vertex>
+  </vertices>
+  <indices>
+    <index value="0"/>
+    <index value="1"/>
+    <index value="2"/>
+    <!---->
+    <index value="2"/>
+    <index value="3"/>
+    <index value="0"/>
+  </indices>
+  <transform m00="1.0" m01="0.0" m02="0.0" m03="0.0"
+             m10="0.0" m11="1.0" m12="0.0" m13="0.0"
+             m20="0.0" m21="0.0" m22="1.0" m23="0.0"
+             m30="0.0" m31="0.0" m32="0.0" m33="1.0"/>
+  <size value="10.0"/>
+</program>

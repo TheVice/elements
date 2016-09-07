@@ -5,57 +5,78 @@
 
 bool SettingsReader::read(const pugi::xml_document& doc)
 {
+	mVertices.clear();
+	mIndices.clear();
+	mTransform = glm::mat4();
+	mSize = 0.0f;
 	mIsEmpty = true;
-	auto root_node = doc.child("program");
+	//
+	const auto root_node = doc.child("program");
 
 	if (root_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto vertices_node = root_node.child("vertices");
+	const auto vertices_node = root_node.child("vertices");
 
 	if (vertices_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto transform_node = root_node.child("transform");
+	const auto indices_node = root_node.child("indices");
+
+	if (indices_node.empty())
+	{
+		return !mIsEmpty;
+	}
+
+	const auto transform_node = root_node.child("transform");
 
 	if (transform_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	auto size_node = root_node.child("size");
+	const auto size_node = root_node.child("size");
 
 	if (size_node.empty())
 	{
-		return false;
+		return !mIsEmpty;
 	}
 
-	mVertices.reserve(6);
-	mVertices.resize(0);
 
-	for (auto vertex = vertices_node.begin(); vertex != vertices_node.end(); ++vertex)
+	for (const auto& vertex : vertices_node)
 	{
-		if (std::strcmp(vertex->name(), "vertex"))
+		if (std::strcmp(vertex.name(), "vertex"))
 		{
 			continue;
 		}
 
-		auto pos_node = vertex->child("pos");
+		const auto pos_node = vertex.child("pos");
 
 		if (pos_node.empty())
 		{
-			return false;
+			return !mIsEmpty;
 		}
 
-		auto a_vertex_pos = glm::vec2(
+		const auto a_vertex_pos = glm::vec2(
 								pos_node.attribute("x").as_float(),
 								pos_node.attribute("y").as_float());
-		auto vertex_data = VertexStructure(a_vertex_pos);
+		const auto vertex_data = VertexStructure(a_vertex_pos);
 		mVertices.push_back(vertex_data);
+	}
+
+	for (const auto& index : indices_node)
+	{
+		if (std::strcmp(index.name(), "index"))
+		{
+			continue;
+		}
+
+		const auto index_data = index.attribute("value").as_uint();
+		mIndices.push_back(index_data);
 	}
 
 	mTransform = glm::mat4(
@@ -78,23 +99,9 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 					 transform_node.attribute("m31").as_float(),
 					 transform_node.attribute("m32").as_float(),
 					 transform_node.attribute("m33").as_float());
-	mSize = size_node.attribute("value").as_float();
-	mIsEmpty = false;
-	return true;
-}
-
-bool load_data(const char* demo_data_asset, SettingsReader& demo_data)
-{
-	auto data = eps::assets_storage::instance().read<SettingsReader>(demo_data_asset);
-
-	if (!data || data.value().mIsEmpty)
-	{
-		return false;
-	}
-
-	demo_data.mVertices = data.value().mVertices;
-	demo_data.mTransform = data.value().mTransform;
-	demo_data.mSize = data.value().mSize;
 	//
-	return true;
+	mSize = size_node.attribute("value").as_float();
+	//
+	mIsEmpty = false;
+	return !mIsEmpty;
 }

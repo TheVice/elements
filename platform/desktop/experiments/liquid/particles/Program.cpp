@@ -28,7 +28,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #endif
 #endif
 	auto game = std::make_unique<Rendering::RenderingGame>
-				(TEXT("Particles Demo"));
+				(TEXT("Particles Demo [experiments/liquid/particles]"));
 
 	try
 	{
