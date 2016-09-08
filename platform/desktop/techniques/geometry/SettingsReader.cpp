@@ -1,6 +1,7 @@
 
 #include "SettingsReader.h"
 #include "assets/assets_storage.h"
+#include "ReaderHelpers.h"
 #include <cstring>
 
 bool SettingsReader::read(const pugi::xml_document& doc)
@@ -89,72 +90,61 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 			return !mIsEmpty;
 		}
 
-		const auto a_vertex_pos = glm::vec3(
-									  pos_node.attribute("x").as_float(),
-									  pos_node.attribute("y").as_float(),
-									  pos_node.attribute("z").as_float());
-		const auto a_vertex_normal = glm::vec3(
-										 normal_node.attribute("x").as_float(),
-										 normal_node.attribute("y").as_float(),
-										 normal_node.attribute("z").as_float());
-		const auto a_vertex_tangent = glm::vec3(
-										  tangent_node.attribute("x").as_float(),
-										  tangent_node.attribute("y").as_float(),
-										  tangent_node.attribute("z").as_float());
-		const auto a_vertex_uv = glm::vec2(
-									 uv_node.attribute("u").as_float(),
-									 uv_node.attribute("v").as_float());
-		const auto vertex_data = VertexStructure(
-									 a_vertex_pos, a_vertex_normal, a_vertex_tangent, a_vertex_uv);
+		auto vertex_pos = glm::vec3();
+
+		if (!Library::ReaderHelpers::read_glm_vec3(pos_node, vertex_pos))
+		{
+			return !mIsEmpty;
+		}
+
+		auto vertex_normal = glm::vec3();
+
+		if (!Library::ReaderHelpers::read_glm_vec3(normal_node, vertex_normal))
+		{
+			return !mIsEmpty;
+		}
+
+		auto vertex_tangent = glm::vec3();
+
+		if (!Library::ReaderHelpers::read_glm_vec3(tangent_node, vertex_tangent))
+		{
+			return !mIsEmpty;
+		}
+
+		auto vertex_uv = glm::vec2();
+
+		if (!Library::ReaderHelpers::read_glm_vec2(uv_node, vertex_uv))
+		{
+			return !mIsEmpty;
+		}
+
+		const auto vertex_data = VertexStructure(vertex_pos, vertex_normal, vertex_tangent, vertex_uv);
 		mVertices.push_back(vertex_data);
 	}
 
-	for (const auto& index : indices_node)
+	if (!Library::ReaderHelpers::read_indices(indices_node, mIndices))
 	{
-		if (std::strcmp(index.name(), "index"))
-		{
-			continue;
-		}
-
-		const auto index_data = index.attribute("value").as_uint();
-		mIndices.push_back(index_data);
+		return !mIsEmpty;
 	}
 
-	mMatrixMvp = glm::mat4(
-					 m_mvp_node.attribute("m00").as_float(),
-					 m_mvp_node.attribute("m01").as_float(),
-					 m_mvp_node.attribute("m02").as_float(),
-					 m_mvp_node.attribute("m03").as_float(),
-					 //
-					 m_mvp_node.attribute("m10").as_float(),
-					 m_mvp_node.attribute("m11").as_float(),
-					 m_mvp_node.attribute("m12").as_float(),
-					 m_mvp_node.attribute("m13").as_float(),
-					 //
-					 m_mvp_node.attribute("m20").as_float(),
-					 m_mvp_node.attribute("m21").as_float(),
-					 m_mvp_node.attribute("m22").as_float(),
-					 m_mvp_node.attribute("m23").as_float(),
-					 //
-					 m_mvp_node.attribute("m30").as_float(),
-					 m_mvp_node.attribute("m31").as_float(),
-					 m_mvp_node.attribute("m32").as_float(),
-					 m_mvp_node.attribute("m33").as_float());
-	//
-	mMatrixNormal = glm::mat3(
-						m_normal_node.attribute("m00").as_float(),
-						m_normal_node.attribute("m01").as_float(),
-						m_normal_node.attribute("m02").as_float(),
-						//
-						m_normal_node.attribute("m10").as_float(),
-						m_normal_node.attribute("m11").as_float(),
-						m_normal_node.attribute("m12").as_float(),
-						//
-						m_normal_node.attribute("m20").as_float(),
-						m_normal_node.attribute("m21").as_float(),
-						m_normal_node.attribute("m22").as_float());
-	//
-	mTexturePath = texture_node.attribute("path").as_string();
+	if (!Library::ReaderHelpers::read_glm_mat4(m_mvp_node, mMatrixMvp))
+	{
+		return !mIsEmpty;
+	}
+
+	if (!Library::ReaderHelpers::read_glm_mat3(m_normal_node, mMatrixNormal))
+	{
+		return !mIsEmpty;
+	}
+
+	const auto texture_path = texture_node.attribute("path");
+
+	if (texture_path.empty())
+	{
+		return !mIsEmpty;
+	}
+
+	mTexturePath = texture_path.as_string();
 	//
 	mIsEmpty = false;
 	return !mIsEmpty;

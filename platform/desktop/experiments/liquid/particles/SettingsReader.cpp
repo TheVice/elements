@@ -1,6 +1,7 @@
 
 #include "SettingsReader.h"
 #include "assets/assets_storage.h"
+#include "ReaderHelpers.h"
 #include <cstring>
 
 bool SettingsReader::read(const pugi::xml_document& doc)
@@ -60,47 +61,32 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 			return !mIsEmpty;
 		}
 
-		const auto a_vertex_pos = glm::vec2(
-									  pos_node.attribute("x").as_float(),
-									  pos_node.attribute("y").as_float());
-		const auto vertex_data = VertexStructure(a_vertex_pos);
+		auto vertex_pos = glm::vec2();
+
+		if (!Library::ReaderHelpers::read_glm_vec2(pos_node, vertex_pos))
+		{
+			return !mIsEmpty;
+		}
+
+		const auto vertex_data = VertexStructure(vertex_pos);
 		mVertices.push_back(vertex_data);
 	}
 
-	for (const auto& index : indices_node)
+	if (!Library::ReaderHelpers::read_indices(indices_node, mIndices))
 	{
-		if (std::strcmp(index.name(), "index"))
-		{
-			continue;
-		}
-
-		const auto index_data = index.attribute("value").as_uint();
-		mIndices.push_back(index_data);
+		return !mIsEmpty;
 	}
 
-	mTransform = glm::mat4(
-					 transform_node.attribute("m00").as_float(),
-					 transform_node.attribute("m01").as_float(),
-					 transform_node.attribute("m02").as_float(),
-					 transform_node.attribute("m03").as_float(),
-					 //
-					 transform_node.attribute("m10").as_float(),
-					 transform_node.attribute("m11").as_float(),
-					 transform_node.attribute("m12").as_float(),
-					 transform_node.attribute("m13").as_float(),
-					 //
-					 transform_node.attribute("m20").as_float(),
-					 transform_node.attribute("m21").as_float(),
-					 transform_node.attribute("m22").as_float(),
-					 transform_node.attribute("m23").as_float(),
-					 //
-					 transform_node.attribute("m30").as_float(),
-					 transform_node.attribute("m31").as_float(),
-					 transform_node.attribute("m32").as_float(),
-					 transform_node.attribute("m33").as_float());
-	//
-	mSize = size_node.attribute("value").as_float();
-	//
+	if (!Library::ReaderHelpers::read_glm_mat4(transform_node, mTransform))
+	{
+		return !mIsEmpty;
+	}
+
+	if (!Library::ReaderHelpers::read_float(size_node, mSize))
+	{
+		return !mIsEmpty;
+	}
+
 	mIsEmpty = false;
 	return !mIsEmpty;
 }
