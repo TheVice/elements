@@ -1,6 +1,7 @@
 
 #include "RenderingGame.h"
 #include "ParticlesDemo.h"
+#include "CustomUi.h"
 #include "asset_fs.h"
 #include "preferences.h"
 #include "metrics.h"
@@ -12,7 +13,8 @@ namespace Rendering
 RenderingGame::RenderingGame(const TCHAR* aWindowTitle) :
 	Game(aWindowTitle),
 	mKeyboardHandler(nullptr),
-	mDrawableGameComponent(nullptr)
+	mDrawableGameComponent(nullptr),
+	mUiComponent(nullptr)
 {
 }
 
@@ -26,6 +28,10 @@ void RenderingGame::Initialize()
 	eps::assets_storage::instance().mount<Desktop::asset_fs>("");
 	eps::preferences::init<Desktop::preferences>();
 	eps::metrics::init<Desktop::metrics>(1.0f);
+	//
+	mUiComponent = std::make_unique<CustomUi>(*this, "assets/settings/experiments/liquid/particles_ui.xml");
+	mComponents.push_back(mUiComponent.get());
+	mServices.AddService(Rendering::CustomUi::TypeIdClass(), mUiComponent.get());
 	//
 	mDrawableGameComponent = std::make_unique<ParticlesDemo>(*this);
 	mComponents.push_back(mDrawableGameComponent.get());

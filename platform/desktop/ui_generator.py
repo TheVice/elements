@@ -117,7 +117,9 @@ def get_member_count(a_type):
         #
         'glm::vec2': 2,
         'glm::vec3': 3,
-        'glm::vec4': 4
+        'glm::vec4': 4,
+        #
+        'float': 1
     }
 
     if a_type not in types.keys():
@@ -197,9 +199,9 @@ def generate_ui_xml(a_program, a_vertex_count):
 
 def to_pretty_xml(a_element):
 
-    tree = ET.tostring(a_element, encoding='utf8', method='xml')
+    tree = ET.tostring(a_element, encoding='utf-8', method='xml')
     doc = minidom.parseString(tree)
-    tree = doc.toprettyxml(encoding='utf8', indent='  ')
+    tree = doc.toprettyxml(encoding='utf-8', indent='  ')
 
     return tree
 
@@ -409,7 +411,9 @@ def get_uniform_list(a_type):
                      ],
         'glm::vec2': [
                         '[0]', '[1]'
-                     ]
+                     ],
+        #
+        'float': ['']
     }
 
     if a_type not in types.keys():
@@ -558,8 +562,6 @@ def generate_custom_ui_cpp_initialize(a_controls):
         '{1}UiAsset::Initialize();{0}'
         '{1}//{0}'
         '{2}'          # is_exist_control
-        '{0}'
-        '{1}//{0}'
         '{1}IS_ALL_SLIDER_MODELS_SET(mSliderModels){0}'
         '{0}'
         '{3}'          # set_button_click
@@ -574,7 +576,7 @@ def generate_custom_ui_cpp_initialize(a_controls):
         '{1}{1}{{{0}'
         '{1}{1}{1}// TODO:{0}'
         '{1}{1}}});{0}'
-        '{1}}}{0}'
+        '{1}}}'
     )
 
     is_exist_control = []
@@ -582,8 +584,6 @@ def generate_custom_ui_cpp_initialize(a_controls):
     is_button = True
 
     for controls in [a_controls[1]['button'], a_controls[1]['panel'], a_controls[1]['label']]:
-
-        is_exist_control.append(os.linesep)
 
         for control in controls:
 
@@ -595,8 +595,11 @@ def generate_custom_ui_cpp_initialize(a_controls):
                 set_button_click.append(button_template.format(os.linesep, '\t', control))
 
         is_button = False
+        is_exist_control.append('{}{}{}'.format('\t', '//', os.linesep))
 
-    return initialize_template.format(os.linesep, '\t', ''.join(is_exist_control), os.linesep.join(set_button_click))
+    return initialize_template.format(os.linesep, '\t',
+                                      ''.join(is_exist_control),
+                                      '{0}{0}'.format(os.linesep).join(set_button_click))
 
 
 def generate_custom_ui_cpp_update(a_program, a_controls, a_vertex_count):
@@ -607,7 +610,7 @@ def generate_custom_ui_cpp_update(a_program, a_controls, a_vertex_count):
         '{1}UiAsset::Update(aGameTime);{0}'
         '{1}//{0}'
         '{2}'           # uniform_variable
-        '{0}'
+        '\t//{0}'
         '{3}'           # vertices_variable
         '}}{0}'
     )

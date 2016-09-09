@@ -24,6 +24,7 @@ private:
 
 	KeyboardHandler mKeyboardHandler;
 	std::unique_ptr<Library::DrawableGameComponent> mDrawableGameComponent;
+	std::unique_ptr<Library::DrawableGameComponent> mUiComponent;
 
 private:
 	static const glm::vec4 sBackgroundColor;

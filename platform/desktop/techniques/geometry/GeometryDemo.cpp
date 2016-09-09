@@ -38,16 +38,18 @@ GeometryDemo::~GeometryDemo()
 void GeometryDemo::Initialize()
 {
 	// Build the shader program
-	if (!eps::rendering::load_program("assets/shaders/techniques/geometry.prog", mProgramEncodeNormal))
+	auto assetPath = "assets/shaders/techniques/geometry.prog";
+
+	if (!eps::rendering::load_program(assetPath, mProgramEncodeNormal))
 	{
 		throw std::runtime_error("Failed to load shader");
 	}
 
 	mGeometryEffect.SetProgram(eps::utils::raw_product(mProgramEncodeNormal.get_product()));
-	mIsNonEncodeProgramLoaded = eps::rendering::load_program("assets/shaders/techniques/geometry_non_encode.prog",
-								mProgramNonEncodeNormal);
+	assetPath = "assets/shaders/techniques/geometry_non_encode.prog";
+	mIsNonEncodeProgramLoaded = eps::rendering::load_program(assetPath, mProgramNonEncodeNormal);
 	// Load the settings
-	const auto assetPath = "assets/settings/techniques/geometry.xml";
+	assetPath = "assets/settings/techniques/geometry.xml";
 	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
 
 	if (!mSettings || mSettings->mIsEmpty)

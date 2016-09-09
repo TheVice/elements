@@ -13,7 +13,8 @@ namespace Rendering
 RenderingGame::RenderingGame(const TCHAR* aWindowTitle) :
 	Game(aWindowTitle),
 	mKeyboardHandler(nullptr),
-	mDrawableGameComponent(nullptr)
+	mDrawableGameComponent(nullptr),
+	mUiComponent(nullptr)
 {
 }
 

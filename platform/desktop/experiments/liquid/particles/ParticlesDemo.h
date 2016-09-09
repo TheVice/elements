@@ -11,6 +11,7 @@
 
 namespace Rendering
 {
+class CustomUi;
 class ParticlesDemo : public Library::DrawableGameComponent
 {
 	RTTI_DECLARATIONS(ParticlesDemo, DrawableGameComponent)
@@ -26,6 +27,7 @@ public:
 
 public:
 	virtual void Initialize() override;
+	virtual void Update(const Library::GameTime& aGameTime) override;
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
@@ -36,6 +38,8 @@ private:
 	eps::rendering::indices mIndexBuffer;
 
 	eps::utils::optional<SettingsReader> mSettings;
+
+	CustomUi* mUi;
 };
 }
 

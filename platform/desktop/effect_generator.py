@@ -124,7 +124,9 @@ def convert_type_from_glsl_to_cpp(a_type):
         #
         'vec2': 'glm::vec2',
         'vec3': 'glm::vec3',
-        'vec4': 'glm::vec4'
+        'vec4': 'glm::vec4',
+        #
+        'float': 'float'
     }
 
     if a_type not in types.keys():
