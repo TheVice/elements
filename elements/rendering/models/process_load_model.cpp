@@ -21,48 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "blend.h"
-#include "rendering/state/state_macro.h"
-#include "rendering/utils/program_loader.h"
+#include "process_load_model.h"
+#include "model_warehouse.h"
+#include "model.h"
 
 namespace eps {
 namespace rendering {
-namespace effect {
 
-enum class program_enum : short
+void process_load_model::operator()(scene::node & node, const asset_model & asset)
 {
-    // attributes
-    a_vertex_xy = 0,
-    a_vertex_uv = 1,
-    // uniforms
-    u_source    = 0,
-    u_transform = 1
-};
+    const auto & geometry = asset.get_node_geometry(node.get_name());
+    const auto & material = asset.get_node_material(node.get_name());
 
-bool blend::initialize()
-{
-    return load_program("assets/shaders/primitives/square_texture.prog", program_);
+    if(!geometry.empty())
+    {
+        auto warehouse = utils::make_shared<model_warehouse>();
+
+        std::vector<scene::mesh> meshes(geometry.size());
+        for(size_t i = 0, end = meshes.size(); i < end; ++i)
+        {
+            meshes[i].set_feature(scene::mesh::feature::geometry, i);
+            meshes[i].set_feature(scene::mesh::feature::material, i);
+
+            warehouse->add_geometry(geometry[i].get_vertices(), geometry[i].get_faces());
+            warehouse->add_material(material[i].get_material());
+        }
+
+        scene_->add_node_entity<model>(node.shared_from_this(),
+                                       std::move(meshes),
+                                       std::move(warehouse));
+    }
 }
 
-void blend::process(float)
-{
-    EPS_STATE_BLEND(sfactor_, dfactor_);
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
-    EPS_STATE_PROGRAM(program_.get_product());
-
-    program_.uniform_value(utils::to_int(program_enum::u_source), 0);
-    program_.uniform_value(utils::to_int(program_enum::u_transform), math::mat4(1.0f));
-
-    square_.render(program_, utils::to_int(program_enum::a_vertex_xy),
-                             utils::to_int(program_enum::a_vertex_uv));
-}
-
-void blend::set_factors(enum_type sfactor, enum_type dfactor)
-{
-    sfactor_ = sfactor;
-    dfactor_ = dfactor;
-}
-
-} /* effect */
 } /* rendering */
 } /* eps */

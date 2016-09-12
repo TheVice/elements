@@ -21,48 +21,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "blend.h"
-#include "rendering/state/state_macro.h"
-#include "rendering/utils/program_loader.h"
+#ifndef COLLISTION_CONTACT_H_INCLUDED
+#define COLLISTION_CONTACT_H_INCLUDED
+
+#include "math/types.h"
 
 namespace eps {
-namespace rendering {
-namespace effect {
+namespace collision {
 
-enum class program_enum : short
+struct contact
 {
-    // attributes
-    a_vertex_xy = 0,
-    a_vertex_uv = 1,
-    // uniforms
-    u_source    = 0,
-    u_transform = 1
+    math::vec3 normal;
+    float depth;
 };
 
-bool blend::initialize()
-{
-    return load_program("assets/shaders/primitives/square_texture.prog", program_);
-}
-
-void blend::process(float)
-{
-    EPS_STATE_BLEND(sfactor_, dfactor_);
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
-    EPS_STATE_PROGRAM(program_.get_product());
-
-    program_.uniform_value(utils::to_int(program_enum::u_source), 0);
-    program_.uniform_value(utils::to_int(program_enum::u_transform), math::mat4(1.0f));
-
-    square_.render(program_, utils::to_int(program_enum::a_vertex_xy),
-                             utils::to_int(program_enum::a_vertex_uv));
-}
-
-void blend::set_factors(enum_type sfactor, enum_type dfactor)
-{
-    sfactor_ = sfactor;
-    dfactor_ = dfactor;
-}
-
-} /* effect */
-} /* rendering */
+} /* collision */
 } /* eps */
+
+#endif // COLLISTION_CONTACT_H_INCLUDED

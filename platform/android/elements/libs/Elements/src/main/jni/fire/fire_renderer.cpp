@@ -23,14 +23,12 @@ IN THE SOFTWARE.
 
 #include "fire_renderer.h"
 #include "fire_ui.h"
-#include "fire_config.h"
 #include "logging.h"
 #include <chrono>
 
 #include <android/input.h>
 #include <elements/ui/controls/button.h>
 #include <elements/ui/controls/panel.h>
-#include <elements/ui/controls/slider.h>
 #include <elements/timing/update.h>
 #include <elements/math/transform.h>
 #include <elements/metrics/metrics.h>
@@ -150,7 +148,7 @@ void fire_renderer::touch(float x, float y, int action)
     if(ui_ && renderer_)
     {
         const eps::math::vec4 pos = transform_touch_ * eps::math::vec4(x, y, 1.0f, 1.0f);
-        ui_->touch(pos.x, pos.y, ui_touch_action(action));
+        ui_->touch(pos.x, pos.y, ui_touch_action(action), eps::ui::touch_finger::finger0);
     }
 }
 

@@ -187,7 +187,7 @@ void checkbox::draw()
 	control::draw();
 }
 
-bool checkbox::touch(int x, int y, eps::ui::touch_action action)
+bool checkbox::touch(int x, int y, eps::ui::touch_action action, eps::ui::touch_finger finger)
 {
 	auto sys = get_system();
 	const auto pos = global_position();
@@ -208,11 +208,11 @@ bool checkbox::touch(int x, int y, eps::ui::touch_action action)
 		}
 	}
 
-	if (sys->capture_test(this))
+	if (sys->capture_test(this, finger))
 	{
 		if (action == eps::ui::touch_action::UP)
 		{
-			sys->capture_release();
+			sys->capture_release(finger);
 		}
 
 		return true;

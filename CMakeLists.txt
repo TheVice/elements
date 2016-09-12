@@ -233,6 +233,12 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/assets/asset_xml.cpp
                        ${elements_Path}/assets/asset_xml.h
 
+                       ${elements_Path}/collision/aabb.cpp
+                       ${elements_Path}/collision/aabb.h
+                       ${elements_Path}/collision/collide.cpp
+                       ${elements_Path}/collision/collide.h
+                       ${elements_Path}/collision/contact.h
+
                        ${elements_Path}/design/visitor.h
 
                        ${elements_Path}/io/file.h
@@ -300,6 +306,8 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/models/model_warehouse.h
                        ${elements_Path}/rendering/models/process_forward.cpp
                        ${elements_Path}/rendering/models/process_forward.h
+                       ${elements_Path}/rendering/models/process_load_model.cpp
+                       ${elements_Path}/rendering/models/process_load_model.h
 
                        ${elements_Path}/rendering/passes/pass_base.h
                        ${elements_Path}/rendering/passes/pass_composition.cpp
@@ -324,8 +332,6 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/rendering/techniques/forward.cpp
                        ${elements_Path}/rendering/techniques/forward.h
 
-                       ${elements_Path}/rendering/utils/model_loader.cpp
-                       ${elements_Path}/rendering/utils/model_loader.h
                        ${elements_Path}/rendering/utils/program_loader.cpp
                        ${elements_Path}/rendering/utils/program_loader.h
 
@@ -351,19 +357,19 @@ set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
                        ${elements_Path}/scene/modifier/positioning.cpp
                        ${elements_Path}/scene/modifier/positioning.h
 
-                       # ${elements_Path}/simulation/air/system.cpp
-                       # ${elements_Path}/simulation/air/system.h
-                       # ${elements_Path}/simulation/air/volume.cpp
-                       # ${elements_Path}/simulation/air/volume.h
+                       ${elements_Path}/simulation/air/system.cpp
+                       ${elements_Path}/simulation/air/system.h
+                       ${elements_Path}/simulation/air/volume.cpp
+                       ${elements_Path}/simulation/air/volume.h
 
-                       # ${elements_Path}/simulation/liquid/config.cpp
-                       # ${elements_Path}/simulation/liquid/config.h
-                       # ${elements_Path}/simulation/liquid/obstacle.h
-                       # ${elements_Path}/simulation/liquid/particle.h
-                       # ${elements_Path}/simulation/liquid/system.cpp
-                       # ${elements_Path}/simulation/liquid/system.h
-                       # ${elements_Path}/simulation/liquid/volume.cpp
-                       # ${elements_Path}/simulation/liquid/volume.h
+                       ${elements_Path}/simulation/liquid/config.cpp
+                       ${elements_Path}/simulation/liquid/config.h
+                       ${elements_Path}/simulation/liquid/obstacle.h
+                       ${elements_Path}/simulation/liquid/particle.h
+                       ${elements_Path}/simulation/liquid/system.cpp
+                       ${elements_Path}/simulation/liquid/system.h
+                       ${elements_Path}/simulation/liquid/volume.cpp
+                       ${elements_Path}/simulation/liquid/volume.h
 
                        ${elements_Path}/synchronization/future.h
                        ${elements_Path}/synchronization/signal.h

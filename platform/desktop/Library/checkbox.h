@@ -29,7 +29,7 @@ public:
 	GLvoid set_colors(std::array<eps::math::vec4, 5>& colors);
 
 	void draw() override;
-	bool touch(int x, int y, eps::ui::touch_action action) override;
+	bool touch(int x, int y, eps::ui::touch_action action, eps::ui::touch_finger finger) override;
 
 private:
 

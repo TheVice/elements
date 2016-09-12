@@ -42,16 +42,24 @@ void DrawableUiGameComponent::Update(const GameTime&)
 	{
 		if (!touchDown)
 		{
-			mUiSystem->touch(touchPos.x, touchPos.y, eps::ui::touch_action::DOWN);
+			mUiSystem->touch(touchPos.x, touchPos.y,
+							 eps::ui::touch_action::DOWN,
+							 eps::ui::touch_finger::finger0);
 			touchDown = true;
 		}
 
-		mUiSystem->touch(touchPos.x, touchPos.y, eps::ui::touch_action::MOVE);
+		mUiSystem->touch(touchPos.x, touchPos.y,
+						 eps::ui::touch_action::MOVE,
+						 eps::ui::touch_finger::finger0);
 	}
 	else if (touchDown)
 	{
-		mUiSystem->touch(touchPos.x, touchPos.y, eps::ui::touch_action::MOVE);
-		mUiSystem->touch(touchPos.x, touchPos.y, eps::ui::touch_action::UP);
+		mUiSystem->touch(touchPos.x, touchPos.y,
+						 eps::ui::touch_action::MOVE,
+						 eps::ui::touch_finger::finger0);
+		mUiSystem->touch(touchPos.x, touchPos.y,
+						 eps::ui::touch_action::UP,
+						 eps::ui::touch_finger::finger0);
 		touchDown = false;
 	}
 }

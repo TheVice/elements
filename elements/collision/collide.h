@@ -21,19 +21,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
-#define RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
+#ifndef COLLISTION_COLLIDE_H_INCLUDED
+#define COLLISTION_COLLIDE_H_INCLUDED
 
-#include "scene/scene.h"
-#include "scene/graph/node.h"
+#include "aabb.h"
+#include "contact.h"
 
 namespace eps {
-namespace rendering {
+namespace collision {
 
-utils::link<scene::node> load_model(const std::string & name,
-                                    utils::pointer<scene::scene> scene);
+bool collide(const aabb & a, const aabb & b);
+bool collide(const aabb & a, const aabb & b, contact & cnt);
 
-} /* rendering */
+} /* collision */
 } /* eps */
 
-#endif // RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
+#endif // COLLISTION_COLLIDE_H_INCLUDED

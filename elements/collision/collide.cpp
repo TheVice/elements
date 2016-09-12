@@ -21,52 +21,58 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UI_CONTROLS_BUTTON_H_INCLUDED
-#define UI_CONTROLS_BUTTON_H_INCLUDED
-
-#include <functional>
-
-#include "ui/control.h"
-#include "rendering/core/texture.h"
-#include "rendering/core/program.h"
-#include "rendering/primitives/square.h"
+#include "collide.h"
 
 namespace eps {
-namespace ui {
+namespace collision {
 
-class button : public control
+bool collide(const aabb & a, const aabb & b)
 {
-public:
+    if(a.max()[0] < b.min()[0] || a.min()[0] > b.max()[0])
+        return false;
+    if(a.max()[1] < b.min()[1] || a.min()[1] > b.max()[1])
+        return false;
+    if(a.max()[2] < b.min()[2] || a.min()[2] > b.max()[2])
+        return false;
+    return true;
+}
 
-    explicit button(control * parent = nullptr);
-
-    void draw() override;
-    bool touch(int x, int y, touch_action action, touch_finger finger) override;
-
-    bool set_asset(const char * asset);
-    void set_click(const std::function<void()> & handler);
-
-private:
-
-    enum class state
+bool collide(const aabb & a, const aabb & b, contact & cnt)
+{
+    static math::vec3 normals[] =
     {
-        NONE = 0,
-        PRESSED
+        {-1.0f, 0.0f, 0.0f},
+        {1.0f, 0.0f, 0.0f},
+        {0.0f, -1.0f, 0.0f},
+        {0.0f, 1.0f, 0.0f},
+        {0.0f, 0.0f, -1.0f},
+        {0.0f, 0.0f, 1.0f}
     };
 
-private:
+    float distances[] =
+    {
+        b.max().x - a.min().x,
+        a.max().x - b.min().x,
+        b.max().y - a.min().y,
+        a.max().y - b.min().y,
+        b.max().z - a.min().z,
+        a.max().z - b.min().z
+    };
 
-    std::function<void()> click_;
+    for(int i = 0; i < 6; ++i)
+    {
+        if(distances[i] < 0.0f)
+            return false;
 
-    rendering::program program_face_;
-    rendering::texture texture_face_;
+        if(i == 0 || distances[i] < cnt.depth)
+        {
+            cnt.normal = normals[i];
+            cnt.depth = distances[i];
+        }
+    }
 
-    rendering::primitive::square square_;
+    return true;
+}
 
-    state state_;
-};
-
-} /* ui */
+} /* collision */
 } /* eps */
-
-#endif // UI_BUTTON_H_INCLUDED

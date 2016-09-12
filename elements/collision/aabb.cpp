@@ -21,48 +21,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "blend.h"
-#include "rendering/state/state_macro.h"
-#include "rendering/utils/program_loader.h"
+#include "aabb.h"
 
 namespace eps {
-namespace rendering {
-namespace effect {
+namespace collision {
 
-enum class program_enum : short
-{
-    // attributes
-    a_vertex_xy = 0,
-    a_vertex_uv = 1,
-    // uniforms
-    u_source    = 0,
-    u_transform = 1
-};
+aabb::aabb(const math::vec3 & min, const math::vec3 & max)
+    : min_(min)
+    , max_(max)
+    , center_((min + max) * 0.5f)
+    , size_(max - min)
+{}
 
-bool blend::initialize()
+aabb update(const aabb & bounds, const math::mat4 & m)
 {
-    return load_program("assets/shaders/primitives/square_texture.prog", program_);
+    math::vec3 min;
+    math::vec3 max;
+    float e, f;
+    for(size_t i = 0; i < 3; ++i)
+    {
+        min[i] = max[i] = m[3][i];
+        for(size_t j = 0; j < 3; ++j)
+        {
+            e = m[j][i] * bounds.min()[j];
+            f = m[j][i] * bounds.max()[j];
+            if(e < f)
+            {
+                min[i] += e;
+                max[i] += f;
+            }
+            else
+            {
+                min[i] += f;
+                max[i] += e;
+            }
+        }
+    }
+    return aabb(min, max);
 }
 
-void blend::process(float)
-{
-    EPS_STATE_BLEND(sfactor_, dfactor_);
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
-    EPS_STATE_PROGRAM(program_.get_product());
-
-    program_.uniform_value(utils::to_int(program_enum::u_source), 0);
-    program_.uniform_value(utils::to_int(program_enum::u_transform), math::mat4(1.0f));
-
-    square_.render(program_, utils::to_int(program_enum::a_vertex_xy),
-                             utils::to_int(program_enum::a_vertex_uv));
-}
-
-void blend::set_factors(enum_type sfactor, enum_type dfactor)
-{
-    sfactor_ = sfactor;
-    dfactor_ = dfactor;
-}
-
-} /* effect */
-} /* rendering */
+} /* collision */
 } /* eps */
