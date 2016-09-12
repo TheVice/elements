@@ -25,7 +25,6 @@ IN THE SOFTWARE.
 #include "ui/system.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
-#include "utils/std/enum.h"
 #include "math/common.h"
 
 namespace eps {

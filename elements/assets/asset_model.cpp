@@ -28,8 +28,6 @@ IN THE SOFTWARE.
 #include "io/file.h"
 #include "io/path.h"
 
-#include "utils/std/enum.h"
-
 #include <assert.h>
 
 #include <assimp/Importer.hpp>
