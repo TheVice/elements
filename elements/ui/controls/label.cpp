@@ -33,8 +33,6 @@ IN THE SOFTWARE.
 #include "rendering/core/texture_maker.h"
 #include "rendering/core/texture_policy.h"
 
-#include "utils/std/enum.h"
-
 namespace eps {
 namespace ui {
 

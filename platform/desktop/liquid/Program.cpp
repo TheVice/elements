@@ -1,6 +1,5 @@
 
 #include "RenderingGame.h"
-#include <memory>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)

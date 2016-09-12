@@ -25,11 +25,8 @@ IN THE SOFTWARE.
 #include "blend.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/passes/pass_target.h"
-#include "rendering/core/program.h"
 #include "rendering/core/texture_policy.h"
-#include "rendering/primitives/square.h"
 #include "rendering/utils/program_loader.h"
-#include "utils/std/enum.h"
 
 namespace eps {
 namespace rendering {

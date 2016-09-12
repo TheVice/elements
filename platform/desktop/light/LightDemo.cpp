@@ -9,7 +9,6 @@ RTTI_DEFINITIONS(LightDemo)
 
 LightDemo::LightDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mTouchDown(false),
 	mRenderId(-1),
 	mLightRendererFactory(nullptr)
 {
@@ -46,6 +45,7 @@ void LightDemo::Initialize()
 
 void LightDemo::Update(const Library::GameTime&)
 {
+	static bool touchDown = false;
 	auto renderer = mLightRendererFactory->get(mRenderId);
 	//
 	glm::dvec2 screen_pos;
@@ -53,19 +53,19 @@ void LightDemo::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		if (!mTouchDown)
+		if (!touchDown)
 		{
 			renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
-			mTouchDown = true;
+			touchDown = true;
 		}
 
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 	}
-	else if (mTouchDown)
+	else if (touchDown)
 	{
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP);
-		mTouchDown = false;
+		touchDown = false;
 	}
 }
 
@@ -75,7 +75,7 @@ void LightDemo::Draw(const Library::GameTime&)
 	renderer->render();
 }
 
-const char* LightDemo::sBackground =  "assets/textures/background.png";
+const char* LightDemo::sBackground = "assets/textures/background.png";
 const glm::vec3 LightDemo::sColor = { 1.0f, 1.0f, 1.0f }; //# FFFFFF
 const int LightDemo::sQuantity = 1000;
 

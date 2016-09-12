@@ -2,7 +2,7 @@
 #define _RENDERING_GAME_H_
 
 #include "Game.h"
-#include "FireDemo.h"
+#include "DrawableGameComponent.h"
 #include <glm/glm.hpp>
 
 namespace Rendering
@@ -22,7 +22,7 @@ private:
 	void OnKey(int aKey, int aScancode, int aAction, int aMods);
 
 	KeyboardHandler mKeyboardHandler;
-	std::unique_ptr<FireDemo> mFireDemo;
+	std::unique_ptr<Library::DrawableGameComponent> mDrawableGameComponent;
 
 private:
 	static const glm::vec4 sBackgroundColor;

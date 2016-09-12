@@ -28,9 +28,7 @@ IN THE SOFTWARE.
 
 #include "assets/assets_storage.h"
 
-#include <thread>
 #include <random>
-#include <vector>
 #include <algorithm>
 
 namespace eps {

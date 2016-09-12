@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "positioning.h"
-#include "math/transform.h"
 #include "math/geometric.h"
 
 namespace eps {
@@ -45,18 +44,14 @@ void modifier_positioning::set_rotation(const math::vec3 & axis, float degree)
 void modifier_positioning::look_at(const math::vec3 & target,
                                    const math::vec3 & up)
 {
-    const math::vec3 z = math::normalize(position_ - target);
-    const math::vec3 y = math::normalize(up - z * math::dot(up, z));
-    const math::vec3 x = math::cross(y, z);
-
-    rotation_ = math::quat(math::mat3(x, y, z));
+    rotation_ = math::look_rotation(position_ - target, up);
 }
 
 void modifier_positioning::look_at(const math::vec3 & pos,
                                    const math::vec3 & target,
                                    const math::vec3 & up)
 {
-    position_ = pos;
+    set_position(pos);
     look_at(target, up);
 }
 
