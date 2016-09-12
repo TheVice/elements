@@ -33,6 +33,13 @@ endif()
 set(REQUIRED_INCLUDES)
 set(REQUIRED_LIBRARIES)
 set(REQUIRED_SYS_INCLUDES)
+set(PROJECT_DEFINITIONS)
+
+list(APPEND PROJECT_DEFINITIONS GL_API=)
+list(APPEND PROJECT_DEFINITIONS GL_APICALL=)
+list(APPEND PROJECT_DEFINITIONS GL_GLEXT_PROTOTYPES=)
+list(APPEND PROJECT_DEFINITIONS _USRDLL=)
+list(APPEND PROJECT_DEFINITIONS LIBGLESV2_EXPORTS=)
 
 # freetype
 if(WIN32 OR UNIX)
@@ -60,7 +67,7 @@ if(WIN32 OR UNIX)
 endif()
 
 # SwiftShader
-
+if(UNIX)
   if(EXISTS ${CMAKE_SOURCE_DIR}/third-party/SwiftShader)
     set(SwiftShader_PATH ${CMAKE_SOURCE_DIR}/third-party/SwiftShader)
   elseif(DEFINED ENV{SWIFTSHADER_PATH})
@@ -71,9 +78,23 @@ endif()
     message(FATAL_ERROR "Could not find SwiftShader library, please check it at https://swiftshader.googlesource.com/SwiftShader")
   endif()
 
-  add_subdirectory(${SwiftShader_PATH} ${CMAKE_BINARY_DIR}/SwiftShader)
+  if(NOT EXISTS ${SwiftShader_PATH}/CMakeLists.txt)
+    message(FATAL_ERROR "Could not find CMakeLists.txt for SwiftShader library, please check it at https://swiftshader.googlesource.com/SwiftShader")
+  endif()
+
+  file(READ ${SwiftShader_PATH}/CMakeLists.txt file_content)
+  string(REGEX REPLACE "CMAKE_SOURCE_DIR" "SwiftShader_PATH" file_content ${file_content})
+  file(WRITE ${CMAKE_BINARY_DIR}/SwiftShader/CMakeLists.txt ${file_content})
+
+  # set(BUILD_EGL OFF CACHE BOOL "" FORCE)
+  set(BUILD_GL32 OFF CACHE BOOL "" FORCE)
+  # set(BUILD_GLESv2 OFF CACHE BOOL "" FORCE)
+  set(BUILD_GLES_CM OFF CACHE BOOL "" FORCE)
+  set(BUILD_EXTRA_PROGRAMS OFF CACHE BOOL "" FORCE)
+  add_subdirectory(${CMAKE_BINARY_DIR}/SwiftShader ${CMAKE_BINARY_DIR}/SwiftShader)
 
   list(APPEND REQUIRED_SYS_INCLUDES ${SwiftShader_PATH}/include)
+endif()
 
 # glfw
 if(UNIX)
@@ -205,13 +226,8 @@ file(GLOB OEL_SRC_FILES ${oel_Path}/*.h ${oel_Path}/*.cpp
                         ${CMAKE_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/*.cpp)
 add_library(oel ${OEL_SRC_FILES})
 target_include_directories(oel SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
+set_target_properties(oel PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
 list(APPEND REQUIRED_INCLUDES ${oel_Path})
-
-target_compile_definitions(oel PRIVATE GL_API=)
-target_compile_definitions(oel PRIVATE GL_APICALL=)
-target_compile_definitions(oel PRIVATE GL_GLEXT_PROTOTYPES)
-target_compile_definitions(oel PRIVATE _USRDLL)
-target_compile_definitions(oel PRIVATE LIBGLESV2_EXPORTS)
 
 # elements
 set(elements_Path ${CMAKE_SOURCE_DIR}/elements)
@@ -220,13 +236,8 @@ file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp
 add_library(elements ${ELEMENTS_SRC_FILES})
 target_include_directories(elements PRIVATE ${elements_Path})
 target_include_directories(elements SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
+set_target_properties(elements PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
 list(APPEND REQUIRED_INCLUDES ${elements_Path})
-
-target_compile_definitions(elements PRIVATE GL_API=)
-target_compile_definitions(elements PRIVATE GL_APICALL=)
-target_compile_definitions(elements PRIVATE GL_GLEXT_PROTOTYPES)
-target_compile_definitions(elements PRIVATE _USRDLL)
-target_compile_definitions(elements PRIVATE LIBGLESV2_EXPORTS)
 
 # platform library
 set(platform_Path ${CMAKE_SOURCE_DIR}/platform/desktop)
@@ -234,13 +245,8 @@ file(GLOB PLATFORM_SRC_FILES ${platform_Path}/*.h ${platform_Path}/*.cpp)
 add_library(desktop ${PLATFORM_SRC_FILES})
 target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES})
 target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
+set_target_properties(desktop PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
 list(APPEND REQUIRED_INCLUDES ${platform_Path})
-
-target_compile_definitions(desktop PRIVATE GL_API=)
-target_compile_definitions(desktop PRIVATE GL_APICALL=)
-target_compile_definitions(desktop PRIVATE GL_GLEXT_PROTOTYPES)
-target_compile_definitions(desktop PRIVATE _USRDLL)
-target_compile_definitions(desktop PRIVATE LIBGLESV2_EXPORTS)
 
 # Copy assets
 file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper)
@@ -285,9 +291,9 @@ list(APPEND REQUIRED_LIBRARIES assimp)
 if(UNIX)
   list(APPEND REQUIRED_LIBRARIES X11)
   list(APPEND REQUIRED_LIBRARIES pthread)
+  list(APPEND REQUIRED_LIBRARIES libGLESv2)
+  list(APPEND REQUIRED_LIBRARIES libEGL)
 endif()
-
-list(APPEND REQUIRED_LIBRARIES ${CMAKE_BINARY_DIR}/SwiftShader/libEGL.so ${CMAKE_BINARY_DIR}/SwiftShader/libGLESv2.so)
 
 file(GLOB Experiments RELATIVE ${CMAKE_SOURCE_DIR}/experiments ${CMAKE_SOURCE_DIR}/experiments/*)
 foreach(Experiment ${Experiments})
@@ -306,19 +312,13 @@ foreach(Experiment ${Experiments})
     list(APPEND SRC_FILES ${ADDITION_SRC_FILES})
 
     add_executable(${Experiment} ${IS_SUBSYSTEM_WIN32} ${SRC_FILES})
-
-    target_compile_definitions(${Experiment} PRIVATE GL_API=)
-    target_compile_definitions(${Experiment} PRIVATE GL_APICALL=)
-    target_compile_definitions(${Experiment} PRIVATE GL_GLEXT_PROTOTYPES)
-    target_compile_definitions(${Experiment} PRIVATE _USRDLL)
-    target_compile_definitions(${Experiment} PRIVATE LIBGLESV2_EXPORTS)
-
     target_include_directories(${Experiment} PRIVATE ${REQUIRED_INCLUDES}
                                                      ${elements_Path}/..
                                                      ${CMAKE_SOURCE_DIR}/experiments/${Experiment}
                                                      ${CMAKE_SOURCE_DIR}/platform/desktop/${Experiment}
                                                      ${ADDITION_SOURCE_PATH}/${Experiment})
     target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
+    set_target_properties(${Experiment} PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
     target_link_libraries(${Experiment} ${REQUIRED_LIBRARIES})
 
     add_dependencies(${Experiment} copyAssets)
