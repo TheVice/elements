@@ -1,7 +1,7 @@
 
 #include "AirDemo.h"
-#include "Game.h"
 #include "android/input.h"
+#include "Game.h"
 
 namespace Rendering
 {

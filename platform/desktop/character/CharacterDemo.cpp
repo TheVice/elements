@@ -38,6 +38,8 @@ void CharacterDemo::Initialize()
 	{
 		throw std::runtime_error("renderer->set_model() failed");
 	}
+
+	renderer->set_rotation(glm::two_over_root_pi<float>(), glm::quarter_pi<float>());
 }
 
 void CharacterDemo::Update(const Library::GameTime&)

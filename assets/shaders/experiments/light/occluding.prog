@@ -2,6 +2,7 @@
 <program name="light_scattered_occluding">
     <shaders>
         <vertex><![CDATA[
+            #version 100
             attribute vec2 a_product_uv;
 
             uniform sampler2D u_positions;
@@ -22,6 +23,7 @@
         ]]></vertex>
 
         <fragment><![CDATA[
+            #version 100
             precision lowp float;
             void main()
             {
