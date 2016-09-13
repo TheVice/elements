@@ -26,7 +26,6 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
-	bool mTouchDown;
 	int mRenderId;
 	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
 	std::unique_ptr<liquid_renderer_factory> mLiquidRendererFactory;

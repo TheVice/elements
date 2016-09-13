@@ -4,14 +4,15 @@
 #include "assets/assets_storage.h"
 #include "preferences.h"
 #include "metrics.h"
+#include "LightDemo.h"
 #include <glm/gtc/constants.hpp>
 
 namespace Rendering
 {
-RenderingGame::RenderingGame(const TCHAR* aWindowTitle)
-	: Game(aWindowTitle),
-	  mKeyboardHandler(nullptr),
-	  mLightDemo(nullptr)
+RenderingGame::RenderingGame(const TCHAR* aWindowTitle) :
+	Game(aWindowTitle),
+	mKeyboardHandler(nullptr),
+	mDrawableGameComponent(nullptr)
 {
 }
 
@@ -22,14 +23,12 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::instance().mount<asset_fs>("");
+	eps::assets_storage::instance().mount<Desktop::asset_fs>("");
+	eps::preferences::init<Desktop::preferences>();
+	eps::metrics::init<Desktop::metrics>(1.0f);
 	//
-	eps::preferences::init<preferences>();
-	//
-	eps::metrics::init<metrics>(1.0f);
-	//
-	mLightDemo = std::make_unique<LightDemo>(*this);
-	mComponents.push_back(mLightDemo.get());
+	mDrawableGameComponent = std::make_unique<LightDemo>(*this);
+	mComponents.push_back(mDrawableGameComponent.get());
 	//
 	Game::Initialize();
 }

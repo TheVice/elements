@@ -5,8 +5,7 @@ In this folder located source files required for build for desktop platforms: Li
 ###Dependencies
 * [GLFW](https://github.com/glfw/glfw/releases) - used for cooperation with operation system
 * [GLEW](https://github.com/nigels-com/glew/releases) - used for cooperation with OpenGL extensions (please note that for 1.13 version, last on the commit moment, on Windows platform there is currently required [alternative distributive](https://github.com/nigels-com/glew/issues/31#issuecomment-145498979))
-* Other dependence from all project, not specific addition for desktop port do not required
-* For Linux build some of this dependence should be installed by package manager of your distributive. Check documentation of your system to know what to install. For Ubuntu dependences may be install by next few commands: ```apt-get install libglfw3-dev```, ```apt-get install libglew-dev```, ```apt-get install libglm-dev```, ```apt-get install libpugixml-dev```, ```apt-get install libpng16-dev```, ```apt-get install libassimp-dev```
+* For Linux build some of dependence should be installed by package manager of your distributive. Check documentation of your system to know what to install. For Ubuntu dependences may be install by next few commands: ```apt-get install libglfw3-dev```, ```apt-get install libglm-dev```, ```apt-get install libpugixml-dev```, ```apt-get install libpng16-dev```, ```apt-get install libassimp-dev```
 
 ###Build from Eclipse (Linux)
 * Open terminal (console) and enter into directory where you want to generated project files

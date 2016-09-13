@@ -22,19 +22,13 @@ IN THE SOFTWARE.
 */
 
 #include "scene.h"
-#include "math/transform.h"
 
 namespace eps {
 namespace scene {
 
 scene::scene()
-    : root_(utils::make_shared<node>())
+    : root_(utils::make_shared<node>("Root"))
 {}
-
-utils::link<node> scene::add_node()
-{
-    return root_->add_node();
-}
 
 utils::link<camera> scene::get_camera() const
 {
@@ -73,6 +67,8 @@ void scene::update(float dt)
     {
         if(auto parent = node.get_parent().lock())
             node.set_world_matrix(parent->get_world_matrix() * node.get_local_matrix());
+        else
+            node.set_world_matrix(node.get_local_matrix());
     };
     root_->process(process_world_matrices);
 }

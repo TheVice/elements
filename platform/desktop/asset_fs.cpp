@@ -3,6 +3,9 @@
 #include "io/file.h"
 #include <fstream>
 
+namespace Desktop
+{
+
 struct asset_stream : public eps::io::file
 {
 	explicit asset_stream(const std::string& file) :
@@ -77,4 +80,6 @@ void asset_fs::close(eps::io::file* file)
 	{
 		delete file;
 	}
+}
+
 }

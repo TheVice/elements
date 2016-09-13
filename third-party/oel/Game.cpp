@@ -127,7 +127,7 @@ void Game::Exit()
 
 void Game::Initialize()
 {
-	for (GameComponent* component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		component->Initialize();
 	}
@@ -135,7 +135,7 @@ void Game::Initialize()
 
 void Game::Update(const GameTime& aGameTime)
 {
-	for (GameComponent* component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		if (component->IsEnabled())
 		{
@@ -146,9 +146,9 @@ void Game::Update(const GameTime& aGameTime)
 
 void Game::Draw(const GameTime& aGameTime)
 {
-	for (GameComponent* component : mComponents)
+	for (const auto& component : mComponents)
 	{
-		DrawableGameComponent* drawableGameComponent = component->As<DrawableGameComponent>();
+		auto* drawableGameComponent = component->As<DrawableGameComponent>();
 
 		if (drawableGameComponent && drawableGameComponent->IsVisible())
 		{
@@ -159,7 +159,7 @@ void Game::Draw(const GameTime& aGameTime)
 
 void Game::Release()
 {
-	for (GameComponent* component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		component->Release();
 	}
@@ -189,7 +189,7 @@ void Game::InitializeWindow()
 
 	GLFWmonitor* monitor = (mIsFullScreen ? glfwGetPrimaryMonitor() : nullptr);
 #ifdef UNICODE
-	const GLuint length = mWindowTitle.length();
+	const auto length = mWindowTitle.length();
 	std::string windowTitle(length + 1, '\0');
 	//
 	mWindow = glfwCreateWindow(mScreenWidth, mScreenHeight, windowTitle.c_str(), monitor, nullptr);

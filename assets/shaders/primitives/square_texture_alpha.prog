@@ -2,6 +2,7 @@
 <program name="square_texture_alpha">
     <shaders>
         <vertex><![CDATA[
+            #version 100
             attribute vec2 a_vertex_xy;
             attribute vec2 a_vertex_uv;
 
@@ -17,6 +18,7 @@
         ]]></vertex>
 
         <fragment><![CDATA[
+            #version 100
             precision lowp float;
 
             varying vec2 v_uv;

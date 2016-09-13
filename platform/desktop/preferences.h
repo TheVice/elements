@@ -3,6 +3,9 @@
 
 #include "preferences/preferences.h"
 
+namespace Desktop
+{
+
 struct preferences : public eps::preferences_interface
 {
 public:
@@ -16,5 +19,7 @@ public:
 private:
 
 };
+
+}
 
 #endif

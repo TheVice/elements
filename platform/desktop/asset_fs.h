@@ -3,6 +3,9 @@
 
 #include "io/system.h"
 
+namespace Desktop
+{
+
 struct asset_fs : public eps::io::system
 {
 	explicit asset_fs();
@@ -11,5 +14,7 @@ struct asset_fs : public eps::io::system
 	bool exists(const std::string& file) final;
 	void close(eps::io::file* file) final;
 };
+
+}
 
 #endif

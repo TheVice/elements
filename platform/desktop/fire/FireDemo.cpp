@@ -9,7 +9,6 @@ RTTI_DEFINITIONS(FireDemo)
 
 FireDemo::FireDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mTouchDown(false),
 	mRenderId(-1),
 	mFireRendererFactory(nullptr)
 {
@@ -47,6 +46,7 @@ void FireDemo::Initialize()
 
 void FireDemo::Update(const Library::GameTime&)
 {
+	static bool touchDown = false;
 	auto renderer = mFireRendererFactory->get(mRenderId);
 	//
 	glm::dvec2 screen_pos;
@@ -54,19 +54,19 @@ void FireDemo::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		if (!mTouchDown)
+		if (!touchDown)
 		{
 			renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
-			mTouchDown = true;
+			touchDown = true;
 		}
 
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 	}
-	else if (mTouchDown)
+	else if (touchDown)
 	{
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP);
-		mTouchDown = false;
+		touchDown = false;
 	}
 }
 

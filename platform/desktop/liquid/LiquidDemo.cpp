@@ -9,7 +9,6 @@ RTTI_DEFINITIONS(LiquidDemo)
 
 LiquidDemo::LiquidDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mTouchDown(false),
 	mRenderId(-1),
 	mLiquidRendererFactory(nullptr)
 {
@@ -50,6 +49,7 @@ void LiquidDemo::Initialize()
 
 void LiquidDemo::Update(const Library::GameTime&)
 {
+	static bool touchDown = false;
 	auto renderer = mLiquidRendererFactory->get(mRenderId);
 	//
 	glm::dvec2 screen_pos;
@@ -57,19 +57,19 @@ void LiquidDemo::Update(const Library::GameTime&)
 
 	if (glfwGetMouseButton(mGame->GetWindow(), GLFW_MOUSE_BUTTON_LEFT))
 	{
-		if (!mTouchDown)
+		if (!touchDown)
 		{
 			renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN);
-			mTouchDown = true;
+			touchDown = true;
 		}
 
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 	}
-	else if (mTouchDown)
+	else if (touchDown)
 	{
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP);
-		mTouchDown = false;
+		touchDown = false;
 	}
 }
 

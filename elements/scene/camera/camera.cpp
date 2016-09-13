@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "camera.h"
-#include "math/transform.h"
 #include "math/trigonometry.h"
 
 namespace eps {
@@ -42,16 +41,16 @@ camera::~camera()
 void camera::process(float)
 {
     projection_ = build_projection();
-    if(auto sn = node_.lock())
+
+    view_ = math::mat4(1.0f);
+    auto sn = node_.lock();
+    while(sn)
     {
-        math::mat4 view(1.0f);
-        while(sn)
-        {
-            sn->set_world_matrix(view);
-            view = sn->get_world_matrix() * math::inverse(sn->get_local_matrix());
-            sn = sn->get_parent().lock();
-        }
+        view_ = view_ * math::inverse(sn->get_local_matrix());
+        sn = sn->get_parent().lock();
     }
+
+    view_projection_ = projection_ * view_;
 }
 
 math::mat4 camera_perspective::build_projection()
