@@ -29,7 +29,6 @@ IN THE SOFTWARE.
 #include "assets/assets_storage.h"
 
 #include <random>
-#include <vector>
 
 namespace eps {
 namespace simulation {
