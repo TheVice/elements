@@ -28,6 +28,8 @@ IN THE SOFTWARE.
 
 #include "assets/assets_storage.h"
 
+#include <sstream>
+
 namespace eps {
 namespace rendering {
 
@@ -46,6 +48,21 @@ bool program_data::read(const pugi::xml_document & doc)
 
     v_shader_ = vertex_node.text().get();
     f_shader_ = fragment_node.text().get();
+
+    const auto shaders_version = root_node.child("shaders").attribute("version");
+    if (!shaders_version.empty())
+    {
+        const auto shaders_version_str = shaders_version.as_string();
+
+        if (!std::strcmp(shaders_version_str, "300 es"))
+        {
+            version_ = 300;
+        }
+        else if (!std::strcmp(shaders_version_str, "310 es"))
+        {
+            version_ = 310;
+        }
+    }
 
     pugi::xml_node a_locations_node = root_node.child("a_locations");
     for(const auto & value : a_locations_node.children("location"))
@@ -73,11 +90,19 @@ bool load_program(const char * asset_program, program & result)
     if(!data.value().v_shader() || !data.value().f_shader())
         return false;
 
-    shader v_shader(data.value().v_shader(), shader_type::VERTEX);
+    std::ostringstream vertex_shader_source;
+    vertex_shader_source << "#version " << data.value().version() << std::endl;
+    vertex_shader_source << data.value().v_shader();
+
+    shader v_shader(vertex_shader_source.str().c_str(), shader_type::VERTEX);
     if(!v_shader.compile())
         return false;
 
-    shader f_shader(data.value().f_shader(), shader_type::FRAGMENT);
+    std::ostringstream fragment_shader_source;
+    fragment_shader_source << "#version " << data.value().version() << std::endl;
+    fragment_shader_source << data.value().f_shader();
+
+    shader f_shader(fragment_shader_source.str().c_str(), shader_type::FRAGMENT);
     if(!f_shader.compile())
         return false;
 

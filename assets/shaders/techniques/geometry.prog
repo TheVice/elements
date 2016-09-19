@@ -2,7 +2,6 @@
 <program name="geometry">
     <shaders>
         <vertex><![CDATA[
-            #version 100
             attribute vec3 a_vertex_pos;
             attribute vec3 a_vertex_normal;
             attribute vec3 a_vertex_tangent;
@@ -32,7 +31,6 @@
         ]]></vertex>
 
         <fragment><![CDATA[
-            #version 100
             precision lowp float;
 
             uniform sampler2D u_map_normal;

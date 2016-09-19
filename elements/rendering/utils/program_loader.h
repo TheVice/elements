@@ -59,6 +59,8 @@ public:
     const char * v_shader() const { return v_shader_; }
     const char * f_shader() const { return f_shader_; }
 
+    short version() const { return version_; }
+
     locations_range a_locations() const
     {
         return utils::make_range(attribute_locations_.begin(),
@@ -82,6 +84,8 @@ private:
 
     const char * v_shader_ = nullptr;
     const char * f_shader_ = nullptr;
+
+    short version_ = 100;
 };
 
 bool load_program(const char * program_asset, program & result);
