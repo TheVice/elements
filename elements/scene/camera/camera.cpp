@@ -23,6 +23,7 @@ IN THE SOFTWARE.
 
 #include "camera.h"
 #include "math/trigonometry.h"
+#include "math/transform.h"
 
 namespace eps {
 namespace scene {

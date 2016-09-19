@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "pass_target.h"
-#include "rendering/core/texture_policy.h"
 
 namespace eps {
 namespace rendering {

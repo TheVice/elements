@@ -30,7 +30,7 @@ IN THE SOFTWARE.
 #endif
 #include <png.h>
 #include <stdlib.h>
-#include <assert.h>
+#include <cassert>
 #include <vector>
 
 namespace eps {
@@ -156,7 +156,7 @@ bool asset_texture::load(utils::link<io::system> fs, const std::string & resourc
     png_read_image(png_ptr, &row_ptrs[0]);
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
-    data_ = std::unique_ptr<void, void(*)(void*)>(raw_image, ::free);
+    data_ = utils::unique<void, void(*)(void*)>(raw_image, ::free);
     format_ = png_color_to_gl_color(color_type);
     size_.x = width;
     size_.y = height;
