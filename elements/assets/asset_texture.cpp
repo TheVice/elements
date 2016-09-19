@@ -30,7 +30,6 @@ IN THE SOFTWARE.
 #endif
 #include <png.h>
 #include <stdlib.h>
-#include <cassert>
 #include <vector>
 
 namespace eps {
