@@ -23,14 +23,12 @@ IN THE SOFTWARE.
 
 #include "fire_renderer.h"
 #include "fire_ui.h"
-#include "fire_config.h"
 #include "logging.h"
 #include <chrono>
 
 #include <android/input.h>
 #include <elements/ui/controls/button.h>
 #include <elements/ui/controls/panel.h>
-#include <elements/ui/controls/slider.h>
 #include <elements/timing/update.h>
 #include <elements/math/transform.h>
 #include <elements/metrics/metrics.h>
