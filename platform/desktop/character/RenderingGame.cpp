@@ -23,7 +23,7 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::instance().mount<Desktop::asset_fs>("");
+	eps::assets_storage::instance().mount<Desktop::asset_fs>("assets", "assets");
 	eps::preferences::init<Desktop::preferences>();
 	eps::metrics::init<Desktop::metrics>(1.0f);
 	//

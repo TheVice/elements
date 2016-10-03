@@ -2,6 +2,7 @@
 #include "asset_fs.h"
 #include "io/file.h"
 #include <fstream>
+#include <cassert>
 
 namespace Desktop
 {
@@ -13,65 +14,89 @@ struct asset_stream : public eps::io::file
 	{
 	}
 
-	~asset_stream()
-	{
-	}
-
 	size_t read(void* output, size_t size, size_t count)
 	{
-		mAssetFile.read(static_cast<char*>(output), count);
-		return count;
+		assert(size == 1 || count == 1);
+
+		if (mAssetFile.is_open())
+		{
+			const auto position = mAssetFile.tellg();
+			mAssetFile.read(static_cast<char*>(output), size * count);
+			const auto new_position = mAssetFile.tellg();
+			return new_position - position;
+		}
+
+		return std::ios::pos_type(-1);
 	}
 
 	size_t tell() const
 	{
-		return mAssetFile.tellg();
+		if (mAssetFile.is_open())
+		{
+			return mAssetFile.tellg();
+		}
+
+		return std::ios::pos_type(-1);
 	}
 
 	size_t size() const
 	{
-		mAssetFile.seekg(0, std::ios::end);
-		return mAssetFile.tellg();
+		if (mAssetFile.is_open())
+		{
+			const auto currentFilePosition = mAssetFile.tellg();
+			mAssetFile.seekg(0, std::ios::end);
+			const auto fileSize = mAssetFile.tellg();
+			mAssetFile.seekg(currentFilePosition, std::ios::beg);
+			return fileSize;
+		}
+
+		return std::ios::pos_type(-1);
 	}
 
 	int seek(size_t offset, int origin)
 	{
-		mAssetFile.seekg(offset, static_cast<std::fstream::seekdir>(origin));
-		return mAssetFile.tellg();
+		if (mAssetFile.is_open())
+		{
+			mAssetFile.seekg(offset, static_cast<std::ios::seekdir>(origin));
+			return mAssetFile.tellg();
+		}
+
+		return std::ios::pos_type(-1);
 	}
 
 	void flush()
 	{
 	}
 
+	virtual ~asset_stream()
+	{
+	}
+
 	static bool exists(const std::string& file)
 	{
 		std::ifstream assetFile(file, std::fstream::binary);
-
-		if (assetFile)
-		{
-			return true;
-		}
-
-		return false;
+		return assetFile.is_open();
 	}
 
 private:
 	mutable std::ifstream mAssetFile;
 };
 
-asset_fs::asset_fs()
+asset_fs::asset_fs(const std::string& mount_point) :
+	mount_point_(mount_point.empty() ? "" : mount_point + "/")
 {
 }
 
 eps::io::file* asset_fs::open(const std::string& file)
 {
-	return new asset_stream(file);
+	const auto full_path = mount_point_ + file;
+	return new asset_stream(full_path);
 }
 
 bool asset_fs::exists(const std::string& file)
 {
-	return asset_stream::exists(file);
+	const auto full_path = mount_point_ + file;
+	return asset_stream::exists(full_path);
 }
 
 void asset_fs::close(eps::io::file* file)
