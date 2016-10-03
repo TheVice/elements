@@ -236,9 +236,12 @@ target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${platform_Path})
 
 # Copy assets
-file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper)
+file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements
+                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper
+                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/Demo)
 file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/*
-                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*)
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/Demo/src/main/assets/*)
 
 add_custom_target(copyAssets)
 

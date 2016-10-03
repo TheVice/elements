@@ -21,33 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
-#define RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
-
-#include "rendering/core/program.h"
-#include "scene/scene.h"
-#include "model.h"
+#include "lpp_reconstruct_pass.h"
+#include "rendering/core/texture_policy.h"
+#include "rendering/state/state_macro.h"
 
 namespace eps {
 namespace rendering {
+namespace techniques {
 
-class process_forward : public scene::visitor<process_forward, scene::scene &>
+bool lpp_reconstruct_pass::initialize()
 {
-public:
+    return process_.initialize();
+}
 
-    EPS_DESIGN_VISIT(model);
+void lpp_reconstruct_pass::set_scene(const utils::pointer<scene::scene> & scene)
+{
+    scene_ = scene;
+}
 
-public:
+void lpp_reconstruct_pass::process(float)
+{
+    if(scene_)
+    {
+        EPS_STATE_DEPTH_TEST();
+        EPS_STATE_CULLFACE();
+        
+        process_.set_map_light(get_inputs().get_slot(pass_slot::slot_0));
+        scene_->process_entities(process_, *scene_);
+    }
+}
 
-    bool initialize();
-    void visit(const model & m, scene::scene & scene);
 
-private:
-
-    program program_;
-};
-
+} /* techniques */
 } /* rendering */
 } /* eps */
-
-#endif // RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
