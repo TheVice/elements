@@ -2,6 +2,7 @@
 #define _ASSET_FS_H_
 
 #include "io/system.h"
+#include <unordered_map>
 
 namespace Desktop
 {
@@ -16,6 +17,7 @@ struct asset_fs : public eps::io::system
 
 private:
 	const std::string mount_point_;
+	std::unordered_map<std::string, std::string> assets_;
 };
 
 }
