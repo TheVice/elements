@@ -76,22 +76,22 @@ void Demo::Update(const Library::GameTime&)
 		const float elapsedTime = rate_.elapsed() - lastTime;
 		lastTime = rate_.elapsed();
 
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_UP))
+		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_UP) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_W))
 		{
 			theta = std::min(glm::radians<float>(90), theta + glm::radians<float>(1) * elapsedTime);
 		}
 
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_DOWN))
+		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_DOWN) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_S))
 		{
 			theta = std::max(glm::radians<float>(70), theta - glm::radians<float>(1) * elapsedTime);
 		}
 
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_LEFT))
+		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_LEFT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_A))
 		{
 			phi = std::min(glm::radians<float>(10), phi +glm::radians<float>(1) * elapsedTime);
 		}
 
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_RIGHT))
+		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_RIGHT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_D))
 		{
 			phi = std::max(glm::radians<float>(-10), phi - glm::radians<float>(1) * elapsedTime);
 		}
