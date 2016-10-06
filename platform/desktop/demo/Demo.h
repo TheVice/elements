@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "demo_renderer.h"
 #include "../renderer_factory.h"
+#include "Game.h"
 
 namespace Rendering
 {
@@ -26,9 +27,14 @@ public:
 	virtual void Draw(const Library::GameTime& aGameTime) override;
 
 private:
+	void OnKey(int aKey, int aScancode, int aAction, int aMods);
+
+private:
 	int mRenderId;
 	using demo_renderer_factory = renderer_factory<demo_renderer>;
 	std::unique_ptr<demo_renderer_factory> mDemoRendererFactory;
+	eps::timing::framerate rate_;
+	Library::Game::KeyboardHandler mKeyboardHandler;
 };
 }
 
