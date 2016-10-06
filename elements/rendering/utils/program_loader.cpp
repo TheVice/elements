@@ -28,8 +28,6 @@ IN THE SOFTWARE.
 
 #include "assets/assets_storage.h"
 
-#include <sstream>
-
 namespace eps {
 namespace rendering {
 
@@ -46,23 +44,52 @@ bool program_data::read(const pugi::xml_document & doc)
     if(fragment_node.text().empty())
         return false;
 
-    v_shader_ = vertex_node.text().get();
-    f_shader_ = fragment_node.text().get();
+    const auto vertex_shader_length = std::strlen(vertex_node.text().get());
+    const auto fragment_shader_length = std::strlen(fragment_node.text().get());
+
+    v_shader_.reserve(18 + vertex_shader_length);
+    f_shader_.reserve(18 + fragment_shader_length);
+    v_shader_.clear();
+    f_shader_.clear();
 
     const auto shaders_version = root_node.child("shaders").attribute("version");
+#ifdef ANDROID
     if (!shaders_version.empty())
     {
         const auto shaders_version_str = shaders_version.as_string();
+#else
+    {
+        const auto shaders_version_str = shaders_version.empty() ? "100_es" : shaders_version.as_string();
+#endif
+        const char* version = "";
 
-        if (!std::strcmp(shaders_version_str, "300 es"))
+        if (!std::strcmp(shaders_version_str, "100_es"))
         {
-            version_ = 300;
+            version = "#version 100\n";
         }
-        else if (!std::strcmp(shaders_version_str, "310 es"))
+        else if (!std::strcmp(shaders_version_str, "300_es"))
         {
-            version_ = 310;
+            version = "#version 300 es\n";
+        }
+        else if (!std::strcmp(shaders_version_str, "310_es"))
+        {
+            version = "#version 310 es\n";
+        }
+        else
+        {
+            return false;
+        }
+
+        const auto version_length = std::strlen(version);
+        if (version_length)
+        {
+            v_shader_.insert(0, version, version_length);
+            f_shader_.insert(0, version, version_length);
         }
     }
+
+    v_shader_.insert(v_shader_.length(), vertex_node.text().get(), vertex_shader_length);
+    f_shader_.insert(f_shader_.length(), fragment_node.text().get(), fragment_shader_length);
 
     pugi::xml_node a_locations_node = root_node.child("a_locations");
     for(const auto & value : a_locations_node.children("location"))
@@ -90,19 +117,11 @@ bool load_program(const char * asset_program, program & result)
     if(!data.value().v_shader() || !data.value().f_shader())
         return false;
 
-    std::ostringstream vertex_shader_source;
-    vertex_shader_source << "#version " << data.value().version() << std::endl;
-    vertex_shader_source << data.value().v_shader();
-
-    shader v_shader(vertex_shader_source.str().c_str(), shader_type::VERTEX);
+    shader v_shader(data.value().v_shader(), shader_type::VERTEX);
     if(!v_shader.compile())
         return false;
 
-    std::ostringstream fragment_shader_source;
-    fragment_shader_source << "#version " << data.value().version() << std::endl;
-    fragment_shader_source << data.value().f_shader();
-
-    shader f_shader(fragment_shader_source.str().c_str(), shader_type::FRAGMENT);
+    shader f_shader(data.value().f_shader(), shader_type::FRAGMENT);
     if(!f_shader.compile())
         return false;
 

@@ -56,10 +56,8 @@ public:
 
     using asset_xml::asset_xml;
 
-    const char * v_shader() const { return v_shader_; }
-    const char * f_shader() const { return f_shader_; }
-
-    short version() const { return version_; }
+    const char * v_shader() const { return v_shader_.c_str(); }
+    const char * f_shader() const { return f_shader_.c_str(); }
 
     locations_range a_locations() const
     {
@@ -82,10 +80,8 @@ private:
     locations attribute_locations_;
     locations uniform_locations_;
 
-    const char * v_shader_ = nullptr;
-    const char * f_shader_ = nullptr;
-
-    short version_ = 100;
+    std::string v_shader_;
+    std::string f_shader_;
 };
 
 bool load_program(const char * program_asset, program & result);
