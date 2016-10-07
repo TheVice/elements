@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 #include <GLES2/gl2.h>
 #include <png.h>
 #include <stdlib.h>
+#include <cassert>
 #include <vector>
 
 namespace eps {

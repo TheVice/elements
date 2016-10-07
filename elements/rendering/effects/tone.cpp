@@ -24,6 +24,7 @@ IN THE SOFTWARE.
 #include "tone.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "utils/std/enum.h"
 
 namespace eps {
 namespace rendering {

@@ -29,6 +29,7 @@ IN THE SOFTWARE.
 #include "rendering/core/texture_policy.h"
 #include "assets/assets_storage.h"
 #include "assets/asset_texture.h"
+#include "utils/std/enum.h"
 
 namespace eps { namespace ui {
 

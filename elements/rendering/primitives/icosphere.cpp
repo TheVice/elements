@@ -27,7 +27,9 @@ IN THE SOFTWARE.
 #include "math/geometric.h"
 
 #include <vector>
+#include <array>
 #include <map>
+#include <utility>
 
 namespace eps {
 namespace rendering {

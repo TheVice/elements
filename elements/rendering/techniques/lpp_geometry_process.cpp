@@ -25,6 +25,7 @@ IN THE SOFTWARE.
 #include "rendering/models/model_warehouse.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "utils/std/enum.h"
 #include "math/trigonometry.h"
 
 namespace eps {

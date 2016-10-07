@@ -23,10 +23,14 @@ IN THE SOFTWARE.
 
 #include "liquid_renderer.h"
 #include "liquid_ui.h"
+#include "liquid_config.h"
 #include "logging.h"
 
+#include <elements/ui/controls/button.h>
 #include <elements/ui/controls/panel.h>
+#include <elements/ui/controls/slider.h>
 #include <elements/timing/update.h>
+#include <elements/preferences/preferences.h>
 #include <elements/metrics/metrics.h>
 #include <elements/math/transform.h>
 
