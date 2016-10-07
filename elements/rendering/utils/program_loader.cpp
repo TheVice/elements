@@ -28,15 +28,18 @@ IN THE SOFTWARE.
 
 #include "assets/assets_storage.h"
 
+#include <unordered_map>
+
 namespace eps {
 namespace rendering {
 
-static std::unordered_map<const char *, const char *> versions_map =
+const std::unordered_map<std::string, std::string> versions_map =
 {
     {"100_es", "#version 100\n"},
     {"300_es", "#version 300 es\n"},
     {"310_es", "#version 310 es\n"}
 };
+const char * default_version_key = "100_es";
 
 bool program_data::read(const pugi::xml_document & doc)
 {
@@ -54,15 +57,16 @@ bool program_data::read(const pugi::xml_document & doc)
     v_shader_.clear();
     f_shader_.clear();
 
-    auto version_attribute = root_node.child("shaders").attribute("version");
-    auto it = versions_map.find(version_attribute.empty() ? "100_es" : version_attribute.as_string());
+    auto shader_node = root_node.child("shaders");
+    const char * key = shader_node.attribute("version").as_string(default_version_key);
+    auto it = versions_map.find(key);
     if(it == versions_map.end())
         return false;
 
     v_shader_ += it->second;
-    f_shader_ += it->second;
-
     v_shader_ += vertex_node.text().get();
+
+    f_shader_ += it->second;
     f_shader_ += fragment_node.text().get();
 
     pugi::xml_node a_locations_node = root_node.child("a_locations");
