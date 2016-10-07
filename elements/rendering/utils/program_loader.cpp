@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "program_loader.h"
-#include "versions_map.h"
 
 #include "rendering/core/shader.h"
 #include "rendering/core/program.h"
@@ -31,6 +30,13 @@ IN THE SOFTWARE.
 
 namespace eps {
 namespace rendering {
+
+static std::unordered_map<const char *, const char *> versions_map =
+{
+    {"100_es", "#version 100\n"},
+    {"300_es", "#version 300 es\n"},
+    {"310_es", "#version 310 es\n"}
+};
 
 bool program_data::read(const pugi::xml_document & doc)
 {
@@ -49,21 +55,13 @@ bool program_data::read(const pugi::xml_document & doc)
     f_shader_.clear();
 
     auto version_attribute = root_node.child("shaders").attribute("version");
-#ifdef ANDROID
-    if(!version_attribute.empty())
-    {
-        auto it = versions_map.find(version_attribute.as_string());
-        if(it == versions_map.end())
-            return false;
-#else
-    {
-        auto it = versions_map.find(version_attribute.empty() ? "100_es" : version_attribute.as_string());
-        if(it == versions_map.end())
-            return false;
-#endif
-        v_shader_ += it->second;
-        f_shader_ += it->second;
-    }
+    auto it = versions_map.find(version_attribute.empty() ? "100_es" : version_attribute.as_string());
+    if(it == versions_map.end())
+        return false;
+
+    v_shader_ += it->second;
+    f_shader_ += it->second;
+
     v_shader_ += vertex_node.text().get();
     f_shader_ += fragment_node.text().get();
 

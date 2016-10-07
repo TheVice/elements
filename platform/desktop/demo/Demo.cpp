@@ -2,6 +2,7 @@
 #include "Demo.h"
 #include "ui/types.h"
 #include "android/input.h"
+#include "metrics/metrics.h"
 
 namespace Rendering
 {
@@ -113,10 +114,12 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 	//
 	auto renderer = mDemoRendererFactory->get(mRenderId);
 	glm::dvec2 screen_pos;
+	//
+	using namespace eps::metric_literals;
 
 	if (aKey == GLFW_KEY_1 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(9/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(9_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
@@ -124,7 +127,7 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 
 	if (aKey == GLFW_KEY_2 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(49/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(49_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
@@ -132,7 +135,7 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 
 	if (aKey == GLFW_KEY_3 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(89/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(89_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
@@ -140,7 +143,7 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 
 	if (aKey == GLFW_KEY_4 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(129/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(129_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
@@ -148,7 +151,7 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 
 	if (aKey == GLFW_KEY_5 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(169/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(169_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
@@ -156,7 +159,7 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 
 	if (aKey == GLFW_KEY_6 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(209/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(209_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
@@ -164,7 +167,7 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 
 	if (aKey == GLFW_KEY_7 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(249/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(249_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
@@ -172,7 +175,7 @@ void Demo::OnKey(int aKey, int aScancode, int aAction, int aMods)
 
 	if (aKey == GLFW_KEY_8 && aAction == GLFW_PRESS)
 	{
-		screen_pos = glm::dvec2(289/*_dp*/, mGame->GetScreenHeight() - 9/*_dp*/);
+		screen_pos = glm::dvec2(289_dp, mGame->GetScreenHeight() - 9_dp);
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_DOWN, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_MOVE, static_cast<int>(eps::ui::touch_finger::finger0));
 		renderer->touch(screen_pos.x, screen_pos.y, AMOTION_EVENT_ACTION_UP, static_cast<int>(eps::ui::touch_finger::finger0));
