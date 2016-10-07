@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 #include "rendering/state/state_macro.h"
 #include "rendering/core/texture_policy.h"
 #include "rendering/utils/program_loader.h"
+#include "utils/std/enum.h"
 
 namespace eps {
 namespace rendering {
