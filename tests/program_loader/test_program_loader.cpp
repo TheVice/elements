@@ -41,9 +41,11 @@ int main()
 
             continue;
         }
+        else if (std::get<0>(test.second).empty() && std::get<1>(test.second).empty())
+        {
+            std::cerr << test.first << " with unknown version FAIL" << std::endl;
+        }
 
-        /*(std::get<0>(test.second) == data.value().v_shader()) ? (std::cout << test.first << " vertex PASS" << std::endl) : (std::cerr << test.first << " vertex FAIL" << std::endl);
-        (std::get<1>(test.second) == data.value().f_shader()) ? (std::cout << test.first << " fragment PASS" << std::endl) : (std::cerr << test.first << " fragment FAIL" << std::endl);*/
         if ((std::get<0>(test.second) == data.value().v_shader()) && (std::get<1>(test.second) == data.value().f_shader()))
         {
             std::cout << test.first << " with known version PASS" << std::endl;
