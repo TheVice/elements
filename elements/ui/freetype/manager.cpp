@@ -47,8 +47,7 @@ manager::~manager()
 
 manager & manager::instance()
 {
-    static manager manager;
-    return manager;
+    return manager_;
 }
 
 face_handle manager::get_face(const std::string & ttf)
@@ -117,6 +116,8 @@ void manager::cleanup()
     if(ft_library_)
         FT_Done_FreeType(ft_library_);
 }
+
+manager manager::manager_;
 
 } /* freetype */
 } /* ui */

@@ -66,15 +66,15 @@ void pass_target_placement::construct(const math::uvec2 & size)
     {
         if(links_[i].expired())
         {
-            auto it = std::find_if(std::rbegin(dependencies_),
-                                   std::rend(dependencies_),
+            auto it = std::find_if(dependencies_.rbegin(),
+                                   dependencies_.rend(),
                                    [&i](const auto & dependency)
             {
                 return std::find(std::begin(dependency),
                                  std::end(dependency), i) != std::end(dependency);
             });
 
-            if(it != std::rend(dependencies_))
+            if(it != dependencies_.rend())
             {
                 utils::link<pass_target> link;
                 if(!queue.empty() && queue.top().ttl() < i)

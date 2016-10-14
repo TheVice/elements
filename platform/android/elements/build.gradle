@@ -1,0 +1,31 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.3.1'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task generateKey(type: Exec) {
+    def kt = new KeyTool()
+    commandLine kt, '-genkey', '-v', '-keystore', 'key.jks', '-alias',
+                    'alias', '-keyalg', 'RSA', '-keysize', '2048',
+                    '-validity', '9125', '-dname', '"cn=, ou=, o=, c="',
+                    '-keypass', '123456', '-storepass', '123456'
+}

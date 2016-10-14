@@ -1,0 +1,11 @@
+include ':gl2-android'
+include ':Elements'
+include ':LiquidWallpaper'
+include ':FireWallpaper'
+include ':AirWallpaper'
+include ':StrangeWallpaper'
+include ':LightWallpaper'
+include ':CompassTool'
+
+project(':gl2-android').projectDir = new File('libs/gl2-android')
+project(':Elements').projectDir = new File('libs/Elements')

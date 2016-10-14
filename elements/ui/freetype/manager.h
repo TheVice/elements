@@ -78,6 +78,8 @@ private:
     FTC_Manager    ftc_manager_;
     FTC_ImageCache ftc_image_cache_;
     FTC_CMapCache  ftc_map_cache_;
+
+    static manager manager_;
 };
 
 } /* freetyep */
