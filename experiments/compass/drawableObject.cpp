@@ -25,6 +25,7 @@ drawableObject::drawableObject()
 	, vertices_()
 	, mDescartesMatrix()
 	, mWorldMatrix()
+	, isArrow(false)
 	, program_face_()
 	, square_(eps::rendering::buffer_usage::STREAM_DRAW)
 {
@@ -59,16 +60,32 @@ void drawableObject::draw(float)
 	for (const auto& vertex : vertices_)
 	{
 		program_face_.uniform_value(eps::utils::to_int(program_enum::u_color), std::get<1>(vertex));
-		//
-		GLfloat vertices[] =
+
+		if (isArrow)
 		{
-			std::get<0>(vertex).x, std::get<0>(vertex).y, 0.0f, 1.0f,
-			std::get<0>(vertex).z, std::get<0>(vertex).y, 1.0f, 1.0f,
-			std::get<0>(vertex).z, std::get<0>(vertex).w, 1.0f, 0.0f,
-			std::get<0>(vertex).x, std::get<0>(vertex).w, 0.0f, 0.0f
-		};
-		//
-		square_.construct(vertices);
+			GLfloat vertices[] =
+			{
+				std::get<0>(vertex).x, std::get<0>(vertex).y, 0.0f, 1.0f,
+				std::get<0>(vertex).z, std::get<0>(vertex).y, 1.0f, 1.0f,
+				std::get<0>(vertex).x + (std::get<0>(vertex).z - std::get<0>(vertex).x) / 2, std::get<0>(vertex).w, 1.0f, 0.0f,
+				std::get<0>(vertex).x + (std::get<0>(vertex).z - std::get<0>(vertex).x) / 2, std::get<0>(vertex).w, 0.0f, 0.0f
+			};
+
+			square_.construct(vertices);
+		}
+		else
+		{
+			GLfloat vertices[] =
+			{
+				std::get<0>(vertex).x, std::get<0>(vertex).y, 0.0f, 1.0f,
+				std::get<0>(vertex).z, std::get<0>(vertex).y, 1.0f, 1.0f,
+				std::get<0>(vertex).z, std::get<0>(vertex).w, 1.0f, 0.0f,
+				std::get<0>(vertex).x, std::get<0>(vertex).w, 0.0f, 0.0f
+			};
+
+			square_.construct(vertices);
+		}
+
 		square_.render(program_face_, eps::utils::to_int(program_enum::a_vertex_xy),
 					   eps::utils::to_int(program_enum::a_vertex_uv));
 	}

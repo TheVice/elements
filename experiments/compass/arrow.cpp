@@ -14,6 +14,7 @@ arrow::arrow()
 	, mColorNorth(sDefaultColorNorth)
 	, mColorSouth(sDefaultColorSouth)
 {
+	isArrow = true;
 }
 
 bool arrow::initialize(const eps::math::uvec2 & size)
@@ -44,7 +45,8 @@ eps::math::vec2& arrow::size()
 
 void arrow::rotate(float angle)
 {
-	// TODO: Proper rotation only if object located in center of window
+	// FIXME: Proper rotation only if object located in center of window
+	// FIXME: Object decrease it size in 'West' and 'East' locations and back to original in 'North' and 'South' locations
 	mWorldMatrix = eps::math::rotate(angle, eps::math::vec3(0.0f, 0.0f, 1.0f)) * mDescartesMatrix;
 }
 

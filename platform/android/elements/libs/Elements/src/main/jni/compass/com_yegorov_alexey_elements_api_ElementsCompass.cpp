@@ -1,4 +1,4 @@
-
+#ifdef ANDROID
 #include "com_yegorov_alexey_elements_api_ElementsCompass.h"
 
 #include "logging.h"
@@ -85,3 +85,4 @@ JNIEXPORT jboolean JNICALL Java_com_yegorov_alexey_elements_api_ElementsCompass_
 	LOGE("[API][Compass] rotation failed: renderer (%d) is null", id);
 	return false;
 }
+#endif

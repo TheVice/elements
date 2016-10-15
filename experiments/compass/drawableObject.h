@@ -29,6 +29,7 @@ protected:
 	std::vector<std::pair<eps::math::vec4, eps::math::vec4>> vertices_;
 	eps::math::mat4 mDescartesMatrix;
 	eps::math::mat4 mWorldMatrix;
+	bool isArrow;
 
 private:
 
