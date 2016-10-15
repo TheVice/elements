@@ -1,6 +1,6 @@
 
 #include <assets/assets_storage.h>
-#include <rendering/utils/program_loader.h>
+#include <rendering/utils/program_data.h>
 
 #include <unordered_map>
 #include <string>
