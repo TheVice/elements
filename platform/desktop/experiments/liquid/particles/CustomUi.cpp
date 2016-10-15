@@ -89,15 +89,15 @@ void CustomUi::Initialize()
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
 	{
-		directButton->set_click([this]
-		{
+		directButton->set_click([this](eps::ui::state)
+        {
 			this->mIsRestoreNeed = !this->mIsRestoreNeed;
-		});
+        });
 	}
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[U_TRANSFORM_BUTTON_13].lock()))
 	{
-		directButton->set_click([this]
+		directButton->set_click([this](eps::ui::state)
 		{
 			if (auto transformPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[U_TRANSFORM_PANEL_14].lock()))
 			{
@@ -108,7 +108,7 @@ void CustomUi::Initialize()
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[U_SIZE_BUTTON_17].lock()))
 	{
-		directButton->set_click([this]
+		directButton->set_click([this](eps::ui::state)
 		{
 			if (auto sizePanel = std::static_pointer_cast<eps::ui::button>(this->mControls[U_SIZE_PANEL_18].lock()))
 			{
@@ -119,7 +119,7 @@ void CustomUi::Initialize()
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[VERTEX_0_BUTTON_22].lock()))
 	{
-		directButton->set_click([this]
+		directButton->set_click([this](eps::ui::state)
 		{
 			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
 			{
@@ -145,7 +145,7 @@ void CustomUi::Initialize()
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[VERTEX_1_BUTTON_27].lock()))
 	{
-		directButton->set_click([this]
+		directButton->set_click([this](eps::ui::state)
 		{
 			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
 			{
@@ -171,7 +171,7 @@ void CustomUi::Initialize()
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[VERTEX_2_BUTTON_32].lock()))
 	{
-		directButton->set_click([this]
+		directButton->set_click([this](eps::ui::state)
 		{
 			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
 			{
@@ -197,7 +197,7 @@ void CustomUi::Initialize()
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[VERTEX_3_BUTTON_37].lock()))
 	{
-		directButton->set_click([this]
+		directButton->set_click([this](eps::ui::state)
 		{
 			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
 			{

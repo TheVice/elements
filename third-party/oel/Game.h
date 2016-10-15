@@ -5,12 +5,16 @@
 #include "ServiceContainer.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <functional>
+#include <map>
 #include <vector>
 #include <sstream>
+#include <functional>
+
 #ifdef WIN32
 #include <tchar.h>
 #include <windows.h>
+#undef far
+#undef near
 #else
 #include <X11/Xlib.h>
 #define TCHAR char
@@ -32,7 +36,7 @@ class Game : public RTTI
 	RTTI_DECLARATIONS(Game, RTTI)
 
 public:
-	typedef std::function<void(int, int, int, int)> KeyboardHandler;
+	using KeyboardHandler = std::function<void(int, int, int, int)>;
 
 public:
 	Game(const TCHAR* aWindowTitle);
@@ -47,6 +51,7 @@ public:
 	Window GetWindowHandle() const;
 #else
 	HWND GetWindowHandle() const;
+	int GetDPI() const;
 #endif
 	GLFWwindow* GetWindow() const;
 	const TCHAR* GetWindowTitle() const;
@@ -75,6 +80,7 @@ protected:
 	virtual void InitializeOpenGL();
 	virtual void Shutdown();
 
+protected:
 	static const GLuint sDefaultScreenWidth;
 	static const GLuint sDefaultScreenHeight;
 

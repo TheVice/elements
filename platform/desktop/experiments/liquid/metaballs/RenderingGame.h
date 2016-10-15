@@ -25,9 +25,6 @@ private:
 
 	KeyboardHandler mKeyboardHandler;
 	std::unique_ptr<MetaballsDemo> mMetaballsDemo;
-
-private:
-	static const glm::vec4 sBackgroundColor;
 };
 }
 

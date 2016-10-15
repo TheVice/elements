@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "pass_target.h"
-#include "rendering/core/texture_policy.h"
 
 namespace eps {
 namespace rendering {
@@ -57,6 +56,16 @@ const math::uvec2 & pass_target_default::get_target_size() const
 }
 
 void pass_target_default::swap() {}
+
+void pass_target_default::attach_depth(texture buffer)
+{
+    target_.attach(attachment::depth, std::move(buffer));
+}
+
+void pass_target_default::attach_stencil(texture buffer)
+{
+    target_.attach(attachment::stencil, std::move(buffer));
+}
 
 } /* rendering */
 } /* eps */

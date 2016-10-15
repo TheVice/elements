@@ -29,6 +29,7 @@ IN THE SOFTWARE.
 #include "rendering/core/texture_policy.h"
 #include "assets/assets_storage.h"
 #include "assets/asset_texture.h"
+#include "utils/std/enum.h"
 
 namespace eps { namespace ui {
 
@@ -60,7 +61,7 @@ bool button::set_asset(const char * asset)
     {
         using namespace rendering;
 
-        auto maker = get_texture_maker<default_texture_policy>(face->format());
+        auto maker = get_texture_maker<default_texture_policy>();
         texture_face_ = maker.construct(face->pixels(), face->size());
         return true;
     }
@@ -68,7 +69,7 @@ bool button::set_asset(const char * asset)
     return false;
 }
 
-void button::set_click(const std::function<void()> & handler)
+void button::set_click(const std::function<void(state)> & handler)
 {
     click_ = handler;
 }
@@ -116,7 +117,7 @@ bool button::touch(int x, int y, touch_action action, touch_finger finger)
         else if(action == touch_action::UP)
         {
             if(click_)
-                click_();
+                click_(state_);
         }
     }
 

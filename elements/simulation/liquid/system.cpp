@@ -29,6 +29,7 @@ IN THE SOFTWARE.
 #include "assets/assets_storage.h"
 
 #include <random>
+#include <vector>
 #include <algorithm>
 
 namespace eps {

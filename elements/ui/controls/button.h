@@ -44,19 +44,11 @@ public:
     bool touch(int x, int y, touch_action action, touch_finger finger) override;
 
     bool set_asset(const char * asset);
-    void set_click(const std::function<void()> & handler);
+    void set_click(const std::function<void(state)> & handler);
 
-private:
+protected:
 
-    enum class state
-    {
-        NONE = 0,
-        PRESSED
-    };
-
-private:
-
-    std::function<void()> click_;
+    std::function<void(state)> click_;
 
     rendering::program program_face_;
     rendering::texture texture_face_;

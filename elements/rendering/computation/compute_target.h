@@ -26,7 +26,6 @@ IN THE SOFTWARE.
 
 #include "rendering/passes/pass_target.h"
 #include "rendering/core/target_buffered.h"
-#include "rendering/core/texture_policy.h"
 
 namespace eps {
 namespace rendering {
@@ -42,6 +41,9 @@ public:
     const math::uvec2 &  get_target_size() const final;
 
     void swap() final;
+
+    void attach_depth(texture buffer) final;
+    void attach_stencil(texture buffer) final;
 
 private:
 

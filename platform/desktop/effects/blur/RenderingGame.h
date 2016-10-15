@@ -25,9 +25,6 @@ private:
 
 	KeyboardHandler mKeyboardHandler;
 	std::unique_ptr<BlurDemo> mBlurDemo;
-
-private:
-	static const glm::vec4 sBackgroundColor;
 };
 }
 

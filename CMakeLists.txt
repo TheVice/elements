@@ -219,197 +219,7 @@ list(APPEND REQUIRED_INCLUDES ${oel_Path})
 
 # elements
 set(elements_Path ${CMAKE_SOURCE_DIR}/elements)
-# file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp)
-# list(FILTER ELEMENTS_SRC_FILES EXCLUDE REGEX ${elements_Path}/simulation/*)
-set(ELEMENTS_SRC_FILES ${elements_Path}/assets/assets.h
-                       ${elements_Path}/assets/assets_storage.cpp
-                       ${elements_Path}/assets/assets_storage.h
-                       ${elements_Path}/assets/asset_blob.cpp
-                       ${elements_Path}/assets/asset_blob.h
-                       ${elements_Path}/assets/asset_model.cpp
-                       ${elements_Path}/assets/asset_model.h
-                       ${elements_Path}/assets/asset_texture.cpp
-                       ${elements_Path}/assets/asset_texture.h
-                       ${elements_Path}/assets/asset_xml.cpp
-                       ${elements_Path}/assets/asset_xml.h
-
-                       ${elements_Path}/collision/aabb.cpp
-                       ${elements_Path}/collision/aabb.h
-                       ${elements_Path}/collision/collide.cpp
-                       ${elements_Path}/collision/collide.h
-                       ${elements_Path}/collision/contact.h
-
-                       ${elements_Path}/design/visitor.h
-
-                       ${elements_Path}/io/file.h
-                       ${elements_Path}/io/path.cpp
-                       ${elements_Path}/io/path.h
-                       ${elements_Path}/io/system.h
-
-                       ${elements_Path}/io/utils/file_guard.h
-
-                       ${elements_Path}/math/common.h
-                       ${elements_Path}/math/constants.h
-                       ${elements_Path}/math/geometric.h
-                       ${elements_Path}/math/matrix.h
-                       ${elements_Path}/math/quaternion.h
-                       ${elements_Path}/math/transform.h
-                       ${elements_Path}/math/trigonometry.h
-                       ${elements_Path}/math/types.h
-
-                       ${elements_Path}/metrics/metrics.cpp
-                       ${elements_Path}/metrics/metrics.h
-
-                       ${elements_Path}/preferences/preferences.cpp
-                       ${elements_Path}/preferences/preferences.h
-
-                       ${elements_Path}/rendering/computation/compute_product_index.cpp
-                       ${elements_Path}/rendering/computation/compute_product_index.h
-                       ${elements_Path}/rendering/computation/compute_target.cpp
-                       ${elements_Path}/rendering/computation/compute_target.h
-
-                       ${elements_Path}/rendering/core/buffer.h
-                       ${elements_Path}/rendering/core/opengl.h
-                       ${elements_Path}/rendering/core/program.cpp
-                       ${elements_Path}/rendering/core/program.h
-                       ${elements_Path}/rendering/core/shader.cpp
-                       ${elements_Path}/rendering/core/shader.h
-                       ${elements_Path}/rendering/core/target.cpp
-                       ${elements_Path}/rendering/core/target.h
-                       ${elements_Path}/rendering/core/target_attachment.h
-                       ${elements_Path}/rendering/core/target_buffered.cpp
-                       ${elements_Path}/rendering/core/target_buffered.h
-                       ${elements_Path}/rendering/core/target_maker.cpp
-                       ${elements_Path}/rendering/core/target_maker.h
-                       ${elements_Path}/rendering/core/texture.cpp
-                       ${elements_Path}/rendering/core/texture.h
-                       ${elements_Path}/rendering/core/texture_maker.h
-                       ${elements_Path}/rendering/core/texture_policy.h
-
-                       ${elements_Path}/rendering/effects/blend.cpp
-                       ${elements_Path}/rendering/effects/blend.h
-                       ${elements_Path}/rendering/effects/blur.cpp
-                       ${elements_Path}/rendering/effects/blur.h
-                       ${elements_Path}/rendering/effects/clear.cpp
-                       ${elements_Path}/rendering/effects/clear.h
-                       ${elements_Path}/rendering/effects/forwards.h
-                       ${elements_Path}/rendering/effects/gradient.cpp
-                       ${elements_Path}/rendering/effects/gradient.h
-                       ${elements_Path}/rendering/effects/light_scattered.cpp
-                       ${elements_Path}/rendering/effects/light_scattered.h
-                       ${elements_Path}/rendering/effects/tone.cpp
-                       ${elements_Path}/rendering/effects/tone.h
-
-                       ${elements_Path}/rendering/models/model.cpp
-                       ${elements_Path}/rendering/models/model.h
-                       ${elements_Path}/rendering/models/model_warehouse.cpp
-                       ${elements_Path}/rendering/models/model_warehouse.h
-                       ${elements_Path}/rendering/models/process_forward.cpp
-                       ${elements_Path}/rendering/models/process_forward.h
-                       ${elements_Path}/rendering/models/process_load_model.cpp
-                       ${elements_Path}/rendering/models/process_load_model.h
-
-                       ${elements_Path}/rendering/passes/pass_base.h
-                       ${elements_Path}/rendering/passes/pass_composition.cpp
-                       ${elements_Path}/rendering/passes/pass_composition.h
-                       ${elements_Path}/rendering/passes/pass_slot.h
-                       ${elements_Path}/rendering/passes/pass_target.cpp
-                       ${elements_Path}/rendering/passes/pass_target.h
-                       ${elements_Path}/rendering/passes/pass_target_input.cpp
-                       ${elements_Path}/rendering/passes/pass_target_input.h
-                       ${elements_Path}/rendering/passes/pass_target_placement.cpp
-                       ${elements_Path}/rendering/passes/pass_target_placement.h
-                       ${elements_Path}/rendering/passes/pass_target_storage.cpp
-                       ${elements_Path}/rendering/passes/pass_target_storage.h
-
-                       ${elements_Path}/rendering/primitives/square.cpp
-                       ${elements_Path}/rendering/primitives/square.h
-
-                       ${elements_Path}/rendering/state/state.h
-                       ${elements_Path}/rendering/state/state_macro.h
-                       ${elements_Path}/rendering/state/state_traits.h
-
-                       ${elements_Path}/rendering/techniques/forward.cpp
-                       ${elements_Path}/rendering/techniques/forward.h
-
-                       ${elements_Path}/rendering/utils/program_loader.cpp
-                       ${elements_Path}/rendering/utils/program_loader.h
-
-                       ${elements_Path}/scene/scene.cpp
-                       ${elements_Path}/scene/scene.h
-
-                       ${elements_Path}/scene/camera/camera.cpp
-                       ${elements_Path}/scene/camera/camera.h
-
-                       ${elements_Path}/scene/entity/entity.h
-                       ${elements_Path}/scene/entity/geometry.h
-                       ${elements_Path}/scene/entity/materials.h
-                       ${elements_Path}/scene/entity/mesh.h
-                       ${elements_Path}/scene/entity/vertices.h
-
-                       ${elements_Path}/scene/graph/node.cpp
-                       ${elements_Path}/scene/graph/node.h
-
-                       ${elements_Path}/scene/light/light.cpp
-                       ${elements_Path}/scene/light/light.h
-
-                       ${elements_Path}/scene/modifier/modifier.h
-                       ${elements_Path}/scene/modifier/positioning.cpp
-                       ${elements_Path}/scene/modifier/positioning.h
-
-                       ${elements_Path}/simulation/air/system.cpp
-                       ${elements_Path}/simulation/air/system.h
-                       ${elements_Path}/simulation/air/volume.cpp
-                       ${elements_Path}/simulation/air/volume.h
-
-                       ${elements_Path}/simulation/liquid/config.cpp
-                       ${elements_Path}/simulation/liquid/config.h
-                       ${elements_Path}/simulation/liquid/obstacle.h
-                       ${elements_Path}/simulation/liquid/particle.h
-                       ${elements_Path}/simulation/liquid/system.cpp
-                       ${elements_Path}/simulation/liquid/system.h
-                       ${elements_Path}/simulation/liquid/volume.cpp
-                       ${elements_Path}/simulation/liquid/volume.h
-
-                       ${elements_Path}/synchronization/future.h
-                       ${elements_Path}/synchronization/signal.h
-                       ${elements_Path}/synchronization/task.h
-
-                       ${elements_Path}/timing/framerate.cpp
-                       ${elements_Path}/timing/framerate.h
-                       ${elements_Path}/timing/timer.cpp
-                       ${elements_Path}/timing/timer.h
-                       ${elements_Path}/timing/update.cpp
-                       ${elements_Path}/timing/update.h
-
-                       ${elements_Path}/ui/control.cpp
-                       ${elements_Path}/ui/control.h
-                       ${elements_Path}/ui/system.cpp
-                       ${elements_Path}/ui/system.h
-                       ${elements_Path}/ui/types.h
-
-                       ${elements_Path}/ui/controls/button.cpp
-                       ${elements_Path}/ui/controls/button.h
-                       ${elements_Path}/ui/controls/label.cpp
-                       ${elements_Path}/ui/controls/label.h
-                       ${elements_Path}/ui/controls/panel.cpp
-                       ${elements_Path}/ui/controls/panel.h
-                       ${elements_Path}/ui/controls/slider.cpp
-                       ${elements_Path}/ui/controls/slider.h
-
-                       ${elements_Path}/ui/freetype/forwards.h
-                       ${elements_Path}/ui/freetype/line.cpp
-                       ${elements_Path}/ui/freetype/line.h
-                       ${elements_Path}/ui/freetype/manager.cpp
-                       ${elements_Path}/ui/freetype/manager.h
-
-                       ${elements_Path}/utils/std/dependency_index.h
-                       ${elements_Path}/utils/std/enum.h
-                       ${elements_Path}/utils/std/iterator_range.h
-                       ${elements_Path}/utils/std/optional.h
-                       ${elements_Path}/utils/std/pointer.h
-                       ${elements_Path}/utils/std/product.h
-                       ${elements_Path}/utils/std/values.h)
+file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp)
 
 add_library(elements ${ELEMENTS_SRC_FILES})
 target_include_directories(elements PRIVATE ${elements_Path})
@@ -426,9 +236,12 @@ target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${platform_Path} ${platform_Path}/Library)
 
 # Copy assets
-file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper)
+file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements
+                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper
+                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/Demo)
 file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/*
-                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*)
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/Demo/src/main/assets/*)
 
 add_custom_target(copyAssets)
 
@@ -483,7 +296,8 @@ elseif(UNIX)
   list(APPEND REQUIRED_LIBRARIES pthread)
 endif()
 
-file(GLOB_RECURSE SHADER_FILES RELATIVE ${CMAKE_SOURCE_DIR}/assets/shaders ${CMAKE_SOURCE_DIR}/assets/shaders/*.prog)
+file(GLOB_RECURSE SHADER_FILES RELATIVE ${CMAKE_SOURCE_DIR}/assets/shaders
+                                        ${CMAKE_SOURCE_DIR}/assets/shaders/*.prog)
 foreach(SHADER_FILE ${SHADER_FILES})
   string(REPLACE ".prog" "" app_path ${SHADER_FILE})
   set(app_full_path ${CMAKE_SOURCE_DIR}/platform/desktop/${app_path})
@@ -519,7 +333,7 @@ endforeach()
 # Flags
 if(MSVC)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(FLAGS "${FLAGS} -Wall -Wextra")# -Werror")
+    set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
     add_definitions(-D__clang__)
@@ -536,7 +350,7 @@ if(MSVC)
     endif()
   endif()
 else()
-  set(FLAGS "${FLAGS} -Wall -Wextra")# -Werror")
+  set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")

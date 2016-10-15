@@ -23,10 +23,14 @@ IN THE SOFTWARE.
 
 #include "liquid_renderer.h"
 #include "liquid_ui.h"
+#include "liquid_config.h"
 #include "logging.h"
 
+#include <elements/ui/controls/button.h>
 #include <elements/ui/controls/panel.h>
+#include <elements/ui/controls/slider.h>
 #include <elements/timing/update.h>
+#include <elements/preferences/preferences.h>
 #include <elements/metrics/metrics.h>
 #include <elements/math/transform.h>
 
@@ -318,7 +322,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
                 button->set_asset("assets/ui/textures/restore.png");
                 button->set_size(40_dp, 40_dp);
                 button->set_position(panel->get_size().x - 48_dp, 2_dp);
-                button->set_click([this]()
+                button->set_click([this](eps::ui::state)
                 {
                     restore_default();
                     configure();
@@ -331,7 +335,7 @@ bool liquid_renderer::create_settings_ui(const eps::math::uvec2 & size)
                 button->set_asset("assets/ui/textures/settings.png");
                 button->set_size(40_dp, 40_dp);
                 button->set_position(size.x - 50_dp, size.y - 70_dp);
-                button->set_click([link = std::move(panel_link)]()
+                button->set_click([link = std::move(panel_link)](eps::ui::state)
                 {
                     if(auto panel = link.lock())
                         panel->set_visible(!panel->get_visible());

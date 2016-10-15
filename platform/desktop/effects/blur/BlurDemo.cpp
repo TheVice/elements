@@ -55,7 +55,7 @@ void BlurDemo::Initialize()
 		throw std::runtime_error("Failed to load texture");
 	}
 
-	auto maker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>(asset->format());
+	auto maker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>();
 	mTexture = maker.construct(asset->pixels(), asset->size());
 	//
 	mOffset.x = 0.5f;

@@ -35,7 +35,7 @@ Game::~Game()
 {
 	mComponents.clear();
 #ifndef NDEBUG
-	std::string glfwErrors = sGlfwErrors.str();
+	const auto glfwErrors = sGlfwErrors.str();
 
 	if (!glfwErrors.empty())
 	{
@@ -57,6 +57,18 @@ Window Game::GetWindowHandle() const
 HWND Game::GetWindowHandle() const
 {
 	return glfwGetWin32Window(mWindow);
+}
+
+int Game::GetDPI() const
+{
+	const auto windowHandle = GetWindowHandle();
+	const auto hdc = GetDC(windowHandle);
+	//
+	const auto dpi = GetDeviceCaps(hdc, LOGPIXELSY);
+	//
+	ReleaseDC(windowHandle, hdc);
+	//
+	return dpi;
 }
 #endif
 GLFWwindow* Game::GetWindow() const
@@ -148,7 +160,7 @@ void Game::Draw(const GameTime& aGameTime)
 {
 	for (const auto& component : mComponents)
 	{
-		auto* drawableGameComponent = component->As<DrawableGameComponent>();
+		const auto drawableGameComponent = component->As<DrawableGameComponent>();
 
 		if (drawableGameComponent && drawableGameComponent->IsVisible())
 		{
@@ -242,7 +254,7 @@ void Game::OnKey(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int 
 {
 	(void)aWindow;
 
-	for (auto handler : sInternalInstance->mKeyboardHandlers)
+	for (const auto& handler : sInternalInstance->mKeyboardHandlers)
 	{
 		handler.second(aKey, aScancode, aAction, aMods);
 	}
