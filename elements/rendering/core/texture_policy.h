@@ -78,7 +78,7 @@ using depth_texture_policy = texture_policy
     GL_DEPTH_COMPONENT16,
     GL_DEPTH_COMPONENT,
     GL_UNSIGNED_SHORT,
-    GL_LINEAR,
+    GL_NEAREST,
     GL_CLAMP_TO_EDGE
 >;
 
@@ -88,7 +88,17 @@ using depth24_texture_policy = texture_policy
     GL_DEPTH_COMPONENT24_OES,
     GL_DEPTH_COMPONENT,
     GL_UNSIGNED_INT,
-    GL_LINEAR,
+    GL_NEAREST,
+    GL_CLAMP_TO_EDGE
+>;
+
+// OES_packed_depth_stencil extension
+using depth24_stencil8_texture_policy = texture_policy
+<
+    GL_DEPTH24_STENCIL8_OES,
+    GL_DEPTH_STENCIL_OES,
+    GL_UNSIGNED_INT_24_8_OES,
+    GL_NEAREST,
     GL_CLAMP_TO_EDGE
 >;
 

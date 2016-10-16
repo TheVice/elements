@@ -5,7 +5,6 @@
 #include "preferences.h"
 #include "metrics.h"
 #include "FireDemo.h"
-#include <glm/gtc/constants.hpp>
 
 namespace Rendering
 {
@@ -23,7 +22,7 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::instance().mount<Desktop::asset_fs>("");
+	eps::assets_storage::instance().mount<Desktop::asset_fs>("assets", "assets");
 	eps::preferences::init<Desktop::preferences>();
 	eps::metrics::init<Desktop::metrics>(1.0f);
 	//
@@ -35,11 +34,6 @@ void RenderingGame::Initialize()
 
 void RenderingGame::Draw(const Library::GameTime& aGameTime)
 {
-	static const GLfloat one = glm::one<GLfloat>();
-	//
-	glClearBufferfv(GL_COLOR, 0, &sBackgroundColor[0]);
-	glClearBufferfv(GL_DEPTH, 0, &one);
-	//
 	Game::Draw(aGameTime);
 	//	glfwSwapBuffers(mWindow);
 }
@@ -60,7 +54,5 @@ void RenderingGame::OnKey(int aKey, int aScancode, int aAction, int aMods)
 		Exit();
 	}
 }
-
-const glm::vec4 RenderingGame::sBackgroundColor = { 0.392f, 0.584f, 0.929f, 1.0f };
 
 }

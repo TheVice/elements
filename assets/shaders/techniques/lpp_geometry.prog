@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="geometry">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec3 a_vertex_pos;
+            attribute vec3 a_vertex_normal;
+            attribute vec3 a_vertex_tangent;
+            attribute vec2 a_vertex_uv;
+
+            uniform mat4 u_matrix_mvp;
+            uniform mat4 u_matrix_model_view;
+
+            varying vec2 v_uv;
+            varying mat3 v_tbn;
+
+            mat3 fn_tbn_matrix()
+            {
+                vec3 T = normalize((u_matrix_model_view * vec4(a_vertex_tangent, 0.0)).xyz);
+                vec3 N = normalize((u_matrix_model_view * vec4(a_vertex_normal, 0.0)).xyz);
+                T = normalize(T - dot(T, N) * N);
+                vec3 B = cross(T, N);
+                return mat3(T, B, N);
+            }
+
+            void main()
+            {
+                gl_Position = u_matrix_mvp * vec4(a_vertex_pos, 1.0);
+                v_uv = a_vertex_uv;
+                v_tbn = fn_tbn_matrix();
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            uniform sampler2D u_map_normal;
+            uniform bool u_has_map_normal;
+
+            varying vec2 v_uv;
+            varying mat3 v_tbn;
+
+            vec3 fn_get_view_normal(vec2 uv)
+            {
+                vec3 result;
+                if(u_has_map_normal)
+                    result = v_tbn * (texture2D(u_map_normal, uv).rgb * 2.0 - 1.0);
+                else
+                    result = v_tbn[2];
+                return normalize(result);
+            }
+
+            void main()
+            {
+                gl_FragColor = vec4(fn_get_view_normal(v_uv) * 0.5 + 0.5, 1.0);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_pos" index="0"/>
+        <location name="a_vertex_normal" index="1"/>
+        <location name="a_vertex_tangent" index="2"/>
+        <location name="a_vertex_uv" index="3"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_matrix_mvp" index="0"/>
+        <location name="u_matrix_model_view" index="1"/>
+        <location name="u_map_normal" index="2"/>
+        <location name="u_has_map_normal" index="3"/>
+    </u_locations>
+
+</program>

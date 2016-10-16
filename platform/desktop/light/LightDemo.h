@@ -27,7 +27,7 @@ public:
 
 private:
 	int mRenderId;
-	typedef renderer_factory<light_renderer> light_renderer_factory;
+	using light_renderer_factory = renderer_factory<light_renderer>;
 	std::unique_ptr<light_renderer_factory> mLightRendererFactory;
 
 private:

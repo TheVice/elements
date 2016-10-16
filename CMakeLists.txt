@@ -255,9 +255,12 @@ set_target_properties(desktop PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITI
 list(APPEND REQUIRED_INCLUDES ${platform_Path})
 
 # Copy assets
-file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper)
+file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements
+                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper
+                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/Demo)
 file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/*
-                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*)
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*
+                                 ${CMAKE_SOURCE_DIR}/platform/android/elements/Demo/src/main/assets/*)
 
 add_custom_target(copyAssets)
 
@@ -325,6 +328,7 @@ foreach(Experiment ${Experiments})
     list(APPEND SRC_FILES ${ADDITION_SRC_FILES})
 
     add_executable(${Experiment} ${IS_SUBSYSTEM_WIN32} ${SRC_FILES})
+
     target_include_directories(${Experiment} PRIVATE ${REQUIRED_INCLUDES}
                                                      ${elements_Path}/..
                                                      ${CMAKE_SOURCE_DIR}/experiments/${Experiment}
@@ -341,7 +345,7 @@ endforeach()
 # Flags
 if(MSVC)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(FLAGS "${FLAGS} -Wall -Wextra")# -Werror")
+    set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
     add_definitions(-D__clang__)
@@ -358,7 +362,7 @@ if(MSVC)
     endif()
   endif()
 else()
-  set(FLAGS "${FLAGS} -Wall -Wextra")# -Werror")
+  set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")

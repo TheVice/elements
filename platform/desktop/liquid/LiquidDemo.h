@@ -27,7 +27,7 @@ public:
 
 private:
 	int mRenderId;
-	typedef renderer_factory<liquid_renderer> liquid_renderer_factory;
+	using liquid_renderer_factory = renderer_factory<liquid_renderer>;
 	std::unique_ptr<liquid_renderer_factory> mLiquidRendererFactory;
 
 private:

@@ -22,6 +22,7 @@ IN THE SOFTWARE.
 */
 
 #include "positioning.h"
+#include "math/transform.h"
 #include "math/geometric.h"
 
 namespace eps {

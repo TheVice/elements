@@ -27,7 +27,7 @@ public:
 
 private:
 	int mRenderId;
-	typedef renderer_factory<air_renderer> air_renderer_factory;
+	using air_renderer_factory = renderer_factory<air_renderer>;
 	std::unique_ptr<air_renderer_factory> mAirRendererFactory;
 
 private:

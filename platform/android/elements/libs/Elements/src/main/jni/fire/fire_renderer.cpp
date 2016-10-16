@@ -23,12 +23,14 @@ IN THE SOFTWARE.
 
 #include "fire_renderer.h"
 #include "fire_ui.h"
+#include "fire_config.h"
 #include "logging.h"
 #include <chrono>
 
 #include <android/input.h>
 #include <elements/ui/controls/button.h>
 #include <elements/ui/controls/panel.h>
+#include <elements/ui/controls/slider.h>
 #include <elements/timing/update.h>
 #include <elements/math/transform.h>
 #include <elements/metrics/metrics.h>
@@ -239,7 +241,7 @@ bool fire_renderer::create_settings_ui(const eps::math::uvec2 & size)
                 button->set_asset("assets/ui/textures/restore.png");
                 button->set_size(40_dp, 40_dp);
                 button->set_position(panel->get_size().x - 48_dp, 2_dp);
-                button->set_click([this]()
+                button->set_click([this](eps::ui::state)
                 {
                     fire_restore_default();
                     configure();
@@ -252,7 +254,7 @@ bool fire_renderer::create_settings_ui(const eps::math::uvec2 & size)
                 button->set_asset("assets/ui/textures/settings.png");
                 button->set_size(40_dp, 40_dp);
                 button->set_position(size.x - 48_dp, size.y - 70_dp);
-                button->set_click([link = std::move(panel_link)]()
+                button->set_click([link = std::move(panel_link)](eps::ui::state)
                 {
                     if(auto panel = link.lock())
                         panel->set_visible(!panel->get_visible());
