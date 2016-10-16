@@ -26,7 +26,7 @@ public:
 
 private:
 	int mRenderId;
-	typedef renderer_factory<strange_renderer> strange_renderer_factory;
+	using strange_renderer_factory = renderer_factory<strange_renderer>;
 	std::unique_ptr<strange_renderer_factory> mStrangeRendererFactory;
 
 private:

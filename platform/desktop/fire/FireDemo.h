@@ -27,7 +27,7 @@ public:
 
 private:
 	int mRenderId;
-	typedef renderer_factory<fire_renderer> fire_renderer_factory;
+	using fire_renderer_factory = renderer_factory<fire_renderer>;
 	std::unique_ptr<fire_renderer_factory> mFireRendererFactory;
 
 private:

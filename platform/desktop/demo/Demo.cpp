@@ -89,7 +89,7 @@ void Demo::Update(const Library::GameTime&)
 
 		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_LEFT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_A))
 		{
-			phi = std::min(glm::radians<float>(10), phi +glm::radians<float>(1) * elapsedTime);
+			phi = std::min(glm::radians<float>(10), phi + glm::radians<float>(1) * elapsedTime);
 		}
 
 		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_RIGHT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_D))

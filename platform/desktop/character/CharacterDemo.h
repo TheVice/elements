@@ -27,8 +27,9 @@ public:
 
 private:
 	int mRenderId;
-	typedef renderer_factory<character_renderer> character_renderer_factory;
+	using character_renderer_factory = renderer_factory<character_renderer>;
 	std::unique_ptr<character_renderer_factory> mCharacterRendererFactory;
+	eps::timing::framerate rate_;
 
 private:
 	static const std::string sModel;

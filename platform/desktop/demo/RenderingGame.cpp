@@ -24,11 +24,7 @@ void RenderingGame::Initialize()
 	//
 	eps::assets_storage::instance().mount<Desktop::asset_fs>("assets", "assets");
 	eps::preferences::init<Desktop::preferences>();
-#ifndef WIN32
 	eps::metrics::init<Desktop::metrics>(1.0f);
-#else
-	eps::metrics::init<Desktop::win32_metrics>(GetDPI());
-#endif
 	//
 	mDrawableGameComponent = std::make_unique<Demo>(*this);
 	mComponents.push_back(mDrawableGameComponent.get());
