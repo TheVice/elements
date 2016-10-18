@@ -20,7 +20,7 @@ test: test_objects
 	g++ -o test $(OBJECTS)
 
 test_objects:
-	g++ -I../../elements -std=c++14 -Wall -Wextra -Werror -c $(SOURCES)
+	g++ -I../../elements -I../../third-party/pugixml/src -std=c++14 -Wall -Wextra -Werror -c $(SOURCES)
 
 clean:
 	 rm $(OBJECTS) test
