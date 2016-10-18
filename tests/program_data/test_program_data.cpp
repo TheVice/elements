@@ -6,6 +6,7 @@
 #include <fstream>
 #include <utility>
 #include <iostream>
+#include <streambuf>
 #include <unordered_map>
 
 /*
@@ -18,25 +19,16 @@
 
 const std::unordered_map<std::string, std::pair<std::string, std::string>> tests_map =
 {
-    {"default_version.prog", std::make_pair<std::string, std::string>("default_version.vs", "default_version.fs")},
-    {"100_es_version.prog", std::make_pair<std::string, std::string>("100_es_version.vs", "100_es_version.fs")},
-    {"300_es_version.prog", std::make_pair<std::string, std::string>("300_es_version.vs", "300_es_version.fs")},
-    {"310_es_version.prog", std::make_pair<std::string, std::string>("310_es_version.vs", "310_es_version.fs")},
-    {"asdasda_version.prog", std::make_pair<std::string, std::string>("asdasda_version.vs", "asdasda_version.fs")}
+    {"default_version.prog", std::make_pair("default_version.vs", "default_version.fs")},
+    {"100_es_version.prog", std::make_pair("100_es_version.vs", "100_es_version.fs")},
+    {"300_es_version.prog", std::make_pair("300_es_version.vs", "300_es_version.fs")},
+    {"310_es_version.prog", std::make_pair("310_es_version.vs", "310_es_version.fs")},
+    {"asdasda_version.prog", std::make_pair("asdasda_version.vs", "asdasda_version.fs")}
 };
 
-void read_from_stream(std::istream & input_stream, std::string & output)
+std::string read_from_stream(std::ifstream & stream)
 {
-    input_stream.seekg(0, std::fstream::end);
-    const auto length = input_stream.tellg();
-
-    if (length)
-    {
-        input_stream.seekg(0, std::fstream::beg);
-        output.reserve(length);
-        output.resize(length);
-        input_stream.read(&output.front(), length);
-    }
+    return {std::istreambuf_iterator<char>{stream}, {}};
 }
 
 int main()
@@ -53,8 +45,7 @@ int main()
             continue;
         }
 
-        std::string vertex_shader;
-        read_from_stream(vs_result, vertex_shader);
+        std::string vertex_shader = read_from_stream(vs_result);
         vs_result.close();
 
         std::ifstream fs_result(std::get<1>(test.second));
@@ -65,8 +56,7 @@ int main()
             continue;
         }
 
-        std::string fragment_shader;
-        read_from_stream(fs_result, fragment_shader);
+        std::string fragment_shader = read_from_stream(fs_result);
         fs_result.close();
 
         if (!data)
@@ -82,6 +72,7 @@ int main()
 
             continue;
         }
+
         if (vertex_shader.empty() && fragment_shader.empty())
         {
             std::cerr << test.first << " with unknown version FAIL" << std::endl;
