@@ -12,10 +12,12 @@ public class CompassView implements GLSurfaceView.Renderer,
                                     android.hardware.SensorEventListener {
 
     private Compass compass;
+    private final int startAngle;
     private Object assetManager;
 
-    public CompassView(Object manager) {
+    public CompassView(int startAngle, Object manager) {
 
+        this.startAngle = startAngle;
         assetManager = manager;
     }
 
@@ -34,6 +36,7 @@ public class CompassView implements GLSurfaceView.Renderer,
     public void onSurfaceChanged(GL10 gl, int width, int height) {
 
         compass.startup(width, height);
+        compass.rotation(startAngle);
     }
 
     @Override
@@ -52,7 +55,7 @@ public class CompassView implements GLSurfaceView.Renderer,
 
                 if (compass != null && event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
 
-                    compass.rotation(event.values[0]);
+                    compass.rotation(startAngle + event.values[0]);
                 }
             /*}
         });*/

@@ -142,7 +142,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. \
     $(LOCAL_PATH) \
     $(LOCAL_PATH)/../third-party/glm
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
-LOCAL_EXPORT_LDLIBS := -llog -lGLESv2
+LOCAL_EXPORT_LDLIBS := -llog -lGLESv2 -latomic
 LOCAL_STATIC_LIBRARIES := png freetype pugixml
 
 include $(BUILD_STATIC_LIBRARY)

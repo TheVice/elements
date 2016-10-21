@@ -2,13 +2,18 @@
 OpenGL ES 2.0 and C++ experiments.
 
 ###Contents
-* [Liquid Simulation](#liquid-simulation)
-* [Light Scattered](#light-scattered)
-* [Strange Attractors](#strange-attractors)
-* [Wind Field](#wind-field)
-* [Flame Simualtion](#flame-simulation)
+* [Experiments](#experiments)
+ * [Liquid Simulation](#liquid-simulation)
+ * [Light Scattered](#light-scattered)
+ * [Strange Attractors](#strange-attractors)
+ * [Wind Field](#wind-field)
+ * [Flame Simualtion](#flame-simulation)
+ * [Compass Tool](#Compass Tool)
+* [Build](#build)
 
 -----------------------
+
+##Experiments
 
 ###Liquid Simulation 
 ![Liquid Simulation](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/liquid.jpeg)
@@ -49,6 +54,35 @@ The adaptation of a [raymarching](http://iquilezles.org/www/articles/raymarching
 - Sources experiments/fire
 - Preview into [the YouTube](https://www.youtube.com/watch?v=eYFEQRwEKm4)
 - Demo into [the Google Play](https://play.google.com/store/apps/details?id=com.yegorov.alexey.elements.fire)
+
+###Compass Tool
+![Compass preview](https://raw.githubusercontent.com/TheVice/elements/gh-pages/2016.10.14/Compass_Tool_poster.png)
+
+##Build
+
+* Download the required components;
+ * ```SDK Tools``` - version 25.2.2: [Linux](http://dl.google.com/android/repository/tools_r25.2.2-linux.zip), [Mac OS X](http://dl.google.com/android/repository/tools_r25.2.2-macosx.zip), [Windows](http://dl.google.com/android/repository/tools_r25.2.2-windows.zip);
+ * ```Platform Tools``` - version 24.0.2: [Linux](http://dl.google.com/android/repository/platform-tools_r24.0.2-linux.zip), [Mac OS X](http://dl.google.com/android/repository/platform-tools_r24.0.2-macosx.zip), [Windows](http://dl.google.com/android/repository/platform-tools_r24.0.2-windows.zip);
+ * ```Build Tools``` - version 24.0.2: [Linux](http://dl.google.com/android/repository/build-tools_r24.0.2-linux.zip), [Mac OS X](http://dl.google.com/android/repository/build-tools_r24.0.2-macosx.zip), [Windows](http://dl.google.com/android/repository/build-tools_r24.0.2-windows.zip);
+ * ```Platform``` - [version 24](http://dl.google.com/android/repository/platform-24_r02.zip);
+ * NDK - Revision 10e (May 2015): [Linux 32-bit (x86)](http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86.bin), [Linux 64-bit (x86)](http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin), [Mac OS X 32-bit](http://dl.google.com/android/ndk/android-ndk-r10e-darwin-x86.bin), [Mac OS X 64-bit](http://dl.google.com/android/ndk/android-ndk-r10e-darwin-x86_64.bin), [Windows 32-bit](http://dl.google.com/android/ndk/android-ndk-r10e-windows-x86.exe), [Windows 64-bit](http://dl.google.com/android/ndk/android-ndk-r10e-windows-x86_64.exe).
+* Create folder ```android-sdk``` with two sub folders ```build-tools``` and  ```platforms```
+* Unpack ```SDK Tools``` and ```Platform Tools``` into ```android-sdk```. ```Build Tools``` and ```Platform``` should be unpacked into ```android-sdk/build-tools``` and ```android-sdk/platforms``` corresponding;
+* Unpacked ```Build Tools``` and ```Platform``` folder can be renamed ```android-7.0 -> 24.0.2``` and ```android-7.0 -> android-24``` corresponding;
+* Unpack ndk in separate folder;
+* At ```platform/android/elements``` create ```local.properties``` and put to it paths to sdk and ndk folders;
+ * On Windows host it can be next:
+  * ```sdk.dir=C\:\\android-sdk```
+  * ```ndk.dir=C\:\\android-ndk-r10e-windows-x86_64```
+ * On Linux host it can be next:
+  * ```sdk.dir=/home/user/android-sdk```
+  * ```ndk.dir=/home/user/android-ndk-r10e-linux-x86_64```
+* Open terminal (console) and enter into ```platform/android/elements``` folder;
+* Type and execute ```gradlew --daemon assembleDebug``` to build apks in debug configuration;
+* For release configuration type and execute:
+ * ```gradlew --daemon generateKey --q``` if you already do not have key file located in ```platform/android/elements``` folder
+ * ```gradlew --daemon assembleRelease```
+* All apk will be available in corresponding folder of demos: ```platform/android/elements/<Demo Name>/build/outputs/apk/```.
 
 ###Author
 Alexey Yegorov.

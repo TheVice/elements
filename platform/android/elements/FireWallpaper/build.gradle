@@ -22,7 +22,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles.add(file('proguard-project.txt'))
             signingConfig signingConfigs.release
         }

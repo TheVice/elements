@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.badlogic.gdx.GL2Test;
@@ -30,8 +31,9 @@ public class MainActivity extends Activity {
 
         if (GL2Test.checkGL20Support()) {
 
+            final int startAngle = getStartAngle(getResources().getConfiguration().orientation);
             view = new GLSurfaceView20(this);
-            compassView = new CompassView(getAssets());
+            compassView = new CompassView(startAngle, getAssets());
             view.setRenderer(compassView);
             sensorManager.registerListener(compassView, sensor, SensorManager.SENSOR_DELAY_UI);
             setContentView(view);
@@ -62,6 +64,20 @@ public class MainActivity extends Activity {
         super.onDestroy();
         sensorManager.unregisterListener(compassView);
         compassView.onDestroy();
+    }
+
+    private static int getStartAngle(int orientation) {
+
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            return 0;
+        }
+        else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            return -270;
+        }
+
+        return 0;
     }
 
 }
