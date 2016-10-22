@@ -21,34 +21,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_PRIMITIVES_SQUARE_H_INCLUDED
-#define RENDERING_PRIMITIVES_SQUARE_H_INCLUDED
+#ifndef MATH_TRIGONOMETRIC_H_INCLUDED
+#define MATH_TRIGONOMETRIC_H_INCLUDED
 
-#include "rendering/core/buffer.h"
-#include "rendering/core/program.h"
+#include "types.h"
 
 namespace eps {
-namespace rendering {
-namespace primitive {
+namespace math {
 
-class square
+inline float radians(float angle)
 {
-public:
+    return glm::radians(angle);
+}
 
-    explicit square(buffer_usage usage = buffer_usage::STATIC_DRAW);
+inline float degrees(float angle)
+{
+    return glm::degrees(angle);
+}
 
-    void construct(float * vertices);
-    void render(program & program, short a_position);
-    void render(program & program, short a_position, short a_texture);
-
-private:
-
-    vertices texture_vertices_;
-    indices texture_indices_;
-};
-
-} /* primitive */
-} /* rendering */
+} /* math */
 } /* eps */
 
-#endif // RENDERING_PROMITIVES_SQUARE_H_INCLUDED
+#endif // MATH_UTILS_H_INCLUDED

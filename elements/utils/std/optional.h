@@ -21,34 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_PRIMITIVES_SQUARE_H_INCLUDED
-#define RENDERING_PRIMITIVES_SQUARE_H_INCLUDED
+#ifndef STD_UTILS_OPTIONAL_H_INCLUDED
+#define STD_UTILS_OPTIONAL_H_INCLUDED
 
-#include "rendering/core/buffer.h"
-#include "rendering/core/program.h"
+#include <experimental/optional>
 
 namespace eps {
-namespace rendering {
-namespace primitive {
+namespace utils {
 
-class square
-{
-public:
+template<typename _Type>
+using optional = std::experimental::optional<_Type>;
 
-    explicit square(buffer_usage usage = buffer_usage::STATIC_DRAW);
+constexpr std::experimental::nullopt_t nullopt = std::experimental::nullopt;
 
-    void construct(float * vertices);
-    void render(program & program, short a_position);
-    void render(program & program, short a_position, short a_texture);
-
-private:
-
-    vertices texture_vertices_;
-    indices texture_indices_;
-};
-
-} /* primitive */
-} /* rendering */
+} /* utils */
 } /* eps */
 
-#endif // RENDERING_PROMITIVES_SQUARE_H_INCLUDED
+#endif // STD_UTILS_OPTIONAL_H_INCLUDED
