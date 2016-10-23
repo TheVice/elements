@@ -27,8 +27,6 @@ IN THE SOFTWARE.
 #include <elements/rendering/utils/program_loader.h>
 #include <elements/utils/std/enum.h>
 
-#include <vector>
-
 namespace eps {
 namespace experiment {
 namespace strange {
@@ -43,7 +41,7 @@ enum class product_enum : short
 
 bool pass_particles::initialize()
 {
-    return rendering::load_program("shaders/experiments/strange/particles.prog",
+    return rendering::load_program("assets/shaders/experiments/strange/particles.prog",
                                    program_);
 }
 
@@ -56,7 +54,7 @@ utils::unique<rendering::pass_target> pass_particles::construct(const math::uvec
 void pass_particles::process(float)
 {
     EPS_STATE_BLEND(GL_SRC_ALPHA, GL_ONE);
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
     EPS_STATE_VERTICES(product_index_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 

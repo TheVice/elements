@@ -22,6 +22,7 @@ IN THE SOFTWARE.
 */
 
 #include "program_loader.h"
+#include "program_data.h"
 
 #include "rendering/core/shader.h"
 #include "rendering/core/program.h"
@@ -31,51 +32,20 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-bool program_data::read(const pugi::xml_document & doc)
-{
-    pugi::xml_node root_node = doc.child("program");
-    if(root_node.empty())
-        return false;
-
-    pugi::xml_node vertex_node = root_node.child("shaders").child("vertex");
-    if(vertex_node.text().empty())
-        return false;
-    pugi::xml_node fragment_node = root_node.child("shaders").child("fragment");
-    if(fragment_node.text().empty())
-        return false;
-
-    v_shader_ = vertex_node.text().get();
-    f_shader_ = fragment_node.text().get();
-
-    pugi::xml_node a_locations_node = root_node.child("a_locations");
-    for(const auto & value : a_locations_node.children("location"))
-    {
-        attribute_locations_.emplace_back(value.attribute("name").value(),
-                                          value.attribute("index").as_int());
-    }
-
-    pugi::xml_node u_locations_node = root_node.child("u_locations");
-    for(const auto & value : u_locations_node.children("location"))
-    {
-        uniform_locations_.emplace_back(value.attribute("name").value(),
-                                        value.attribute("index").as_int());
-    }
-
-    return true;
-}
-
 bool load_program(const char * asset_program, program & result)
 {
     auto data = assets_storage::instance().read<program_data>(asset_program);
-
-    if(!data.v_shader() || !data.f_shader())
+    if(!data)
         return false;
 
-    shader v_shader(data.v_shader(), shader_type::VERTEX);
+    if(!data.value().v_shader() || !data.value().f_shader())
+        return false;
+
+    shader v_shader(data.value().v_shader(), shader_type::VERTEX);
     if(!v_shader.compile())
         return false;
 
-    shader f_shader(data.f_shader(), shader_type::FRAGMENT);
+    shader f_shader(data.value().f_shader(), shader_type::FRAGMENT);
     if(!f_shader.compile())
         return false;
 
@@ -84,10 +54,10 @@ bool load_program(const char * asset_program, program & result)
     if(!result.link())
         return false;
 
-    for(const auto & location : data.a_locations())
+    for(const auto & location : data.value().a_locations())
         result.attribute_location(location.name, location.index);
 
-    for(const auto & location : data.u_locations())
+    for(const auto & location : data.value().u_locations())
         result.uniform_location(location.name, location.index);
 
     return true;

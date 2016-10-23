@@ -28,7 +28,6 @@ IN THE SOFTWARE.
 
 #include "ui/control.h"
 #include "rendering/core/texture.h"
-#include "rendering/core/texture_policy.h"
 #include "rendering/core/program.h"
 #include "rendering/primitives/square.h"
 
@@ -42,7 +41,7 @@ public:
     explicit button(control * parent = nullptr);
 
     void draw() override;
-    bool touch(int x, int y, touch_action action) override;
+    bool touch(int x, int y, touch_action action, touch_finger finger) override;
 
     bool set_asset(const char * asset);
     void set_click(const std::function<void()> & handler);
@@ -60,8 +59,9 @@ private:
     std::function<void()> click_;
 
     rendering::program program_face_;
+    rendering::texture texture_face_;
+
     rendering::primitive::square square_;
-    rendering::texture<rendering::default_texture_policy> texture_face_;
 
     state state_;
 };

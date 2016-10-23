@@ -25,6 +25,7 @@ IN THE SOFTWARE.
 #include <elements/rendering/computation/compute_target.h>
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
 #include <elements/utils/std/enum.h>
 #include <elements/math/common.h>
 
@@ -55,9 +56,9 @@ void pass_velocities::set_field(sync::future<math::vec2> field)
 
 bool pass_velocities::initialize()
 {
-    return rendering::load_program("shaders/experiments/light/velocities_product_reset.prog",
+    return rendering::load_program("assets/shaders/experiments/light/velocities_product_reset.prog",
                                     program_reset_) &&
-           rendering::load_program("shaders/experiments/light/velocities_product_process.prog",
+           rendering::load_program("assets/shaders/experiments/light/velocities_product_process.prog",
                                     program_process_);
 }
 
@@ -69,7 +70,9 @@ utils::unique<rendering::pass_target> pass_velocities::construct(const math::uve
     const math::uvec2 field_size(size.x / scale, size.y / scale);
 
     vertices_data_uv_.construct(field_size);
-    return utils::make_unique<rendering::compute_target>(field_size);
+
+    using namespace rendering;
+    return get_compute_target<default_texture_policy>(field_size);
 }
 
 void pass_velocities::process(float dt)
@@ -99,7 +102,7 @@ void pass_velocities::pass_process(float dt)
         vertices_data_.allocate(field_.output().data(),
                                 field_.output().size(), sizeof(math::vec2));
 
-        EPS_STATE_SAMPLER_0(get_inputs().get_product());
+        EPS_STATE_SAMPLER_0(get_inputs().get_product(rendering::pass_slot::slot_0));
         EPS_STATE_PROGRAM(program_process_.get_product());
 
         EPS_STATE_VERTICES(vertices_data_uv_.get_product());

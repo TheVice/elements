@@ -28,6 +28,10 @@ ifeq ($(BUILD_LIQUID), true)
 	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/liquid/*.cpp)
 endif
 
+ifeq ($(BUILD_CHARACTER), true)
+	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/character/*.cpp)
+endif
+
 ifeq ($(BUILD_COMPASS), true)
 	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/compass/*.cpp)
 endif

@@ -25,6 +25,8 @@ IN THE SOFTWARE.
 
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/core/texture_maker.h>
 
 #include <elements/utils/std/enum.h>
 
@@ -49,10 +51,14 @@ enum class program_enum : short
 
 bool pass_liquid::set_surface_background(const std::string & asset_name)
 {
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
-    if(asset.pixels())
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
+    if(asset)
     {
-        surface_background_.set_data(asset.pixels(), asset.size(), asset.format());
+        using namespace rendering;
+
+        auto maker = get_texture_maker<default_texture_policy>(asset->format());
+        background_ = maker.construct(asset->pixels(), asset->size());
+
         return true;
     }
     return false;
@@ -65,7 +71,7 @@ void pass_liquid::set_surface_color(const math::vec4 & color)
 
 bool pass_liquid::initialize()
 {
-    return rendering::load_program("shaders/experiments/liquid/liquid.prog", program_);
+    return rendering::load_program("assets/shaders/experiments/liquid/liquid.prog", program_);
 }
 
 utils::unique<rendering::pass_target> pass_liquid::construct(const math::uvec2 & size)
@@ -78,8 +84,8 @@ utils::unique<rendering::pass_target> pass_liquid::construct(const math::uvec2 &
 
 void pass_liquid::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
-    EPS_STATE_SAMPLER_1(surface_background_.get_product());
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
+    EPS_STATE_SAMPLER_1(background_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_surface), 0);

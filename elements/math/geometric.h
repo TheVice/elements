@@ -50,9 +50,34 @@ inline float dot(const vec2 & a, const vec2 & b)
     return glm::dot(a, b);
 }
 
+inline float dot(const vec3 & a, const vec3 & b)
+{
+    return glm::dot(a, b);
+}
+
+inline vec3 cross(const vec3 & a, const vec3 & b)
+{
+    return glm::cross(a, b);
+}
+
 inline vec2 normalize(const vec2 & a)
 {
     return glm::normalize(a);
+}
+
+inline vec3 normalize(const vec3 & a)
+{
+    return glm::normalize(a);
+}
+
+inline vec3 mix(const vec3 & a, const vec3 & b, float factor)
+{
+    return glm::mix(a, b, factor);
+}
+
+inline vec3 reflect(const vec3 & d, const vec3 & n)
+{
+    return glm::reflect(d, n);
 }
 
 } /* math */

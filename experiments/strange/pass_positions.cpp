@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 #include <elements/rendering/computation/compute_target.h>
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
 #include <elements/utils/std/enum.h>
 
 namespace eps {
@@ -45,13 +46,14 @@ enum class program_enum : short
 
 bool pass_positions::initialize()
 {
-    return rendering::load_program("shaders/experiments/strange/positions_product_process.prog",
+    return rendering::load_program("assets/shaders/experiments/strange/positions_product_process.prog",
                                    program_process_);
 }
 
 utils::unique<rendering::pass_target> pass_positions::construct(const math::uvec2 & size)
 {
-    return utils::make_unique<rendering::compute_target>(size);
+    using namespace rendering;
+    return get_compute_target<default_texture_policy>(size);
 }
 
 void pass_positions::process(float dt)

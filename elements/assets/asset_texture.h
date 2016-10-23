@@ -25,13 +25,12 @@ IN THE SOFTWARE.
 #define ASSETS_ASSET_TEXTURE_H_INCLUDED
 
 #include "assets.h"
-#include <memory>
 #include "math/types.h"
+#include "utils/std/pointer.h"
 
 namespace eps {
 
-struct asset_texture : public asset,
-                       public asset_dispatcher<asset_texture>
+struct asset_texture : public asset
 {
 public:
 
@@ -47,11 +46,11 @@ public:
     const math::uvec2 & size() const { return size_; }
     unsigned int format() const { return format_; }
 
-    bool load(asset_read_operation * opt) final;
+    bool load(utils::link<io::system> fs, const std::string & resource) final;
 
 private:
 
-    std::unique_ptr<void, void(*)(void*)> data_;
+    utils::unique<void, void(*)(void*)> data_;
 
     math::uvec2 size_;
     size_t format_;

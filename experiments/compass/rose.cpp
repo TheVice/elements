@@ -17,7 +17,7 @@ rose::rose()
 
 bool rose::initialize(const eps::math::uvec2 & size)
 {
-	shader_path_ = "shaders/primitives/circle_color.prog";
+	shader_path_ = "assets/shaders/primitives/circle_color.prog";
 	vertices_.clear();
 	//
 	vertices_.push_back(std::make_pair(

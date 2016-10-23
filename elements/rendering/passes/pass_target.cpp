@@ -26,27 +26,36 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-pass_target_simple::pass_target_simple(const math::uvec2 & size)
+pass_target_default::pass_target_default(target target)
+    : target_(std::move(target))
+{}
+
+const product_type & pass_target_default::get_product(const pass_slot & slot) const
 {
-    target_.construct(size);
+    if(utils::to_int(slot) < utils::to_int(attachment::MAX))
+    {
+        static attachment attachments[] =
+        {
+            attachment::color0,
+            attachment::depth
+        };
+        return target_.get_product(attachments[utils::to_int(slot)]);
+    }
+
+    return product_type::default_product();
 }
 
-const product_type & pass_target_simple::get_product() const
-{
-    return target_.get_product();
-}
-
-const product_type & pass_target_simple::get_target() const
+const product_type & pass_target_default::get_target() const
 {
     return target_.get_target();
 }
 
-const math::uvec2 & pass_target_simple::get_size() const
+const math::uvec2 & pass_target_default::get_target_size() const
 {
     return target_.get_size();
 }
 
-void pass_target_simple::swap() {}
+void pass_target_default::swap() {}
 
 } /* rendering */
 } /* eps */

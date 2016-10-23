@@ -25,6 +25,8 @@ IN THE SOFTWARE.
 #include "ui/system.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "rendering/core/texture_maker.h"
+#include "rendering/core/texture_policy.h"
 #include "assets/assets_storage.h"
 #include "assets/asset_texture.h"
 #include "utils/std/enum.h"
@@ -46,18 +48,21 @@ button::button(control * parent)
     , square_(rendering::buffer_usage::STREAM_DRAW)
     , state_(state::NONE)
 {
-    rendering::load_program("shaders/primitives/square_texture.prog",
-                                program_face_);
+    rendering::load_program("assets/shaders/primitives/square_texture.prog",
+                            program_face_);
 }
 
 bool button::set_asset(const char * asset)
 {
     std::string asset_name(asset);
-    asset_texture face = assets_storage::instance().read<asset_texture>(asset_name);
+    auto face = assets_storage::instance().read<asset_texture>(asset_name);
 
-    if(face.pixels())
+    if(face)
     {
-        texture_face_.set_data(face.pixels(), face.size(), face.format());
+        using namespace rendering;
+
+        auto maker = get_texture_maker<default_texture_policy>(face->format());
+        texture_face_ = maker.construct(face->pixels(), face->size());
         return true;
     }
 
@@ -94,7 +99,7 @@ void button::draw()
                                   utils::to_int(square_enum::a_vertex_uv));
 }
 
-bool button::touch(int x, int y, touch_action action)
+bool button::touch(int x, int y, touch_action action, touch_finger finger)
 {
     system * sys = get_system();
 
@@ -105,7 +110,7 @@ bool button::touch(int x, int y, touch_action action)
     {
         if(action == touch_action::DOWN)
         {
-            sys->capture(this);
+            sys->capture(this, finger);
             state_ = state::PRESSED;
             return true;
         }
@@ -116,11 +121,11 @@ bool button::touch(int x, int y, touch_action action)
         }
     }
 
-    if(sys->capture_test(this))
+    if(sys->capture_test(this, finger))
     {
         if(action == touch_action::UP)
         {
-            sys->capture_release();
+            sys->capture_release(finger);
             state_ = state::NONE;
         }
         return true;

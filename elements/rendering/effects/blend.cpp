@@ -42,13 +42,13 @@ enum class program_enum : short
 
 bool blend::initialize()
 {
-    return load_program("shaders/primitives/square_texture.prog", program_);
+    return load_program("assets/shaders/primitives/square_texture.prog", program_);
 }
 
 void blend::process(float)
 {
     EPS_STATE_BLEND(sfactor_, dfactor_);
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_source), 0);

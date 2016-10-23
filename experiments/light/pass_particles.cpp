@@ -25,12 +25,12 @@ IN THE SOFTWARE.
 
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/core/texture_maker.h>
 #include <elements/utils/std/enum.h>
 #include <elements/math/common.h>
 #include <elements/assets/assets_storage.h>
 #include <elements/assets/asset_texture.h>
-
-#include <vector>
 
 namespace eps {
 namespace experiment {
@@ -55,10 +55,14 @@ void pass_particles::set_count(size_t count)
 
 bool pass_particles::set_background(const std::string & asset_name)
 {
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
-    if(asset.pixels())
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
+    if(asset)
     {
-        texture_background_.set_data(asset.pixels(), asset.size(), asset.format());
+        using namespace rendering;
+
+        auto maker = get_texture_maker<default_texture_policy>(asset->format());
+        background_ = maker.construct(asset->pixels(), asset->size());
+
         return true;
     }
     return false;
@@ -66,7 +70,7 @@ bool pass_particles::set_background(const std::string & asset_name)
 
 bool pass_particles::initialize()
 {
-    return rendering::load_program("shaders/experiments/light/particles.prog",
+    return rendering::load_program("assets/shaders/experiments/light/particles.prog",
                                    program_);
 }
 
@@ -88,9 +92,9 @@ utils::unique<rendering::pass_target> pass_particles::construct(const math::uvec
 void pass_particles::process(float)
 {
     EPS_STATE_BLEND(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
-    EPS_STATE_SAMPLER_1(get_inputs().get_slot(rendering::pass_input_slot::input_1));
-    EPS_STATE_SAMPLER_2(texture_background_.get_product());
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
+    EPS_STATE_SAMPLER_1(get_inputs().get_slot(rendering::pass_slot::slot_1));
+    EPS_STATE_SAMPLER_2(background_.get_product());
     EPS_STATE_VERTICES(product_index_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 

@@ -50,13 +50,13 @@ void tone::set_tone(float exposure, float gamma)
 
 bool tone::initialize()
 {
-    return load_program("shaders/effects/tone.prog", program_);
+    return load_program("assets/shaders/effects/tone.prog", program_);
 }
 
 void tone::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_input_slot::input_0));
-    EPS_STATE_SAMPLER_1(get_inputs().get_slot(pass_input_slot::input_1));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
+    EPS_STATE_SAMPLER_1(get_inputs().get_slot(pass_slot::slot_1));
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_source_0), 0);

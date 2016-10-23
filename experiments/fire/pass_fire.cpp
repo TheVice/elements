@@ -25,6 +25,8 @@ IN THE SOFTWARE.
 
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/core/texture_maker.h>
 
 #include <elements/utils/std/enum.h>
 
@@ -49,11 +51,15 @@ enum class program_enum : short
 bool pass_fire::set_background(const char * background)
 {
     std::string asset_name(background);
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
 
-    if(asset.pixels())
+    if(asset)
     {
-        texture_background_.set_data(asset.pixels(), asset.size(), asset.format());
+        using namespace rendering;
+
+        auto maker = get_texture_maker<default_texture_policy>(asset->format());
+        background_ = maker.construct(asset->pixels(), asset->size());
+
         return true;
     }
     return false;
@@ -61,13 +67,13 @@ bool pass_fire::set_background(const char * background)
 
 bool pass_fire::initialize()
 {
-    return rendering::load_program("shaders/experiments/fire/fire.prog", program_);
+    return rendering::load_program("assets/shaders/experiments/fire/fire.prog", program_);
 }
 
 void pass_fire::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
-    EPS_STATE_SAMPLER_1(texture_background_.get_product());
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
+    EPS_STATE_SAMPLER_1(background_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_fire), 0);

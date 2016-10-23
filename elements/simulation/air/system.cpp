@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "system.h"
-#include <thread>
 
 namespace eps {
 namespace simulation {
@@ -52,7 +51,7 @@ sync::task<math::vec2>::future system::spawn(float dt)
     const size_t size = std::distance(volume_.begin(), volume_.end());
     return simulation_task_.start(size, [this](auto begin, auto /*end*/, float dt)
     {
-        update_velocities(dt);
+        this->update_velocities(dt);
         for(auto & cell : volume_)
         {
             begin->x = cell.data[volume::cell::U];

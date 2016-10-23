@@ -25,18 +25,17 @@ IN THE SOFTWARE.
 #define ASSETS_ASSET_XML_H_INCLUDED
 
 #include "assets.h"
-#include <memory>
+#include "utils/std/pointer.h"
 #include <pugixml.hpp>
 
 namespace eps {
 
-struct asset_xml : public asset,
-                   public asset_dispatcher<asset_xml>
+struct asset_xml : public asset
 {
 public:
 
     using asset::asset;
-    bool load(asset_read_operation * opt) final;
+    bool load(utils::link<io::system> fs, const std::string & resource) final;
 
 private:
 
@@ -44,7 +43,7 @@ private:
 
 private:
 
-    std::unique_ptr<pugi::xml_document> doc_;
+    utils::unique<pugi::xml_document> doc_;
 };
 
 } /* eps */

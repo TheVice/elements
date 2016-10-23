@@ -28,8 +28,6 @@ IN THE SOFTWARE.
 #include <elements/utils/std/enum.h>
 #include <elements/math/common.h>
 
-#include <vector>
-
 namespace eps {
 namespace experiment {
 namespace light {
@@ -55,7 +53,7 @@ void pass_occluding::set_color(const math::vec4 & color)
 
 bool pass_occluding::initialize()
 {
-    return rendering::load_program("shaders/experiments/light/occluding.prog",
+    return rendering::load_program("assets/shaders/experiments/light/occluding.prog",
                                    program_);
 }
 
@@ -74,7 +72,7 @@ utils::unique<rendering::pass_target> pass_occluding::construct(const math::uvec
 
 void pass_occluding::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
     EPS_STATE_VERTICES(product_index_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 

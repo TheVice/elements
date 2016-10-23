@@ -19,7 +19,7 @@ public class CharacterWallpaperActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        VMRuntime.getRuntime().setMinimumHeapSize(12 * 1024 * 1024);
+        VMRuntime.getRuntime().setMinimumHeapSize(16 * 1024 * 1024);
 
         super.onCreate(savedInstanceState);
 

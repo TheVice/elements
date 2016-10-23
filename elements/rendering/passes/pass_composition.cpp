@@ -29,7 +29,7 @@ namespace eps {
 namespace rendering {
 
 pass_composition::pass_composition()
-    : placement_(new pass_target_placement())
+    : placement_(utils::make_shared<pass_target_placement>())
 {}
 
 void pass_composition::initialize(size_t places_count)
@@ -50,9 +50,9 @@ void pass_composition::process(float dt)
 {
     for(auto & pass : passes_)
     {
-        if(auto output = placement_->get_output(pass->get_place()).lock())
+        if(auto output = placement_->get_target(pass->get_place()).lock())
         {
-            EPS_STATE_VIEWPORT(output->get_size());
+            EPS_STATE_VIEWPORT(output->get_target_size());
             EPS_STATE_TARGET(output->get_target());
             pass->process(dt);
             output->swap();

@@ -39,11 +39,10 @@ public:
 
     utils::link<pass_target> register_target(utils::unique<pass_target> target);
 
-    template<typename _Target>
+    template<typename _Policy>
     utils::link<pass_target> request_target(const math::uvec2 & size)
     {
-        storage_.emplace_back(new _Target(size));
-        return storage_.back();
+        return register_target(get_pass_target<_Policy>(size));
     }
 
     void clear() { storage_.clear(); }

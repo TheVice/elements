@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 #include <elements/rendering/computation/compute_target.h>
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
 #include <elements/utils/std/enum.h>
 #include <elements/math/common.h>
 
@@ -56,9 +57,9 @@ void pass_positions::set_count(size_t particles_count)
 
 bool pass_positions::initialize()
 {
-    return load_program("shaders/experiments/air/positions_product_reset.prog",
+    return load_program("assets/shaders/experiments/air/positions_product_reset.prog",
                         program_reset_) &&
-           load_program("shaders/experiments/air/positions_product_process.prog",
+           load_program("assets/shaders/experiments/air/positions_product_process.prog",
                         program_process_);
 }
 
@@ -69,8 +70,10 @@ utils::unique<rendering::pass_target> pass_positions::construct(const math::uvec
         reset_ = true;
 
         const float scale = math::sqrt(float(size.x * size.y) / float(particles_count_));
-        return utils::make_unique<rendering::compute_target>(math::uvec2(size.x / scale,
-                                                                         size.y / scale));
+
+        using namespace rendering;
+        return get_compute_target<default_texture_policy>(math::uvec2(size.x / scale,
+                                                                      size.y / scale));
     }
 
     return nullptr;
@@ -97,8 +100,8 @@ void pass_positions::pass_reset()
 
 void pass_positions::pass_process(float dt)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_product());
-    EPS_STATE_SAMPLER_1(get_inputs().get_slot(rendering::pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_product(rendering::pass_slot::slot_0));
+    EPS_STATE_SAMPLER_1(get_inputs().get_slot(rendering::pass_slot::slot_0));
     EPS_STATE_PROGRAM(program_process_.get_product());
 
     program_process_.uniform_value(utils::to_int(process_enum::u_positions), 0);

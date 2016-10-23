@@ -30,6 +30,8 @@ IN THE SOFTWARE.
 #include "rendering/state/state_macro.h"
 #include "rendering/core/opengl.h"
 #include "rendering/utils/program_loader.h"
+#include "rendering/core/texture_maker.h"
+#include "rendering/core/texture_policy.h"
 
 #include "utils/std/enum.h"
 
@@ -56,7 +58,7 @@ label::label(control * parent)
     , valignment_(valignment::TOP)
     , halignment_(halignment::LEFT)
 {
-    rendering::load_program("shaders/primitives/square_texture_alpha.prog",
+    rendering::load_program("assets/shaders/primitives/square_texture_alpha.prog",
                             program_face_);
 }
 
@@ -84,7 +86,12 @@ bool label::set_text(const std::string & text)
     if(font_ != freetype::INVALID_FACE_HANDLE)
     {
         freetype::line line = freetype::manager::instance().get_line(text, font_, height_);
-        texture_face_.set_data(line.get_data(), line.get_size());
+
+        using namespace rendering;
+
+        auto maker = get_texture_maker<alpha_texture_policy>();
+        texture_face_ = maker.construct(line.get_data(), line.get_size());
+
         return true;
     }
     return false;

@@ -8,6 +8,7 @@ OpenGL ES 2.0 and C++ experiments.
  * [Strange Attractors](#strange-attractors)
  * [Wind Field](#wind-field)
  * [Flame Simualtion](#flame-simulation)
+ * [3D Character](#3d-character)
  * [Compass Tool](#Compass Tool)
 * [Build](#build)
 
@@ -55,6 +56,13 @@ The adaptation of a [raymarching](http://iquilezles.org/www/articles/raymarching
 - Preview into [the YouTube](https://www.youtube.com/watch?v=eYFEQRwEKm4)
 - Demo into [the Google Play](https://play.google.com/store/apps/details?id=com.yegorov.alexey.elements.fire)
 
+###3D Character
+![3D Character preview](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/character.jpeg)
+
+3D R2-D2 and C-3PO with Android Sensors.
+- Source experiments/character
+- Preview into [the YouTube](https://youtu.be/PH8TPegPb2k)
+
 ###Compass Tool
 ![Compass preview](https://raw.githubusercontent.com/TheVice/elements/gh-pages/2016.10.14/Compass_Tool_poster.png)
 
@@ -64,7 +72,7 @@ The adaptation of a [raymarching](http://iquilezles.org/www/articles/raymarching
  * ```SDK Tools``` - version 25.2.2: [Linux](http://dl.google.com/android/repository/tools_r25.2.2-linux.zip), [Mac OS X](http://dl.google.com/android/repository/tools_r25.2.2-macosx.zip), [Windows](http://dl.google.com/android/repository/tools_r25.2.2-windows.zip);
  * ```Platform Tools``` - version 24.0.2: [Linux](http://dl.google.com/android/repository/platform-tools_r24.0.2-linux.zip), [Mac OS X](http://dl.google.com/android/repository/platform-tools_r24.0.2-macosx.zip), [Windows](http://dl.google.com/android/repository/platform-tools_r24.0.2-windows.zip);
  * ```Build Tools``` - version 24.0.2: [Linux](http://dl.google.com/android/repository/build-tools_r24.0.2-linux.zip), [Mac OS X](http://dl.google.com/android/repository/build-tools_r24.0.2-macosx.zip), [Windows](http://dl.google.com/android/repository/build-tools_r24.0.2-windows.zip);
- * ```Platform``` - [version 24](http://dl.google.com/android/repository/platform-24_r02.zip);
+ * ```Platform``` - [version 24](http://dl.google.com/android/repository/platform-24_r02.zip) and [version 2.1](http://dl.google.com/android/repository/android-2.1_r03.zip) for Character Wallpaper demo;
  * NDK - Revision 10e (May 2015): [Linux 32-bit (x86)](http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86.bin), [Linux 64-bit (x86)](http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin), [Mac OS X 32-bit](http://dl.google.com/android/ndk/android-ndk-r10e-darwin-x86.bin), [Mac OS X 64-bit](http://dl.google.com/android/ndk/android-ndk-r10e-darwin-x86_64.bin), [Windows 32-bit](http://dl.google.com/android/ndk/android-ndk-r10e-windows-x86.exe), [Windows 64-bit](http://dl.google.com/android/ndk/android-ndk-r10e-windows-x86_64.exe).
 * Create folder ```android-sdk``` with two sub folders ```build-tools``` and  ```platforms```
 * Unpack ```SDK Tools``` and ```Platform Tools``` into ```android-sdk```. ```Build Tools``` and ```Platform``` should be unpacked into ```android-sdk/build-tools``` and ```android-sdk/platforms``` corresponding;
