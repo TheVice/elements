@@ -1,13 +1,14 @@
 package com.yegorov.alexey.elements.character;
 
 import android.app.Activity;
-import android.content.Context;
-//import android.content.pm.ApplicationInfo;
-//import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
+//import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+//import android.hardware.Sensor;
+//import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
-import dalvik.system.VMRuntime;
+import android.os.Environment;
 
 import com.badlogic.gdx.GL2Test;
 import com.badlogic.gdx.backends.android.surfaceview.GLSurfaceView20;
@@ -21,8 +22,6 @@ public class CharacterWallpaperActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        VMRuntime.getRuntime().setMinimumHeapSize(16 * 1024 * 1024);
-
         super.onCreate(savedInstanceState);
 
         /*sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
@@ -35,14 +34,35 @@ public class CharacterWallpaperActivity extends Activity {
 
         if (GL2Test.checkGL20Support()) {
 
-            //String path_to_apk = getPathToApk();
-            //String path_to_cache = getCacheDir().getAbsolutePath();
-
             view = new GLSurfaceView20(this);
-            //characterWallpaperView = new CharacterWallpaperView(true, path_to_apk, path_to_cache);
-            characterWallpaperView = new CharacterWallpaperView(true, getAssets());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                characterWallpaperView = new CharacterWallpaperView(true, getAssets());
+            }
+            else {
+
+                if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+
+                    throw new RuntimeException("External storage is " +
+                                                Environment.getExternalStorageState());
+                }
+
+                String path_to_apk = getPathToApk();
+                //String path_to_cache = getCacheDir().getAbsolutePath();
+                String path_to_cache = String.format("%s/%s/%s",
+                        Environment.getExternalStorageDirectory().getAbsolutePath(),
+                        getPackageName(),
+                        getCacheDir().getName());
+                characterWallpaperView = new CharacterWallpaperView(true,
+                                                                    path_to_apk,
+                                                                    path_to_cache);
+            }
+
             view.setRenderer(characterWallpaperView);
-            //sensorManager.registerListener(characterWallpaperView, sensor, SensorManager.SENSOR_DELAY_UI);
+            /*sensorManager.registerListener(characterWallpaperView,
+                                           sensor,
+                                           SensorManager.SENSOR_DELAY_UI);*/
             setContentView(view);
         }
         else {
@@ -73,7 +93,7 @@ public class CharacterWallpaperActivity extends Activity {
         characterWallpaperView.onDestroy();
     }
 
-    /*public String getPathToApk() {
+    public String getPathToApk() {
 
         PackageManager packageManager = getPackageManager();
         ApplicationInfo appInfo = null;
@@ -88,6 +108,6 @@ public class CharacterWallpaperActivity extends Activity {
         }
 
         return appInfo.sourceDir;
-    }*/
+    }
 
 }

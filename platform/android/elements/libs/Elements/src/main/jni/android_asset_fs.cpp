@@ -190,33 +190,13 @@ asset_fs::asset_fs()
 
 eps::io::file* asset_fs::open(const std::string& file)
 {
-	std::string correct_path;
-
-	if (file == "models/R2-D2/R2-D2.dR2-D2_D.png")
-	{
-		correct_path = "models/R2-D2/R2-D2_D.png";
-	}
-	else if (file == "models/R2-D2/R2-D2.dR2-D2_S.png")
-	{
-		correct_path = "models/R2-D2/R2-D2_S.png";
-	}
-	else if (file == "models/R2-D2/R2-D2.dR2-D2_N.png")
-	{
-		correct_path = "models/R2-D2/R2-D2_N.png";
-	}
-
-	if (!correct_path.empty())
-	{
-		return open(correct_path);
-	}
-	
 	if (!assets_.count(file))
 	{
-		LOGE("Asset %s NOT found", file.c_str());
+		LOGE("Asset %s NOT exists", file.c_str());
 		return new asset_content("");
 	}
 
-	LOGI("Asset %s found", file.c_str());
+	LOGI("Asset %s exists", file.c_str());
 	return new asset_content(assets_[file]);
 }
 
@@ -242,6 +222,7 @@ asset_fs2::asset_fs2(const std::string& path_to_cache)
 
 eps::io::file* asset_fs2::open(const std::string& file)
 {
+	LOGI("Asset %s %s", file.c_str(), exists(file) ? "exists" : "NOT exists");
 	const std::string abs_path = _path_to_cache + file;
 	return new asset_file(abs_path.c_str());
 }

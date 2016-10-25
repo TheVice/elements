@@ -21,33 +21,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
-#define RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
+#ifndef ELEMENTS_TECHNIQUES_LPP_H_INCLUDED
+#define ELEMENTS_TECHNIQUES_LPP_H_INCLUDED
 
-#include "rendering/core/program.h"
+#include "rendering/passes/pass_base.h"
+#include "rendering/passes/pass_composition.h"
 #include "scene/scene.h"
-#include "model.h"
 
 namespace eps {
 namespace rendering {
+namespace techniques {
 
-class process_forward : public scene::visitor<process_forward, scene::scene &>
+class lpp_geometry_pass;
+class lpp_lighting_pass;
+class lpp_reconstruct_pass;
+
+class lpp : public pass_base
 {
 public:
 
-    EPS_DESIGN_VISIT(model);
+    using pass_base::pass_base;
 
 public:
 
-    bool initialize();
-    void visit(const model & m, scene::scene & scene);
+    bool initialize() final;
+    void process(float dt) final;
+    utils::unique<pass_target> construct(const math::uvec2 & size) final;
+
+    void set_scene(const utils::pointer<scene::scene> & scene);
 
 private:
 
-    program program_;
+    pass_composition passes_;
+    utils::link<lpp_geometry_pass> link_geometry_;
+    utils::link<lpp_lighting_pass> link_lighting_;
+    utils::link<lpp_reconstruct_pass> link_reconstruct_;
 };
 
+} /* techniques */
 } /* rendering */
 } /* eps */
 
-#endif // RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
+
+#endif // ELEMENTS_TECHNIQUES_LPP_H_INCLUDED

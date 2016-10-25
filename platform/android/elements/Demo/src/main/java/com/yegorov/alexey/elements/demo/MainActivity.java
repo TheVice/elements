@@ -1,8 +1,11 @@
 package com.yegorov.alexey.elements.demo;
 
 import android.app.Activity;
+//import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+//import android.hardware.Sensor;
+//import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,6 +15,7 @@ import com.badlogic.gdx.backends.android.surfaceview.GLSurfaceView20;
 
 public class MainActivity extends Activity {
 
+    //private SensorManager sensorManager;
     private DemoView demoView;
     private com.badlogic.gdx.backends.android.surfaceview.GLSurfaceView20 view;
 
@@ -20,30 +24,44 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        /*sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
-            throw new RuntimeException("Run-time check of permission not implemented. " +
-                                       "Required READ_EXTERNAL_STORAGE and WRITE_EXTERNAL_STORAGE");
-        }
+        if (sensor == null) {
 
-        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-
-            throw new RuntimeException("External storage is " + Environment.getExternalStorageState());
-        }
+            throw new RuntimeException("There is no orientation sensor");
+        }*/
 
         if (GL2Test.checkGL20Support()) {
 
-            String path_to_apk = getPathToApk();
-            //String path_to_cache = getCacheDir().getAbsolutePath();
-            String path_to_cache = String.format("%s/%s/%s",
-                    Environment.getExternalStorageDirectory().getAbsolutePath(),
-                    getPackageName(),
-                    getCacheDir().getName());
-
             view = new GLSurfaceView20(this);
-            demoView = new DemoView(path_to_apk, path_to_cache);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                demoView = new DemoView(getAssets());
+            }
+            else {
+
+                if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+
+                    throw new RuntimeException("External storage is " +
+                                                Environment.getExternalStorageState());
+                }
+
+                String path_to_apk = getPathToApk();
+                //String path_to_cache = getCacheDir().getAbsolutePath();
+                String path_to_cache = String.format("%s/%s/%s",
+                        Environment.getExternalStorageDirectory().getAbsolutePath(),
+                        getPackageName(),
+                        getCacheDir().getName());
+                demoView = new DemoView(path_to_apk, path_to_cache);
+            }
+
             view.setRenderer(demoView);
             view.setOnTouchListener(demoView);
+            /*sensorManager.registerListener(characterWallpaperView,
+                                           sensor,
+                                           SensorManager.SENSOR_DELAY_UI);*/
             setContentView(view);
         }
         else {
@@ -70,6 +88,7 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
 
         super.onDestroy();
+        //sensorManager.unregisterListener(demoView);
         demoView.onDestroy();
     }
 

@@ -21,12 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-
-#include "process_forward.h"
-#include "model_warehouse.h"
+#include "lpp_geometry_process.h"
+#include "rendering/models/model_warehouse.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
-#include "math/matrix.h"
+#include "utils/std/enum.h"
 #include "math/trigonometry.h"
 
 namespace eps {
@@ -42,63 +41,35 @@ enum class program_enum : short
     // uniforms
     u_matrix_mvp = 0,
     u_matrix_model_view = 1,
-    u_matrix_normal = 2,
-    u_matrix_view = 3,
-    u_camera_pos = 4,
-    u_map_diffuse = 5,
-    u_map_specular = 6,
-    u_map_normal = 7,
-    u_light_pos = 8,
-    u_light_diffuse = 9,
-    u_light_specular = 10,
-    u_light_ambient = 11,
-    u_light_range = 12
+    u_map_normal = 2,
+    u_has_map_normal = 3
 };
 
-struct process_lights : public scene::visitor<process_lights, program&>
+bool lpp_geometry_process::initialize()
 {
-public:
-
-    EPS_DESIGN_VISIT(scene::light_point);
-
-public:
-
-    void visit(const scene::light_point & light, program & prog)
-    {
-        prog.uniform_value(utils::to_int(program_enum::u_light_diffuse), light.get_diffuse());
-        prog.uniform_value(utils::to_int(program_enum::u_light_specular), light.get_specular());
-        prog.uniform_value(utils::to_int(program_enum::u_light_ambient), light.get_ambient());
-        prog.uniform_value(utils::to_int(program_enum::u_light_range), light.get_range());
-        prog.uniform_value(utils::to_int(program_enum::u_light_pos),
-                           scene::get_position(light.get_node()));
-
-        // TODO: process all lights
-    }
-};
-
-bool process_forward::initialize()
-{
-    return load_program("assets/shaders/techniques/forward.prog", program_);
+    return load_program("assets/shaders/techniques/lpp_geometry.prog", program_);
 }
 
-void process_forward::visit(const model & sm, scene::scene & scene)
+void lpp_geometry_process::process()
 {
+    if(scene_)
+        scene_->process_entities(*this);
+}
+
+void lpp_geometry_process::visit(const model & sm)
+{
+    assert(scene_);
+
     auto node = sm.get_node().lock();
     assert(node);
 
-    auto camera = scene.get_camera().lock();
+    auto camera = scene_->get_camera().lock();
     assert(camera);
 
     auto warehouse = sm.get_warehouse().lock();
     assert(warehouse);
 
     EPS_STATE_PROGRAM(program_.get_product());
-
-    process_lights process;
-    scene.process_lights(process, program_);
-
-    program_.uniform_value(utils::to_int(program_enum::u_camera_pos),
-                           scene::get_position(camera->get_node()));
 
     for(const auto & mesh : sm)
     {
@@ -123,31 +94,21 @@ void process_forward::visit(const model & sm, scene::scene & scene)
         program_.attribute_array(utils::to_int(program_enum::a_vertex_uv),
                                  offsetof(scene::vertex, tex), 2, sizeof(scene::vertex));
 
-        if(const auto & texture = material.get_texture(scene::material::type_texture::diffuse))
-        {
-            EPS_STATE_SAMPLER_0(texture.value());
-            program_.uniform_value(utils::to_int(program_enum::u_map_diffuse), 0);
-        }
-
-        if(const auto & texture = material.get_texture(scene::material::type_texture::specular))
-        {
-            EPS_STATE_SAMPLER_1(texture.value());
-            program_.uniform_value(utils::to_int(program_enum::u_map_specular), 1);
-        }
-
         if(const auto & texture = material.get_texture(scene::material::type_texture::normals))
         {
-            EPS_STATE_SAMPLER_2(texture.value());
-            program_.uniform_value(utils::to_int(program_enum::u_map_normal), 2);
+            EPS_STATE_SAMPLER_0(texture.value());
+            program_.uniform_value(utils::to_int(program_enum::u_map_normal), 0);
+            program_.uniform_value(utils::to_int(program_enum::u_has_map_normal), true);
+        }
+        else
+        {
+            program_.uniform_value(utils::to_int(program_enum::u_has_map_normal), false);
         }
 
         const math::mat4 & mv = camera->get_view() * node->get_world_matrix();
         const math::mat4 & projection = camera->get_projection();
         program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), projection * mv);
         program_.uniform_value(utils::to_int(program_enum::u_matrix_model_view), mv);
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_view), camera->get_view());
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_normal),
-                               math::transpose(math::inverse(math::mat3(mv))));
 
         EPS_STATE_INDICES(geometry.get_indices());
         glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);

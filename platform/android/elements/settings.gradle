@@ -1,6 +1,6 @@
 include ':Elements'
 include ':gl2-android'
-
+include ':Demo'
 include ':LiquidWallpaper'
 include ':FireWallpaper'
 include ':AirWallpaper'
