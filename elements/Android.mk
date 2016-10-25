@@ -215,6 +215,7 @@ LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. \
     $(LOCAL_PATH) \
     $(LOCAL_PATH)/../third-party/glm
+    
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
 LOCAL_EXPORT_LDLIBS := -llog -lGLESv2 -latomic
 LOCAL_STATIC_LIBRARIES := png freetype pugixml assimp

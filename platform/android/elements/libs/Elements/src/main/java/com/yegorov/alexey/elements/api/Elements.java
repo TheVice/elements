@@ -8,4 +8,5 @@ public class Elements
     }
 
     public static native void initializeAssets(Object manager);
+    public static native void initializeAssetsAtCache(String path_to_cache);
 }

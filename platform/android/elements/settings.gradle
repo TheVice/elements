@@ -1,5 +1,6 @@
-include ':gl2-android'
 include ':Elements'
+include ':gl2-android'
+
 include ':LiquidWallpaper'
 include ':FireWallpaper'
 include ':AirWallpaper'
@@ -8,5 +9,5 @@ include ':LightWallpaper'
 include ':CharacterWallpaper'
 include ':CompassTool'
 
-project(':gl2-android').projectDir = new File('libs/gl2-android')
 project(':Elements').projectDir = new File('libs/Elements')
+project(':gl2-android').projectDir = new File('libs/gl2-android')

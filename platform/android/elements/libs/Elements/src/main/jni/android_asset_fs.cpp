@@ -1,9 +1,9 @@
 
 #include "android_asset_fs.h"
 #include "io/file.h"
+#include "logging.h"
 #include <ios>
 #include <cassert>
-#include "logging.h"
 
 struct asset_content : public eps::io::file
 {
@@ -101,12 +101,115 @@ private:
 	std::string::size_type pos_;
 };
 
+struct asset_file : public eps::io::file
+{
+	asset_file(const char* file_name)
+		: _file(fopen(file_name, "rb"))
+	{
+	}
+
+	size_t read(void * output, size_t size, size_t count)
+	{
+		if (!_file)
+		{
+			return -1;
+		}
+
+		return fread(output, size, count, _file);
+	}
+
+	size_t tell() const
+	{
+		if (!_file)
+		{
+			return -1;
+		}
+
+		return ftell(_file);
+	}
+
+	size_t size() const
+	{
+		if (!_file)
+		{
+			return -1;
+		}
+
+		const long offset = ftell(_file);
+		fseek(_file, 0, SEEK_END);
+		const long file_size = ftell(_file);
+		fseek(_file, offset, SEEK_SET);
+		return file_size;
+	}
+
+	int seek(size_t offset, int origin)
+	{
+		if (!_file)
+		{
+			return INT_MAX;
+		}
+
+		return fseek(_file, offset, origin);
+	}
+
+	void flush()
+	{
+		fflush(_file);
+	}
+
+	virtual ~asset_file()
+	{
+		if (!_file)
+		{
+			return;
+		}
+
+		fclose(_file);
+	}
+
+	static bool exists(const char* file_name)
+	{
+		FILE * _file = fopen(file_name, "rb");
+		const bool is_open = (_file != nullptr);
+
+		if (is_open)
+		{
+			fclose(_file);
+		}
+
+		return is_open;
+	}
+
+private:
+	FILE * _file;
+};
+
 asset_fs::asset_fs()
 {
 }
 
 eps::io::file* asset_fs::open(const std::string& file)
 {
+	std::string correct_path;
+
+	if (file == "models/R2-D2/R2-D2.dR2-D2_D.png")
+	{
+		correct_path = "models/R2-D2/R2-D2_D.png";
+	}
+	else if (file == "models/R2-D2/R2-D2.dR2-D2_S.png")
+	{
+		correct_path = "models/R2-D2/R2-D2_S.png";
+	}
+	else if (file == "models/R2-D2/R2-D2.dR2-D2_N.png")
+	{
+		correct_path = "models/R2-D2/R2-D2_N.png";
+	}
+
+	if (!correct_path.empty())
+	{
+		return open(correct_path);
+	}
+	
 	if (!assets_.count(file))
 	{
 		LOGE("Asset %s NOT found", file.c_str());
@@ -131,3 +234,28 @@ void asset_fs::close(eps::io::file* file)
 }
 
 std::map<std::string, std::string> asset_fs::assets_;
+
+asset_fs2::asset_fs2(const std::string& path_to_cache)
+	: _path_to_cache(path_to_cache.empty() ? "" : path_to_cache + "/")
+{
+}
+
+eps::io::file* asset_fs2::open(const std::string& file)
+{
+	const std::string abs_path = _path_to_cache + file;
+	return new asset_file(abs_path.c_str());
+}
+
+bool asset_fs2::exists(const std::string& file)
+{
+	const std::string abs_path = _path_to_cache + file;
+	return asset_file::exists(abs_path.c_str());
+}
+
+void asset_fs2::close(eps::io::file* file)
+{
+	if (file)
+	{
+		delete file;
+	}
+}

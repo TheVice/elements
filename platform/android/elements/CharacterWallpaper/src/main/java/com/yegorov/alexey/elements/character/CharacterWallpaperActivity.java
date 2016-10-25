@@ -2,6 +2,8 @@ package com.yegorov.alexey.elements.character;
 
 import android.app.Activity;
 import android.content.Context;
+//import android.content.pm.ApplicationInfo;
+//import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -33,7 +35,11 @@ public class CharacterWallpaperActivity extends Activity {
 
         if (GL2Test.checkGL20Support()) {
 
+            //String path_to_apk = getPathToApk();
+            //String path_to_cache = getCacheDir().getAbsolutePath();
+
             view = new GLSurfaceView20(this);
+            //characterWallpaperView = new CharacterWallpaperView(true, path_to_apk, path_to_cache);
             characterWallpaperView = new CharacterWallpaperView(true, getAssets());
             view.setRenderer(characterWallpaperView);
             //sensorManager.registerListener(characterWallpaperView, sensor, SensorManager.SENSOR_DELAY_UI);
@@ -66,5 +72,22 @@ public class CharacterWallpaperActivity extends Activity {
         //sensorManager.unregisterListener(characterWallpaperView);
         characterWallpaperView.onDestroy();
     }
+
+    /*public String getPathToApk() {
+
+        PackageManager packageManager = getPackageManager();
+        ApplicationInfo appInfo = null;
+
+        try {
+
+            appInfo = packageManager.getApplicationInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException exc) {
+
+            exc.printStackTrace();
+            throw new RuntimeException("Unable to locate APK");
+        }
+
+        return appInfo.sourceDir;
+    }*/
 
 }

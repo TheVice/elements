@@ -7,6 +7,7 @@ BUILD_STRANGE := true
 BUILD_LIQUID := true
 BUILD_AIR := true
 BUILD_CHARACTER := true
+#BUILD_DEMO := true
 BUILD_COMPASS := true
 
 # android
@@ -41,6 +42,10 @@ endif
 ifeq ($(BUILD_CHARACTER), true)
 	FILE_LIST += $(wildcard $(LOCAL_PATH)/character/*.cpp)
 endif
+
+#ifeq ($(BUILD_DEMO), true)
+#	FILE_LIST += $(wildcard $(LOCAL_PATH)/demo/*.cpp)
+#endif
 
 ifeq ($(BUILD_COMPASS), true)
 	FILE_LIST += $(wildcard $(LOCAL_PATH)/compass/*.cpp)

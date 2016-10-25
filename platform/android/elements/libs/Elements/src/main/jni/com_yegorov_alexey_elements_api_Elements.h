@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT void JNICALL Java_com_yegorov_alexey_elements_api_Elements_initializeAssets
   (JNIEnv *, jclass, jobject);
 
+/*
+ * Class:     com_yegorov_alexey_elements_api_Elements
+ * Method:    initializeAssetsAtCache
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_yegorov_alexey_elements_api_Elements_initializeAssetsAtCache
+  (JNIEnv *, jclass, jstring);
+
 #ifdef __cplusplus
 }
 #endif
