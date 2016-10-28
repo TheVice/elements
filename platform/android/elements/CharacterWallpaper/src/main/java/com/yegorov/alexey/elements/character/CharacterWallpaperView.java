@@ -78,7 +78,7 @@ public class CharacterWallpaperView implements GLSurfaceView.Renderer,
 
         character.startup(width, height);
         loadModel();
-        character.rotation(2 / (float) Math.sqrt(Math.PI), (float) Math.PI / 4, 0);
+        character.rotation(0, 2 / (float) Math.sqrt(Math.PI), (float) Math.PI / 4);
     }
 
     @Override

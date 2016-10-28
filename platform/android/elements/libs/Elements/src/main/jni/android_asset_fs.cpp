@@ -240,3 +240,42 @@ void asset_fs2::close(eps::io::file* file)
 		delete file;
 	}
 }
+
+#ifndef ANDROID
+
+asset_fs3::asset_fs3(const std::string& mount_point) :
+	mount_point_(mount_point.empty() ? "" : mount_point + "/"),
+	assets_()
+{
+}
+
+eps::io::file* asset_fs3::open(const std::string& file)
+{
+	const auto full_path = mount_point_ + file;
+
+	if (!assets_.count(full_path))
+	{
+		asset_file asset(full_path.c_str());
+		std::string file_content(asset.size(), '\0');
+		asset.read(&file_content.front(), 1, file_content.size());
+		assets_[full_path] = file_content;
+	}
+
+	return new asset_content(assets_[full_path]);
+}
+
+bool asset_fs3::exists(const std::string& file)
+{
+	const auto full_path = mount_point_ + file;
+	return asset_file::exists(full_path.c_str());
+}
+
+void asset_fs3::close(eps::io::file* file)
+{
+	if (file)
+	{
+		delete file;
+	}
+}
+
+#endif

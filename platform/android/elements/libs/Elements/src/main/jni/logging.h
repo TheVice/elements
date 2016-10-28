@@ -24,10 +24,79 @@ IN THE SOFTWARE.
 #ifndef PLATFORM_ANDROID_LOGGING_H_INCLUDED
 #define PLATFORM_ANDROID_LOGGING_H_INCLUDED
 
+#ifdef ANDROID
+
 #include <android/log.h>
 
 #define  LOG_TAG  "Elements"
 #define  LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+
+#else
+
+#include <stdio.h>
+#include <stdarg.h>
+
+#ifdef _MSC_VER
+#include <windows.h>
+#endif
+
+inline int LOGI(const char* aMessageFormat, ...)
+{
+	va_list args1;
+	va_start(args1, aMessageFormat);
+	va_list args2;
+	va_copy(args2, args1);
+	const int length = vsnprintf(nullptr, 0, aMessageFormat, args1);
+	va_end(args1);
+
+	if (length > 0)
+	{
+		char message[1 + length];
+		vsnprintf(message, sizeof(message), aMessageFormat, args2);
+		va_end(args2);
+#ifndef _MSC_VER
+		fprintf(stdout, "%s\n", message);
+#else
+		OutputDebugStringA(message);
+#endif
+	}
+	else
+	{
+		va_end(args2);
+	}
+
+	return length;
+}
+
+inline int LOGE(const char* aMessageFormat, ...)
+{
+	va_list args1;
+	va_start(args1, aMessageFormat);
+	va_list args2;
+	va_copy(args2, args1);
+	const int length = vsnprintf(nullptr, 0, aMessageFormat, args1);
+	va_end(args1);
+
+	if (length > 0)
+	{
+		char message[1 + length];
+		vsnprintf(message, sizeof(message), aMessageFormat, args2);
+		va_end(args2);
+#ifndef _MSC_VER
+		fprintf(stderr, "%s\n", message);
+#else
+		OutputDebugStringA(message);
+#endif
+	}
+	else
+	{
+		va_end(args2);
+	}
+
+	return length;
+}
+
+#endif
 
 #endif // PLATFORM_ANDROID_LOGGING_H_INCLUDED

@@ -28,7 +28,7 @@ namespace io {
 
 std::string parent_path(const std::string & path)
 {
-    size_t pos = path.find_last_of(utils::values_cast<std::string>(io::separator));
+    size_t pos = path.find_last_of(utils::values_cast<std::string>(utils::values<char>({'\\', '/'})));
     return pos != std::string::npos ? path.substr(0, pos + 1) : "";
 }
 
