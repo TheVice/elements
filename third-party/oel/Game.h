@@ -50,13 +50,13 @@ public:
 	Window GetWindowHandle() const;
 #else
 	HWND GetWindowHandle() const;
-	int GetDPI() const;
 #endif
 	GLFWwindow* GetWindow() const;
 	const TCHAR* GetWindowTitle() const;
 
 	GLuint GetScreenWidth() const;
 	GLuint GetScreenHeight() const;
+	GLint GetDPI() const;
 
 	GLfloat GetAspectRatio() const;
 	bool IsFullScreen() const;

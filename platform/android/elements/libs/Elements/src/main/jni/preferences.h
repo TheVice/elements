@@ -24,9 +24,12 @@ IN THE SOFTWARE.
 #ifndef PLATFORM_ANDROID_PREFERENCES_H_INCLUDED
 #define PLATFORM_ANDROID_PREFERENCES_H_INCLUDED
 
+#ifdef ANDROID
 #include <jni.h>
+#endif
 #include <elements/preferences/preferences.h>
 
+#ifdef ANDROID
 class preferences : public eps::preferences_interface
 {
 public:
@@ -47,5 +50,20 @@ private:
     jmethodID jmethodID_edit_putFloat_;
     jmethodID jmethodID_edit_apply_;
 };
+#else
+struct preferences : public eps::preferences_interface
+{
+public:
+
+    preferences();
+    ~preferences();
+
+    float get_float(const std::string & key, float default_value) const final;
+    void  set_float(const std::string & key, float value) final;
+
+private:
+
+};
+#endif
 
 #endif // PLATFORM_ANDROID_PREFERENCES_H_INCLUDED

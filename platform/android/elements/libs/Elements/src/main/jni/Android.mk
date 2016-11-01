@@ -8,13 +8,14 @@ BUILD_LIQUID := true
 BUILD_AIR := true
 BUILD_CHARACTER := true
 BUILD_DEMO := true
+BUILD_COMPASS := true
 
 # android
 # ------------------------------------
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := elements
-LOCAL_CPPFLAGS  := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra -Werror
+LOCAL_CPPFLAGS := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra #-Werror
 
 FILE_LIST := $(wildcard $(LOCAL_PATH)/*.cpp)
 
@@ -44,6 +45,10 @@ endif
 
 ifeq ($(BUILD_DEMO), true)
 	FILE_LIST += $(wildcard $(LOCAL_PATH)/demo/*.cpp)
+endif
+
+ifeq ($(BUILD_COMPASS), true)
+	FILE_LIST += $(wildcard $(LOCAL_PATH)/compass/*.cpp)
 endif
 
 LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)

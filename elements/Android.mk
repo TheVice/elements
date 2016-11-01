@@ -195,7 +195,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := elements_engine
-LOCAL_CPPFLAGS  := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra -Werror
+LOCAL_CPPFLAGS  := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra #-Werror
 FILE_LIST := $(wildcard $(LOCAL_PATH)/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/assets/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/io/*/*.cpp)
@@ -209,14 +209,14 @@ FILE_LIST += $(wildcard $(LOCAL_PATH)/synchronization/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/timing/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/ui/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/utils/*/*.cpp)
-FILE_LIST += $(wildcard $(LOCAL_PATH)/design/*/*.cpp)
 
 LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. \
     $(LOCAL_PATH) \
-    $(LOCAL_PATH)/../third-party/glm
+    $(LOCAL_PATH)/../third-party/glm \
+	$(LOCAL_PATH)/../third-party/snape/include
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
-LOCAL_EXPORT_LDLIBS := -latomic -lGLESv2 -llog -L$(SYSROOT)/usr/lib
+LOCAL_EXPORT_LDLIBS := -llog -lGLESv2 -latomic
 LOCAL_STATIC_LIBRARIES := png freetype pugixml assimp
 
 include $(BUILD_STATIC_LIBRARY)

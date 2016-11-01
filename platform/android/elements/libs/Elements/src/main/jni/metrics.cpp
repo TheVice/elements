@@ -23,6 +23,9 @@ IN THE SOFTWARE.
 
 #include "metrics.h"
 #include "logging.h"
+#include <map>
+
+#ifdef ANDROID
 
 metrics::metrics(JNIEnv * env, jobject jmetrics)
     : density_(1.0f)
@@ -43,3 +46,35 @@ metrics::metrics(JNIEnv * env, jobject jmetrics)
 
     density_ = env->GetFloatField(jmetrics, jfieldID_density);
 }
+
+#else
+
+static const std::map<int, float> dpi_map =
+{
+    {  96, 1.00f },
+    { 120, 1.25f },
+    { 144, 1.50f },
+    { 192, 2.00f },
+    { 240, 2.50f },
+    { 288, 3.00f },
+    { 384, 4.00f },
+    { 480, 5.00f }
+};
+
+
+metrics::metrics(int dpi) :
+    density_(dpi_map.count(dpi) ? dpi_map.at(dpi) : dpi_map.at(96))
+{
+}
+
+metrics::~metrics()
+{
+}
+
+float metrics::density() const
+{
+    return density_;
+}
+
+#endif
+

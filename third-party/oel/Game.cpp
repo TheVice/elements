@@ -57,18 +57,6 @@ HWND Game::GetWindowHandle() const
 {
 	return glfwGetWin32Window(mWindow);
 }
-
-int Game::GetDPI() const
-{
-	const auto windowHandle = GetWindowHandle();
-	const auto hdc = GetDC(windowHandle);
-	//
-	const auto dpi = GetDeviceCaps(hdc, LOGPIXELSY);
-	//
-	ReleaseDC(windowHandle, hdc);
-	//
-	return dpi;
-}
 #endif
 GLFWwindow* Game::GetWindow() const
 {
@@ -88,6 +76,22 @@ GLuint Game::GetScreenWidth() const
 GLuint Game::GetScreenHeight() const
 {
 	return mScreenHeight;
+}
+
+GLint Game::GetDPI() const
+{
+#ifdef WIN32
+	const auto windowHandle = GetWindowHandle();
+	const auto hdc = GetDC(windowHandle);
+	//
+	const auto dpi = GetDeviceCaps(hdc, LOGPIXELSY);
+	//
+	ReleaseDC(windowHandle, hdc);
+	//
+	return dpi;
+#else
+	return 96;
+#endif
 }
 
 GLfloat Game::GetAspectRatio() const

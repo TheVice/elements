@@ -93,7 +93,6 @@ using depth24_texture_policy = texture_policy
     GL_NEAREST,
     GL_CLAMP_TO_EDGE
 >;
-
 #ifndef ANDROID
 #define GL_DEPTH24_STENCIL8_OES GL_DEPTH24_STENCIL8
 #define GL_DEPTH_STENCIL_OES GL_DEPTH_STENCIL
