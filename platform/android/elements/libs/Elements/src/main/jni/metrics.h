@@ -24,9 +24,12 @@ IN THE SOFTWARE.
 #ifndef PLATFORM_ANDROID_METRICS_H_INCLUDED
 #define PLATFORM_ANDROID_METRICS_H_INCLUDED
 
+#ifdef ANDROID
 #include <jni.h>
+#endif
 #include <elements/metrics/metrics.h>
 
+#ifdef ANDROID
 class metrics : public eps::metrics_interface
 {
 public:
@@ -38,5 +41,20 @@ private:
 
     float density_;
 };
+#else
+struct metrics : public eps::metrics_interface
+{
+public:
+
+    metrics(int dpi);
+    ~metrics();
+
+    float density() const final;
+
+private:
+
+    float density_;
+};
+#endif
 
 #endif // PLATFORM_ANDROID_METRICS_H_INCLUDED

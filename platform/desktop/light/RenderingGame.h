@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "DrawableGameComponent.h"
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace Rendering
 {

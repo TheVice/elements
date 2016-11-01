@@ -6,7 +6,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := experiments
-LOCAL_CPPFLAGS  := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra -Werror
+LOCAL_CPPFLAGS := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra #-Werror
 
 ifeq ($(BUILD_FIRE), true)
 	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/fire/*.cpp)
@@ -34,6 +34,10 @@ endif
 
 ifeq ($(BUILD_DEMO), true)
 	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/demo/*.cpp)
+endif
+
+ifeq ($(BUILD_COMPASS), true)
+	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/compass/*.cpp)
 endif
 
 LOCAL_SRC_FILES := $(EXPERIMETNS_FILES:$(LOCAL_PATH)/%=%)

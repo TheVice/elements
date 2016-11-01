@@ -10,6 +10,7 @@ OpenGL ES 2.0 and C++ experiments.
  * [Wind Field](#wind-field)
  * [Flame Simualtion](#flame-simulation)
  * [3D Character](#3d-character)
+ * [Compass Tool](#Compass Tool)
 * [Build](#build)
 
 -----------------------
@@ -68,6 +69,9 @@ The adaptation of a [raymarching](http://iquilezles.org/www/articles/raymarching
 3D R2-D2 and C-3PO with Android Sensors.
 - Source experiments/character
 - Preview into [the YouTube](https://youtu.be/PH8TPegPb2k)
+
+###Compass Tool
+![Compass preview](https://raw.githubusercontent.com/TheVice/elements/gh-pages/2016.10.14/Compass_Tool_poster.png)
 
 ##Build
 

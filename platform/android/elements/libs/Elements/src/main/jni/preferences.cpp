@@ -23,6 +23,7 @@ IN THE SOFTWARE.
 
 #include "preferences.h"
 #include "logging.h"
+#ifdef ANDROID
 #include "jni_environment.h"
 
 preferences::preferences(JNIEnv * env, jobject prefs)
@@ -140,3 +141,27 @@ void preferences::set_float(const std::string & key, float value)
     env->CallObjectMethod(editor, jmethodID_edit_putFloat_, jkey, value);
     env->CallVoidMethod(editor, jmethodID_edit_apply_);
 }
+
+#else
+
+preferences::preferences()
+{
+}
+
+preferences::~preferences()
+{
+}
+
+float preferences::get_float(const std::string & key, float default_value) const
+{
+    (void)key;
+    return default_value;
+}
+
+void preferences::set_float(const std::string & key, float value)
+{
+    (void)key;
+    (void)value;
+}
+
+#endif
