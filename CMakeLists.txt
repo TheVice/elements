@@ -217,21 +217,31 @@ add_library(oel ${OEL_SRC_FILES})
 target_include_directories(oel SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${oel_Path})
 
+# snape
+set(snape_Path ${CMAKE_SOURCE_DIR}/third-party/snape)
+
 # elements
 set(elements_Path ${CMAKE_SOURCE_DIR}/elements)
 file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp)
 
 add_library(elements ${ELEMENTS_SRC_FILES})
-target_include_directories(elements PRIVATE ${elements_Path})
+target_include_directories(elements PRIVATE ${elements_Path} ${snape_Path}/include)
 target_include_directories(elements SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${elements_Path})
 
 # platform library
 set(platform_Path ${CMAKE_SOURCE_DIR}/platform/desktop)
-file(GLOB PLATFORM_SRC_FILES ${platform_Path}/*.h ${platform_Path}/*.cpp
-                             ${platform_Path}/Library/*.h ${platform_Path}/Library/*.cpp)
+file(GLOB PLATFORM_SRC_FILES ${platform_Path}/Library/*.h ${platform_Path}/Library/*.cpp
+                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/asset_fs.h
+                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/asset_fs.cpp
+                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/metrics.h
+                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/metrics.cpp
+                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.h
+                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.cpp)
+
 add_library(desktop ${PLATFORM_SRC_FILES})
-target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES})
+target_include_directories(desktop PRIVATE ${elements_Path}/..
+                                           ${REQUIRED_INCLUDES})
 target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
 list(APPEND REQUIRED_INCLUDES ${platform_Path} ${platform_Path}/Library)
 
@@ -319,12 +329,17 @@ foreach(SHADER_FILE ${SHADER_FILES})
       string(REPLACE "/" "_" app_path ${app_path})
     endif()
 
-    file(GLOB SRC_FILES ${app_full_path}/*.h ${app_full_path}/*.cpp)
+    file(GLOB SRC_FILES ${app_full_path}/*.h ${app_full_path}/*.cpp ${CMAKE_SOURCE_DIR}/platform/android/input.h)
+
     add_executable(${app_path} ${IS_SUBSYSTEM_WIN32} ${SRC_FILES})
 
-    target_link_libraries(${app_path} ${REQUIRED_LIBRARIES})
-    target_include_directories(${app_path} PRIVATE ${REQUIRED_INCLUDES})
+    target_include_directories(${app_path} PRIVATE ${REQUIRED_INCLUDES}
+                                                   ${snape_Path}/include
+                                                   ${elements_Path}/..
+                                                   ${CMAKE_SOURCE_DIR}/platform
+                                                   ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
     target_include_directories(${app_path} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
+    target_link_libraries(${app_path} ${REQUIRED_LIBRARIES})
 
     add_dependencies(${app_path} copyAssets)
   endif()

@@ -7,6 +7,7 @@
 #include "utils/std/enum.h"
 #include "TestCard.h"
 #include "Game.h"
+#include <memory>
 
 namespace Rendering
 {

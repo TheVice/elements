@@ -317,10 +317,10 @@ bool CustomUi::IsNeedRestore() const
 
 bool CustomUi::IsPointSpriteEnabled()
 {
-	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>
+	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[GL_POINT_SPRITE_CHECKBOX].lock()))
 	{
-		return (Desktop::checkbox::state::CHECKED == directCheckbox->get_state());
+		return (Library::checkbox::state::CHECKED == directCheckbox->get_state());
 	}
 
 	return false;
@@ -328,10 +328,10 @@ bool CustomUi::IsPointSpriteEnabled()
 
 bool CustomUi::IsVertexProgramPointSizeEnabled()
 {
-	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>
+	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[GL_VERTEX_PROGRAM_POINT_SIZE_CHECKBOX].lock()))
 	{
-		return (Desktop::checkbox::state::CHECKED == directCheckbox->get_state());
+		return (Library::checkbox::state::CHECKED == directCheckbox->get_state());
 	}
 
 	return false;
@@ -339,18 +339,18 @@ bool CustomUi::IsVertexProgramPointSizeEnabled()
 
 void CustomUi::SetCheckBoxState(bool aPointSpriteEnabled, bool aVertexProgramPointSizeEnabled)
 {
-	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>
+	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[GL_POINT_SPRITE_CHECKBOX].lock()))
 	{
-		directCheckbox->set_state(aPointSpriteEnabled ? Desktop::checkbox::state::CHECKED :
-								  Desktop::checkbox::state::UNCHECKED);
+		directCheckbox->set_state(aPointSpriteEnabled ? Library::checkbox::state::CHECKED :
+								  Library::checkbox::state::UNCHECKED);
 	}
 
-	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>
+	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[GL_VERTEX_PROGRAM_POINT_SIZE_CHECKBOX].lock()))
 	{
-		directCheckbox->set_state(aVertexProgramPointSizeEnabled ? Desktop::checkbox::state::CHECKED :
-								  Desktop::checkbox::state::UNCHECKED);
+		directCheckbox->set_state(aVertexProgramPointSizeEnabled ? Library::checkbox::state::CHECKED :
+								  Library::checkbox::state::UNCHECKED);
 	}
 }
 

@@ -223,7 +223,7 @@ UiAsset::~UiAsset()
 	}
 
 #define SET_CHECKBOX(C)																			\
-	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>(C.lock()))			\
+	if (auto directCheckbox = std::static_pointer_cast<checkbox>(C.lock()))						\
 	{																							\
 		auto search = std::get<1>(controlInfo).find("state");									\
 		\
@@ -231,15 +231,15 @@ UiAsset::~UiAsset()
 		{																						\
 			if (search->second == "Checked")													\
 			{																					\
-				directCheckbox->set_state(Desktop::checkbox::state::CHECKED);					\
+				directCheckbox->set_state(checkbox::state::CHECKED);							\
 			}																					\
 			else if (search->second == "Indeterminate")											\
 			{																					\
-				directCheckbox->set_state(Desktop::checkbox::state::INDETERMINATE);				\
+				directCheckbox->set_state(checkbox::state::INDETERMINATE);						\
 			}																					\
 			else if (search->second == "Unchecked")												\
 			{																					\
-				directCheckbox->set_state(Desktop::checkbox::state::UNCHECKED);					\
+				directCheckbox->set_state(checkbox::state::UNCHECKED);							\
 			}																					\
 		}																						\
 	}
@@ -329,7 +329,7 @@ void UiAsset::Initialize()
 		}
 		else if (std::get<0>(controlInfo) == "checkbox")
 		{
-			control = parentControl->add<Desktop::checkbox>();
+			control = parentControl->add<checkbox>();
 			SET_CHECKBOX(control)
 		}
 

@@ -25,9 +25,9 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::instance().mount<Desktop::asset_fs>("assets", "assets");
-	eps::preferences::init<Desktop::preferences>();
-	eps::metrics::init<Desktop::metrics>(1.0f);
+	eps::assets_storage::instance().mount<asset_fs>("assets", "assets");
+	eps::preferences::init<preferences>();
+	eps::metrics::init<metrics>(GetDPI());
 	//
 	mUiComponent = std::make_unique<CustomUi>(*this, "assets/settings/techniques/geometry_ui.xml");
 	mComponents.push_back(mUiComponent.get());

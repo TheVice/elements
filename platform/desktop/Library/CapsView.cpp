@@ -32,14 +32,14 @@ void CapsView::Initialize()
 
 	for (const auto& cap : GetCaps())
 	{
-		auto checkBox = mUiSystem->add<Desktop::checkbox>();
+		auto checkBox = mUiSystem->add<checkbox>();
 
-		if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>(checkBox.lock()))
+		if (auto directCheckbox = std::static_pointer_cast<checkbox>(checkBox.lock()))
 		{
 			directCheckbox->set_position(density * x, density * (3 + y));
 			directCheckbox->set_size(density * 13, density * 13);
-			directCheckbox->set_state(glIsEnabled(cap.second) ? Desktop::checkbox::state::CHECKED :
-									  Desktop::checkbox::state::UNCHECKED);
+			directCheckbox->set_state(glIsEnabled(cap.second) ? checkbox::state::CHECKED :
+									  checkbox::state::UNCHECKED);
 		}
 
 		mControls[cap.first] = checkBox;
@@ -75,9 +75,9 @@ void CapsView::Update(const GameTime& aGameTime)
 
 	for (const auto& cap : GetCaps())
 	{
-		if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>(mControls[cap.first].lock()))
+		if (auto directCheckbox = std::static_pointer_cast<checkbox>(mControls[cap.first].lock()))
 		{
-			bool isCapEnable = directCheckbox->get_state() == Desktop::checkbox::state::CHECKED;
+			bool isCapEnable = directCheckbox->get_state() == checkbox::state::CHECKED;
 
 			if (isCapEnable)
 			{

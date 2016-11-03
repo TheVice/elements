@@ -327,10 +327,10 @@ void CustomUi::Update(const Library::GameTime& aGameTime)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.x, VERTEX_3_LABEL_76)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.y, VERTEX_3_LABEL_77)
 
-	if (auto directCheckbox = std::static_pointer_cast<Desktop::checkbox>
+	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[ENCODE_NORMAL_CHECKBOX].lock()))
 	{
-		mIsEncodeNormal = (Desktop::checkbox::state::CHECKED == directCheckbox->get_state());
+		mIsEncodeNormal = (Library::checkbox::state::CHECKED == directCheckbox->get_state());
 	}
 }
 

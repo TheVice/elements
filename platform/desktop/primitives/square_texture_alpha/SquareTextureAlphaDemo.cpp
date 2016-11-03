@@ -8,6 +8,7 @@
 #include "SettingsReader.h"
 #include "TestCard.h"
 #include "Game.h"
+#include <memory>
 
 namespace Rendering
 {

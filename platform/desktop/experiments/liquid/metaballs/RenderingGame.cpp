@@ -1,6 +1,8 @@
 
 #include "RenderingGame.h"
 #include "asset_fs.h"
+#include "preferences.h"
+#include "metrics.h"
 #include "assets/assets_storage.h"
 
 namespace Rendering
@@ -19,9 +21,9 @@ void RenderingGame::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	AddKeyboardHandler(mKeyboardHandler);
 	//
-	eps::assets_storage::instance().mount<Desktop::asset_fs>("assets", "assets");
-	// eps::preferences::init<Desktop::preferences>();
-	// eps::metrics::init<Desktop::metrics>(1.0f);
+	eps::assets_storage::instance().mount<asset_fs>("assets", "assets");
+	eps::preferences::init<preferences>();
+	eps::metrics::init<metrics>(GetDPI());
 	//
 	mMetaballsDemo = std::make_unique<MetaballsDemo>(*this);
 	mComponents.push_back(mMetaballsDemo.get());

@@ -27,7 +27,7 @@ IN THE SOFTWARE.
 #include <elements/io/system.h>
 #include <elements/assets/assets.h>
 #include <elements/assets/assets_storage.h>
-
+#ifdef ANDROID
 struct AAssetManager;
 
 struct asset_fs : public eps::io::system
@@ -42,5 +42,22 @@ private:
 
     AAssetManager * mgr_;
 };
+#else
+
+#include <map>
+
+struct asset_fs : public eps::io::system
+{
+    explicit asset_fs(const std::string& mount_point = "");
+
+    eps::io::file* open(const std::string& file) final;
+    bool exists(const std::string& file) final;
+    void close(eps::io::file* file) final;
+
+private:
+    const std::string mount_point_;
+    std::map<std::string, std::string> assets_;
+};
+#endif
 
 #endif // PLATFORM_ANDROID_ASSET_FS_H_INCLUDED
