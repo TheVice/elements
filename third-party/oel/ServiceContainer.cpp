@@ -15,7 +15,7 @@ ServiceContainer::~ServiceContainer()
 
 void ServiceContainer::AddService(uintptr_t aTypeId, void* aService)
 {
-	mServices.insert(std::pair<uintptr_t, void*>(aTypeId, aService));
+	mServices.insert(std::make_pair(aTypeId, aService));
 }
 
 void ServiceContainer::RemoveService(uintptr_t aTypeId)
@@ -25,8 +25,8 @@ void ServiceContainer::RemoveService(uintptr_t aTypeId)
 
 void* ServiceContainer::GetService(uintptr_t aTypeId) const
 {
-	std::map<uintptr_t, void*>::const_iterator it = mServices.find(aTypeId);
-	return (it != mServices.end() ? it->second : nullptr);
+	const auto search = mServices.find(aTypeId);
+	return (search != mServices.end() ? search->second : nullptr);
 }
 
 }

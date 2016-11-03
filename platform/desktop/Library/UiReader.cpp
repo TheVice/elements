@@ -1,11 +1,10 @@
 
 #include "UiReader.h"
-#include <sstream>
 
 namespace Library
 {
 
-void UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
+bool UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
 {
 	std::map<std::string, std::string> attribAndValue;
 
@@ -14,36 +13,52 @@ void UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
 		attribAndValue[attrib.name()] = attrib.value();
 	}
 
-	if (!attribAndValue.empty())
+	if (attribAndValue.empty())
 	{
-		const auto info = std::make_pair(node.name(), attribAndValue);
-		mControlsInfo.push_back(info);
-		std::ostringstream controlName;
+		return false;
+	}
 
-		if (!parent.empty())
+	auto info = std::make_pair(node.name(), attribAndValue);
+
+	if (!parent.empty())
+	{
+		info.second["parent"] = parent;
+	}
+
+	mControlsInfo.push_back(info);
+
+	const auto& search = attribAndValue.find("control_name");
+	int written = parent.size() + 1 + (search != attribAndValue.end() ? search->second.size() + 1 : 32);
+	std::string controlName(written, '\0');
+
+	if (search != attribAndValue.end())
+	{
+		if (parent.empty())
 		{
-			mControlsInfo.back().second["parent"] = parent;
-			controlName << parent << "/";
-		}
-
-		const auto& search = attribAndValue.find("control_name");
-
-		if (search != attribAndValue.end())
-		{
-			controlName << search->second;
+			written = std::sprintf(&controlName.front(), "%s", search->second.c_str());
 		}
 		else
 		{
-			controlName << &mControlsInfo.back();
-		}
-
-		mControlsInfo.back().second["control_name"] = controlName.str();
-
-		for (const auto& sub_node : node)
-		{
-			UiReader::addControl(sub_node, controlName.str());
+			written = std::sprintf(&controlName.front(), "%s/%s", parent.c_str(), search->second.c_str());
 		}
 	}
+	else
+	{
+		written = std::sprintf(&controlName.front(), "%p", &mControlsInfo.back());
+	}
+
+	controlName.resize(written);
+	mControlsInfo.back().second["control_name"] = controlName;
+
+	for (const auto& sub_node : node)
+	{
+		if (!addControl(sub_node, controlName))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool UiReader::read(const pugi::xml_document& doc)
@@ -67,7 +82,11 @@ bool UiReader::read(const pugi::xml_document& doc)
 
 	for (const auto& control : controls_node)
 	{
-		UiReader::addControl(control, "");
+		if (!addControl(control, ""))
+		{
+			mControlsInfo.clear();
+			break;
+		}
 	}
 
 	mIsEmpty = mControlsInfo.empty();
