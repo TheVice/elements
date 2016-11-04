@@ -7,3 +7,6 @@
 [submodule "third-party/libpng"]
 	path = third-party/libpng
 	url = git://github.com/PkXwmpgN/libpng
+[submodule "third-party/pugixml"]
+	path = third-party/pugixml
+	url = git://github.com/PkXwmpgN/pugixml
