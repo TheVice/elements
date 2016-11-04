@@ -4,3 +4,6 @@
 [submodule "third-party/assimp"]
 	path = third-party/assimp
 	url = git://github.com/PkXwmpgN/assimp
+[submodule "third-party/libpng"]
+	path = third-party/libpng
+	url = git://github.com/PkXwmpgN/libpng
