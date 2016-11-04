@@ -6,7 +6,6 @@
 namespace Library
 {
 class Game;
-class GameTime;
 
 class GameComponent : public RTTI
 {
@@ -27,8 +26,8 @@ public:
 	bool IsEnabled() const;
 	void SetEnabled(bool aEnabled);
 
-	virtual void Initialize();
-	virtual void Update(const GameTime& aGameTime);
+	virtual bool Initialize();
+	virtual void Update();
 	virtual void Release();
 
 protected:

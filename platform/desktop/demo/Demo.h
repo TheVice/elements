@@ -22,17 +22,17 @@ public:
 	Demo& operator = (const Demo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
 	void OnKey(int aKey, int aScancode, int aAction, int aMods);
 
 private:
 	int mRenderId;
-	using demo_renderer_factory = renderer_factory<demo_renderer>;
-	std::unique_ptr<demo_renderer_factory> mDemoRendererFactory;
+	using RendererFactory = renderer_factory<demo_renderer>;
+	eps::utils::unique<RendererFactory> mRendererFactory;
 	eps::timing::framerate rate_;
 	Library::Game::KeyboardHandler mKeyboardHandler;
 };

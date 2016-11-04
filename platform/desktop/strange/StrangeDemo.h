@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "strange_renderer.h"
 #include "../renderer_factory.h"
+#include "Game.h"
 
 namespace Rendering
 {
@@ -21,13 +22,14 @@ public:
 	StrangeDemo& operator = (const StrangeDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
 	int mRenderId;
-	using strange_renderer_factory = renderer_factory<strange_renderer>;
-	std::unique_ptr<strange_renderer_factory> mStrangeRendererFactory;
+	using RendererFactory = renderer_factory<strange_renderer>;
+	eps::utils::unique<RendererFactory> mRendererFactory;
 
 private:
 	static const glm::vec3 sColorBackground;

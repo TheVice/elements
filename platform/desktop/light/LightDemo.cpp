@@ -1,6 +1,5 @@
 
 #include "LightDemo.h"
-#include "Game.h"
 #include "android/input.h"
 
 namespace Rendering
@@ -10,46 +9,44 @@ RTTI_DEFINITIONS(LightDemo)
 LightDemo::LightDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
 	mRenderId(-1),
-	mLightRendererFactory(nullptr)
+	mRendererFactory(nullptr)
 {
 }
 
 LightDemo::~LightDemo()
 {
-	mLightRendererFactory->close(mRenderId);
+	mRendererFactory->close(mRenderId);
 }
 
-void LightDemo::Initialize()
+bool LightDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	//
-	mLightRendererFactory = std::make_unique<light_renderer_factory>();
-	//
-	bool preview = true;
-	mRenderId = mLightRendererFactory->open(preview);
-	//
-	auto renderer = mLightRendererFactory->get(mRenderId);
+	mRendererFactory = eps::utils::make_unique<RendererFactory>();
+	mRenderId = mRendererFactory->open(true);
+	auto renderer = mRendererFactory->get(mRenderId);
 
 	if (!renderer->startup(size, sQuantity))
 	{
-		throw std::runtime_error("renderer->startup() failed");
+		return false;
 	}
 
 	if (!renderer->set_background(sBackground))
 	{
-		throw std::runtime_error("renderer->set_background() failed");
+		return false;
 	}
 
 	renderer->set_color(sColor);
 	//
 	glEnable(GL_POINT_SPRITE);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+	//
+	return true;
 }
 
-void LightDemo::Update(const Library::GameTime&)
+void LightDemo::Update()
 {
 	static bool touchDown = false;
-	auto renderer = mLightRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	//
 	glm::dvec2 screen_pos;
 	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
@@ -72,9 +69,9 @@ void LightDemo::Update(const Library::GameTime&)
 	}
 }
 
-void LightDemo::Draw(const Library::GameTime&)
+void LightDemo::Draw()
 {
-	auto renderer = mLightRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	renderer->render();
 }
 

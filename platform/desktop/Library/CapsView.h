@@ -20,8 +20,8 @@ public:
 	CapsView& operator = (const CapsView& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
 
 protected:
 	virtual const std::map<std::string, unsigned int>& GetCaps() const;

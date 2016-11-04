@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "compass_renderer.h"
 #include "../renderer_factory.h"
+#include "Game.h"
 
 namespace Rendering
 {
@@ -21,14 +22,18 @@ public:
 	CompassDemo& operator = (const CompassDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
+
+private:
+	void OnKey(int aKey, int aScancode, int aAction, int aMods);
 
 private:
 	int mRenderId;
-	using CompassRendererFactory = renderer_factory<compass_renderer>;
-	std::unique_ptr<CompassRendererFactory> mRendererFactory;
+	using RendererFactory = renderer_factory<compass_renderer>;
+	eps::utils::unique<RendererFactory> mRendererFactory;
+	eps::timing::framerate rate_;
 };
 }
 

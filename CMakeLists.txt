@@ -240,10 +240,13 @@ file(GLOB PLATFORM_SRC_FILES ${platform_Path}/Library/*.h ${platform_Path}/Libra
                              ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.cpp)
 
 add_library(desktop ${PLATFORM_SRC_FILES})
-target_include_directories(desktop PRIVATE ${elements_Path}/..
-                                           ${REQUIRED_INCLUDES})
+target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES}
+                                           ${elements_Path}/..
+                                           ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
 target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-list(APPEND REQUIRED_INCLUDES ${platform_Path})
+list(APPEND REQUIRED_INCLUDES ${platform_Path} ${platform_Path}/Library
+                                               ${elements_Path}/..
+                                               ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
 
 # Copy assets
 file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements
@@ -327,12 +330,10 @@ foreach(Experiment ${Experiments})
 
     target_include_directories(${Experiment} PRIVATE ${REQUIRED_INCLUDES}
                                                      ${snape_Path}/include
-                                                     ${elements_Path}/..
                                                      ${CMAKE_SOURCE_DIR}/experiments/${Experiment}
                                                      ${CMAKE_SOURCE_DIR}/platform/desktop/${Experiment}
                                                      ${ADDITION_SOURCE_PATH}/${Experiment}
-                                                     ${CMAKE_SOURCE_DIR}/platform
-                                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
+                                                     ${CMAKE_SOURCE_DIR}/platform)
     target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
     target_link_libraries(${Experiment} ${REQUIRED_LIBRARIES})
 

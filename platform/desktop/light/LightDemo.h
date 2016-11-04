@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "light_renderer.h"
 #include "../renderer_factory.h"
+#include "Game.h"
 
 namespace Rendering
 {
@@ -21,14 +22,14 @@ public:
 	LightDemo& operator = (const LightDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
 	int mRenderId;
-	using light_renderer_factory = renderer_factory<light_renderer>;
-	std::unique_ptr<light_renderer_factory> mLightRendererFactory;
+	using RendererFactory = renderer_factory<light_renderer>;
+	eps::utils::unique<RendererFactory> mRendererFactory;
 
 private:
 	static const char* sBackground;

@@ -1,6 +1,5 @@
 
 #include "StrangeDemo.h"
-#include "Game.h"
 
 namespace Rendering
 {
@@ -9,38 +8,40 @@ RTTI_DEFINITIONS(StrangeDemo)
 StrangeDemo::StrangeDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
 	mRenderId(-1),
-	mStrangeRendererFactory(nullptr)
+	mRendererFactory(nullptr)
 {
 }
 
 StrangeDemo::~StrangeDemo()
 {
-	mStrangeRendererFactory->close(mRenderId);
+	mRendererFactory->close(mRenderId);
 }
 
-void StrangeDemo::Initialize()
+bool StrangeDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	//
-	mStrangeRendererFactory = std::make_unique<strange_renderer_factory>();
-	//
-	bool preview = true;
-	mRenderId = mStrangeRendererFactory->open(preview);
-	//
-	auto renderer = mStrangeRendererFactory->get(mRenderId);
+	mRendererFactory = eps::utils::make_unique<RendererFactory>();
+	mRenderId = mRendererFactory->open(true);
+	auto renderer = mRendererFactory->get(mRenderId);
 
 	if (!renderer->startup(size, sQuantity))
 	{
-		throw std::runtime_error("renderer->startup() failed");
+		return false;
 	}
 
 	renderer->set_background(sColorBackground);
 	renderer->set_gradient(sColorGradient1, sColorGradient2);
+	//
+	return true;
 }
 
-void StrangeDemo::Draw(const Library::GameTime&)
+void StrangeDemo::Update()
 {
-	auto renderer = mStrangeRendererFactory->get(mRenderId);
+}
+
+void StrangeDemo::Draw()
+{
+	auto renderer = mRendererFactory->get(mRenderId);
 	renderer->render();
 }
 

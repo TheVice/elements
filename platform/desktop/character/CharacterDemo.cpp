@@ -1,6 +1,5 @@
 
 #include "CharacterDemo.h"
-#include "Game.h"
 
 namespace Rendering
 {
@@ -9,41 +8,45 @@ RTTI_DEFINITIONS(CharacterDemo)
 CharacterDemo::CharacterDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
 	mRenderId(-1),
-	mCharacterRendererFactory(nullptr),
-	rate_(60)
+	mRendererFactory(nullptr),
+	rate_(60),
+	mKeyboardHandler(nullptr)
 {
 }
 
 CharacterDemo::~CharacterDemo()
 {
-	mCharacterRendererFactory->close(mRenderId);
+	mRendererFactory->close(mRenderId);
+	mGame->RemoveKeyboardHandler(mKeyboardHandler);
 }
 
-void CharacterDemo::Initialize()
+bool CharacterDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	//
-	mCharacterRendererFactory = std::make_unique<character_renderer_factory>();
-	//
-	bool preview = true;
-	mRenderId = mCharacterRendererFactory->open(preview);
-	//
-	auto renderer = mCharacterRendererFactory->get(mRenderId);
+	mRendererFactory = eps::utils::make_unique<RendererFactory>();
+	mRenderId = mRendererFactory->open(true);
+	auto renderer = mRendererFactory->get(mRenderId);
 
 	if (!renderer->startup(size))
 	{
-		throw std::runtime_error("renderer->startup() failed");
+		return false;
 	}
 
-	if (!renderer->set_model(sModel))
+	if (!renderer->set_model(sModels[0]))
 	{
-		throw std::runtime_error("renderer->set_model() failed");
+		return false;
 	}
 
-	//renderer->set_rotation(glm::two_over_root_pi<float>(), glm::quarter_pi<float>());
+	// Attach the keyboard handler
+	mKeyboardHandler = std::bind(&CharacterDemo::OnKey, this,
+								 std::placeholders::_1, std::placeholders::_2,
+								 std::placeholders::_3, std::placeholders::_4);
+	mGame->AddKeyboardHandler(mKeyboardHandler);
+	//
+	return true;
 }
 
-void CharacterDemo::Update(const Library::GameTime&)
+void CharacterDemo::Update()
 {
 	static float theta = glm::two_over_root_pi<float>();
 	static float phi = glm::quarter_pi<float>();
@@ -51,8 +54,6 @@ void CharacterDemo::Update(const Library::GameTime&)
 
 	if (rate_.update() && rate_.elapsed() > lastTime)
 	{
-		auto renderer = mCharacterRendererFactory->get(mRenderId);
-		//
 		const float elapsedTime = rate_.elapsed() - lastTime;
 		lastTime = rate_.elapsed();
 
@@ -76,16 +77,39 @@ void CharacterDemo::Update(const Library::GameTime&)
 			phi -= glm::radians<float>(1) * elapsedTime;
 		}
 
+		auto renderer = mRendererFactory->get(mRenderId);
 		renderer->set_rotation(theta, phi);
 	}
 }
 
-void CharacterDemo::Draw(const Library::GameTime&)
+void CharacterDemo::Draw()
 {
-	auto renderer = mCharacterRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	renderer->render();
 }
 
-const std::string CharacterDemo::sModel = "assets/models/R2-D2/R2-D2.dae";
+void CharacterDemo::OnKey(int aKey, int aScancode, int aAction, int aMods)
+{
+	(void)aScancode;
+	(void)aMods;
+	static int modelNumber = 0;
+
+	if (aKey == GLFW_KEY_SPACE && aAction == GLFW_PRESS)
+	{
+		if (modelNumber < 1)
+		{
+			modelNumber++;
+		}
+		else
+		{
+			modelNumber = 0;
+		}
+
+		auto renderer = mRendererFactory->get(mRenderId);
+		renderer->set_model(sModels[modelNumber]);
+	}
+}
+
+const std::string CharacterDemo::sModels[] = { "assets/models/R2-D2/R2-D2.dae", "assets/models/C-3PO/C-3PO.dae" };
 
 }

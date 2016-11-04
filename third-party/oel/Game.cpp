@@ -3,9 +3,7 @@
 #include "DrawableGameComponent.h"
 #include <GLFW/glfw3native.h>
 #include <cassert>
-#ifndef _MSC_VER
 #include <iostream>
-#endif
 
 namespace Library
 {
@@ -16,15 +14,12 @@ const GLuint Game::sDefaultScreenHeight = 600;
 
 Game* Game::sInternalInstance = nullptr;
 
-std::ostringstream Game::sGlfwErrors;
-
-Game::Game(const TCHAR* aWindowTitle) :
+Game::Game(const std::string& aWindowTitle, GLuint aScreenWidth, GLuint aScreenHeight) :
 	mWindowTitle(aWindowTitle),
 	mWindow(nullptr),
-	mScreenWidth(sDefaultScreenWidth),
-	mScreenHeight(sDefaultScreenHeight),
+	mScreenWidth(aScreenWidth),
+	mScreenHeight(aScreenHeight),
 	mIsFullScreen(false),
-	mGameTime(),
 	mComponents(),
 	mKeyboardHandlers()
 {
@@ -33,19 +28,6 @@ Game::Game(const TCHAR* aWindowTitle) :
 Game::~Game()
 {
 	mComponents.clear();
-#ifndef NDEBUG
-	const auto glfwErrors = sGlfwErrors.str();
-
-	if (!glfwErrors.empty())
-	{
-#ifdef _MSC_VER
-		OutputDebugStringA(glfwErrors.c_str());
-#else
-		std::cerr << glfwErrors.c_str() << std::endl;
-#endif
-	}
-
-#endif
 }
 #ifndef WIN32
 Window Game::GetWindowHandle() const
@@ -63,9 +45,9 @@ GLFWwindow* Game::GetWindow() const
 	return mWindow;
 }
 
-const TCHAR* Game::GetWindowTitle() const
+const std::string& Game::GetWindowTitle() const
 {
-	return mWindowTitle.c_str();
+	return mWindowTitle;
 }
 
 GLuint Game::GetScreenWidth() const
@@ -83,11 +65,8 @@ GLint Game::GetDPI() const
 #ifdef WIN32
 	const auto windowHandle = GetWindowHandle();
 	const auto hdc = GetDC(windowHandle);
-	//
 	const auto dpi = GetDeviceCaps(hdc, LOGPIXELSY);
-	//
 	ReleaseDC(windowHandle, hdc);
-	//
 	return dpi;
 #else
 	return 96;
@@ -113,17 +92,17 @@ void Game::Run()
 {
 	assert(!sInternalInstance);
 	sInternalInstance = this;
-	//
 	InitializeWindow();
 	InitializeOpenGL();
-	Initialize();
 
-	while (!glfwWindowShouldClose(mWindow))
+	if (Initialize())
 	{
-		Update(mGameTime);
-		Draw(mGameTime);
-		//
-		glfwPollEvents();
+		while (!glfwWindowShouldClose(mWindow))
+		{
+			Update();
+			Draw();
+			glfwPollEvents();
+		}
 	}
 
 	Release();
@@ -135,26 +114,31 @@ void Game::Exit()
 	glfwSetWindowShouldClose(mWindow, GL_TRUE);
 }
 
-void Game::Initialize()
+bool Game::Initialize()
 {
 	for (const auto& component : mComponents)
 	{
-		component->Initialize();
+		if (!component->Initialize())
+		{
+			return false;
+		}
 	}
+
+	return true;
 }
 
-void Game::Update(const GameTime& aGameTime)
+void Game::Update()
 {
 	for (const auto& component : mComponents)
 	{
 		if (component->IsEnabled())
 		{
-			component->Update(aGameTime);
+			component->Update();
 		}
 	}
 }
 
-void Game::Draw(const GameTime& aGameTime)
+void Game::Draw()
 {
 	for (const auto& component : mComponents)
 	{
@@ -162,7 +146,7 @@ void Game::Draw(const GameTime& aGameTime)
 
 		if (drawableGameComponent && drawableGameComponent->IsVisible())
 		{
-			drawableGameComponent->Draw(aGameTime);
+			drawableGameComponent->Draw();
 		}
 	}
 }
@@ -187,31 +171,26 @@ void Game::RemoveKeyboardHandler(KeyboardHandler aHandler)
 
 void Game::InitializeWindow()
 {
-#ifndef NDEBUG
 	glfwSetErrorCallback(glfwErrorCallback);
-#endif
 
 	if (!glfwInit())
 	{
-		sGlfwErrors << ("glfwInit() failed") << std::endl;
-		throw std::runtime_error(sGlfwErrors.str());
+		throw std::runtime_error("glfwInit() failed");
 	}
 
 	GLFWmonitor* monitor = (mIsFullScreen ? glfwGetPrimaryMonitor() : nullptr);
-#ifdef UNICODE
-	const auto length = mWindowTitle.length();
-	std::string windowTitle(length + 1, '\0');
-	//
-	mWindow = glfwCreateWindow(mScreenWidth, mScreenHeight, windowTitle.c_str(), monitor, nullptr);
-#else
+
+	if (!mIsFullScreen)
+	{
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	}
+
 	mWindow = glfwCreateWindow(mScreenWidth, mScreenHeight, mWindowTitle.c_str(), monitor, nullptr);
-#endif
 
 	if (!mWindow)
 	{
 		Shutdown();
-		sGlfwErrors << ("glfwCreateWindow() failed") << std::endl;
-		throw std::runtime_error(sGlfwErrors.str());
+		throw std::runtime_error("glfwCreateWindow() failed");
 	}
 
 	if (!mIsFullScreen)
@@ -228,15 +207,12 @@ void Game::InitializeWindow()
 void Game::InitializeOpenGL()
 {
 	glfwMakeContextCurrent(mWindow);
-	GLenum ret = glewInit();
+	const auto ret = glewInit();
 
 	if (GLEW_OK != ret)
 	{
-		const GLubyte* resultStringPointer = glewGetErrorString(ret);
-		std::ostringstream glewErrors;
-		glewErrors << resultStringPointer << std::endl;
-		glewErrors << "glewInit() failed" << std::endl;
-		throw std::runtime_error(glewErrors.str());
+		glfwErrorCallback(ret, reinterpret_cast<const char*>(glewGetErrorString(ret)));
+		throw std::runtime_error("glewInit() failed");
 	}
 
 	glfwSetKeyCallback(mWindow, Game::OnKey);
@@ -251,6 +227,7 @@ void Game::Shutdown()
 void Game::OnKey(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int aMods)
 {
 	(void)aWindow;
+	assert(sInternalInstance);
 
 	for (const auto& handler : sInternalInstance->mKeyboardHandlers)
 	{
@@ -287,10 +264,12 @@ POINT Game::CenterWindow(int aWindowWidth, int aWindowHeight)
 	return center;
 }
 #endif
-#ifndef NDEBUG
 void Game::glfwErrorCallback(int aError, const char* aDescription)
 {
-	sGlfwErrors << aDescription << " (Error #" << aError << ")" << std::endl;
+	const auto sz = snprintf(nullptr, 0, "%s (Error #%i)\n", aDescription, aError);
+	char errorMessage[1 + sz] = "";
+	sprintf(errorMessage, "%s (Error #%i)\n", aDescription, aError);
+	fprintf(stderr, "%s", errorMessage);
 }
-#endif
+
 }

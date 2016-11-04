@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "character_renderer.h"
 #include "../renderer_factory.h"
+#include "Game.h"
 
 namespace Rendering
 {
@@ -21,18 +22,22 @@ public:
 	CharacterDemo& operator = (const CharacterDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
+
+private:
+	void OnKey(int aKey, int aScancode, int aAction, int aMods);
 
 private:
 	int mRenderId;
-	using character_renderer_factory = renderer_factory<character_renderer>;
-	std::unique_ptr<character_renderer_factory> mCharacterRendererFactory;
+	using RendererFactory = renderer_factory<character_renderer>;
+	eps::utils::unique<RendererFactory> mRendererFactory;
 	eps::timing::framerate rate_;
+	Library::Game::KeyboardHandler mKeyboardHandler;
 
 private:
-	static const std::string sModel;
+	static const std::string sModels[];
 };
 }
 
