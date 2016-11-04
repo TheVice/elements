@@ -1,26 +1,24 @@
 
-#include "DeferredEffect.h"
+#include "ModelEffect.h"
 #include "VertexStructure.h"
 
 namespace Library
 {
-RTTI_DEFINITIONS(DeferredEffect)
+RTTI_DEFINITIONS(ModelEffect)
 
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_matrix_mvp)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_matrix_model_view)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_matrix_normal)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_matrix_view)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_camera_pos)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_map_diffuse)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_map_specular)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_map_normal)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_light_pos)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_light_diffuse)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_light_specular)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_light_ambient)
-SHADER_VARIABLE_DEFINITION(DeferredEffect, u_light_range)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_matrix_mvp)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_matrix_model_view)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_matrix_normal)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_matrix_view)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_camera_pos)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_map_diffuse)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_map_specular)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_map_normal)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_light_pos)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_light_intensity)
+SHADER_VARIABLE_DEFINITION(ModelEffect, u_light_range)
 
-DeferredEffect::DeferredEffect() :
+ModelEffect::ModelEffect() :
 	ShaderProgram(),
 	SHADER_VARIABLE_INITIALIZATION(u_matrix_mvp),
 	SHADER_VARIABLE_INITIALIZATION(u_matrix_model_view),
@@ -31,14 +29,12 @@ DeferredEffect::DeferredEffect() :
 	SHADER_VARIABLE_INITIALIZATION(u_map_specular),
 	SHADER_VARIABLE_INITIALIZATION(u_map_normal),
 	SHADER_VARIABLE_INITIALIZATION(u_light_pos),
-	SHADER_VARIABLE_INITIALIZATION(u_light_diffuse),
-	SHADER_VARIABLE_INITIALIZATION(u_light_specular),
-	SHADER_VARIABLE_INITIALIZATION(u_light_ambient),
+	SHADER_VARIABLE_INITIALIZATION(u_light_intensity),
 	SHADER_VARIABLE_INITIALIZATION(u_light_range)
 {
 }
 
-GLvoid DeferredEffect::Initialize(GLuint aVertexArrayObject)
+GLvoid ModelEffect::Initialize(GLuint aVertexArrayObject)
 {
 	ShaderProgram::Initialize(aVertexArrayObject);
 	//
@@ -51,9 +47,7 @@ GLvoid DeferredEffect::Initialize(GLuint aVertexArrayObject)
 	SHADER_VARIABLE_INSTANTIATE(u_map_specular)
 	SHADER_VARIABLE_INSTANTIATE(u_map_normal)
 	SHADER_VARIABLE_INSTANTIATE(u_light_pos)
-	SHADER_VARIABLE_INSTANTIATE(u_light_diffuse)
-	SHADER_VARIABLE_INSTANTIATE(u_light_specular)
-	SHADER_VARIABLE_INSTANTIATE(u_light_ambient)
+	SHADER_VARIABLE_INSTANTIATE(u_light_intensity)
 	SHADER_VARIABLE_INSTANTIATE(u_light_range)
 	//
 	const GLint vertexAttribute_a_vertex_pos = GetAttrib("a_vertex_pos");
@@ -82,7 +76,7 @@ GLvoid DeferredEffect::Initialize(GLuint aVertexArrayObject)
 	glEnableVertexAttribArray(vertexAttribute_a_vertex_uv);
 }
 
-GLuint DeferredEffect::GetVertexSize() const
+GLuint ModelEffect::GetVertexSize() const
 {
 	return sizeof(VertexStructure);
 }

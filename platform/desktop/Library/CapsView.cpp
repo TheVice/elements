@@ -20,9 +20,13 @@ CapsView::~CapsView()
 {
 }
 
-void CapsView::Initialize()
+bool CapsView::Initialize()
 {
-	DrawableUiGameComponent::Initialize();
+	if (!DrawableUiGameComponent::Initialize())
+	{
+		return true;
+	}
+
 	const auto screenSize = eps::math::uvec2(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 	const auto density = eps::metrics::instance().density();
 	const int step_x = screenSize.x / 3;
@@ -67,11 +71,13 @@ void CapsView::Initialize()
 			y = y - step_y;
 		}
 	}
+
+	return true;
 }
 
-void CapsView::Update(const GameTime& aGameTime)
+void CapsView::Update()
 {
-	DrawableUiGameComponent::Update(aGameTime);
+	DrawableUiGameComponent::Update();
 
 	for (const auto& cap : GetCaps())
 	{

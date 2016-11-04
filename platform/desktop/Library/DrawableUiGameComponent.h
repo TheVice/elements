@@ -20,9 +20,9 @@ public:
 	DrawableUiGameComponent& operator = (const DrawableUiGameComponent& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const GameTime& aGameTime) override;
-	virtual void Draw(const GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
 	eps::math::mat4 mTransformTouch;

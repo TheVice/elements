@@ -2,9 +2,11 @@
 #define _SQUARE_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#include "rendering/core/program.h"
-#include "rendering/primitives/square.h"
-#include <GL/glew.h>
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/primitives/square.h>
+#include <elements/utils/std/pointer.h>
+#include <elements/timing/framerate.h>
+#include "Game.h"
 
 namespace Rendering
 {
@@ -22,14 +24,16 @@ public:
 	SquareColorDemo& operator = (const SquareColorDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
-	eps::rendering::program mProgram;
-	eps::rendering::primitive::square mSquare;
-	glm::vec4 mColor;
-	glm::mat4 mTransform;
+	eps::utils::unique<eps::rendering::program> mProgram;
+	eps::utils::unique<eps::rendering::primitive::square> mSquare;
+	eps::math::vec4 mColor;
+	eps::math::mat4 mTransform;
+	eps::timing::framerate rate_;
 };
 }
 

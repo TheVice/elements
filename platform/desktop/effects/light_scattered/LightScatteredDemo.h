@@ -2,9 +2,12 @@
 #define _LIGHT_SCATTERED_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#include "rendering/core/program.h"
-#include "rendering/core/texture.h"
-#include "rendering/primitives/square.h"
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
+#include <elements/rendering/primitives/square.h>
+#include <elements/utils/std/pointer.h>
+#include <elements/timing/framerate.h>
+#include "Game.h"
 
 namespace Rendering
 {
@@ -22,18 +25,22 @@ public:
 	LightScatteredDemo& operator = (const LightScatteredDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
-	eps::rendering::program mProgram;
-	eps::rendering::primitive::square mSquare;
-	eps::rendering::texture mTexture;
+	eps::utils::unique<eps::rendering::program> mProgram;
+	eps::utils::unique<eps::rendering::texture> mTexture;
+	eps::utils::unique<eps::rendering::primitive::square> mSquare;
 	float mExposure;
 	float mDecay;
 	float mDensity;
 	float mWeight;
-	glm::vec2 mLightPosition;
+	eps::math::vec2 mLightPosition;
+
+	GLuint mColorTexture;
+	eps::timing::framerate rate_;
 };
 }
 

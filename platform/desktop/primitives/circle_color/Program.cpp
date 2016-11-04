@@ -1,5 +1,6 @@
 
 #include "RenderingGame.h"
+#include "CircleColorDemo.h"
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)
@@ -7,6 +8,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 #endif
+#include <tchar.h>
 #else
 #include <iostream>
 #endif
@@ -27,8 +29,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Rendering::RenderingGame>
-				(TEXT("CircleColorDemo"));
+	auto game = std::make_unique<Library::RenderingGame>("Circle Color Demo [Sources primitives/circle_color]");
+	game->addComponent<Rendering::CircleColorDemo>();
 
 	try
 	{
@@ -39,7 +41,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #ifndef WIN32
 		std::cerr << aExc.what() << std::endl;
 #else
-		MessageBoxA(game->GetWindowHandle(), aExc.what(), "", MB_ABORTRETRYIGNORE);
+		MessageBoxA(game->GetWindowHandle(), aExc.what(),
+					game->GetWindowTitle().c_str(), MB_ABORTRETRYIGNORE);
 #endif
 	}
 

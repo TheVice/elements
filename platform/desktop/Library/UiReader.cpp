@@ -26,7 +26,6 @@ bool UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
 	}
 
 	mControlsInfo.push_back(info);
-
 	const auto& search = attribAndValue.find("control_name");
 	int written = parent.size() + 1 + (search != attribAndValue.end() ? search->second.size() + 1 : 32);
 	std::string controlName(written, '\0');

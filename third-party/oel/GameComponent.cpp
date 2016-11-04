@@ -41,11 +41,12 @@ void GameComponent::SetEnabled(bool aEnabled)
 	mEnabled = aEnabled;
 }
 
-void GameComponent::Initialize()
+bool GameComponent::Initialize()
 {
+	return true;
 }
 
-void GameComponent::Update(const GameTime&)
+void GameComponent::Update()
 {
 }
 

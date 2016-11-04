@@ -20,8 +20,8 @@ public:
 	CustomUi& operator = (const CustomUi& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
 
 public:
 	void Set_u_transform(const glm::mat4& a_u_transform);

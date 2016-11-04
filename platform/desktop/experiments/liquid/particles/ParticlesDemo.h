@@ -4,10 +4,10 @@
 #include "DrawableGameComponent.h"
 #include "ParticlesEffect.h"
 #include "SettingsReader.h"
-#include "rendering/core/buffer.h"
-#include "rendering/core/program.h"
-#include "utils/std/optional.h"
-#include <memory>
+#include <elements/rendering/core/buffer.h>
+#include <elements/rendering/core/program.h>
+#include <elements/utils/std/optional.h>
+#include "Game.h"
 
 namespace Rendering
 {
@@ -26,16 +26,16 @@ public:
 	ParticlesDemo& operator = (const ParticlesDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
-	eps::rendering::program mProgram;
-	Library::ParticlesEffect mParticlesEffect;
+	eps::utils::unique<eps::rendering::program> mProgram;
+	eps::utils::unique<Library::ParticlesEffect> mParticlesEffect;
 	GLuint mVertexArrayObject;
-	eps::rendering::vertices mVertexBuffer;
-	eps::rendering::indices mIndexBuffer;
+	eps::utils::unique<eps::rendering::vertices> mVertexBuffer;
+	eps::utils::unique<eps::rendering::indices> mIndexBuffer;
 
 	eps::utils::optional<SettingsReader> mSettings;
 

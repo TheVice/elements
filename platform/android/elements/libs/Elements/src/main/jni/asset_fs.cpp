@@ -264,6 +264,11 @@ struct asset_file : public eps::io::file
 		fclose(_file);
 	}
 
+	bool exists()
+	{
+		return (_file != nullptr);
+	}
+
 	static bool exists(const char* file_name)
 	{
 		FILE * _file = fopen(file_name, "rb");
@@ -294,9 +299,17 @@ eps::io::file* asset_fs::open(const std::string& file)
 	if (!assets_.count(full_path))
 	{
 		asset_file asset(full_path.c_str());
-		std::string file_content(asset.size(), '\0');
-		asset.read(&file_content.front(), 1, file_content.size());
-		assets_[full_path] = file_content;
+
+		if (asset.exists())
+		{
+			std::string file_content(asset.size(), '\0');
+			asset.read(&file_content.front(), 1, file_content.size());
+			assets_[full_path] = file_content;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	return new asset_content(assets_[full_path]);

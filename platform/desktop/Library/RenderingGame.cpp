@@ -1,20 +1,20 @@
 
 #include "RenderingGame.h"
 #include "asset_fs.h"
+#include "assets/assets_storage.h"
 #include "preferences.h"
 #include "metrics.h"
-#include "assets/assets_storage.h"
 
-namespace Rendering
+namespace Library
 {
-RenderingGame::RenderingGame(const TCHAR* aWindowTitle)
-	: Game(aWindowTitle),
-	  mKeyboardHandler(nullptr),
-	  mSquareColorDemo(nullptr)
+RenderingGame::RenderingGame(const std::string& aWindowTitle, GLuint aScreenWidth, GLuint aScreenHeight) :
+	Game(aWindowTitle, aScreenWidth, aScreenHeight),
+	mKeyboardHandler(nullptr),
+	mDrawableGameComponents()
 {
 }
 
-void RenderingGame::Initialize()
+bool RenderingGame::Initialize()
 {
 	mKeyboardHandler = std::bind(&RenderingGame::OnKey, this,
 								 std::placeholders::_1, std::placeholders::_2,
@@ -24,16 +24,18 @@ void RenderingGame::Initialize()
 	eps::assets_storage::instance().mount<asset_fs>("assets", "assets");
 	eps::preferences::init<preferences>();
 	eps::metrics::init<metrics>(GetDPI());
-	//
-	mSquareColorDemo = std::make_unique<SquareColorDemo>(*this);
-	mComponents.push_back(mSquareColorDemo.get());
-	//
-	Game::Initialize();
+
+	for (const auto& component : mDrawableGameComponents)
+	{
+		mComponents.push_back(component.get());
+	}
+
+	return Game::Initialize();
 }
 
-void RenderingGame::Draw(const Library::GameTime& aGameTime)
+void RenderingGame::Draw()
 {
-	Game::Draw(aGameTime);
+	Game::Draw();
 	glfwSwapBuffers(mWindow);
 }
 

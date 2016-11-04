@@ -3,7 +3,6 @@
 #include "rendering/utils/program_loader.h"
 #include "assets/assets_storage.h"
 #include "utils/std/product.h"
-#include "Game.h"
 #include "CustomUi.h"
 
 namespace Rendering
@@ -12,11 +11,11 @@ RTTI_DEFINITIONS(ParticlesDemo)
 
 ParticlesDemo::ParticlesDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgram(),
-	mParticlesEffect(),
+	mProgram(nullptr),
+	mParticlesEffect(nullptr),
 	mVertexArrayObject(0),
-	mVertexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
-	mIndexBuffer(eps::rendering::buffer_usage::STATIC_DRAW),
+	mVertexBuffer(nullptr),
+	mIndexBuffer(nullptr),
 	mSettings(),
 	mUi(nullptr)
 {
@@ -27,17 +26,21 @@ ParticlesDemo::~ParticlesDemo()
 	glDeleteVertexArrays(1, &mVertexArrayObject);
 }
 
-void ParticlesDemo::Initialize()
+bool ParticlesDemo::Initialize()
 {
+	mProgram = eps::utils::make_unique<eps::rendering::program>();
+	mParticlesEffect = eps::utils::make_unique<Library::ParticlesEffect>();
+	mVertexBuffer = eps::utils::make_unique<eps::rendering::vertices>(eps::rendering::buffer_usage::STATIC_DRAW);
+	mIndexBuffer = eps::utils::make_unique<eps::rendering::indices>(eps::rendering::buffer_usage::STATIC_DRAW);
 	// Build the shader program
 	auto assetPath = "assets/shaders/experiments/liquid/particles.prog";
 
-	if (!eps::rendering::load_program(assetPath, mProgram))
+	if (!eps::rendering::load_program(assetPath, (*mProgram.get())))
 	{
-		throw std::runtime_error("Failed to load shader");
+		return false;
 	}
 
-	mParticlesEffect.SetProgram(eps::utils::raw_product(mProgram.get_product()));
+	mParticlesEffect->SetProgram(eps::utils::raw_product(mProgram->get_product()));
 	// Load the settings
 	assetPath = "assets/settings/experiments/liquid/particles.xml";
 	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
@@ -48,14 +51,14 @@ void ParticlesDemo::Initialize()
 	}
 
 	// Create the vertex buffer object
-	mVertexBuffer.allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(),
-						   sizeof(mSettings->mVertices.front()));
+	mVertexBuffer->allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(),
+							sizeof(mSettings->mVertices.front()));
 	// Create the index buffer object
-	mIndexBuffer.allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(),
-						  sizeof(mSettings->mIndices.front()));
+	mIndexBuffer->allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(),
+						   sizeof(mSettings->mIndices.front()));
 	// Create the vertex array object
 	glGenVertexArrays(1, &mVertexArrayObject);
-	mParticlesEffect.Initialize(mVertexArrayObject);
+	mParticlesEffect->Initialize(mVertexArrayObject);
 	glBindVertexArray(0);
 	//
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -66,9 +69,11 @@ void ParticlesDemo::Initialize()
 	mUi->Set_u_transform(mSettings->mTransform);
 	mUi->Set_u_size(mSettings->mSize);
 	mUi->SetCheckBoxState(glIsEnabled(GL_POINT_SPRITE), glIsEnabled(GL_VERTEX_PROGRAM_POINT_SIZE));
+	//
+	return true;
 }
 
-void ParticlesDemo::Update(const Library::GameTime&)
+void ParticlesDemo::Update()
 {
 	if (mUi->IsNeedRestore())
 	{
@@ -96,15 +101,15 @@ void ParticlesDemo::Update(const Library::GameTime&)
 	}
 }
 
-void ParticlesDemo::Draw(const Library::GameTime&)
+void ParticlesDemo::Draw()
 {
 	glBindVertexArray(mVertexArrayObject);
-	glBindBuffer(GL_ARRAY_BUFFER, eps::utils::raw_product(mVertexBuffer.get_product()));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer.get_product()));
+	glBindBuffer(GL_ARRAY_BUFFER, eps::utils::raw_product(mVertexBuffer->get_product()));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer->get_product()));
 	//
-	mParticlesEffect.Use();
-	mParticlesEffect.u_transform() << mUi->Get_u_transform();
-	mParticlesEffect.u_size() << mUi->Get_u_size();
+	mParticlesEffect->Use();
+	mParticlesEffect->u_transform() << mUi->Get_u_transform();
+	mParticlesEffect->u_size() << mUi->Get_u_size();
 	//
 	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 	//

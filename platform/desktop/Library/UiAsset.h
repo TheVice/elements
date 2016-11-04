@@ -22,7 +22,7 @@ public:
 	UiAsset& operator = (const UiAsset& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
+	virtual bool Initialize() override;
 
 protected:
 	virtual SliderModel* GetSliderModel(int aSliderId);

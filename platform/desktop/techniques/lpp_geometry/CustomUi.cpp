@@ -34,9 +34,13 @@ CustomUi::~CustomUi()
 {
 }
 
-void CustomUi::Initialize()
+bool CustomUi::Initialize()
 {
-	UiAsset::Initialize();
+	if (!UiAsset::Initialize())
+	{
+		return false;
+	}
+
 	//
 	IS_CONTROL_EXIST(RESTORE_BUTTON)
 	IS_CONTROL_EXIST(U_MATRIX_MVP_BUTTON_13)
@@ -148,7 +152,8 @@ void CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto normalPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[U_MATRIX_NORMAL_PANEL_23].lock()))
+			if (auto normalPanel = std::static_pointer_cast<eps::ui::button>
+								   (this->mControls[U_MATRIX_NORMAL_PANEL_23].lock()))
 			{
 				normalPanel->set_visible(!normalPanel->get_visible());
 			}
@@ -258,11 +263,13 @@ void CustomUi::Initialize()
 			}
 		});
 	}
+
+	return true;
 }
 
-void CustomUi::Update(const Library::GameTime& aGameTime)
+void CustomUi::Update()
 {
-	UiAsset::Update(aGameTime);
+	UiAsset::Update();
 	//
 	DISPLAY_VALUE_AT_LABEL(m_u_matrix_mvp[0][0], U_MATRIX_MVP_LABEL_1)
 	DISPLAY_VALUE_AT_LABEL(m_u_matrix_mvp[0][1], U_MATRIX_MVP_LABEL_2)

@@ -10,7 +10,6 @@
 #include "assets/asset_texture.h"
 #include "assets/assets_storage.h"
 #include "TestCard.h"
-#include "Game.h"
 
 namespace Rendering
 {
@@ -26,9 +25,10 @@ enum ProgramEnum
 
 MetaballsDemo::MetaballsDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgram(),
-	mSquare(),
-	mTexture()
+	mProgram(nullptr),
+	mTexture(nullptr),
+	mSquare(nullptr),
+	mColorTexture(0)
 {
 }
 
@@ -36,33 +36,47 @@ MetaballsDemo::~MetaballsDemo()
 {
 }
 
-void MetaballsDemo::Initialize()
+bool MetaballsDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
+	mProgram = eps::utils::make_unique<eps::rendering::program>();
+	mTexture = eps::utils::make_unique<eps::rendering::texture>();
+	mSquare = eps::utils::make_unique<eps::rendering::primitive::square>();
 
-	if (!eps::rendering::load_program("assets/shaders/experiments/liquid/metaballs.prog", mProgram))
+	// Build the shader program
+	if (!eps::rendering::load_program("assets/shaders/experiments/liquid/metaballs.prog", (*mProgram.get())))
 	{
-		throw std::runtime_error("eps::rendering::load_program() failed");
+		return false;
 	}
 
+	// Load the texture
 	glm::uvec2 texture_size = size;
-	auto texture_data = std::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
+	auto texture_data = eps::utils::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
 	Library::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
 	//
 	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>();
-	mTexture = maker.construct(texture_data.get(), size);
+	(*mTexture.get()) = maker.construct(texture_data.get(), size);
+	mColorTexture = (*eps::utils::ptr_product(mTexture->get_product()));
+	//
+	return true;
 }
 
-void MetaballsDemo::Draw(const Library::GameTime&)
+void MetaballsDemo::Update()
 {
-	GLuint colorTexture = (*eps::utils::ptr_product(mTexture.get_product()));
-	//glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, colorTexture);
+}
+
+void MetaballsDemo::Draw()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mColorTexture);
 	//
-	EPS_STATE_PROGRAM(mProgram.get_product());
-	mProgram.uniform_value(eps::utils::to_int(FragmentUniformSurface), 0);
-	mSquare.render(mProgram, eps::utils::to_int(VertexAttributePosition),
-				   eps::utils::to_int(VertexAttributeTextureCoordinate));
+	EPS_STATE_PROGRAM(mProgram->get_product());
+	//
+	mProgram->uniform_value(eps::utils::to_int(FragmentUniformSurface), 0);
+	mSquare->render((*mProgram.get()), eps::utils::to_int(VertexAttributePosition),
+					eps::utils::to_int(VertexAttributeTextureCoordinate));
+	//
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 }

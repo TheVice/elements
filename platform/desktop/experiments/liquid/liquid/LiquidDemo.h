@@ -2,9 +2,11 @@
 #define _LIQUID_DEMO_H_
 
 #include "DrawableGameComponent.h"
-#include "rendering/core/program.h"
-#include "rendering/core/texture.h"
-#include "rendering/primitives/square.h"
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
+#include <elements/rendering/primitives/square.h>
+#include <elements/utils/std/pointer.h>
+#include "Game.h"
 
 namespace Rendering
 {
@@ -22,16 +24,18 @@ public:
 	LiquidDemo& operator = (const LiquidDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
-	eps::rendering::program mProgram;
-	eps::rendering::primitive::square mSquare;
-	eps::rendering::texture mTexture;
+	eps::utils::unique<eps::rendering::program> mProgram;
+	eps::utils::unique<eps::rendering::texture> mTexture;
+	eps::utils::unique<eps::rendering::primitive::square> mSquare;
+	eps::math::vec4 mSurfaceColor;
+	eps::math::vec2 mSurfaceTexel;
 
-	glm::vec4 mSurfaceColor;
-	glm::vec2 mSurfaceTexel;
+	GLuint mColorTexture;
 };
 }
 

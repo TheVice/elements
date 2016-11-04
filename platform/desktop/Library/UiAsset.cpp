@@ -244,15 +244,19 @@ UiAsset::~UiAsset()
 		}																						\
 	}
 
-void UiAsset::Initialize()
+bool UiAsset::Initialize()
 {
-	DrawableUiGameComponent::Initialize();
+	if (!DrawableUiGameComponent::Initialize())
+	{
+		return false;
+	}
+
 	auto data =
 		eps::assets_storage::instance().read<UiReader>(mAssetPath);
 
 	if (!data || data->mIsEmpty)
 	{
-		throw std::runtime_error("Failed to load UI asset");
+		return false;
 	}
 
 	for (const auto& controlInfo : data->mControlsInfo)
@@ -339,6 +343,8 @@ void UiAsset::Initialize()
 			mControls[controlName] = control;
 		}
 	}
+
+	return true;
 }
 
 SliderModel* UiAsset::GetSliderModel(int aSliderId)

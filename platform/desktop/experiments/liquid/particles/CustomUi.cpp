@@ -33,9 +33,13 @@ CustomUi::~CustomUi()
 {
 }
 
-void CustomUi::Initialize()
+bool CustomUi::Initialize()
 {
-	UiAsset::Initialize();
+	if (!UiAsset::Initialize())
+	{
+		return false;
+	}
+
 	//
 	IS_CONTROL_EXIST(RESTORE_BUTTON)
 	IS_CONTROL_EXIST(U_TRANSFORM_BUTTON_13)
@@ -90,16 +94,17 @@ void CustomUi::Initialize()
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
 	{
 		directButton->set_click([this](eps::ui::state)
-        {
+		{
 			this->mIsRestoreNeed = !this->mIsRestoreNeed;
-        });
+		});
 	}
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[U_TRANSFORM_BUTTON_13].lock()))
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto transformPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[U_TRANSFORM_PANEL_14].lock()))
+			if (auto transformPanel = std::static_pointer_cast<eps::ui::button>
+									  (this->mControls[U_TRANSFORM_PANEL_14].lock()))
 			{
 				transformPanel->set_visible(!transformPanel->get_visible());
 			}
@@ -220,11 +225,13 @@ void CustomUi::Initialize()
 			}
 		});
 	}
+
+	return true;
 }
 
-void CustomUi::Update(const Library::GameTime& aGameTime)
+void CustomUi::Update()
 {
-	UiAsset::Update(aGameTime);
+	UiAsset::Update();
 	//
 	DISPLAY_VALUE_AT_LABEL(m_u_transform[0][0], U_TRANSFORM_LABEL_1)
 	DISPLAY_VALUE_AT_LABEL(m_u_transform[0][1], U_TRANSFORM_LABEL_2)

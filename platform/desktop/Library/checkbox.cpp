@@ -27,10 +27,10 @@ checkbox::checkbox(control* parent)
 	, state_(state::UNCHECKED)
 	, square_(eps::rendering::buffer_usage::STREAM_DRAW)
 	, colors_{   eps::math::vec4(1.0f,    1.0f,     1.0f,    1.0f)
-			   , eps::math::vec4(0.5f,    0.5f,     0.5f,    1.0f)
-			   , eps::math::vec4(0.8314f, 0.81569f, 0.7843f, 1.0f)
-			   , eps::math::vec4(0.25f,   0.25f,    0.25f,   1.0f)
-			   , eps::math::vec4(0.0f,    0.0f,     0.0f,    1.0f)
+				 , eps::math::vec4(0.5f,    0.5f,     0.5f,    1.0f)
+				 , eps::math::vec4(0.8314f, 0.81569f, 0.7843f, 1.0f)
+				 , eps::math::vec4(0.25f,   0.25f,    0.25f,   1.0f)
+				 , eps::math::vec4(0.0f,    0.0f,     0.0f,    1.0f)
 			 }
 {
 	eps::rendering::load_program("assets/shaders/primitives/square_color.prog",
