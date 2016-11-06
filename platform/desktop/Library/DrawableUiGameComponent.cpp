@@ -18,20 +18,22 @@ DrawableUiGameComponent::~DrawableUiGameComponent()
 {
 }
 
-void DrawableUiGameComponent::Initialize()
+bool DrawableUiGameComponent::Initialize()
 {
 	const auto screenSize = eps::math::uvec2(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 	mUiSystem = std::make_shared<eps::ui::system>();
 
 	if (!std::static_pointer_cast<eps::ui::system>(mUiSystem)->construct(screenSize))
 	{
-		throw std::runtime_error("eps::ui::system::construct() failed");
+		//throw std::runtime_error("eps::ui::system::construct() failed");
+		return false;
 	}
 
 	mTransformTouch = eps::math::translate(0.0f, screenSize.y, 0.0f) * eps::math::scale(1.0f, -1.0f, 1.0f);
+	return true;
 }
 
-void DrawableUiGameComponent::Update(const GameTime&)
+void DrawableUiGameComponent::Update()
 {
 	static bool touchDown = false;
 	auto screenPos = glm::dvec2();
@@ -64,7 +66,7 @@ void DrawableUiGameComponent::Update(const GameTime&)
 	}
 }
 
-void DrawableUiGameComponent::Draw(const GameTime&)
+void DrawableUiGameComponent::Draw()
 {
 	mUiSystem->draw();
 }

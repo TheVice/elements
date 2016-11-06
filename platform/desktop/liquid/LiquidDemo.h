@@ -4,6 +4,7 @@
 #include "DrawableGameComponent.h"
 #include "liquid_renderer.h"
 #include "../renderer_factory.h"
+#include "Game.h"
 
 namespace Rendering
 {
@@ -21,14 +22,14 @@ public:
 	LiquidDemo& operator = (const LiquidDemo& aRhs) = delete;
 
 public:
-	virtual void Initialize() override;
-	virtual void Update(const Library::GameTime& aGameTime) override;
-	virtual void Draw(const Library::GameTime& aGameTime) override;
+	virtual bool Initialize() override;
+	virtual void Update() override;
+	virtual void Draw() override;
 
 private:
 	int mRenderId;
-	using liquid_renderer_factory = renderer_factory<liquid_renderer>;
-	std::unique_ptr<liquid_renderer_factory> mLiquidRendererFactory;
+	using RendererFactory = renderer_factory<liquid_renderer>;
+	std::unique_ptr<RendererFactory> mRendererFactory;
 
 private:
 	static const char* sBackground;

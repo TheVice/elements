@@ -33,13 +33,6 @@ endif()
 set(REQUIRED_INCLUDES)
 set(REQUIRED_LIBRARIES)
 set(REQUIRED_SYS_INCLUDES)
-set(PROJECT_DEFINITIONS)
-
-list(APPEND PROJECT_DEFINITIONS GL_API=)
-list(APPEND PROJECT_DEFINITIONS GL_APICALL=)
-list(APPEND PROJECT_DEFINITIONS GL_GLEXT_PROTOTYPES=)
-list(APPEND PROJECT_DEFINITIONS _USRDLL=)
-list(APPEND PROJECT_DEFINITIONS LIBGLESV2_EXPORTS=)
 
 if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
   list(APPEND REQUIRED_SYS_INCLUDES /usr/local/include/)
@@ -224,14 +217,10 @@ if(WIN32)
 endif()
 
 # oel
-list(APPEND REQUIRED_SYS_INCLUDES ${CMAKE_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/)
 set(oel_Path ${CMAKE_SOURCE_DIR}/third-party/oel)
-file(GLOB OEL_SRC_FILES ${oel_Path}/*.h ${oel_Path}/*.cpp
-                        ${CMAKE_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/*.h
-                        ${CMAKE_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/*.cpp)
+file(GLOB OEL_SRC_FILES ${oel_Path}/*.h ${oel_Path}/*.cpp)
 add_library(oel ${OEL_SRC_FILES})
 target_include_directories(oel SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-set_target_properties(oel PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
 list(APPEND REQUIRED_INCLUDES ${oel_Path})
 
 # snape
@@ -244,7 +233,6 @@ file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp
 add_library(elements ${ELEMENTS_SRC_FILES})
 target_include_directories(elements PRIVATE ${elements_Path} ${snape_Path}/include)
 target_include_directories(elements SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-set_target_properties(elements PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
 list(APPEND REQUIRED_INCLUDES ${elements_Path})
 
 # platform library
@@ -255,14 +243,19 @@ file(GLOB PLATFORM_SRC_FILES ${platform_Path}/Library/*.h ${platform_Path}/Libra
                              ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/metrics.h
                              ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/metrics.cpp
                              ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.h
-                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.cpp)
+                             ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.cpp
+                             ${CMAKE_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.h
+                             ${CMAKE_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp)
 
 add_library(desktop ${PLATFORM_SRC_FILES})
-target_include_directories(desktop PRIVATE ${elements_Path}/..
-                                           ${REQUIRED_INCLUDES})
+target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES}
+                                           ${elements_Path}/..
+                                           ${CMAKE_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/
+                                           ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
 target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-set_target_properties(desktop PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
-list(APPEND REQUIRED_INCLUDES ${platform_Path})
+list(APPEND REQUIRED_INCLUDES ${platform_Path} ${platform_Path}/Library
+                                               ${elements_Path}/..
+                                               ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
 
 # Copy assets
 file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_SOURCE_DIR}/platform/android/elements
@@ -342,14 +335,11 @@ foreach(Experiment ${Experiments})
 
     target_include_directories(${Experiment} PRIVATE ${REQUIRED_INCLUDES}
                                                      ${snape_Path}/include
-                                                     ${elements_Path}/..
                                                      ${CMAKE_SOURCE_DIR}/experiments/${Experiment}
                                                      ${CMAKE_SOURCE_DIR}/platform/desktop/${Experiment}
                                                      ${ADDITION_SOURCE_PATH}/${Experiment}
-                                                     ${CMAKE_SOURCE_DIR}/platform
-                                                     ${CMAKE_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
+                                                     ${CMAKE_SOURCE_DIR}/platform)
     target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-    set_target_properties(${Experiment} PROPERTIES COMPILE_DEFINITIONS "${PROJECT_DEFINITIONS}")
     target_link_libraries(${Experiment} ${REQUIRED_LIBRARIES})
 
     add_dependencies(${Experiment} copyAssets)

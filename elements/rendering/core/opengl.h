@@ -24,6 +24,15 @@ IN THE SOFTWARE.
 #ifndef RENDERING_BASE_OPENGL_H_INCLUDED
 #define RENDERING_BASE_OPENGL_H_INCLUDED
 
+#ifndef ANDROID
+#define GL_API
+#ifndef GL_APICALL
+#define GL_APICALL
+#endif
+#define GL_GLEXT_PROTOTYPES
+#define _USRDLL
+#define LIBGLESV2_EXPORTS
+#endif
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "utils/std/product.h"

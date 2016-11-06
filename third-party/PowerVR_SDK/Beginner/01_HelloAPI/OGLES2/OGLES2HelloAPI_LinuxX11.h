@@ -17,16 +17,22 @@
 #ifndef _OGLES2HelloAPI_LinuxX11_H_
 #define _OGLES2HelloAPI_LinuxX11_H_
 
+#include "GameComponent.h"
 #include <EGL/egl.h>
 
-class OGLES2HelloAPI_LinuxX11
+class OGLES2HelloAPI_LinuxX11 : public Library::GameComponent
 {
+	RTTI_DECLARATIONS(OGLES2HelloAPI_LinuxX11, GameComponent)
+
 public:
-	OGLES2HelloAPI_LinuxX11(Window aNativeWindow);
+	OGLES2HelloAPI_LinuxX11(Library::Game& aGame, Window aNativeWindow);
 	~OGLES2HelloAPI_LinuxX11();
 
-	void Update();
-	bool Initialize();
+public:
+	virtual bool Initialize() override;
+	virtual void Update() override;
+
+private:
 	void Cleanup();
 
 private:

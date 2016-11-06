@@ -17,13 +17,12 @@
  Include Files
 *******************************************************************************************************************************************/
 #include "OGLES2HelloAPI_LinuxX11.h"
+#include <elements/rendering/core/opengl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "X11/Xlib.h"
 #include "X11/Xutil.h"
-
-#include <GLES2/gl2.h>
 
 /*******************************************************************************************************************************************
  Defines
@@ -745,7 +744,10 @@ void ReleaseNativeResources(Display* nativeDisplay, Window nativeWindow)
 	}
 }
 
-OGLES2HelloAPI_LinuxX11::OGLES2HelloAPI_LinuxX11(Window aNativeWindow) :
+RTTI_DEFINITIONS(OGLES2HelloAPI_LinuxX11)
+
+OGLES2HelloAPI_LinuxX11::OGLES2HelloAPI_LinuxX11(Library::Game& aGame, Window aNativeWindow) :
+	GameComponent(aGame),
 	mNativeDisplay(nullptr),
 	mNativeWindow(aNativeWindow),
 	mEglDisplay(nullptr),
@@ -758,14 +760,6 @@ OGLES2HelloAPI_LinuxX11::OGLES2HelloAPI_LinuxX11(Window aNativeWindow) :
 OGLES2HelloAPI_LinuxX11::~OGLES2HelloAPI_LinuxX11()
 {
 	Cleanup();
-}
-
-void OGLES2HelloAPI_LinuxX11::Update()
-{
-	if (!eglSwapBuffers(mEglDisplay, mEglSurface) )
-	{
-		TestEGLError("eglSwapBuffers");
-	}
 }
 
 bool OGLES2HelloAPI_LinuxX11::Initialize()
@@ -813,6 +807,14 @@ bool OGLES2HelloAPI_LinuxX11::Initialize()
 	}
 
 	return true;
+}
+
+void OGLES2HelloAPI_LinuxX11::Update()
+{
+	if (!eglSwapBuffers(mEglDisplay, mEglSurface) )
+	{
+		TestEGLError("eglSwapBuffers");
+	}
 }
 
 void OGLES2HelloAPI_LinuxX11::Cleanup()

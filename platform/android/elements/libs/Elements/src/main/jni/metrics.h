@@ -29,32 +29,19 @@ IN THE SOFTWARE.
 #endif
 #include <elements/metrics/metrics.h>
 
-#ifdef ANDROID
 class metrics : public eps::metrics_interface
 {
 public:
-
+#ifdef ANDROID
     metrics(JNIEnv * env, jobject jmetrics);
+#else
+    metrics(int dpi);
+#endif
     float density() const final { return density_; }
 
 private:
 
     float density_;
 };
-#else
-struct metrics : public eps::metrics_interface
-{
-public:
-
-    metrics(int dpi);
-    ~metrics();
-
-    float density() const final;
-
-private:
-
-    float density_;
-};
-#endif
 
 #endif // PLATFORM_ANDROID_METRICS_H_INCLUDED

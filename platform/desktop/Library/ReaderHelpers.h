@@ -23,6 +23,8 @@ bool read_unsigned_int(const pugi::xml_node& aNode, unsigned int& aValue);
 
 bool read_indices(const pugi::xml_node& aNode, std::vector<unsigned int>& aIndices);
 
+bool read_std_string(const pugi::xml_node& aNode, std::string& aValue);
+
 }
 }
 

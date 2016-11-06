@@ -1,6 +1,5 @@
 
 #include "LiquidDemo.h"
-#include "Game.h"
 #include "android/input.h"
 
 namespace Rendering
@@ -10,44 +9,45 @@ RTTI_DEFINITIONS(LiquidDemo)
 LiquidDemo::LiquidDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
 	mRenderId(-1),
-	mLiquidRendererFactory(nullptr)
+	mRendererFactory(nullptr)
 {
 }
 
 LiquidDemo::~LiquidDemo()
 {
-	mLiquidRendererFactory->close(mRenderId);
+	mRendererFactory->close(mRenderId);
 }
 
-void LiquidDemo::Initialize()
+bool LiquidDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	//
-	mLiquidRendererFactory = std::make_unique<liquid_renderer_factory>();
-	//
-	bool preview = true;
-	mRenderId = mLiquidRendererFactory->open(preview);
-	//
-	auto renderer = mLiquidRendererFactory->get(mRenderId);
+	mRendererFactory = eps::utils::make_unique<RendererFactory>();
+	mRenderId = mRendererFactory->open(true);
+	auto renderer = mRendererFactory->get(mRenderId);
 
 	if (!renderer->startup(size, sQuantity))
 	{
-		throw std::runtime_error("renderer->startup() failed");
+		return false;
 	}
 
 	if (!renderer->set_background(sBackground))
 	{
-		throw std::runtime_error("renderer->set_background() failed");
+		return false;
 	}
 
 	renderer->set_color(sColor.x, sColor.y, sColor.z, sColor.w);
 	renderer->acceleration(sGravity.x, sGravity.y, sGravity.z);
+	//
+	glEnable(GL_POINT_SPRITE);
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+	//
+	return true;
 }
 
-void LiquidDemo::Update(const Library::GameTime&)
+void LiquidDemo::Update()
 {
 	static bool touchDown = false;
-	auto renderer = mLiquidRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	//
 	glm::dvec2 screen_pos;
 	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
@@ -70,9 +70,9 @@ void LiquidDemo::Update(const Library::GameTime&)
 	}
 }
 
-void LiquidDemo::Draw(const Library::GameTime&)
+void LiquidDemo::Draw()
 {
-	auto renderer = mLiquidRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	renderer->render();
 }
 

@@ -13,7 +13,7 @@ SliderModel::SliderModel() :
 	mDelta(sDefaultMax - sDefaultMin),
 	mValue(sDefaultMin)
 {
-	assert(sDefaultMin < sDefaultMin);
+	assert(sDefaultMin < sDefaultMax);
 }
 
 SliderModel::SliderModel(float aMin, float aMax) :

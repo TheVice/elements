@@ -5,7 +5,7 @@
 #include "rendering/core/program.h"
 #include "rendering/primitives/square.h"
 
-namespace Desktop
+namespace Library
 {
 
 class checkbox : public eps::ui::control

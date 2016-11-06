@@ -9,7 +9,7 @@
 #define DEFAULT_WIDTH 13
 #define DEFAULT_HEIGHT 13
 
-namespace Desktop
+namespace Library
 {
 
 enum program_enum : short

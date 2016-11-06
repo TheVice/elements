@@ -1,6 +1,5 @@
 
 #include "FireDemo.h"
-#include "Game.h"
 #include "android/input.h"
 
 namespace Rendering
@@ -10,44 +9,42 @@ RTTI_DEFINITIONS(FireDemo)
 FireDemo::FireDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
 	mRenderId(-1),
-	mFireRendererFactory(nullptr)
+	mRendererFactory(nullptr)
 {
 }
 
 FireDemo::~FireDemo()
 {
-	mFireRendererFactory->close(mRenderId);
+	mRendererFactory->close(mRenderId);
 }
 
-void FireDemo::Initialize()
+bool FireDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	//
-	mFireRendererFactory = std::make_unique<fire_renderer_factory>();
-	//
-	bool preview = true;
-	mRenderId = mFireRendererFactory->open(preview);
-	//
-	auto renderer = mFireRendererFactory->get(mRenderId);
+	mRendererFactory = eps::utils::make_unique<RendererFactory>();
+	mRenderId = mRendererFactory->open(true);
+	auto renderer = mRendererFactory->get(mRenderId);
 
 	if (!renderer->startup(size, sQuality))
 	{
-		throw std::runtime_error("renderer->startup() failed");
+		return false;
 	}
 
 	if (!renderer->set_background(sBackground))
 	{
-		throw std::runtime_error("renderer->set_background() failed");
+		return false;
 	}
 
 	renderer->set_color_hot(sColorHot);
 	renderer->set_color_cold(sColorCold);
+	//
+	return true;
 }
 
-void FireDemo::Update(const Library::GameTime&)
+void FireDemo::Update()
 {
 	static bool touchDown = false;
-	auto renderer = mFireRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	//
 	glm::dvec2 screen_pos;
 	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
@@ -70,9 +67,9 @@ void FireDemo::Update(const Library::GameTime&)
 	}
 }
 
-void FireDemo::Draw(const Library::GameTime&)
+void FireDemo::Draw()
 {
-	auto renderer = mFireRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	renderer->render();
 }
 

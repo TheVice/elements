@@ -4,18 +4,20 @@
 #include "assets/assets_storage.h"
 #include "preferences.h"
 #include "metrics.h"
-#include "LightDemo.h"
+#ifndef WIN32
+#include "OGLES2HelloAPI_LinuxX11.h"
+#endif
 
-namespace Rendering
+namespace Library
 {
-RenderingGame::RenderingGame(const TCHAR* aWindowTitle) :
-	Game(aWindowTitle),
+RenderingGame::RenderingGame(const std::string& aWindowTitle, GLuint aScreenWidth, GLuint aScreenHeight) :
+	Game(aWindowTitle, aScreenWidth, aScreenHeight),
 	mKeyboardHandler(nullptr),
-	mDrawableGameComponent(nullptr)
+	mGameComponents()
 {
 }
 
-void RenderingGame::Initialize()
+bool RenderingGame::Initialize()
 {
 	mKeyboardHandler = std::bind(&RenderingGame::OnKey, this,
 								 std::placeholders::_1, std::placeholders::_2,
@@ -25,17 +27,22 @@ void RenderingGame::Initialize()
 	eps::assets_storage::instance().mount<asset_fs>("assets", "assets");
 	eps::preferences::init<preferences>();
 	eps::metrics::init<metrics>(GetDPI());
-	//
-	mDrawableGameComponent = std::make_unique<LightDemo>(*this);
-	mComponents.push_back(mDrawableGameComponent.get());
-	//
-	Game::Initialize();
+#ifndef WIN32
+	mGameComponents.insert(mGameComponents.begin(), eps::utils::make_unique<OGLES2HelloAPI_LinuxX11>(*this, GetWindowHandle()));
+#endif
+
+	for (const auto& component : mGameComponents)
+	{
+		mComponents.push_back(component.get());
+	}
+
+	return Game::Initialize();
 }
 
-void RenderingGame::Draw(const Library::GameTime& aGameTime)
+void RenderingGame::Draw()
 {
-	Game::Draw(aGameTime);
-	//	glfwSwapBuffers(mWindow);
+	Game::Draw();
+	//glfwSwapBuffers(mWindow);
 }
 
 void RenderingGame::Shutdown()

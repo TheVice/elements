@@ -1,7 +1,6 @@
 
 #include "AirDemo.h"
 #include "android/input.h"
-#include "Game.h"
 
 namespace Rendering
 {
@@ -10,38 +9,35 @@ RTTI_DEFINITIONS(AirDemo)
 AirDemo::AirDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
 	mRenderId(-1),
-	mAirRendererFactory(nullptr)
+	mRendererFactory(nullptr)
 {
 }
 
 AirDemo::~AirDemo()
 {
-	mAirRendererFactory->close(mRenderId);
+	mRendererFactory->close(mRenderId);
 }
 
-void AirDemo::Initialize()
+bool AirDemo::Initialize()
 {
 	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	//
-	mAirRendererFactory = std::make_unique<air_renderer_factory>();
-	//
-	bool preview = true;
-	mRenderId = mAirRendererFactory->open(preview);
-	//
-	auto renderer = mAirRendererFactory->get(mRenderId);
+	mRendererFactory = eps::utils::make_unique<RendererFactory>();
+	mRenderId = mRendererFactory->open(true);
+	auto renderer = mRendererFactory->get(mRenderId);
 
 	if (!renderer->startup(size, sQuantity))
 	{
-		throw std::runtime_error("renderer->startup() failed");
+		return false;
 	}
 
 	renderer->set_colors(sColorSpeedDown, sColorSpeedUp);
+	return true;
 }
 
-void AirDemo::Update(const Library::GameTime&)
+void AirDemo::Update()
 {
 	static bool touchDown = false;
-	auto renderer = mAirRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	//
 	glm::dvec2 screen_pos;
 	glfwGetCursorPos(mGame->GetWindow(), &screen_pos.x, &screen_pos.y);
@@ -64,9 +60,9 @@ void AirDemo::Update(const Library::GameTime&)
 	}
 }
 
-void AirDemo::Draw(const Library::GameTime&)
+void AirDemo::Draw()
 {
-	auto renderer = mAirRendererFactory->get(mRenderId);
+	auto renderer = mRendererFactory->get(mRenderId);
 	renderer->render();
 }
 
