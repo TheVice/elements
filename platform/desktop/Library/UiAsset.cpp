@@ -256,7 +256,6 @@ bool UiAsset::Initialize()
 
 	if (!data || data->mIsEmpty)
 	{
-		//throw std::runtime_error("Failed to load UI asset");
 		return false;
 	}
 

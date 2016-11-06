@@ -11,25 +11,18 @@ namespace Library
 class RenderingGame : public Library::Game
 {
 public:
-	RenderingGame(const std::string& aWindowTitle, GLuint aScreenWidth = Game::sDefaultScreenWidth,
+	RenderingGame(const std::string& aWindowTitle,
+				  GLuint aScreenWidth = Game::sDefaultScreenWidth,
 				  GLuint aScreenHeight = Game::sDefaultScreenHeight);
 
 	virtual bool Initialize() override;
 	virtual void Draw() override;
 
-	template<typename T>//, typename... Args>
-	void addComponent()
+	template<typename T, typename... Args>
+	void addComponent(Args&& ... args)
 	{
-		mDrawableGameComponents.push_back(eps::utils::make_unique<T>(*this));
+		mGameComponents.push_back(eps::utils::make_unique<T>(*this, (args)...));
 	}
-
-	/*template<typename T>//, typename... Args>
-	void addService()
-	{
-		auto c = eps::utils::make_unique<T>(*this);
-		mDrawableGameComponents.push_back(c);
-		mServices.AddService(T::TypeIdClass(), c.get());
-	}*/
 
 protected:
 	virtual void Shutdown() override;
@@ -39,7 +32,7 @@ private:
 
 private:
 	KeyboardHandler mKeyboardHandler;
-	std::vector<eps::utils::unique<DrawableGameComponent>> mDrawableGameComponents;
+	std::vector<eps::utils::unique<GameComponent>> mGameComponents;
 };
 }
 

@@ -3,7 +3,7 @@
 #include "DrawableGameComponent.h"
 #include <GLFW/glfw3native.h>
 #include <cassert>
-#include <iostream>
+#include <stdio.h>
 
 namespace Library
 {
@@ -11,15 +11,16 @@ RTTI_DEFINITIONS(Game)
 
 const GLuint Game::sDefaultScreenWidth = 800;
 const GLuint Game::sDefaultScreenHeight = 600;
+const GLuint Game::sDefaultDPI = 96;
 
 Game* Game::sInternalInstance = nullptr;
 
 Game::Game(const std::string& aWindowTitle, GLuint aScreenWidth, GLuint aScreenHeight) :
 	mWindowTitle(aWindowTitle),
-	mWindow(nullptr),
 	mScreenWidth(aScreenWidth),
 	mScreenHeight(aScreenHeight),
 	mIsFullScreen(false),
+	mWindow(nullptr),
 	mComponents(),
 	mKeyboardHandlers()
 {
@@ -60,22 +61,36 @@ GLuint Game::GetScreenHeight() const
 	return mScreenHeight;
 }
 
-GLint Game::GetDPI() const
-{
-#ifdef WIN32
-	const auto windowHandle = GetWindowHandle();
-	const auto hdc = GetDC(windowHandle);
-	const auto dpi = GetDeviceCaps(hdc, LOGPIXELSY);
-	ReleaseDC(windowHandle, hdc);
-	return dpi;
-#else
-	return 96;
-#endif
-}
-
 GLfloat Game::GetAspectRatio() const
 {
 	return static_cast<GLfloat>(mScreenWidth) / mScreenHeight;
+}
+
+GLint Game::GetDPI() const
+{
+	int widthMM = 0;
+	int heightMM = 0;
+	const auto monitor = glfwGetPrimaryMonitor();
+	glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
+	const auto mode = glfwGetVideoMode(monitor);
+	const auto dpi = heightMM ? static_cast<GLint>((static_cast<GLfloat>(mode->height) * 25.4f) / heightMM) : 96;
+	//
+	const std::vector<GLint> dpis = { 96, 120, 144, 192, 240, 288, 384, 480 };
+	GLint index = 0;
+	GLint minimalDiff = std::abs(dpis[index] - dpi);
+
+	for (size_t i = 0, count = dpis.size(); i < count; ++i)
+	{
+		GLint diff = std::abs(dpis[i] - dpi);
+
+		if (diff < minimalDiff)
+		{
+			minimalDiff = diff;
+			index = i;
+		}
+	}
+
+	return dpis[index];
 }
 
 bool Game::IsFullScreen() const
@@ -178,6 +193,8 @@ void Game::InitializeWindow()
 		throw std::runtime_error("glfwInit() failed");
 	}
 
+	mScreenWidth *= static_cast<GLfloat>(GetDPI()) / sDefaultDPI;
+	mScreenHeight *= static_cast<GLfloat>(GetDPI()) / sDefaultDPI;
 	GLFWmonitor* monitor = (mIsFullScreen ? glfwGetPrimaryMonitor() : nullptr);
 
 	if (!mIsFullScreen)
@@ -195,12 +212,8 @@ void Game::InitializeWindow()
 
 	if (!mIsFullScreen)
 	{
-		auto center = CenterWindow(mScreenWidth, mScreenHeight);
-#ifndef WIN32
+		const auto center = CenterWindow(mScreenWidth, mScreenHeight);
 		glfwSetWindowPos(mWindow, std::get<0>(center), std::get<1>(center));
-#else
-		glfwSetWindowPos(mWindow, center.x, center.y);
-#endif
 	}
 }
 
@@ -234,36 +247,17 @@ void Game::OnKey(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int 
 		handler.second(aKey, aScancode, aAction, aMods);
 	}
 }
-#ifndef WIN32
+
 std::pair<int, int> Game::CenterWindow(int aWindowWidth, int aWindowHeight)
 {
 	std::pair<int, int> center = std::make_pair(0, 0);
-	Display* display = XOpenDisplay(nullptr);
-
-	if (!display)
-	{
-		return center;
-	}
-
-	int screenNumber = XDefaultScreen(display);
-	int screenWidth = XDisplayWidth(display, screenNumber);
-	int screenHeight = XDisplayHeight(display, screenNumber);
-	XCloseDisplay(display);
-	std::get<0>(center) = static_cast<int>(static_cast<GLfloat>(screenWidth - aWindowWidth) / 2);
-	std::get<1>(center) = static_cast<int>(static_cast<GLfloat>(screenHeight - aWindowHeight) / 2);
+	const auto monitor = glfwGetPrimaryMonitor();
+	const auto mode = glfwGetVideoMode(monitor);
+	std::get<0>(center) = static_cast<int>(static_cast<float>(mode->width - aWindowWidth) / 2);
+	std::get<1>(center) = static_cast<int>(static_cast<float>(mode->height - aWindowHeight) / 2);
 	return center;
 }
-#else
-POINT Game::CenterWindow(int aWindowWidth, int aWindowHeight)
-{
-	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	POINT center = { 0, 0 };
-	center.x = static_cast<LONG>(static_cast<GLfloat>(screenWidth - aWindowWidth) / 2);
-	center.y = static_cast<LONG>(static_cast<GLfloat>(screenHeight - aWindowHeight) / 2);
-	return center;
-}
-#endif
+
 void Game::glfwErrorCallback(int aError, const char* aDescription)
 {
 	const auto sz = snprintf(nullptr, 0, "%s (Error #%i)\n", aDescription, aError);

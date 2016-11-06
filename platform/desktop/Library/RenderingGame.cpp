@@ -10,7 +10,7 @@ namespace Library
 RenderingGame::RenderingGame(const std::string& aWindowTitle, GLuint aScreenWidth, GLuint aScreenHeight) :
 	Game(aWindowTitle, aScreenWidth, aScreenHeight),
 	mKeyboardHandler(nullptr),
-	mDrawableGameComponents()
+	mGameComponents()
 {
 }
 
@@ -25,7 +25,7 @@ bool RenderingGame::Initialize()
 	eps::preferences::init<preferences>();
 	eps::metrics::init<metrics>(GetDPI());
 
-	for (const auto& component : mDrawableGameComponents)
+	for (const auto& component : mGameComponents)
 	{
 		mComponents.push_back(component.get());
 	}
@@ -41,7 +41,6 @@ void RenderingGame::Draw()
 
 void RenderingGame::Shutdown()
 {
-	mComponents.clear();
 	RemoveKeyboardHandler(mKeyboardHandler);
 	Game::Shutdown();
 }

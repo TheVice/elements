@@ -8,14 +8,15 @@
 
 #include <map>
 #include <vector>
+#include <utility>
 #include <functional>
 
-#ifdef WIN32
+#ifndef WIN32
+#include <X11/Xlib.h>
+#else
 #include <windows.h>
 #undef far
 #undef near
-#else
-#include <X11/Xlib.h>
 #endif
 
 namespace Library
@@ -48,9 +49,8 @@ public:
 
 	GLuint GetScreenWidth() const;
 	GLuint GetScreenHeight() const;
-	GLint GetDPI() const;
-
 	GLfloat GetAspectRatio() const;
+	GLint GetDPI() const;
 	bool IsFullScreen() const;
 
 	const std::vector<GameComponent*>& GetComponents() const;
@@ -73,11 +73,13 @@ protected:
 protected:
 	static const GLuint sDefaultScreenWidth;
 	static const GLuint sDefaultScreenHeight;
+	static const GLuint sDefaultDPI;
+
 	std::string mWindowTitle;
-	GLFWwindow* mWindow;
 	GLuint mScreenWidth;
 	GLuint mScreenHeight;
 	bool mIsFullScreen;
+	GLFWwindow* mWindow;
 	std::vector<GameComponent*> mComponents;
 	std::map<KeyboardHandler*, KeyboardHandler> mKeyboardHandlers;
 
@@ -85,11 +87,7 @@ private:
 	static Game* sInternalInstance;
 
 	static void OnKey(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int aMods);
-#ifndef WIN32
 	static std::pair<int, int> CenterWindow(int aWindowWidth, int aWindowHeight);
-#else
-	static POINT CenterWindow(int aWindowWidth, int aWindowHeight);
-#endif
 	static void glfwErrorCallback(int aError, const char* aDescription);
 };
 

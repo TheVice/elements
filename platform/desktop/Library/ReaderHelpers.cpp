@@ -173,5 +173,19 @@ bool read_indices(const pugi::xml_node& aNode, std::vector<unsigned int>& aIndic
 	return !aIndices.empty();
 }
 
+bool read_std_string(const pugi::xml_node& aNode, std::string& aValue)
+{
+	const auto value_attribute = aNode.attribute("value");
+
+	if (value_attribute.empty())
+	{
+		return false;
+	}
+
+	aValue = value_attribute.as_string();
+	//
+	return !aValue.empty();
+}
+
 }
 }
