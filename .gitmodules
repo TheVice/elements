@@ -24,3 +24,6 @@
 	path = third-party/SwiftShader
 	#url = https://swiftshader.googlesource.com/SwiftShader
 	url = git://github.com/google/swiftshader
+[submodule "third-party/glew"]
+	path = third-party/glew
+	url = git://github.com/nigels-com/glew
