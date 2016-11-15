@@ -27,3 +27,8 @@
 [submodule "third-party/glew"]
 	path = third-party/glew
 	url = git://github.com/nigels-com/glew
+#[submodule "third-party/glew/auto/registry"]
+#	path = third-party/glew/auto/registry
+[submodule "third-party/glfixes"]
+	path = third-party/glfixes
+	url = git://github.com/nigels-com/glfixes
