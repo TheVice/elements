@@ -581,30 +581,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
   link_directories(${LINK_DIRECTORIES} /usr/local/lib/)
 endif()
 
-# freetype
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/freetype2)
-    set(freetype_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/freetype2)
-  elseif(DEFINED ENV{FREETYPE_PATH})
-    string(REPLACE "\\" "/" freetype_Path $ENV{FREETYPE_PATH})
-  elseif(DEFINED FREETYPE_PATH)
-    string(REPLACE "\\" "/" freetype_Path ${FREETYPE_PATH})
-  else()
-    message(FATAL_ERROR "Could not find freetype library, please check it at https://sourceforge.net/projects/freetype/files/")
-  endif()
-
-  if(MSVC)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-      add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
-    endif()
-  endif()
-
-  if(UNIX)
-    include_directories(${CMAKE_BINARY_DIR}/libpng ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libpng)
-  endif()
-  add_subdirectory(${freetype_Path} ${CMAKE_BINARY_DIR}/freetype)
-
-  list(APPEND REQUIRED_SYS_INCLUDES ${freetype_Path}/include)
-
 # SwiftShader
 if(UNIX)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SwiftShader)
@@ -769,45 +745,6 @@ endif()
   endif()
   list(APPEND REQUIRED_SYS_INCLUDES ${glm_Path})
 
-# libpng
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libpng)
-    set(libpng_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libpng)
-  elseif(DEFINED ENV{LIBPNG_PATH})
-    string(REPLACE "\\" "/" libpng_Path $ENV{LIBPNG_PATH})
-  elseif(DEFINED LIBPNG_PATH)
-    string(REPLACE "\\" "/" libpng_Path ${LIBPNG_PATH})
-  else()
-    message(FATAL_ERROR "Could not find libpng library, please check it at https://sourceforge.net/projects/libpng/files/")
-  endif()
-
-  file(GLOB LIBPNG_SRC_FILES ${libpng_Path}/*.h ${libpng_Path}/*.c)
-  list(REMOVE_ITEM LIBPNG_SRC_FILES ${libpng_Path}/example.c ${libpng_Path}/pngtest.c)
-  add_library(libpng STATIC ${LIBPNG_SRC_FILES})
-
-  configure_file(${libpng_Path}/scripts/pnglibconf.h.prebuilt
-                 ${CMAKE_BINARY_DIR}/libpng/pnglibconf.h)
-  target_include_directories(libpng SYSTEM PRIVATE ${zlib_Path} ${CMAKE_BINARY_DIR}/libpng)
-  list(APPEND REQUIRED_SYS_INCLUDES ${CMAKE_BINARY_DIR}/libpng)
-  # target_include_directories(freetype ${CMAKE_BINARY_DIR}/libpng ${libpng_Path})
-  # include_directories(${libpng_Path})
-
-  list(APPEND REQUIRED_SYS_INCLUDES ${libpng_Path})
-
-# pugixml
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/pugixml)
-    set(pugixml_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/pugixml)
-  elseif(DEFINED ENV{PUGIXML_PATH})
-    string(REPLACE "\\" "/" pugixml_Path $ENV{PUGIXML_PATH})
-  elseif(DEFINED PUGIXML_PATH)
-    string(REPLACE "\\" "/" pugixml_Path ${PUGIXML_PATH})
-  else()
-    message(FATAL_ERROR "Could not find pugixml library, please check it at https://github.com/zeux/pugixml/releases")
-  endif()
-
-  file(GLOB PUGIXML_SRC_FILES ${pugixml_Path}/src/*.hpp ${pugixml_Path}/src/*.cpp)
-  add_library(pugixml STATIC ${PUGIXML_SRC_FILES})
-  list(APPEND REQUIRED_SYS_INCLUDES ${pugixml_Path}/src)
-
 # assimp
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/assimp/code)
     set(assimp_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/assimp)
@@ -846,7 +783,77 @@ endif()
 
   file(GLOB ZLIB_SRC_FILES ${zlib_Path}/*.h ${zlib_Path}/*.c)
   add_library(z STATIC ${ZLIB_SRC_FILES})
+  if(UNIX)
+    configure_file(${zlib_Path}/zconf.h.cmakein
+                   ${CMAKE_BINARY_DIR}/zlib/zconf.h)
+    target_include_directories(z SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/zlib)
+  endif()
+
   list(APPEND REQUIRED_SYS_INCLUDES ${zlib_Path})
+
+# libpng
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libpng)
+    set(libpng_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libpng)
+  elseif(DEFINED ENV{LIBPNG_PATH})
+    string(REPLACE "\\" "/" libpng_Path $ENV{LIBPNG_PATH})
+  elseif(DEFINED LIBPNG_PATH)
+    string(REPLACE "\\" "/" libpng_Path ${LIBPNG_PATH})
+  else()
+    message(FATAL_ERROR "Could not find libpng library, please check it at https://sourceforge.net/projects/libpng/files/")
+  endif()
+
+  file(GLOB LIBPNG_SRC_FILES ${libpng_Path}/*.h ${libpng_Path}/*.c)
+  list(REMOVE_ITEM LIBPNG_SRC_FILES ${libpng_Path}/example.c ${libpng_Path}/pngtest.c)
+  add_library(libpng STATIC ${LIBPNG_SRC_FILES})
+
+  configure_file(${libpng_Path}/scripts/pnglibconf.h.prebuilt
+                 ${CMAKE_BINARY_DIR}/libpng/pnglibconf.h)
+  target_include_directories(libpng SYSTEM PRIVATE ${zlib_Path} ${CMAKE_BINARY_DIR}/libpng)
+  list(APPEND REQUIRED_SYS_INCLUDES ${CMAKE_BINARY_DIR}/libpng)
+  if(UNIX)
+    target_include_directories(libpng SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/zlib)
+  endif()
+
+  list(APPEND REQUIRED_SYS_INCLUDES ${libpng_Path})
+
+# freetype
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/freetype2)
+    set(freetype_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/freetype2)
+  elseif(DEFINED ENV{FREETYPE_PATH})
+    string(REPLACE "\\" "/" freetype_Path $ENV{FREETYPE_PATH})
+  elseif(DEFINED FREETYPE_PATH)
+    string(REPLACE "\\" "/" freetype_Path ${FREETYPE_PATH})
+  else()
+    message(FATAL_ERROR "Could not find freetype library, please check it at https://sourceforge.net/projects/freetype/files/")
+  endif()
+
+  if(MSVC)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
+    endif()
+  endif()
+
+  if(UNIX)
+    include_directories(${CMAKE_BINARY_DIR}/libpng ${libpng_Path})
+  endif()
+  add_subdirectory(${freetype_Path} ${CMAKE_BINARY_DIR}/freetype)
+
+  list(APPEND REQUIRED_SYS_INCLUDES ${freetype_Path}/include)
+
+# pugixml
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/pugixml)
+    set(pugixml_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/pugixml)
+  elseif(DEFINED ENV{PUGIXML_PATH})
+    string(REPLACE "\\" "/" pugixml_Path $ENV{PUGIXML_PATH})
+  elseif(DEFINED PUGIXML_PATH)
+    string(REPLACE "\\" "/" pugixml_Path ${PUGIXML_PATH})
+  else()
+    message(FATAL_ERROR "Could not find pugixml library, please check it at https://github.com/zeux/pugixml/releases")
+  endif()
+
+  file(GLOB PUGIXML_SRC_FILES ${pugixml_Path}/src/*.hpp ${pugixml_Path}/src/*.cpp)
+  add_library(pugixml STATIC ${PUGIXML_SRC_FILES})
+  list(APPEND REQUIRED_SYS_INCLUDES ${pugixml_Path}/src)
 
 # oel
 set(oel_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/oel)
@@ -978,7 +985,7 @@ endforeach()
 # Flags
 if(MSVC)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
+    set(FLAGS "${FLAGS} -Wall -Wextra") #-Werror
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
     add_definitions(-D__clang__)
@@ -995,7 +1002,7 @@ if(MSVC)
     endif()
   endif()
 else()
-  set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
+  set(FLAGS "${FLAGS} -Wall -Wextra") #-Werror
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
