@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.3)
 
 project("elements")
-
-if(ANDROID)
 
 # Third-party
 set(EXTERNAL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/third-party)
@@ -20,6 +18,9 @@ set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(${EXTERNAL_PATH_ASSIMP})
 target_compile_options(assimp PRIVATE -fexceptions -frtti)
+if(NOT ANDROID)
+    set_target_properties(assimp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 
 # build importers
 target_compile_definitions(assimp PRIVATE
@@ -95,6 +96,9 @@ list(APPEND EXTERNAL_LIBRARIES assimp)
 set(EXTERNAL_PATH_FREETYPE ${EXTERNAL_PATH}/freetype2)
 add_subdirectory(${EXTERNAL_PATH_FREETYPE})
 target_compile_definitions(freetype PRIVATE FT2_BUILD_LIBRARY)
+if(NOT ANDROID)
+    set_target_properties(freetype PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_FREETYPE}/include)
 list(APPEND EXTERNAL_LIBRARIES freetype)
 
@@ -106,17 +110,37 @@ list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLM})
 # libpng
 
 set(EXTERNAL_PATH_PNG ${EXTERNAL_PATH}/libpng)
-configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
-               ${EXTERNAL_PATH_PNG}/pnglibconf.h)
+if(ANDROID)
+  configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
+                 ${EXTERNAL_PATH_PNG}/pnglibconf.h)
+else()
+  configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
+                 ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h)
+endif()
 file(GLOB LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/*.h ${EXTERNAL_PATH_PNG}/*.c)
 add_library(png STATIC ${LIBPNG_SOURCE_FILES})
+if(NOT ANDROID)
+    target_include_directories(png SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/third-party/libpng)
+    set_target_properties(png PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    list(APPEND EXTERNAL_INCLUDES ${CMAKE_BINARY_DIR}/third-party/libpng)
+endif()
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_PNG})
 list(APPEND EXTERNAL_LIBRARIES png)
 
 # pugixml
 
 set(EXTERNAL_PATH_PUGIXML ${EXTERNAL_PATH}/pugixml)
-add_subdirectory(${EXTERNAL_PATH_PUGIXML})
+if(ANDROID)
+  add_subdirectory(${EXTERNAL_PATH_PUGIXML})
+else()
+  set(SOURCES
+      ${EXTERNAL_PATH_PUGIXML}/src/pugixml.hpp
+      ${EXTERNAL_PATH_PUGIXML}/src/pugiconfig.hpp
+      ${EXTERNAL_PATH_PUGIXML}/src/pugixml.cpp)
+  add_library(pugixml STATIC ${SOURCES})
+  target_compile_options(pugixml PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+  set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 target_compile_definitions(pugixml PRIVATE PUGIXML_NO_EXCEPTIONS)
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_PUGIXML}/src)
 list(APPEND EXTERNAL_LIBRARIES pugixml)
@@ -125,6 +149,72 @@ list(APPEND EXTERNAL_LIBRARIES pugixml)
 
 set(EXTERNAL_PATH_SNAPE ${EXTERNAL_PATH}/snape)
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_SNAPE}/include)
+
+if(NOT ANDROID)
+
+  if(UNIX)
+
+    # SwiftShader
+    set(EXTERNAL_PATH_SWIFT_SHADER ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SwiftShader)
+
+    file(READ ${EXTERNAL_PATH_SWIFT_SHADER}/CMakeLists.txt file_content)
+    string(REGEX REPLACE "CMAKE_SOURCE_DIR" "EXTERNAL_PATH_SWIFT_SHADER" file_content ${file_content})
+    file(WRITE ${CMAKE_BINARY_DIR}/third-party/SwiftShader/CMakeLists.txt ${file_content})
+
+    # set(BUILD_EGL OFF CACHE BOOL "" FORCE)
+    set(BUILD_GL32 OFF CACHE BOOL "" FORCE)
+    # set(BUILD_GLESv2 OFF CACHE BOOL "" FORCE)
+    set(BUILD_GLES_CM OFF CACHE BOOL "" FORCE)
+    set(BUILD_EXTRA_PROGRAMS OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${CMAKE_BINARY_DIR}/third-party/SwiftShader ${CMAKE_BINARY_DIR}/third-party/SwiftShader)
+    set_target_properties(libEGL PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set_target_properties(libGLESv2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+    list(APPEND REQUIRED_SYS_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
+    list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
+    list(APPEND EXTERNAL_LIBRARIES libEGL)
+    list(APPEND EXTERNAL_LIBRARIES libGLESv2)
+
+  endif()
+
+  # glfw
+
+  set(EXTERNAL_PATH_GLFW ${EXTERNAL_PATH}/glfw)
+  set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+  set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+  add_subdirectory(${EXTERNAL_PATH_GLFW})
+  set_target_properties(glfw PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+  if(UNIX)
+    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_X11)
+    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_GLX)
+  elseif(WIN32)
+    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WIN32)
+    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WGL)
+  endif()
+
+  list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLFW}/include)
+  list(APPEND EXTERNAL_LIBRARIES glfw)
+
+  # oel
+
+  set(EXTERNAL_PATH_OEL ${EXTERNAL_PATH}/oel)
+  file(GLOB OEL_SOURCE_FILES ${EXTERNAL_PATH_OEL}/*.h ${EXTERNAL_PATH_OEL}/*.cpp)
+  add_library(oel STATIC ${OEL_SOURCE_FILES})
+  target_include_directories(oel PRIVATE ${EXTERNAL_PATH_GLEW}/include ${EXTERNAL_PATH_GLFW}/include ${EXTERNAL_PATH_GLM})
+  target_compile_options(oel PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+  set_target_properties(oel PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+  if(WIN32)
+    target_compile_definitions(oel PRIVATE WIN32)
+  endif()
+
+  list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_OEL})
+  list(APPEND EXTERNAL_LIBRARIES oel)
+
+endif()
 
 # elements
 
@@ -372,9 +462,22 @@ target_include_directories(elements PUBLIC
 target_compile_options(elements PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
 target_compile_options(elements PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
 target_compile_options(elements PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+if(NOT ANDROID)
+    set_target_properties(elements PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 
 #experiments
 set(EXPERIMENTS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/experiments)
+
+if(NOT ANDROID)
+    set(EXPERIMENTS_LIQUID TRUE)
+    set(EXPERIMENTS_FIRE TRUE)
+    set(EXPERIMENTS_LIGHT TRUE)
+    set(EXPERIMENTS_AIR TRUE)
+    set(EXPERIMENTS_STRANGE TRUE)
+    set(EXPERIMENTS_CHARACTER TRUE)
+    set(EXPERIMENTS_DEMO TRUE)
+endif()
 
 if(EXPERIMENTS_LIQUID)
     set(SOURCE_FILES
@@ -540,370 +643,54 @@ if(EXPERIMENTS_SOURCE_FILES)
         add_library(experiments SHARED ${EXPERIMENTS_SOURCE_FILES})
         target_link_libraries(experiments android elements ${EXTERNAL_LIBRARIES} atomic GLESv2 log)
         target_include_directories(experiments PRIVATE ${JNI_PATH})
-        target_compile_options(elements PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
-        target_compile_options(elements PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
-        target_compile_options(elements PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+        target_compile_options(experiments PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+        target_compile_options(experiments PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+        target_compile_options(experiments PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
 
-    endif()
-endif()
-
-else()
-
-if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
-  message(FATAL_ERROR "Build process cannot start from project source directory")
-endif()
-
-if(WIN32)
-  message(FATAL_ERROR "Could not support WIN32 platform")
-endif()
-
-if(MSVC)
-  # if(NOT CHARACTER_SET)
-  #   add_definitions(-D_UNICODE -DUNICODE)
-  # else()
-    add_definitions(-D_MBCS)
-  # endif()
-  add_definitions(-DNOMINMAX)
-  # message(FATAL_ERROR "Could not support Visual Studio")
-endif()
-
-if(WIN32)
-  add_definitions(-DWIN32)
-  add_definitions(-D_WIN32)
-  add_definitions(-D_WINDOWS)
-  add_definitions(-DNOCOMM)
-  add_definitions(-DWIN32_LEAN_AND_MEAN)
-  add_definitions(-D_WIN32_WINNT=0x0500)
-endif()
-
-set(REQUIRED_INCLUDES)
-set(REQUIRED_LIBRARIES)
-set(REQUIRED_SYS_INCLUDES)
-
-if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-  list(APPEND REQUIRED_SYS_INCLUDES /usr/local/include/)
-  link_directories(${LINK_DIRECTORIES} /usr/local/lib/)
-endif()
-
-# freetype
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/freetype2)
-    set(freetype_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/freetype2)
-  elseif(DEFINED ENV{FREETYPE_PATH})
-    string(REPLACE "\\" "/" freetype_Path $ENV{FREETYPE_PATH})
-  elseif(DEFINED FREETYPE_PATH)
-    string(REPLACE "\\" "/" freetype_Path ${FREETYPE_PATH})
-  else()
-    message(FATAL_ERROR "Could not find freetype library, please check it at https://sourceforge.net/projects/freetype/files/")
-  endif()
-
-  if(MSVC)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-      add_definitions(-DFT_CONFIG_OPTION_NO_ASSEMBLER)
-    endif()
-  endif()
-
-  add_subdirectory(${freetype_Path} ${CMAKE_BINARY_DIR}/freetype)
-
-  list(APPEND REQUIRED_SYS_INCLUDES ${freetype_Path}/include)
-
-# SwiftShader
-if(UNIX)
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SwiftShader)
-    set(SwiftShader_PATH ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SwiftShader)
-  elseif(DEFINED ENV{SWIFTSHADER_PATH})
-    string(REPLACE "\\" "/" SwiftShader_PATH $ENV{SWIFTSHADER_PATH})
-  elseif(DEFINED SWIFTSHADER_PATH)
-    string(REPLACE "\\" "/" SwiftShader_PATH ${SWIFTSHADER_PATH})
-  else()
-    message(FATAL_ERROR "Could not find SwiftShader library, please check it at https://swiftshader.googlesource.com/SwiftShader")
-  endif()
-
-  if(NOT EXISTS ${SwiftShader_PATH}/CMakeLists.txt)
-    message(FATAL_ERROR "Could not find CMakeLists.txt for SwiftShader library, please check it at https://swiftshader.googlesource.com/SwiftShader")
-  endif()
-
-  file(READ ${SwiftShader_PATH}/CMakeLists.txt file_content)
-  string(REGEX REPLACE "CMAKE_SOURCE_DIR" "SwiftShader_PATH" file_content ${file_content})
-  file(WRITE ${CMAKE_BINARY_DIR}/SwiftShader/CMakeLists.txt ${file_content})
-
-  # set(BUILD_EGL OFF CACHE BOOL "" FORCE)
-  set(BUILD_GL32 OFF CACHE BOOL "" FORCE)
-  # set(BUILD_GLESv2 OFF CACHE BOOL "" FORCE)
-  set(BUILD_GLES_CM OFF CACHE BOOL "" FORCE)
-  set(BUILD_EXTRA_PROGRAMS OFF CACHE BOOL "" FORCE)
-  add_subdirectory(${CMAKE_BINARY_DIR}/SwiftShader ${CMAKE_BINARY_DIR}/SwiftShader)
-
-  list(APPEND REQUIRED_SYS_INCLUDES ${SwiftShader_PATH}/include)
-endif()
-
-# glfw
-if(UNIX)
-  add_definitions(-DGLFW_EXPOSE_NATIVE_X11)
-  add_definitions(-DGLFW_EXPOSE_NATIVE_GLX)
-elseif(WIN32)
-  add_definitions(-DGLFW_EXPOSE_NATIVE_WIN32)
-  add_definitions(-DGLFW_EXPOSE_NATIVE_WGL)
-endif()    
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/glfw)
-    set(glfw_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/glfw)
-  elseif(DEFINED ENV{GLFW_PATH})
-    string(REPLACE "\\" "/" glfw_Path $ENV{GLFW_PATH})
-  elseif(DEFINED GLFW_PATH)
-    string(REPLACE "\\" "/" glfw_Path ${GLFW_PATH})
-  else()
-    message(FATAL_ERROR "Could not find glfw library, please check it at https://github.com/glfw/glfw/releases")
-  endif()
-
-  set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-  set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-  set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-  add_subdirectory(${glfw_Path} ${CMAKE_BINARY_DIR}/glfw)
-
-  list(APPEND REQUIRED_SYS_INCLUDES ${glfw_Path}/include)
-
-# glm
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/glm)
-    set(glm_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/glm)
-  elseif(DEFINED ENV{GLM_PATH})
-    string(REPLACE "\\" "/" glm_Path $ENV{GLM_PATH})
-  elseif(DEFINED GLM_PATH)
-    string(REPLACE "\\" "/" glm_Path ${GLM_PATH})
-  else()
-    message(FATAL_ERROR "Could not find glm library, please check it at https://github.com/g-truc/glm/releases")
-  endif()
-  list(APPEND REQUIRED_SYS_INCLUDES ${glm_Path})
-
-# libpng
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libpng)
-    set(libpng_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libpng)
-  elseif(DEFINED ENV{LIBPNG_PATH})
-    string(REPLACE "\\" "/" libpng_Path $ENV{LIBPNG_PATH})
-  elseif(DEFINED LIBPNG_PATH)
-    string(REPLACE "\\" "/" libpng_Path ${LIBPNG_PATH})
-  else()
-    message(FATAL_ERROR "Could not find libpng library, please check it at https://sourceforge.net/projects/libpng/files/")
-  endif()
-
-  file(GLOB LIBPNG_SRC_FILES ${libpng_Path}/*.h ${libpng_Path}/*.c)
-  list(REMOVE_ITEM LIBPNG_SRC_FILES ${libpng_Path}/example.c ${libpng_Path}/pngtest.c)
-  add_library(libpng STATIC ${LIBPNG_SRC_FILES})
-if(UNIX)
-  configure_file(${libpng_Path}/scripts/pnglibconf.h.prebuilt
-                 ${CMAKE_BINARY_DIR}/libpng/pnglibconf.h)
-  target_include_directories(libpng SYSTEM PRIVATE ${zlib_Path} ${CMAKE_BINARY_DIR}/libpng)
-  list(APPEND REQUIRED_SYS_INCLUDES ${CMAKE_BINARY_DIR}/libpng)
-else()
-  target_include_directories(libpng SYSTEM PRIVATE ${zlib_Path})
-endif()
-  list(APPEND REQUIRED_SYS_INCLUDES ${libpng_Path})
-
-# pugixml
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/pugixml)
-    set(pugixml_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/pugixml)
-  elseif(DEFINED ENV{PUGIXML_PATH})
-    string(REPLACE "\\" "/" pugixml_Path $ENV{PUGIXML_PATH})
-  elseif(DEFINED PUGIXML_PATH)
-    string(REPLACE "\\" "/" pugixml_Path ${PUGIXML_PATH})
-  else()
-    message(FATAL_ERROR "Could not find pugixml library, please check it at https://github.com/zeux/pugixml/releases")
-  endif()
-
-  file(GLOB PUGIXML_SRC_FILES ${pugixml_Path}/src/*.hpp ${pugixml_Path}/src/*.cpp)
-  add_library(pugixml STATIC ${PUGIXML_SRC_FILES})
-  list(APPEND REQUIRED_SYS_INCLUDES ${pugixml_Path}/src)
-
-# assimp
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/assimp/code)
-    set(assimp_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/assimp)
-  elseif(DEFINED ENV{ASSIMP_PATH})
-    string(REPLACE "\\" "/" assimp_Path $ENV{ASSIMP_PATH})
-  elseif(DEFINED ASSIMP_PATH)
-    string(REPLACE "\\" "/" assimp_Path ${ASSIMP_PATH})
-  else()
-    message(FATAL_ERROR "Could not find assimp library, please check it at https://github.com/assimp/assimp/releases")
-  endif()
-
-  set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-  set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-  set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
-  set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
-  # ASSIMP_NO_EXPORT
-  # ASSIMP_BUILD_ZLIB
-  # ASSIMP_BUILD_ASSIMP_VIEW
-  # ASSIMP_INSTALL_PDB
-  add_subdirectory(${assimp_Path} ${CMAKE_BINARY_DIR}/assimp)
-
-  list(APPEND REQUIRED_SYS_INCLUDES ${assimp_Path}/include)
-
-# z
-  if(EXISTS ${assimp_Path}/contrib/zlib)
-    set(zlib_Path ${assimp_Path}/contrib/zlib)
-  elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib)
-    set(zlib_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/zlib)
-  elseif(DEFINED ENV{ZLIB_PATH})
-    string(REPLACE "\\" "/" zlib_Path $ENV{ZLIB_PATH})
-  elseif(DEFINED ZLIB_PATH)
-    string(REPLACE "\\" "/" zlib_Path ${ZLIB_PATH})
-  else()
-    message(FATAL_ERROR "Could not find zlib library, please check it at https://sourceforge.net/projects/libpng/files/zlib/")
-  endif()
-
-  file(GLOB ZLIB_SRC_FILES ${zlib_Path}/*.h ${zlib_Path}/*.c)
-  add_library(z STATIC ${ZLIB_SRC_FILES})
-  list(APPEND REQUIRED_SYS_INCLUDES ${zlib_Path})
-
-# oel
-set(oel_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/oel)
-file(GLOB OEL_SRC_FILES ${oel_Path}/*.h ${oel_Path}/*.cpp)
-add_library(oel ${OEL_SRC_FILES})
-target_include_directories(oel SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-list(APPEND REQUIRED_INCLUDES ${oel_Path})
-
-# snape
-set(snape_Path ${CMAKE_CURRENT_SOURCE_DIR}/third-party/snape)
-
-# elements
-set(elements_Path ${CMAKE_CURRENT_SOURCE_DIR}/elements)
-file(GLOB_RECURSE ELEMENTS_SRC_FILES ${elements_Path}/*.h ${elements_Path}/*.cpp)
-
-add_library(elements ${ELEMENTS_SRC_FILES})
-target_include_directories(elements PRIVATE ${elements_Path} ${snape_Path}/include)
-target_include_directories(elements SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-list(APPEND REQUIRED_INCLUDES ${elements_Path})
-
-# platform library
-set(platform_Path ${CMAKE_CURRENT_SOURCE_DIR}/platform/desktop)
-file(GLOB PLATFORM_SRC_FILES ${platform_Path}/Library/*.h ${platform_Path}/Library/*.cpp
-                             ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/asset_fs.h
-                             ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/asset_fs.cpp
-                             ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/metrics.h
-                             ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/metrics.cpp
-                             ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.h
-                             ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni/preferences.cpp
-                             ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.h
-                             ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp)
-
-add_library(desktop ${PLATFORM_SRC_FILES})
-target_include_directories(desktop PRIVATE ${REQUIRED_INCLUDES}
-                                           ${elements_Path}/..
-                                           ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/
-                                           ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
-target_include_directories(desktop SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-list(APPEND REQUIRED_INCLUDES ${platform_Path} ${platform_Path}/Library
-                                               ${elements_Path}/..
-                                               ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
-
-# Copy assets
-file(GLOB WALLPAPER_FOLDERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements
-                                     ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/*Wallpaper
-                                     ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/Demo)
-file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/*
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/*Wallpaper/src/main/assets/*
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/Demo/src/main/assets/*)
-
-add_custom_target(copyAssets)
-
-foreach(RESOURCE_FILE ${RESOURCE_FILES})
-  string(REPLACE "//" "/" sourcePath ${RESOURCE_FILE})
-  string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets destination ${sourcePath})
-
-  foreach(WALLPAPER ${WALLPAPER_FOLDERS})
-    set(ADDITION_RESOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/${WALLPAPER}/src/main/assets)
-    string(REPLACE ${ADDITION_RESOURCE_PATH} ${CMAKE_BINARY_DIR}/assets destination ${destination})
-  endforeach()
-
-  add_custom_command(TARGET copyAssets PRE_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${sourcePath}" "${destination}")
-endforeach()
-
-# experiments
-set(IS_SUBSYSTEM_WIN32)
-if(MSVC)
-  set(IS_SUBSYSTEM_WIN32 WIN32)
-endif()
-
-list(APPEND REQUIRED_LIBRARIES desktop)
-list(APPEND REQUIRED_LIBRARIES elements)
-list(APPEND REQUIRED_LIBRARIES freetype)
-list(APPEND REQUIRED_LIBRARIES libpng)
-list(APPEND REQUIRED_LIBRARIES z)
-list(APPEND REQUIRED_LIBRARIES pugixml)
-list(APPEND REQUIRED_LIBRARIES oel)
-if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-  list(APPEND REQUIRED_LIBRARIES glfw3)
-else()
-  list(APPEND REQUIRED_LIBRARIES glfw)
-endif()
-list(APPEND REQUIRED_LIBRARIES assimp)
-if(UNIX)
-  list(APPEND REQUIRED_LIBRARIES X11)
-  if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-    list(APPEND REQUIRED_LIBRARIES Xrandr Xi Xxf86vm Xcursor Xinerama)
-  endif()
-  list(APPEND REQUIRED_LIBRARIES pthread)
-  list(APPEND REQUIRED_LIBRARIES libGLESv2)
-  list(APPEND REQUIRED_LIBRARIES libEGL)
-endif()
-
-file(GLOB Experiments RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/experiments ${CMAKE_CURRENT_SOURCE_DIR}/experiments/*)
-foreach(Experiment ${Experiments})
-  if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/experiments/${Experiment})
-    set(Experiment_Path ${CMAKE_CURRENT_SOURCE_DIR}/experiments/${Experiment})
-    set(ADDITION_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
-
-    file(GLOB SRC_FILES ${Experiment_Path}/*.h
-                        ${Experiment_Path}/*.cpp
-                        ${CMAKE_CURRENT_SOURCE_DIR}/platform/desktop/${Experiment}/*.h
-                        ${CMAKE_CURRENT_SOURCE_DIR}/platform/desktop/${Experiment}/*.cpp)
-
-    file(GLOB ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/*.h
-                                 ${ADDITION_SOURCE_PATH}/${Experiment}/*.cpp)
-    list(REMOVE_ITEM ADDITION_SRC_FILES ${ADDITION_SOURCE_PATH}/${Experiment}/${Experiment}_jni.cpp)
-    list(APPEND SRC_FILES ${ADDITION_SRC_FILES})
-    list(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/input.h)
-
-    add_executable(${Experiment} ${IS_SUBSYSTEM_WIN32} ${SRC_FILES})
-
-    target_include_directories(${Experiment} PRIVATE ${REQUIRED_INCLUDES}
-                                                     ${snape_Path}/include
-                                                     ${CMAKE_CURRENT_SOURCE_DIR}/experiments/${Experiment}
-                                                     ${CMAKE_CURRENT_SOURCE_DIR}/platform/desktop/${Experiment}
-                                                     ${ADDITION_SOURCE_PATH}/${Experiment}
-                                                     ${CMAKE_CURRENT_SOURCE_DIR}/platform)
-    target_include_directories(${Experiment} SYSTEM PRIVATE ${REQUIRED_SYS_INCLUDES})
-    target_link_libraries(${Experiment} ${REQUIRED_LIBRARIES})
-
-    add_dependencies(${Experiment} copyAssets)
-  endif()
-endforeach()
-
-# Flags
-if(MSVC)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
-    add_definitions(-D__clang__)
-  else()
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /EHsc /W4")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /EHsc /W4")
-
-    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /EHsc /W0 /GS")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc /W0 /GS")
-    if(CMAKE_CL_64)
-      set(LINK_FLAGS_RELEASE "${LINK_FLAGS_RELEASE} /DynamicBase /NXCompat")
     else()
-      set(LINK_FLAGS_RELEASE "${LINK_FLAGS_RELEASE} /SafeSEH /DynamicBase /NXCompat")
-    endif()
-  endif()
-else()
-  set(FLAGS "${FLAGS} -Wall -Wextra -Werror")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${FLAGS} -std=c11")
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++1y")
-  else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${FLAGS} -std=c++14")
-  endif()
-endif()
+        set(JNI_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
+        set(DESKTOP_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform/desktop)
+        set(SOURCE_FILES
+            ${JNI_PATH}/asset_fs.cpp
+            ${JNI_PATH}/asset_fs.h
+            ${JNI_PATH}/logging.h
+            ${JNI_PATH}/metrics.cpp
+            ${JNI_PATH}/metrics.h
+            ${JNI_PATH}/preferences.cpp
+            ${JNI_PATH}/preferences.h
+            ${JNI_PATH}/renderer_factory.h
+            ${DESKTOP_PATH}/Library/CapsView.cpp
+            ${DESKTOP_PATH}/Library/CapsView.h
+            ${DESKTOP_PATH}/Library/checkbox.cpp
+            ${DESKTOP_PATH}/Library/checkbox.h
+            ${DESKTOP_PATH}/Library/ClearBackground.cpp
+            ${DESKTOP_PATH}/Library/ClearBackground.h
+            ${DESKTOP_PATH}/Library/DrawableUiGameComponent.cpp
+            ${DESKTOP_PATH}/Library/DrawableUiGameComponent.h
+            ${DESKTOP_PATH}/Library/ReaderHelpers.cpp
+            ${DESKTOP_PATH}/Library/ReaderHelpers.h
+            ${DESKTOP_PATH}/Library/RenderingGame.cpp
+            ${DESKTOP_PATH}/Library/RenderingGame.h
+            ${DESKTOP_PATH}/Library/SliderModel.cpp
+            ${DESKTOP_PATH}/Library/SliderModel.h
+            ${DESKTOP_PATH}/Library/TestCard.cpp
+            ${DESKTOP_PATH}/Library/TestCard.h
+            ${DESKTOP_PATH}/Library/UiAsset.cpp
+            ${DESKTOP_PATH}/Library/UiAsset.h
+            ${DESKTOP_PATH}/Library/UiReader.cpp
+            ${DESKTOP_PATH}/Library/UiReader.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.h)
+        list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
 
+        add_library(experiments SHARED ${EXPERIMENTS_SOURCE_FILES})
+        target_link_libraries(experiments elements ${EXTERNAL_LIBRARIES})
+        target_include_directories(experiments PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+        target_include_directories(experiments PRIVATE ${JNI_PATH} ${DESKTOP_PATH}/Library ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2)
+        target_compile_options(experiments PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+        target_compile_options(experiments PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+        target_compile_options(experiments PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+        set_target_properties(experiments PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+    endif()
 endif()
