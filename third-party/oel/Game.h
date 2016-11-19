@@ -4,7 +4,23 @@
 #include "RTTI.h"
 #include "ServiceContainer.h"
 
+#define GLEW_STATIC
 #include <GL/glew.h>
+#ifdef WIN32
+#ifndef _WIN32
+#define _WIN32
+#endif
+#define NOCOMM
+#define WIN32_LEAN_AND_MEAN
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0500
+#endif
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WGL
+#else
+#define GLFW_EXPOSE_NATIVE_X11
+#define GLFW_EXPOSE_NATIVE_GLX
+#endif
 #include <GLFW/glfw3.h>
 
 #include <map>

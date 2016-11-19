@@ -28,6 +28,7 @@ IN THE SOFTWARE.
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #else
+#define GLEW_STATIC
 #include <GL/glew.h>
 #endif
 #include "utils/std/product.h"
