@@ -1,7 +1,7 @@
 #ifndef _TEST_CARD_H_
 #define _TEST_CARD_H_
 
-#include <GL/glew.h>
+#include <elements/rendering/core/opengl.h>
 
 namespace Library
 {

@@ -15,6 +15,9 @@ set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+if(NOT ANDROID)
+    set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
+endif()
 
 add_subdirectory(${EXTERNAL_PATH_ASSIMP})
 target_compile_options(assimp PRIVATE -fexceptions -frtti)
@@ -91,6 +94,30 @@ target_compile_definitions(assimp PRIVATE
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_ASSIMP}/include)
 list(APPEND EXTERNAL_LIBRARIES assimp)
 
+if(NOT ANDROID)
+
+    set_target_properties(zlibstatic PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set(EXTERNAL_PATH_ZLIBSTATIC ${CMAKE_BINARY_DIR}/third-party/assimp/contrib/zlib
+                                 ${EXTERNAL_PATH_ASSIMP}/contrib/zlib)
+    # z
+
+    # set(EXTERNAL_PATH_Z ${EXTERNAL_PATH_ASSIMP}/contrib/zlib)
+
+    # file(GLOB SOURCES ${EXTERNAL_PATH_Z}/*.h ${EXTERNAL_PATH_Z}/*.c)
+    # add_library(z STATIC ${SOURCES})
+    # set_target_properties(z PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+    # if(UNIX)
+    #     configure_file(${EXTERNAL_PATH_Z}/zconf.h.cmakein
+    #                    ${CMAKE_BINARY_DIR}/third-party/zlib/zconf.h)
+    #     target_include_directories(z SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/third-party/zlib)
+    # endif()
+
+    # list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_Z})
+    # list(APPEND EXTERNAL_LIBRARIES z)
+
+endif()
+
 #freetype
 
 set(EXTERNAL_PATH_FREETYPE ${EXTERNAL_PATH}/freetype2)
@@ -111,16 +138,18 @@ list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLM})
 
 set(EXTERNAL_PATH_PNG ${EXTERNAL_PATH}/libpng)
 if(ANDROID)
-  configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
-                 ${EXTERNAL_PATH_PNG}/pnglibconf.h)
+    configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
+                   ${EXTERNAL_PATH_PNG}/pnglibconf.h)
 else()
-  configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
-                 ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h)
+    configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
+                   ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h)
 endif()
 file(GLOB LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/*.h ${EXTERNAL_PATH_PNG}/*.c)
 add_library(png STATIC ${LIBPNG_SOURCE_FILES})
 if(NOT ANDROID)
-    target_include_directories(png SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/third-party/libpng)
+    add_dependencies(png zlibstatic)
+    target_include_directories(png SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/third-party/libpng
+                                                  ${EXTERNAL_PATH_ZLIBSTATIC})
     set_target_properties(png PROPERTIES POSITION_INDEPENDENT_CODE ON)
     list(APPEND EXTERNAL_INCLUDES ${CMAKE_BINARY_DIR}/third-party/libpng)
 endif()
@@ -131,15 +160,15 @@ list(APPEND EXTERNAL_LIBRARIES png)
 
 set(EXTERNAL_PATH_PUGIXML ${EXTERNAL_PATH}/pugixml)
 if(ANDROID)
-  add_subdirectory(${EXTERNAL_PATH_PUGIXML})
+    add_subdirectory(${EXTERNAL_PATH_PUGIXML})
 else()
-  set(SOURCES
-      ${EXTERNAL_PATH_PUGIXML}/src/pugixml.hpp
-      ${EXTERNAL_PATH_PUGIXML}/src/pugiconfig.hpp
-      ${EXTERNAL_PATH_PUGIXML}/src/pugixml.cpp)
-  add_library(pugixml STATIC ${SOURCES})
-  target_compile_options(pugixml PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
-  set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set(SOURCES
+        ${EXTERNAL_PATH_PUGIXML}/src/pugixml.hpp
+        ${EXTERNAL_PATH_PUGIXML}/src/pugiconfig.hpp
+        ${EXTERNAL_PATH_PUGIXML}/src/pugixml.cpp)
+    add_library(pugixml STATIC ${SOURCES})
+    target_compile_options(pugixml PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+    set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_compile_definitions(pugixml PRIVATE PUGIXML_NO_EXCEPTIONS)
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_PUGIXML}/src)
@@ -152,67 +181,68 @@ list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_SNAPE}/include)
 
 if(NOT ANDROID)
 
-  if(UNIX)
+    if(UNIX)
 
-    # SwiftShader
-    set(EXTERNAL_PATH_SWIFT_SHADER ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SwiftShader)
+        # SwiftShader
 
-    file(READ ${EXTERNAL_PATH_SWIFT_SHADER}/CMakeLists.txt file_content)
-    string(REGEX REPLACE "CMAKE_SOURCE_DIR" "EXTERNAL_PATH_SWIFT_SHADER" file_content ${file_content})
-    file(WRITE ${CMAKE_BINARY_DIR}/third-party/SwiftShader/CMakeLists.txt ${file_content})
+        set(EXTERNAL_PATH_SWIFT_SHADER ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SwiftShader)
 
-    # set(BUILD_EGL OFF CACHE BOOL "" FORCE)
-    set(BUILD_GL32 OFF CACHE BOOL "" FORCE)
-    # set(BUILD_GLESv2 OFF CACHE BOOL "" FORCE)
-    set(BUILD_GLES_CM OFF CACHE BOOL "" FORCE)
-    set(BUILD_EXTRA_PROGRAMS OFF CACHE BOOL "" FORCE)
-    add_subdirectory(${CMAKE_BINARY_DIR}/third-party/SwiftShader ${CMAKE_BINARY_DIR}/third-party/SwiftShader)
-    set_target_properties(libEGL PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    set_target_properties(libGLESv2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+        file(READ ${EXTERNAL_PATH_SWIFT_SHADER}/CMakeLists.txt file_content)
+        string(REGEX REPLACE "CMAKE_SOURCE_DIR" "EXTERNAL_PATH_SWIFT_SHADER" file_content ${file_content})
+        file(WRITE ${CMAKE_BINARY_DIR}/third-party/SwiftShader/CMakeLists.txt ${file_content})
 
-    list(APPEND REQUIRED_SYS_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
-    list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
-    list(APPEND EXTERNAL_LIBRARIES libEGL)
-    list(APPEND EXTERNAL_LIBRARIES libGLESv2)
+        # set(BUILD_EGL OFF CACHE BOOL "" FORCE)
+        set(BUILD_GL32 OFF CACHE BOOL "" FORCE)
+        # set(BUILD_GLESv2 OFF CACHE BOOL "" FORCE)
+        set(BUILD_GLES_CM OFF CACHE BOOL "" FORCE)
+        set(BUILD_EXTRA_PROGRAMS OFF CACHE BOOL "" FORCE)
+        add_subdirectory(${CMAKE_BINARY_DIR}/third-party/SwiftShader ${CMAKE_BINARY_DIR}/third-party/SwiftShader)
+        set_target_properties(libEGL PROPERTIES POSITION_INDEPENDENT_CODE ON)
+        set_target_properties(libGLESv2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-  endif()
+        list(APPEND REQUIRED_SYS_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
+        list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
+        list(APPEND EXTERNAL_LIBRARIES libEGL)
+        list(APPEND EXTERNAL_LIBRARIES libGLESv2)
 
-  # glfw
+    endif()
 
-  set(EXTERNAL_PATH_GLFW ${EXTERNAL_PATH}/glfw)
-  set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-  set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-  set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    # glfw
 
-  add_subdirectory(${EXTERNAL_PATH_GLFW})
-  set_target_properties(glfw PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set(EXTERNAL_PATH_GLFW ${EXTERNAL_PATH}/glfw)
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-  if(UNIX)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_X11)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_GLX)
-  elseif(WIN32)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WIN32)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WGL)
-  endif()
+    add_subdirectory(${EXTERNAL_PATH_GLFW})
+    set_target_properties(glfw PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-  list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLFW}/include)
-  list(APPEND EXTERNAL_LIBRARIES glfw)
+    if(UNIX)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_X11)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_GLX)
+    elseif(WIN32)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WIN32)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WGL)
+    endif()
 
-  # oel
+    list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLFW}/include)
+    list(APPEND EXTERNAL_LIBRARIES glfw)
 
-  set(EXTERNAL_PATH_OEL ${EXTERNAL_PATH}/oel)
-  file(GLOB OEL_SOURCE_FILES ${EXTERNAL_PATH_OEL}/*.h ${EXTERNAL_PATH_OEL}/*.cpp)
-  add_library(oel STATIC ${OEL_SOURCE_FILES})
-  target_include_directories(oel PRIVATE ${EXTERNAL_PATH_GLEW}/include ${EXTERNAL_PATH_GLFW}/include ${EXTERNAL_PATH_GLM})
-  target_compile_options(oel PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
-  set_target_properties(oel PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    # oel
 
-  if(WIN32)
-    target_compile_definitions(oel PRIVATE WIN32)
-  endif()
+    set(EXTERNAL_PATH_OEL ${EXTERNAL_PATH}/oel)
+    file(GLOB OEL_SOURCE_FILES ${EXTERNAL_PATH_OEL}/*.h ${EXTERNAL_PATH_OEL}/*.cpp)
+    add_library(oel STATIC ${OEL_SOURCE_FILES})
+    target_include_directories(oel PRIVATE ${EXTERNAL_PATH_GLEW}/include ${EXTERNAL_PATH_GLFW}/include ${EXTERNAL_PATH_GLM})
+    target_compile_options(oel PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+    set_target_properties(oel PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-  list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_OEL})
-  list(APPEND EXTERNAL_LIBRARIES oel)
+    if(WIN32)
+        target_compile_definitions(oel PRIVATE WIN32)
+    endif()
+
+    list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_OEL})
+    list(APPEND EXTERNAL_LIBRARIES oel)
 
 endif()
 
@@ -640,8 +670,24 @@ if(EXPERIMENTS_SOURCE_FILES)
             list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
         endif()
 
+        find_library(NDK_LIBRARY_ANDROID NAMES android)
+        if(NOT NDK_LIBRARY_ANDROID)
+            message(FATAL_ERROR "Can not find NDK Android library")
+        endif()
+
+        find_library(NDK_LIBRARY_LOG NAMES log)
+        if(NOT NDK_LIBRARY_LOG)
+            message(FATAL_ERROR "Can not find NDK Log library")
+        endif()
+
+        find_library(NDK_LIBRARY_GLSE2 NAMES GLESv2)
+        if(NOT NDK_LIBRARY_GLSE2)
+            message(FATAL_ERROR "Can not find NDK GLESv2 library")
+        endif()
+
         add_library(experiments SHARED ${EXPERIMENTS_SOURCE_FILES})
-        target_link_libraries(experiments android elements ${EXTERNAL_LIBRARIES} atomic GLESv2 log)
+        target_link_libraries(experiments ${NDK_LIBRARY_ANDROID} elements atomic
+            ${EXTERNAL_LIBRARIES} ${NDK_LIBRARY_GLSE2} ${NDK_LIBRARY_LOG})
         target_include_directories(experiments PRIVATE ${JNI_PATH})
         target_compile_options(experiments PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
         target_compile_options(experiments PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
