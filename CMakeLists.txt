@@ -122,33 +122,12 @@ set(EXTERNAL_PATH_PNG ${EXTERNAL_PATH}/libpng)
 if(ANDROID)
     configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
                    ${EXTERNAL_PATH_PNG}/pnglibconf.h)
-    file(GLOB LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/*.h ${EXTERNAL_PATH_PNG}/*.c)
 else()
     configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
                    ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h)
-    set(LIBPNG_SOURCE_FILES ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h
-                            ${EXTERNAL_PATH_PNG}/png.h
-                            ${EXTERNAL_PATH_PNG}/pngconf.h
-                            ${EXTERNAL_PATH_PNG}/pngpriv.h
-                            ${EXTERNAL_PATH_PNG}/pngdebug.h
-                            ${EXTERNAL_PATH_PNG}/pnginfo.h
-                            ${EXTERNAL_PATH_PNG}/pngstruct.h
-                            ${EXTERNAL_PATH_PNG}/png.c
-                            ${EXTERNAL_PATH_PNG}/pngerror.c
-                            ${EXTERNAL_PATH_PNG}/pngget.c
-                            ${EXTERNAL_PATH_PNG}/pngmem.c
-                            ${EXTERNAL_PATH_PNG}/pngpread.c
-                            ${EXTERNAL_PATH_PNG}/pngread.c
-                            ${EXTERNAL_PATH_PNG}/pngrio.c
-                            ${EXTERNAL_PATH_PNG}/pngrtran.c
-                            ${EXTERNAL_PATH_PNG}/pngrutil.c
-                            ${EXTERNAL_PATH_PNG}/pngset.c
-                            ${EXTERNAL_PATH_PNG}/pngtrans.c
-                            ${EXTERNAL_PATH_PNG}/pngwio.c
-                            ${EXTERNAL_PATH_PNG}/pngwrite.c
-                            ${EXTERNAL_PATH_PNG}/pngwtran.c
-                            ${EXTERNAL_PATH_PNG}/pngwutil.c)
 endif()
+file(GLOB LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/*.h ${EXTERNAL_PATH_PNG}/*.c)
+list(REMOVE_ITEM LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/pngtest.c)
 add_library(png STATIC ${LIBPNG_SOURCE_FILES})
 if(NOT ANDROID)
     add_dependencies(png zlibstatic)
