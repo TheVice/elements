@@ -95,27 +95,9 @@ list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_ASSIMP}/include)
 list(APPEND EXTERNAL_LIBRARIES assimp)
 
 if(NOT ANDROID)
-
     set_target_properties(zlibstatic PROPERTIES POSITION_INDEPENDENT_CODE ON)
     set(EXTERNAL_PATH_ZLIBSTATIC ${CMAKE_BINARY_DIR}/third-party/assimp/contrib/zlib
                                  ${EXTERNAL_PATH_ASSIMP}/contrib/zlib)
-    # z
-
-    # set(EXTERNAL_PATH_Z ${EXTERNAL_PATH_ASSIMP}/contrib/zlib)
-
-    # file(GLOB SOURCES ${EXTERNAL_PATH_Z}/*.h ${EXTERNAL_PATH_Z}/*.c)
-    # add_library(z STATIC ${SOURCES})
-    # set_target_properties(z PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-    # if(UNIX)
-    #     configure_file(${EXTERNAL_PATH_Z}/zconf.h.cmakein
-    #                    ${CMAKE_BINARY_DIR}/third-party/zlib/zconf.h)
-    #     target_include_directories(z SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/third-party/zlib)
-    # endif()
-
-    # list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_Z})
-    # list(APPEND EXTERNAL_LIBRARIES z)
-
 endif()
 
 #freetype
@@ -140,11 +122,33 @@ set(EXTERNAL_PATH_PNG ${EXTERNAL_PATH}/libpng)
 if(ANDROID)
     configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
                    ${EXTERNAL_PATH_PNG}/pnglibconf.h)
+    file(GLOB LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/*.h ${EXTERNAL_PATH_PNG}/*.c)
 else()
     configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
                    ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h)
+    set(LIBPNG_SOURCE_FILES ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h
+                            ${EXTERNAL_PATH_PNG}/png.h
+                            ${EXTERNAL_PATH_PNG}/pngconf.h
+                            ${EXTERNAL_PATH_PNG}/pngpriv.h
+                            ${EXTERNAL_PATH_PNG}/pngdebug.h
+                            ${EXTERNAL_PATH_PNG}/pnginfo.h
+                            ${EXTERNAL_PATH_PNG}/pngstruct.h
+                            ${EXTERNAL_PATH_PNG}/png.c
+                            ${EXTERNAL_PATH_PNG}/pngerror.c
+                            ${EXTERNAL_PATH_PNG}/pngget.c
+                            ${EXTERNAL_PATH_PNG}/pngmem.c
+                            ${EXTERNAL_PATH_PNG}/pngpread.c
+                            ${EXTERNAL_PATH_PNG}/pngread.c
+                            ${EXTERNAL_PATH_PNG}/pngrio.c
+                            ${EXTERNAL_PATH_PNG}/pngrtran.c
+                            ${EXTERNAL_PATH_PNG}/pngrutil.c
+                            ${EXTERNAL_PATH_PNG}/pngset.c
+                            ${EXTERNAL_PATH_PNG}/pngtrans.c
+                            ${EXTERNAL_PATH_PNG}/pngwio.c
+                            ${EXTERNAL_PATH_PNG}/pngwrite.c
+                            ${EXTERNAL_PATH_PNG}/pngwtran.c
+                            ${EXTERNAL_PATH_PNG}/pngwutil.c)
 endif()
-file(GLOB LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/*.h ${EXTERNAL_PATH_PNG}/*.c)
 add_library(png STATIC ${LIBPNG_SOURCE_FILES})
 if(NOT ANDROID)
     add_dependencies(png zlibstatic)
@@ -662,7 +666,7 @@ if(EXPERIMENTS_SOURCE_FILES)
             list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
         endif()
 
-        if(EXPERIMENTS_LIGHT)
+        if(EXPERIMENTS_DEMO)
             set(SOURCE_FILES
                 ${JNI_PATH}/demo/demo_jni.cpp
                 ${JNI_PATH}/demo/demo_renderer.h
@@ -696,6 +700,7 @@ if(EXPERIMENTS_SOURCE_FILES)
     else()
         set(JNI_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/elements/libs/Elements/src/main/jni)
         set(DESKTOP_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform/desktop)
+        set(OGLES2_PATH ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2)
         set(SOURCE_FILES
             ${JNI_PATH}/asset_fs.cpp
             ${JNI_PATH}/asset_fs.h
@@ -725,18 +730,190 @@ if(EXPERIMENTS_SOURCE_FILES)
             ${DESKTOP_PATH}/Library/UiAsset.h
             ${DESKTOP_PATH}/Library/UiReader.cpp
             ${DESKTOP_PATH}/Library/UiReader.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2/OGLES2HelloAPI_LinuxX11.h)
+            ${OGLES2_PATH}/OGLES2HelloAPI_LinuxX11.cpp
+            ${OGLES2_PATH}/OGLES2HelloAPI_LinuxX11.h)
         list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
 
         add_library(experiments SHARED ${EXPERIMENTS_SOURCE_FILES})
         target_link_libraries(experiments elements ${EXTERNAL_LIBRARIES})
         target_include_directories(experiments PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
-        target_include_directories(experiments PRIVATE ${JNI_PATH} ${DESKTOP_PATH}/Library ${CMAKE_CURRENT_SOURCE_DIR}/third-party/PowerVR_SDK/Beginner/01_HelloAPI/OGLES2)
+        target_include_directories(experiments PRIVATE ${JNI_PATH} ${DESKTOP_PATH}/Library ${OGLES2_PATH})
         target_compile_options(experiments PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
         target_compile_options(experiments PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
         target_compile_options(experiments PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
         set_target_properties(experiments PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+        # Copy assets
+
+        set(PLATFORM_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform)
+        file(GLOB WALLPAPER_FOLDERS RELATIVE ${PLATFORM_PATH}/android/elements
+                                             ${PLATFORM_PATH}/android/elements/*Wallpaper
+                                             ${PLATFORM_PATH}/android/elements/Demo)
+        file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/*
+                                         ${PLATFORM_PATH}/android/elements/*Wallpaper/src/main/assets/*
+                                         ${PLATFORM_PATH}/android/elements/Demo/src/main/assets/*)
+
+        add_custom_target(copy_assets)
+
+        foreach(RESOURCE_FILE ${RESOURCE_FILES})
+            string(REPLACE "//" "/" sourcePath ${RESOURCE_FILE})
+            string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets destination ${sourcePath})
+
+            foreach(WALLPAPER ${WALLPAPER_FOLDERS})
+                set(ADDITION_RESOURCE_PATH ${PLATFORM_PATH}/android/elements/${WALLPAPER}/src/main/assets)
+                string(REPLACE ${ADDITION_RESOURCE_PATH} ${CMAKE_BINARY_DIR}/assets destination ${destination})
+            endforeach()
+
+            add_custom_command(TARGET copy_assets PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${sourcePath}" "${destination}")
+        endforeach()
+
+        # liquid
+
+        if(EXPERIMENTS_LIQUID)
+            set(SOURCE_FILES
+                ${JNI_PATH}/liquid/liquid_config.cpp
+                ${JNI_PATH}/liquid/liquid_config.h
+                ${JNI_PATH}/liquid/liquid_renderer.cpp
+                ${JNI_PATH}/liquid/liquid_renderer.h
+                ${JNI_PATH}/liquid/liquid_ui.cpp
+                ${JNI_PATH}/liquid/liquid_ui.h
+                ${DESKTOP_PATH}/liquid/LiquidDemo.cpp
+                ${DESKTOP_PATH}/liquid/LiquidDemo.h
+                ${DESKTOP_PATH}/liquid/Program.cpp)
+            add_executable(liquid ${SOURCE_FILES})
+            target_link_libraries(liquid experiments)
+            target_include_directories(liquid PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+            target_include_directories(liquid PRIVATE ${JNI_PATH} ${JNI_PATH}/liquid ${DESKTOP_PATH}/Library ${OGLES2_PATH} ${PLATFORM_PATH})
+            target_compile_options(liquid PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+            target_compile_options(liquid PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+            target_compile_options(liquid PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+            set_target_properties(liquid PROPERTIES POSITION_INDEPENDENT_CODE ON)
+            add_dependencies(liquid copy_assets)
+        endif()
+
+        # fire
+
+        if(EXPERIMENTS_FIRE)
+            set(SOURCE_FILES
+                ${JNI_PATH}/fire/fire_config.cpp
+                ${JNI_PATH}/fire/fire_config.h
+                ${JNI_PATH}/fire/fire_renderer.cpp
+                ${JNI_PATH}/fire/fire_renderer.h
+                ${JNI_PATH}/fire/fire_ui.cpp
+                ${JNI_PATH}/fire/fire_ui.h
+                ${DESKTOP_PATH}/fire/FireDemo.cpp
+                ${DESKTOP_PATH}/fire/FireDemo.h
+                ${DESKTOP_PATH}/fire/Program.cpp)
+            add_executable(fire ${SOURCE_FILES})
+            target_link_libraries(fire experiments)
+            target_include_directories(fire PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+            target_include_directories(fire PRIVATE ${JNI_PATH} ${JNI_PATH}/fire ${DESKTOP_PATH}/Library ${OGLES2_PATH} ${PLATFORM_PATH})
+            target_compile_options(fire PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+            target_compile_options(fire PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+            target_compile_options(fire PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+            set_target_properties(fire PROPERTIES POSITION_INDEPENDENT_CODE ON)
+            add_dependencies(fire copy_assets)
+        endif()
+
+        # light
+
+        if(EXPERIMENTS_LIGHT)
+            set(SOURCE_FILES
+                ${JNI_PATH}/light/light_renderer.h
+                ${JNI_PATH}/light/light_renderer.cpp
+                ${DESKTOP_PATH}/light/LightDemo.cpp
+                ${DESKTOP_PATH}/light/LightDemo.h
+                ${DESKTOP_PATH}/light/Program.cpp)
+            add_executable(light ${SOURCE_FILES})
+            target_link_libraries(light experiments)
+            target_include_directories(light PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+            target_include_directories(light PRIVATE ${JNI_PATH} ${JNI_PATH}/light ${DESKTOP_PATH}/Library ${OGLES2_PATH} ${PLATFORM_PATH})
+            target_compile_options(light PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+            target_compile_options(light PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+            target_compile_options(light PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+            set_target_properties(light PROPERTIES POSITION_INDEPENDENT_CODE ON)
+            add_dependencies(light copy_assets)
+        endif()
+
+        # strange
+
+        if(EXPERIMENTS_STRANGE)
+            set(SOURCE_FILES
+                ${JNI_PATH}/strange/strange_renderer.h
+                ${JNI_PATH}/strange/strange_renderer.cpp
+                ${DESKTOP_PATH}/strange/StrangeDemo.cpp
+                ${DESKTOP_PATH}/strange/StrangeDemo.h
+                ${DESKTOP_PATH}/strange/Program.cpp)
+            add_executable(strange ${SOURCE_FILES})
+            target_link_libraries(strange experiments)
+            target_include_directories(strange PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+            target_include_directories(strange PRIVATE ${JNI_PATH} ${JNI_PATH}/strange ${DESKTOP_PATH}/Library ${OGLES2_PATH} ${PLATFORM_PATH})
+            target_compile_options(strange PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+            target_compile_options(strange PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+            target_compile_options(strange PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+            set_target_properties(strange PROPERTIES POSITION_INDEPENDENT_CODE ON)
+            add_dependencies(strange copy_assets)
+        endif()
+
+        # air
+
+        if(EXPERIMENTS_AIR)
+            set(SOURCE_FILES
+                ${JNI_PATH}/air/air_renderer.h
+                ${JNI_PATH}/air/air_renderer.cpp
+                ${DESKTOP_PATH}/air/AirDemo.cpp
+                ${DESKTOP_PATH}/air/AirDemo.h
+                ${DESKTOP_PATH}/air/Program.cpp)
+            add_executable(air ${SOURCE_FILES})
+            target_link_libraries(air experiments)
+            target_include_directories(air PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+            target_include_directories(air PRIVATE ${JNI_PATH} ${JNI_PATH}/air ${DESKTOP_PATH}/Library ${OGLES2_PATH} ${PLATFORM_PATH})
+            target_compile_options(air PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+            target_compile_options(air PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+            target_compile_options(air PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+            set_target_properties(air PROPERTIES POSITION_INDEPENDENT_CODE ON)
+            add_dependencies(air copy_assets)
+        endif()
+
+        # character
+
+        if(EXPERIMENTS_CHARACTER)
+            set(SOURCE_FILES
+                ${JNI_PATH}/character/character_renderer.h
+                ${JNI_PATH}/character/character_renderer.cpp
+                ${DESKTOP_PATH}/character/CharacterDemo.cpp
+                ${DESKTOP_PATH}/character/CharacterDemo.h
+                ${DESKTOP_PATH}/character/Program.cpp)
+            add_executable(character ${SOURCE_FILES})
+            target_link_libraries(character experiments)
+            target_include_directories(character PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+            target_include_directories(character PRIVATE ${JNI_PATH} ${JNI_PATH}/character ${DESKTOP_PATH}/Library ${OGLES2_PATH} ${PLATFORM_PATH})
+            target_compile_options(character PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+            target_compile_options(character PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+            target_compile_options(character PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+            set_target_properties(character PROPERTIES POSITION_INDEPENDENT_CODE ON)
+            add_dependencies(character copy_assets)
+        endif()
+
+        # demo
+
+        if(EXPERIMENTS_DEMO)
+            set(SOURCE_FILES
+                ${JNI_PATH}/demo/demo_renderer.h
+                ${JNI_PATH}/demo/demo_renderer.cpp
+                ${DESKTOP_PATH}/demo/Demo.cpp
+                ${DESKTOP_PATH}/demo/Demo.h
+                ${DESKTOP_PATH}/demo/Program.cpp)
+            add_executable(demo ${SOURCE_FILES})
+            target_link_libraries(demo experiments)
+            target_include_directories(demo PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+            target_include_directories(demo PRIVATE ${JNI_PATH} ${JNI_PATH}/demo ${DESKTOP_PATH}/Library ${OGLES2_PATH} ${PLATFORM_PATH})
+            target_compile_options(demo PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+            target_compile_options(demo PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+            target_compile_options(demo PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+            set_target_properties(demo PROPERTIES POSITION_INDEPENDENT_CODE ON)
+            add_dependencies(demo copy_assets)
+        endif()
 
     endif()
 endif()
