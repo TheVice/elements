@@ -1,9 +1,9 @@
 #ifndef _CLEAR_BACKGROUND_H_
 #define _CLEAR_BACKGROUND_H_
 
-#include "DrawableGameComponent.h"
+#include <DrawableGameComponent.h>
 #include <elements/math/types.h>
-#include "Game.h"
+#include <elements/rendering/core/opengl.h>
 
 namespace Library
 {

@@ -1,7 +1,7 @@
 
 #include "DrawableUiGameComponent.h"
-#include "math/transform.h"
-#include "Game.h"
+#include <elements/math/transform.h>
+#include <Game.h>
 
 namespace Library
 {

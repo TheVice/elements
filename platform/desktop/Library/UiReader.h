@@ -1,7 +1,7 @@
 #ifndef _UI_READER_H_
 #define _UI_READER_H_
 
-#include "assets/asset_xml.h"
+#include <elements/assets/asset_xml.h>
 #include <list>
 #include <map>
 

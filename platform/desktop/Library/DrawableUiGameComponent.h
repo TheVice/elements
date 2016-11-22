@@ -1,8 +1,8 @@
 #ifndef _DRAWABLE_UI_GAME_COMPONENT_H_
 #define _DRAWABLE_UI_GAME_COMPONENT_H_
 
-#include "DrawableGameComponent.h"
-#include "ui/system.h"
+#include <DrawableGameComponent.h>
+#include <elements/ui/system.h>
 
 namespace Library
 {

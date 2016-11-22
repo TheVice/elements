@@ -1,8 +1,8 @@
 #ifndef _RENDERING_GAME_H_
 #define _RENDERING_GAME_H_
 
-#include "Game.h"
-#include "DrawableGameComponent.h"
+#include <Game.h>
+#include <GameComponent.h>
 #include <elements/utils/std/pointer.h>
 #include <vector>
 
@@ -21,7 +21,7 @@ public:
 	template<typename T, typename... Args>
 	void addComponent(Args&& ... args)
 	{
-		mDrawableGameComponents.push_back(eps::utils::make_unique<T>(*this, (args)...));
+		mGameComponents.push_back(eps::utils::make_unique<T>(*this, (args)...));
 	}
 
 	template<typename T, typename... Args>
@@ -29,7 +29,7 @@ public:
 	{
 		auto c = eps::utils::make_unique<T>(*this, (args)...);
 		mServices.AddService(T::TypeIdClass(), c.get());
-		mDrawableGameComponents.push_back(std::move(c));
+		mGameComponents.push_back(std::move(c));
 	}
 
 protected:
@@ -40,7 +40,7 @@ private:
 
 private:
 	KeyboardHandler mKeyboardHandler;
-	std::vector<eps::utils::unique<DrawableGameComponent>> mDrawableGameComponents;
+	std::vector<eps::utils::unique<GameComponent>> mGameComponents;
 };
 }
 

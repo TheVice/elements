@@ -1,16 +1,16 @@
 
 #include "RenderingGame.h"
-#include "asset_fs.h"
-#include "assets/assets_storage.h"
-#include "preferences.h"
-#include "metrics.h"
+#include <asset_fs.h>
+#include <preferences.h>
+#include <metrics.h>
+#include <elements/assets/assets_storage.h>
 
 namespace Library
 {
 RenderingGame::RenderingGame(const std::string& aWindowTitle, GLuint aScreenWidth, GLuint aScreenHeight) :
 	Game(aWindowTitle, aScreenWidth, aScreenHeight),
 	mKeyboardHandler(nullptr),
-	mDrawableGameComponents()
+	mGameComponents()
 {
 }
 
@@ -25,7 +25,7 @@ bool RenderingGame::Initialize()
 	eps::preferences::init<preferences>();
 	eps::metrics::init<metrics>(GetDPI());
 
-	for (const auto& component : mDrawableGameComponents)
+	for (const auto& component : mGameComponents)
 	{
 		mComponents.push_back(component.get());
 	}

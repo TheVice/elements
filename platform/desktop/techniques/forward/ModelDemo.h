@@ -1,14 +1,13 @@
 #ifndef _MODEL_DEMO_H_
 #define _MODEL_DEMO_H_
 
-#include "DrawableGameComponent.h"
 #include "ModelEffect.h"
 #include "SettingsReader.h"
+#include <DrawableGameComponent.h>
 #include <elements/rendering/core/buffer.h>
 #include <elements/rendering/core/program.h>
 #include <elements/rendering/core/texture.h>
 #include <elements/utils/std/optional.h>
-#include "Game.h"
 
 namespace Rendering
 {

@@ -1,6 +1,7 @@
 #ifndef _VARIABLE_H_
 #define _VARIABLE_H_
 
+#define GLEW_STATIC
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <string>

@@ -1,13 +1,14 @@
 
 #include "GeometryDemo.h"
-#include "rendering/utils/program_loader.h"
-#include "rendering/core/texture_maker.h"
-#include "rendering/core/texture_policy.h"
-#include "assets/asset_texture.h"
-#include "assets/assets_storage.h"
-#include "utils/std/enum.h"
-#include "utils/std/product.h"
 #include "CustomUi.h"
+#include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_maker.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/assets/asset_texture.h>
+#include <elements/assets/assets_storage.h>
+#include <elements/utils/std/enum.h>
+#include <elements/utils/std/product.h>
+#include <Game.h>
 
 namespace Rendering
 {

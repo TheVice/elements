@@ -1,13 +1,12 @@
 #ifndef _PARTICLES_DEMO_H_
 #define _PARTICLES_DEMO_H_
 
-#include "DrawableGameComponent.h"
 #include "ParticlesEffect.h"
 #include "SettingsReader.h"
+#include <DrawableGameComponent.h>
 #include <elements/rendering/core/buffer.h>
 #include <elements/rendering/core/program.h>
 #include <elements/utils/std/optional.h>
-#include "Game.h"
 
 namespace Rendering
 {

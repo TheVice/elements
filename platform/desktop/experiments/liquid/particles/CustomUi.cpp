@@ -1,11 +1,12 @@
 
 #include "CustomUi.h"
-#include "ui/controls/button.h"
-#include "ui/controls/label.h"
-#include "ui/controls/panel.h"
-#include "SliderModel.h"
-#include "checkbox.h"
 #include "Controls.h"
+#include <elements/ui/controls/button.h>
+#include <elements/ui/controls/label.h>
+#include <elements/ui/controls/panel.h>
+#include <elements/ui/controls/slider.h>
+#include <checkbox.h>
+#include <SliderModel.h>
 #include <sstream>
 #include <iomanip>
 

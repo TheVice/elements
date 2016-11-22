@@ -1,7 +1,7 @@
 #ifndef _PARTICLES_EFFECT_H_
 #define _PARTICLES_EFFECT_H_
 
-#include "ShaderProgram.h"
+#include <ShaderProgram.h>
 
 namespace Library
 {

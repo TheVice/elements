@@ -1,7 +1,7 @@
 #ifndef _SLIDER_MODEL_H_
 #define _SLIDER_MODEL_H_
 
-#include "ui/controls/slider.h"
+#include <elements/ui/controls/slider.h>
 
 namespace Library
 {

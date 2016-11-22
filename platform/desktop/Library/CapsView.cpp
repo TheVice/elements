@@ -1,8 +1,8 @@
 
 #include "CapsView.h"
-#include "metrics/metrics.h"
-#include "ui/controls/label.h"
 #include "checkbox.h"
+#include <elements/metrics/metrics.h>
+#include <elements/ui/controls/label.h>
 #include <Game.h>
 #include <sstream>
 

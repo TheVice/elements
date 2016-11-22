@@ -1,15 +1,16 @@
 
 #include "LiquidDemo.h"
-#include "rendering/state/state_macro.h"
-#include "rendering/utils/program_loader.h"
-#include "rendering/core/texture_maker.h"
-#include "rendering/core/texture_policy.h"
-#include "rendering/passes/pass_base.h"
-#include "utils/std/enum.h"
-#include "math/transform.h"
-#include "assets/asset_texture.h"
-#include "assets/assets_storage.h"
-#include "TestCard.h"
+#include <elements/rendering/state/state_macro.h>
+#include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_maker.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/passes/pass_base.h>
+#include <elements/utils/std/enum.h>
+#include <elements/math/transform.h>
+#include <elements/assets/asset_texture.h>
+#include <elements/assets/assets_storage.h>
+#include <TestCard.h>
+#include <Game.h>
 
 namespace Rendering
 {
@@ -57,7 +58,7 @@ bool LiquidDemo::Initialize()
 	// Load the texture
 	glm::uvec2 texture_size = size;
 	auto texture_data = eps::utils::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
-	Library::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
+	Library::TestCard::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
 	//
 	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>();
 	(*mTexture.get()) = maker.construct(texture_data.get(), size);

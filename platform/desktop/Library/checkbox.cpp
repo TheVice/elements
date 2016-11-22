@@ -1,10 +1,10 @@
 
 #include "checkbox.h"
-#include "ui/system.h"
-#include "rendering/state/state_macro.h"
-#include "rendering/core/opengl.h"
-#include "rendering/utils/program_loader.h"
-#include "utils/std/enum.h"
+#include <elements/ui/system.h>
+#include <elements/rendering/state/state_macro.h>
+#include <elements/rendering/core/opengl.h>
+#include <elements/rendering/utils/program_loader.h>
+#include <elements/utils/std/enum.h>
 
 #define DEFAULT_WIDTH 13
 #define DEFAULT_HEIGHT 13

@@ -1,6 +1,6 @@
 
-#include "RenderingGame.h"
 #include "LightScatteredDemo.h"
+#include <RenderingGame.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)

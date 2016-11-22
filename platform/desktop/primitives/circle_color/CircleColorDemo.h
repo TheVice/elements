@@ -1,12 +1,11 @@
 #ifndef _CIRCLE_DEMO_H_
 #define _CIRCLE_DEMO_H_
 
-#include "DrawableGameComponent.h"
+#include <DrawableGameComponent.h>
 #include <elements/rendering/core/program.h>
 #include <elements/rendering/primitives/square.h>
 #include <elements/utils/std/pointer.h>
 #include <elements/timing/framerate.h>
-#include "Game.h"
 
 namespace Rendering
 {

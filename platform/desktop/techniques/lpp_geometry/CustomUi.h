@@ -1,8 +1,8 @@
 #ifndef _CUSTOM_UI_H_
 #define _CUSTOM_UI_H_
 
-#include "UiAsset.h"
 #include "VertexStructure.h"
+#include <UiAsset.h>
 
 namespace Rendering
 {

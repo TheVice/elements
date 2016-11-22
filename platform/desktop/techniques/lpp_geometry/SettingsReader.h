@@ -1,10 +1,12 @@
 #ifndef _SETTINGS_READER_H_
 #define _SETTINGS_READER_H_
 
-#include "assets/asset_xml.h"
 #include "VertexStructure.h"
+#include <elements/assets/asset_xml.h>
 #include <vector>
 
+namespace Rendering
+{
 struct SettingsReader : public eps::asset_xml
 {
 public:
@@ -24,5 +26,6 @@ private:
 
 	bool read(const pugi::xml_document& doc) final;
 };
+}
 
 #endif

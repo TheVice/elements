@@ -1,8 +1,8 @@
 
-#include "RenderingGame.h"
 #include "ModelDemo.h"
 #include "CustomUi.h"
-#include "ClearBackground.h"
+#include <RenderingGame.h>
+#include <ClearBackground.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)

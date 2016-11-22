@@ -1,8 +1,11 @@
 
 #include "SettingsReader.h"
-#include "assets/assets_storage.h"
-#include "ReaderHelpers.h"
+#include <elements/assets/assets_storage.h>
+#include <ReaderHelpers.h>
 #include <cstring>
+
+namespace Rendering
+{
 
 bool SettingsReader::read(const pugi::xml_document& doc)
 {
@@ -148,4 +151,6 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 	//
 	mIsEmpty = false;
 	return !mIsEmpty;
+}
+
 }

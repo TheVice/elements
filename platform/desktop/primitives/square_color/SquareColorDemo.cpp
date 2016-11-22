@@ -1,10 +1,11 @@
 
 #include "SquareColorDemo.h"
-#include "rendering/state/state_macro.h"
-#include "rendering/utils/program_loader.h"
-#include "utils/std/enum.h"
-#include "math/transform.h"
 #include "SettingsReader.h"
+#include <elements/rendering/state/state_macro.h>
+#include <elements/rendering/utils/program_loader.h>
+#include <elements/utils/std/enum.h>
+#include <elements/math/transform.h>
+#include <Game.h>
 #include <algorithm>
 
 namespace Rendering
@@ -70,12 +71,11 @@ bool SquareColorDemo::Initialize()
 
 void SquareColorDemo::Update()
 {
-	static float lastTime = rate_.elapsed();
+	float lastTime = rate_.elapsed();
 
 	if (rate_.update() && rate_.elapsed() > lastTime)
 	{
 		const float elapsedTime = rate_.elapsed() - lastTime;
-		lastTime = rate_.elapsed();
 
 		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_Z))
 		{

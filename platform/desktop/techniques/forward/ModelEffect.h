@@ -1,7 +1,7 @@
 #ifndef _MODEL_EFFECT_H_
 #define _MODEL_EFFECT_H_
 
-#include "ShaderProgram.h"
+#include <ShaderProgram.h>
 
 namespace Library
 {

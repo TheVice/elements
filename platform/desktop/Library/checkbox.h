@@ -1,9 +1,9 @@
 #ifndef _CHECKBOX_H_
 #define _CHECKBOX_H_
 
-#include "ui/control.h"
-#include "rendering/core/program.h"
-#include "rendering/primitives/square.h"
+#include <elements/ui/control.h>
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/primitives/square.h>
 
 namespace Library
 {

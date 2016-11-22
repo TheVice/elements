@@ -1,14 +1,13 @@
 #ifndef _GEOMETRY_DEMO_H_
 #define _GEOMETRY_DEMO_H_
 
-#include "DrawableGameComponent.h"
 #include "GeometryEffect.h"
 #include "SettingsReader.h"
+#include <DrawableGameComponent.h>
 #include <elements/rendering/core/buffer.h>
 #include <elements/rendering/core/program.h>
 #include <elements/rendering/core/texture.h>
 #include <elements/utils/std/optional.h>
-#include "Game.h"
 
 namespace Rendering
 {

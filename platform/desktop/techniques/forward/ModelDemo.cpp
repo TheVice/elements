@@ -1,11 +1,12 @@
 
 #include "ModelDemo.h"
-#include "rendering/utils/program_loader.h"
-#include "rendering/core/texture_maker.h"
-#include "rendering/core/texture_policy.h"
-#include "assets/asset_texture.h"
-#include "assets/assets_storage.h"
 #include "CustomUi.h"
+#include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_maker.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/assets/asset_texture.h>
+#include <elements/assets/assets_storage.h>
+#include <Game.h>
 
 namespace Rendering
 {

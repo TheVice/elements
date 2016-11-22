@@ -1,14 +1,16 @@
 
 #include "UiAsset.h"
-#include "metrics/metrics.h"
-#include "ui/controls/button.h"
-#include "ui/controls/label.h"
-#include "ui/controls/panel.h"
 #include "SliderModel.h"
 #include "checkbox.h"
-#include "assets/assets_storage.h"
 #include "UiReader.h"
-#include "Game.h"
+#include <elements/metrics/metrics.h>
+#include <elements/ui/controls/button.h>
+#include <elements/ui/controls/check.h>
+#include <elements/ui/controls/label.h>
+#include <elements/ui/controls/panel.h>
+#include <elements/ui/controls/slider.h>
+#include <elements/assets/assets_storage.h>
+#include <Game.h>
 
 namespace Library
 {
@@ -80,6 +82,17 @@ UiAsset::~UiAsset()
 		if (search != std::get<1>(controlInfo).end())											\
 		{																						\
 			directButton->set_asset(search->second.c_str());									\
+		}																						\
+	}
+
+#define SET_CHECK(C)																			\
+	if (auto directCheck = std::static_pointer_cast<eps::ui::check>(C.lock()))					\
+	{																							\
+		auto search = std::get<1>(controlInfo).find("asset_path");								\
+		\
+		if (search != std::get<1>(controlInfo).end())											\
+		{																						\
+			directCheck->set_asset(search->second.c_str());										\
 		}																						\
 	}
 
@@ -259,6 +272,8 @@ bool UiAsset::Initialize()
 		return false;
 	}
 
+	mControls.clear();
+
 	for (const auto& controlInfo : data->mControlsInfo)
 	{
 		const auto controlName = std::get<1>(controlInfo).find("control_name")->second;
@@ -281,6 +296,11 @@ bool UiAsset::Initialize()
 		{
 			control = parentControl->add<eps::ui::button>();
 			SET_BUTTON(control)
+		}
+		else if (std::get<0>(controlInfo) == "check")
+		{
+			control = parentControl->add<eps::ui::check>();
+			SET_CHECK(control)
 		}
 		else if (std::get<0>(controlInfo) == "label")
 		{
@@ -344,7 +364,7 @@ bool UiAsset::Initialize()
 		}
 	}
 
-	return true;
+	return !mControls.empty();
 }
 
 SliderModel* UiAsset::GetSliderModel(int aSliderId)

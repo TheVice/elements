@@ -1,6 +1,6 @@
 
-#include "RenderingGame.h"
 #include "SquareTextureAlphaDemo.h"
+#include <RenderingGame.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)

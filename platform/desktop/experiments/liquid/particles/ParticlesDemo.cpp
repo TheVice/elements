@@ -1,9 +1,10 @@
 
 #include "ParticlesDemo.h"
-#include "rendering/utils/program_loader.h"
-#include "assets/assets_storage.h"
-#include "utils/std/product.h"
 #include "CustomUi.h"
+#include <elements/rendering/utils/program_loader.h>
+#include <elements/assets/assets_storage.h>
+#include <elements/utils/std/product.h>
+#include <Game.h>
 
 namespace Rendering
 {

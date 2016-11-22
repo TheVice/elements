@@ -15,6 +15,9 @@ set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+if(NOT ANDROID)
+    set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
+endif()
 
 add_subdirectory(${EXTERNAL_PATH_ASSIMP})
 target_compile_options(assimp PRIVATE -fexceptions -frtti)
@@ -91,6 +94,12 @@ target_compile_definitions(assimp PRIVATE
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_ASSIMP}/include)
 list(APPEND EXTERNAL_LIBRARIES assimp)
 
+if(NOT ANDROID)
+    set_target_properties(zlibstatic PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set(EXTERNAL_PATH_ZLIBSTATIC ${CMAKE_BINARY_DIR}/third-party/assimp/contrib/zlib
+                                 ${EXTERNAL_PATH_ASSIMP}/contrib/zlib)
+endif()
+
 #freetype
 
 set(EXTERNAL_PATH_FREETYPE ${EXTERNAL_PATH}/freetype2)
@@ -111,35 +120,41 @@ list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLM})
 
 set(EXTERNAL_PATH_PNG ${EXTERNAL_PATH}/libpng)
 if(ANDROID)
-  configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
-                 ${EXTERNAL_PATH_PNG}/pnglibconf.h)
+    configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
+                   ${EXTERNAL_PATH_PNG}/pnglibconf.h)
 else()
-  configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
-                 ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h)
+    configure_file(${EXTERNAL_PATH_PNG}/scripts/pnglibconf.h.prebuilt
+                   ${CMAKE_BINARY_DIR}/third-party/libpng/pnglibconf.h)
 endif()
 file(GLOB LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/*.h ${EXTERNAL_PATH_PNG}/*.c)
+list(REMOVE_ITEM LIBPNG_SOURCE_FILES ${EXTERNAL_PATH_PNG}/pngtest.c)
 add_library(png STATIC ${LIBPNG_SOURCE_FILES})
 if(NOT ANDROID)
-    target_include_directories(png SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/third-party/libpng)
+    add_dependencies(png zlibstatic)
+    target_include_directories(png SYSTEM PRIVATE ${CMAKE_BINARY_DIR}/third-party/libpng
+                                                  ${EXTERNAL_PATH_ZLIBSTATIC})
     set_target_properties(png PROPERTIES POSITION_INDEPENDENT_CODE ON)
     list(APPEND EXTERNAL_INCLUDES ${CMAKE_BINARY_DIR}/third-party/libpng)
 endif()
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_PNG})
 list(APPEND EXTERNAL_LIBRARIES png)
+if(NOT ANDROID)
+    list(APPEND EXTERNAL_LIBRARIES zlibstatic)
+endif()
 
 # pugixml
 
 set(EXTERNAL_PATH_PUGIXML ${EXTERNAL_PATH}/pugixml)
 if(ANDROID)
-  add_subdirectory(${EXTERNAL_PATH_PUGIXML})
+    add_subdirectory(${EXTERNAL_PATH_PUGIXML})
 else()
-  set(SOURCES
-      ${EXTERNAL_PATH_PUGIXML}/src/pugixml.hpp
-      ${EXTERNAL_PATH_PUGIXML}/src/pugiconfig.hpp
-      ${EXTERNAL_PATH_PUGIXML}/src/pugixml.cpp)
-  add_library(pugixml STATIC ${SOURCES})
-  target_compile_options(pugixml PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
-  set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set(SOURCES
+        ${EXTERNAL_PATH_PUGIXML}/src/pugixml.hpp
+        ${EXTERNAL_PATH_PUGIXML}/src/pugiconfig.hpp
+        ${EXTERNAL_PATH_PUGIXML}/src/pugixml.cpp)
+    add_library(pugixml STATIC ${SOURCES})
+    target_compile_options(pugixml PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+    set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_compile_definitions(pugixml PRIVATE PUGIXML_NO_EXCEPTIONS)
 list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_PUGIXML}/src)
@@ -152,108 +167,134 @@ list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_SNAPE}/include)
 
 if(NOT ANDROID)
 
-  # glew
+    if(UNIX)
 
-  if(WIN32)
-    if(EXISTS ${EXTERNAL_PATH}/glew-1.13.0)
-      set(EXTERNAL_PATH_GLEW ${EXTERNAL_PATH}/glew-1.13.0)
-    elseif(DEFINED ENV{GLEW_PATH})
-      string(REPLACE "\\" "/" EXTERNAL_PATH_GLEW $ENV{GLEW_PATH})
-    elseif(DEFINED GLEW_PATH)
-      string(REPLACE "\\" "/" EXTERNAL_PATH_GLEW ${GLEW_PATH})
+        # SwiftShader
+
+        set(EXTERNAL_PATH_SWIFT_SHADER ${CMAKE_CURRENT_SOURCE_DIR}/third-party/SwiftShader)
+
+        # file(READ ${EXTERNAL_PATH_SWIFT_SHADER}/CMakeLists.txt file_content)
+        # string(REGEX REPLACE "CMAKE_SOURCE_DIR" "EXTERNAL_PATH_SWIFT_SHADER" file_content ${file_content})
+        # file(WRITE ${CMAKE_BINARY_DIR}/third-party/SwiftShader/CMakeLists.txt ${file_content})
+
+        # set(BUILD_EGL OFF CACHE BOOL "" FORCE)
+        # set(BUILD_GL32 OFF CACHE BOOL "" FORCE)
+        # set(BUILD_GLESv2 OFF CACHE BOOL "" FORCE)
+        # set(BUILD_GLES_CM OFF CACHE BOOL "" FORCE)
+        # set(BUILD_EXTRA_PROGRAMS OFF CACHE BOOL "" FORCE)
+        # add_subdirectory(${CMAKE_BINARY_DIR}/third-party/SwiftShader ${CMAKE_BINARY_DIR}/third-party/SwiftShader)
+        # set_target_properties(libEGL PROPERTIES POSITION_INDEPENDENT_CODE ON)
+        # set_target_properties(libGLESv2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+        # list(APPEND REQUIRED_SYS_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
+        # list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_SWIFT_SHADER}/include)
+        # list(APPEND EXTERNAL_LIBRARIES libEGL)
+        # list(APPEND EXTERNAL_LIBRARIES libGLESv2)
+
+    endif()
+
+    # glew
+
+    if(WIN32)
+        if(EXISTS ${EXTERNAL_PATH}/glew-1.13.0)
+            set(EXTERNAL_PATH_GLEW ${EXTERNAL_PATH}/glew-1.13.0)
+        elseif(DEFINED ENV{GLEW_PATH})
+            string(REPLACE "\\" "/" EXTERNAL_PATH_GLEW $ENV{GLEW_PATH})
+        elseif(DEFINED GLEW_PATH)
+            string(REPLACE "\\" "/" EXTERNAL_PATH_GLEW ${GLEW_PATH})
+        else()
+            message(FATAL_ERROR "Could not find glew library, please check it at https://github.com/nigels-com/glew/issues/31#issuecomment-145498979 or https://sourceforge.net/projects/glew/files/glew/1.13.0/")
+        endif()
     else()
-      message(FATAL_ERROR "Could not find glew library, please check it at https://github.com/nigels-com/glew/issues/31#issuecomment-145498979 or https://sourceforge.net/projects/glew/files/glew/1.13.0/")
-    endif()
-  else()
-    set(EXTERNAL_PATH_GLEW ${EXTERNAL_PATH}/glew)
-  endif()
-
-  if(UNIX)
-
-    # glfixes
-
-    set(glfixes_Path ${EXTERNAL_PATH}/glfixes)
-
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/third-party/glew")
-      message("Copying ${EXTERNAL_PATH_GLEW} into ${CMAKE_BINARY_DIR}/third-party/glew")
-      execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${EXTERNAL_PATH_GLEW}" "${CMAKE_BINARY_DIR}/third-party/glew")
+        set(EXTERNAL_PATH_GLEW ${EXTERNAL_PATH}/glew)
     endif()
 
-    set(REQUIRED_TO_WRITE FALSE)
-    file(READ "${CMAKE_BINARY_DIR}/third-party/glew/auto/Makefile" file_content)
+    if(UNIX)
 
-    string(FIND "${file_content}" "\$(GIT_CLONE)" pos)
-    if("${pos}" EQUAL -1)
-    else()
-      string(REPLACE "\$(GIT_CLONE)" "# \$(G_I_T_CLONE)" file_content "${file_content}")
-      set(REQUIRED_TO_WRITE TRUE)
+        # glfixes
+
+        set(glfixes_Path ${EXTERNAL_PATH}/glfixes)
+
+        if(NOT EXISTS "${CMAKE_BINARY_DIR}/third-party/glew")
+            message("Copying ${EXTERNAL_PATH_GLEW} into ${CMAKE_BINARY_DIR}/third-party/glew")
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${EXTERNAL_PATH_GLEW}" "${CMAKE_BINARY_DIR}/third-party/glew")
+        endif()
+
+        set(REQUIRED_TO_WRITE FALSE)
+        file(READ "${CMAKE_BINARY_DIR}/third-party/glew/auto/Makefile" file_content)
+
+        string(FIND "${file_content}" "\$(GIT_CLONE)" pos)
+        if("${pos}" EQUAL -1)
+        else()
+            string(REPLACE "\$(GIT_CLONE)" "# \$(G_I_T_CLONE)" file_content "${file_content}")
+            set(REQUIRED_TO_WRITE TRUE)
+        endif()
+
+        string(FIND "${file_content}" "GIT_CLONE" pos)
+        if("${pos}" EQUAL -1)
+        else()
+            string(REPLACE "GIT_CLONE" "# G_I_T_CLONE" file_content "${file_content}")
+            set(REQUIRED_TO_WRITE TRUE)
+        endif()
+
+        if(REQUIRED_TO_WRITE)
+            message("Write ${CMAKE_BINARY_DIR}/third-party/glew/auto/Makefile")
+            file(WRITE "${CMAKE_BINARY_DIR}/third-party/glew/auto/Makefile" "${file_content}")
+        endif()
+
+        if(NOT EXISTS "${CMAKE_BINARY_DIR}/third-party/glew/auto/registry")
+            message("Copying ${glfixes_Path} into ${CMAKE_BINARY_DIR}/third-party/glew/auto/registry")
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${glfixes_Path}" "${CMAKE_BINARY_DIR}/third-party/glew/auto/registry")
+        endif()
+
+        execute_process(COMMAND ${CMAKE_MAKE_PROGRAM} -C "${CMAKE_BINARY_DIR}/third-party/glew/auto")
+        set(EXTERNAL_PATH_GLEW ${CMAKE_BINARY_DIR}/third-party/glew)
     endif()
 
-    string(FIND "${file_content}" "GIT_CLONE" pos)
-    if("${pos}" EQUAL -1)
-    else()
-      string(REPLACE "GIT_CLONE" "# G_I_T_CLONE" file_content "${file_content}")
-      set(REQUIRED_TO_WRITE TRUE)
+    add_library(glew_s STATIC ${EXTERNAL_PATH_GLEW}/src/glew.c)
+    set_target_properties(glew_s PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+    target_include_directories(glew_s SYSTEM PRIVATE ${EXTERNAL_PATH_GLEW}/include)
+    target_compile_definitions(glew_s PRIVATE GLEW_STATIC)
+    list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLEW}/include)
+    list(APPEND EXTERNAL_LIBRARIES glew_s)
+
+    # glfw
+
+    set(EXTERNAL_PATH_GLFW ${EXTERNAL_PATH}/glfw)
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+    add_subdirectory(${EXTERNAL_PATH_GLFW})
+    set_target_properties(glfw PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+    if(UNIX)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_X11)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_GLX)
+    elseif(WIN32)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WIN32)
+        target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WGL)
     endif()
 
-    if(REQUIRED_TO_WRITE)
-      message("Write ${CMAKE_BINARY_DIR}/third-party/glew/auto/Makefile")
-      file(WRITE "${CMAKE_BINARY_DIR}/third-party/glew/auto/Makefile" "${file_content}")
+    list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLFW}/include)
+    list(APPEND EXTERNAL_LIBRARIES glfw)
+
+    # oel
+
+    set(EXTERNAL_PATH_OEL ${EXTERNAL_PATH}/oel)
+    file(GLOB OEL_SOURCE_FILES ${EXTERNAL_PATH_OEL}/*.h ${EXTERNAL_PATH_OEL}/*.cpp)
+    add_library(oel STATIC ${OEL_SOURCE_FILES})
+    target_include_directories(oel PRIVATE ${EXTERNAL_PATH_GLEW}/include ${EXTERNAL_PATH_GLFW}/include ${EXTERNAL_PATH_GLM})
+    target_compile_options(oel PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+    set_target_properties(oel PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+    if(WIN32)
+        target_compile_definitions(oel PRIVATE WIN32)
     endif()
 
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/third-party/glew/auto/registry")
-      message("Copying ${glfixes_Path} into ${CMAKE_BINARY_DIR}/third-party/glew/auto/registry")
-      execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${glfixes_Path}" "${CMAKE_BINARY_DIR}/third-party/glew/auto/registry")
-    endif()
-
-    execute_process(COMMAND ${CMAKE_MAKE_PROGRAM} -C "${CMAKE_BINARY_DIR}/third-party/glew/auto")
-    set(EXTERNAL_PATH_GLEW ${CMAKE_BINARY_DIR}/third-party/glew)
-  endif()
-
-  add_library(glew_s STATIC ${EXTERNAL_PATH_GLEW}/src/glew.c)
-  set_target_properties(glew_s PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-  target_include_directories(glew_s SYSTEM PRIVATE ${EXTERNAL_PATH_GLEW}/include)
-  target_compile_definitions(glew_s PRIVATE GLEW_STATIC)
-  list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLEW}/include)
-  list(APPEND EXTERNAL_LIBRARIES glew_s)
-
-  # glfw
-
-  set(EXTERNAL_PATH_GLFW ${EXTERNAL_PATH}/glfw)
-  set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-  set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-  set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
-  add_subdirectory(${EXTERNAL_PATH_GLFW})
-  set_target_properties(glfw PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-  if(UNIX)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_X11)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_GLX)
-  elseif(WIN32)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WIN32)
-    target_compile_definitions(glfw PRIVATE GLFW_EXPOSE_NATIVE_WGL)
-  endif()
-
-  list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_GLFW}/include)
-  list(APPEND EXTERNAL_LIBRARIES glfw)
-
-  # oel
-
-  set(EXTERNAL_PATH_OEL ${EXTERNAL_PATH}/oel)
-  file(GLOB OEL_SOURCE_FILES ${EXTERNAL_PATH_OEL}/*.h ${EXTERNAL_PATH_OEL}/*.cpp)
-  add_library(oel STATIC ${OEL_SOURCE_FILES})
-  target_include_directories(oel PRIVATE ${EXTERNAL_PATH_GLEW}/include ${EXTERNAL_PATH_GLFW}/include ${EXTERNAL_PATH_GLM})
-  target_compile_options(oel PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
-  set_target_properties(oel PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-  if(WIN32)
-    target_compile_definitions(oel PRIVATE WIN32)
-  endif()
-
-  list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_OEL})
-  list(APPEND EXTERNAL_LIBRARIES oel)
+    list(APPEND EXTERNAL_INCLUDES ${EXTERNAL_PATH_OEL})
+    list(APPEND EXTERNAL_LIBRARIES oel)
 
 endif()
 
@@ -673,7 +714,7 @@ if(EXPERIMENTS_SOURCE_FILES)
             list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
         endif()
 
-        if(EXPERIMENTS_LIGHT)
+        if(EXPERIMENTS_DEMO)
             set(SOURCE_FILES
                 ${JNI_PATH}/demo/demo_jni.cpp
                 ${JNI_PATH}/demo/demo_renderer.h
@@ -681,8 +722,24 @@ if(EXPERIMENTS_SOURCE_FILES)
             list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
         endif()
 
+        find_library(NDK_LIBRARY_ANDROID NAMES android)
+        if(NOT NDK_LIBRARY_ANDROID)
+            message(FATAL_ERROR "Can not find NDK Android library")
+        endif()
+
+        find_library(NDK_LIBRARY_LOG NAMES log)
+        if(NOT NDK_LIBRARY_LOG)
+            message(FATAL_ERROR "Can not find NDK Log library")
+        endif()
+
+        find_library(NDK_LIBRARY_GLSE2 NAMES GLESv2)
+        if(NOT NDK_LIBRARY_GLSE2)
+            message(FATAL_ERROR "Can not find NDK GLESv2 library")
+        endif()
+
         add_library(experiments SHARED ${EXPERIMENTS_SOURCE_FILES})
-        target_link_libraries(experiments android elements ${EXTERNAL_LIBRARIES} atomic GLESv2 log)
+        target_link_libraries(experiments ${NDK_LIBRARY_ANDROID} elements atomic
+            ${EXTERNAL_LIBRARIES} ${NDK_LIBRARY_GLSE2} ${NDK_LIBRARY_LOG})
         target_include_directories(experiments PRIVATE ${JNI_PATH})
         target_compile_options(experiments PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
         target_compile_options(experiments PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
@@ -722,7 +779,7 @@ if(EXPERIMENTS_SOURCE_FILES)
             ${DESKTOP_PATH}/Library/UiReader.h)
         list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
 
-        add_library(experiments SHARED ${EXPERIMENTS_SOURCE_FILES})
+        add_library(experiments STATIC ${EXPERIMENTS_SOURCE_FILES})
 
         if(WIN32)
             target_compile_definitions(experiments PRIVATE WIN32)
@@ -740,6 +797,73 @@ if(EXPERIMENTS_SOURCE_FILES)
         target_compile_options(experiments PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
         target_compile_options(experiments PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
         set_target_properties(experiments PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+        # Copy assets
+
+        set(PLATFORM_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platform)
+        file(GLOB WALLPAPER_FOLDERS RELATIVE ${PLATFORM_PATH}/android/elements
+                                             ${PLATFORM_PATH}/android/elements/*Wallpaper
+                                             ${PLATFORM_PATH}/android/elements/Demo)
+        file(GLOB_RECURSE RESOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/*
+                                         ${PLATFORM_PATH}/android/elements/*Wallpaper/src/main/assets/*
+                                         ${PLATFORM_PATH}/android/elements/Demo/src/main/assets/*)
+
+        add_custom_target(copy_assets)
+
+        foreach(RESOURCE_FILE ${RESOURCE_FILES})
+            string(REPLACE "//" "/" sourcePath ${RESOURCE_FILE})
+            string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets destination ${sourcePath})
+
+            foreach(WALLPAPER ${WALLPAPER_FOLDERS})
+                set(ADDITION_RESOURCE_PATH ${PLATFORM_PATH}/android/elements/${WALLPAPER}/src/main/assets)
+                string(REPLACE ${ADDITION_RESOURCE_PATH} ${CMAKE_BINARY_DIR}/assets destination ${destination})
+            endforeach()
+
+            add_custom_command(TARGET copy_assets PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${sourcePath}" "${destination}")
+        endforeach()
+
+        # apps
+
+        file(GLOB_RECURSE SHADER_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders
+                                                ${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders/*.prog)
+        foreach(SHADER_FILE ${SHADER_FILES})
+            string(REPLACE ".prog" "" app_path ${SHADER_FILE})
+            set(app_full_path ${DESKTOP_PATH}/${app_path})
+
+            if((EXISTS ${app_full_path}) AND (IS_DIRECTORY ${app_full_path}))
+                string(FIND ${app_path} "/" pos1 REVERSE)
+
+                if(${pos1} GREATER -1)
+                    string(SUBSTRING ${app_path} 0 ${pos1} tmp_path)
+                    string(FIND ${tmp_path} "/" pos2 REVERSE)
+
+                    if(${pos2} GREATER -1)
+                        math(EXPR pos2 "${pos2} + 1")
+                    else()
+                        set(pos2 0)
+                    endif()
+
+                    string(SUBSTRING ${app_path} ${pos2} -1 app_path)
+                    string(REPLACE "/" "_" app_path ${app_path})
+                endif()
+
+                file(GLOB APP_SRC_FILES ${app_full_path}/*.h ${app_full_path}/*.cpp)
+                add_executable(${app_path} ${APP_SRC_FILES})
+
+                if(WIN32)
+                    target_compile_definitions(${app_path} PRIVATE WIN32)
+                endif()
+
+                target_link_libraries(${app_path} experiments)
+                target_include_directories(${app_path} PRIVATE ${ELEMENTS_PATH} ${EXTERNAL_INCLUDES})
+                target_include_directories(${app_path} PRIVATE ${DESKTOP_PATH}/Library ${PLATFORM_PATH})
+                target_compile_options(${app_path} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+                target_compile_options(${app_path} PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+                target_compile_options(${app_path} PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+                set_target_properties(${app_path} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+                add_dependencies(${app_path} copy_assets)
+            endif()
+        endforeach()
 
     endif()
 endif()

@@ -3,6 +3,8 @@
 
 namespace Library
 {
+namespace TestCard
+{
 
 void MakeColorBars(GLubyte* aImage, GLsizei aWidth, GLsizei aHeight)
 {
@@ -40,4 +42,5 @@ void MakeColorBars(GLubyte* aImage, GLsizei aWidth, GLsizei aHeight)
 	}
 }
 
+}
 }
