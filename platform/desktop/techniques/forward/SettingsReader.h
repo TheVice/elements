@@ -25,9 +25,7 @@ public:
 	std::string mMapSpecular;
 	std::string mMapNormal;
 
-	glm::vec3 mLightDiffuse;
-	glm::vec3 mLightSpecular;
-	glm::vec3 mLightAmbient;
+	glm::vec3 mLightIntensity;
 	float mLightRange;
 
 	bool mIsEmpty;

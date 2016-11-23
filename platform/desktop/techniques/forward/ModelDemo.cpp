@@ -115,7 +115,7 @@ bool ModelDemo::Initialize()
 
 void ModelDemo::Update()
 {
-	/*if (mUi->IsNeedRestore())
+	if (mUi->IsNeedRestore())
 	{
 		mUi->Set_u_matrix_mvp(mSettings->mMatrixMvp);
 		mUi->Set_u_matrix_model_view(mSettings->mMatrixModelView);
@@ -125,13 +125,11 @@ void ModelDemo::Update()
 		mUi->Set_u_light_pos(mSettings->mLightPos);
 		mUi->Set_u_camera_pos(mSettings->mCameraPos);
 		//
-		mUi->Set_u_light_diffuse(mSettings->mLightDiffuse);
-		mUi->Set_u_light_specular(mSettings->mLightSpecular);
-		mUi->Set_u_light_ambient(mSettings->mLightAmbient);
+		mUi->Set_u_light_intensity(mSettings->mLightIntensity);
 		mUi->Set_u_light_range(mSettings->mLightRange);
 		//
 		mUi->SetVertices(mSettings->mVertices);
-	}*/
+	}
 }
 
 void ModelDemo::Draw()
@@ -161,10 +159,8 @@ void ModelDemo::Draw()
 	mModelEffect->u_light_pos() << mUi->Get_u_light_pos();
 	mModelEffect->u_camera_pos() << mUi->Get_u_camera_pos();
 	//
-	/*mModelEffect->u_light_diffuse() << mUi->Get_u_light_diffuse();
-	mModelEffect->u_light_specular() << mUi->Get_u_light_specular();
-	mModelEffect->u_light_ambient() << mUi->Get_u_light_ambient();
-	mModelEffect->u_light_range() << mUi->Get_u_light_range();*/
+	mModelEffect->u_light_intensity() << mUi->Get_u_light_intensity();
+	mModelEffect->u_light_range() << mUi->Get_u_light_range();
 	//
 	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 	//

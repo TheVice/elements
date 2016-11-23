@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ui name="geometry">
   <controls>
     <button asset_path="assets/ui/textures/settings.png" control_name="restore_button" position_x="725" position_y="525" size_h="75" size_w="75" visible="true"/>

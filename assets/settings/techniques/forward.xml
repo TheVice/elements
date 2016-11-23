@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<program name="Deferred Demo [techniques/lpp]">
+<program name="Model Demo [techniques/forward]">
   <vertices>
     <vertex>
       <pos x="-0.55" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="1.0"/>
@@ -43,8 +43,6 @@
   <map_diffuse value="assets/models/C-3PO/C-3PO_Dirty_D.png"/>
   <map_specular value="assets/models/C-3PO/C-3PO_Dirty_S.png"/>
   <map_normal value="assets/models/C-3PO/C-3PO_Dirty_N.png"/>
-  <light_diffuse x="1.0" y="1.0" z="1.0"/>
-  <light_specular x="1.0" y="1.0" z="1.0"/>
-  <light_ambient x="1.0" y="1.0" z="1.0"/>
+  <light_intensity x="1.0" y="1.0" z="1.0"/>
   <light_range value="5.0"/>
 </program>

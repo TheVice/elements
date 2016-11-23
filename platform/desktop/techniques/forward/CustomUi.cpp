@@ -22,6 +22,8 @@ CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 	m_u_matrix_view(),
 	m_u_camera_pos(),
 	m_u_light_pos(),
+	m_u_light_intensity(),
+	m_u_light_range(),
 	mVertices(
 {
 	VertexStructure(),
@@ -29,7 +31,8 @@ CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 					VertexStructure(),
 					VertexStructure()
 }),
-mSliderModels(SLIDER_MODEL_COUNT)
+mSliderModels(SLIDER_MODEL_COUNT),
+mIsRestoreNeed(true)
 {
 }
 
@@ -44,7 +47,7 @@ bool CustomUi::Initialize()
 		return false;
 	}
 
-	//
+	IS_CONTROL_EXIST(RESTORE_BUTTON)
 	IS_CONTROL_EXIST(U_MATRIX_MVP_BUTTON_13)
 	IS_CONTROL_EXIST(U_MATRIX_MODEL_VIEW_BUTTON_28)
 	IS_CONTROL_EXIST(U_MATRIX_NORMAL_BUTTON_37)
@@ -55,6 +58,7 @@ bool CustomUi::Initialize()
 	IS_CONTROL_EXIST(VERTEX_1_BUTTON_92)
 	IS_CONTROL_EXIST(VERTEX_2_BUTTON_106)
 	IS_CONTROL_EXIST(VERTEX_3_BUTTON_120)
+	IS_CONTROL_EXIST(U_INTENSITY_RANGE_BUTTON_124)
 	//
 	IS_CONTROL_EXIST(U_MATRIX_MVP_PANEL_14)
 	IS_CONTROL_EXIST(U_MATRIX_MODEL_VIEW_PANEL_29)
@@ -66,6 +70,7 @@ bool CustomUi::Initialize()
 	IS_CONTROL_EXIST(VERTEX_1_PANEL_93)
 	IS_CONTROL_EXIST(VERTEX_2_PANEL_107)
 	IS_CONTROL_EXIST(VERTEX_3_PANEL_121)
+	IS_CONTROL_EXIST(U_INTENSITY_RANGE_PANEL_123)
 	//
 	IS_CONTROL_EXIST(U_MATRIX_MVP_LABEL_1)
 	IS_CONTROL_EXIST(U_MATRIX_MVP_LABEL_2)
@@ -170,13 +175,60 @@ bool CustomUi::Initialize()
 	IS_CONTROL_EXIST(VERTEX_3_LABEL_119)
 	IS_CONTROL_EXIST(VERTEX_3_LABEL_122)
 	//
+	IS_CONTROL_EXIST(U_LIGHT_INTENSITY_LABEL_130)
+	IS_CONTROL_EXIST(U_LIGHT_INTENSITY_LABEL_131)
+	IS_CONTROL_EXIST(U_LIGHT_INTENSITY_LABEL_132)
+	IS_CONTROL_EXIST(U_LIGHT_RANGE_LABEL_133)
+	IS_CONTROL_EXIST(U_INTENSITY_RANGE_LABEL_134)
+	//
 	IS_ALL_SLIDER_MODELS_SET(mSliderModels)
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
+	{
+		directButton->set_click([this](eps::ui::state)
+		{
+			this->mIsRestoreNeed = !this->mIsRestoreNeed;
+		});
+	}
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[U_MATRIX_MVP_BUTTON_13].lock()))
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[U_MATRIX_MVP_PANEL_14].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_MODEL_VIEW_PANEL_29].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_NORMAL_PANEL_38].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_VIEW_PANEL_53].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_CAMERA_POS_PANEL_59].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_LIGHT_POS_PANEL_65].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_INTENSITY_RANGE_PANEL_123].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -185,7 +237,40 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[U_MATRIX_MVP_PANEL_14].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_MODEL_VIEW_PANEL_29].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_NORMAL_PANEL_38].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_VIEW_PANEL_53].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_CAMERA_POS_PANEL_59].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_LIGHT_POS_PANEL_65].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_INTENSITY_RANGE_PANEL_123].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -194,7 +279,40 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[U_MATRIX_MVP_PANEL_14].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_MODEL_VIEW_PANEL_29].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_NORMAL_PANEL_38].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_VIEW_PANEL_53].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_CAMERA_POS_PANEL_59].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_LIGHT_POS_PANEL_65].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_INTENSITY_RANGE_PANEL_123].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -202,7 +320,40 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[U_MATRIX_MVP_PANEL_14].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_MODEL_VIEW_PANEL_29].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_NORMAL_PANEL_38].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_VIEW_PANEL_53].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[U_CAMERA_POS_PANEL_59].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_LIGHT_POS_PANEL_65].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_INTENSITY_RANGE_PANEL_123].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -210,7 +361,40 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[U_MATRIX_MVP_PANEL_14].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_MODEL_VIEW_PANEL_29].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_NORMAL_PANEL_38].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_VIEW_PANEL_53].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_CAMERA_POS_PANEL_59].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[U_LIGHT_POS_PANEL_65].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_INTENSITY_RANGE_PANEL_123].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -218,7 +402,82 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[U_MATRIX_MVP_PANEL_14].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_MODEL_VIEW_PANEL_29].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_NORMAL_PANEL_38].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_VIEW_PANEL_53].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_CAMERA_POS_PANEL_59].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_LIGHT_POS_PANEL_65].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[U_INTENSITY_RANGE_PANEL_123].lock())
+			{
+				panel->set_visible(false);
+			}
+		});
+	}
+
+	if (auto directButton = std::static_pointer_cast<eps::ui::button>
+							(mControls[U_INTENSITY_RANGE_BUTTON_124].lock()))
+	{
+		directButton->set_click([this](eps::ui::state)
+		{
+			if (auto panel = this->mControls[U_MATRIX_MVP_PANEL_14].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_MODEL_VIEW_PANEL_29].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_NORMAL_PANEL_38].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_MATRIX_VIEW_PANEL_53].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_CAMERA_POS_PANEL_59].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_LIGHT_POS_PANEL_65].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[U_INTENSITY_RANGE_PANEL_123].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
 		});
 	}
 
@@ -226,7 +485,25 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[VERTEX_0_PANEL_79].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[VERTEX_1_PANEL_93].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_2_PANEL_107].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_3_PANEL_121].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -234,7 +511,25 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[VERTEX_0_PANEL_79].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_1_PANEL_93].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[VERTEX_2_PANEL_107].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_3_PANEL_121].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -242,7 +537,25 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[VERTEX_0_PANEL_79].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_1_PANEL_93].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_2_PANEL_107].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
+
+			if (auto panel = this->mControls[VERTEX_3_PANEL_121].lock())
+			{
+				panel->set_visible(false);
+			}
 		});
 	}
 
@@ -250,7 +563,25 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			// TODO:
+			if (auto panel = this->mControls[VERTEX_0_PANEL_79].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_1_PANEL_93].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_2_PANEL_107].lock())
+			{
+				panel->set_visible(false);
+			}
+
+			if (auto panel = this->mControls[VERTEX_3_PANEL_121].lock())
+			{
+				panel->set_visible(!panel->get_visible());
+			}
 		});
 	}
 
@@ -354,6 +685,11 @@ void CustomUi::Update()
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_tangent.z, VERTEX_3_LABEL_117)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.x, VERTEX_3_LABEL_118)
 	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_uv.y, VERTEX_3_LABEL_119)
+	//
+	DISPLAY_VALUE_AT_LABEL(m_u_light_intensity[0], U_LIGHT_INTENSITY_LABEL_130);
+	DISPLAY_VALUE_AT_LABEL(m_u_light_intensity[1], U_LIGHT_INTENSITY_LABEL_131);
+	DISPLAY_VALUE_AT_LABEL(m_u_light_intensity[2], U_LIGHT_INTENSITY_LABEL_132);
+	DISPLAY_VALUE_AT_LABEL(m_u_light_range, U_LIGHT_RANGE_LABEL_133);
 }
 
 void CustomUi::Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp)
@@ -372,6 +708,8 @@ void CustomUi::Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_mvp[3][0], U_MATRIX_MVP_SLIDER_10)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_mvp[3][1], U_MATRIX_MVP_SLIDER_11)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_mvp[3][2], U_MATRIX_MVP_SLIDER_12)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::mat4& CustomUi::Get_u_matrix_mvp() const
@@ -395,6 +733,8 @@ void CustomUi::Set_u_matrix_model_view(const glm::mat4& a_u_matrix_model_view)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_model_view[3][0], U_MATRIX_MODEL_VIEW_SLIDER_25)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_model_view[3][1], U_MATRIX_MODEL_VIEW_SLIDER_26)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_model_view[3][2], U_MATRIX_MODEL_VIEW_SLIDER_27)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::mat4& CustomUi::Get_u_matrix_model_view() const
@@ -412,6 +752,8 @@ void CustomUi::Set_u_matrix_normal(const glm::mat3& a_u_matrix_normal)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_normal[1][1], U_MATRIX_NORMAL_SLIDER_34)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_normal[2][0], U_MATRIX_NORMAL_SLIDER_35)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_normal[2][1], U_MATRIX_NORMAL_SLIDER_36)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::mat3& CustomUi::Get_u_matrix_normal() const
@@ -435,6 +777,8 @@ void CustomUi::Set_u_matrix_view(const glm::mat4& a_u_matrix_view)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_view[3][0], U_MATRIX_VIEW_SLIDER_49)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_view[3][1], U_MATRIX_VIEW_SLIDER_50)
 	SET_REAL_SLIDER_VALUE(m_u_matrix_view[3][2], U_MATRIX_VIEW_SLIDER_51)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::mat4& CustomUi::Get_u_matrix_view() const
@@ -449,6 +793,8 @@ void CustomUi::Set_u_camera_pos(const glm::vec3& a_u_camera_pos)
 	SET_REAL_SLIDER_VALUE(m_u_camera_pos[0], U_CAMERA_POS_SLIDER_55)
 	SET_REAL_SLIDER_VALUE(m_u_camera_pos[1], U_CAMERA_POS_SLIDER_56)
 	SET_REAL_SLIDER_VALUE(m_u_camera_pos[2], U_CAMERA_POS_SLIDER_57)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::vec3& CustomUi::Get_u_camera_pos() const
@@ -463,6 +809,8 @@ void CustomUi::Set_u_light_pos(const glm::vec3& a_u_light_pos)
 	SET_REAL_SLIDER_VALUE(m_u_light_pos[0], U_LIGHT_POS_SLIDER_61)
 	SET_REAL_SLIDER_VALUE(m_u_light_pos[1], U_LIGHT_POS_SLIDER_62)
 	SET_REAL_SLIDER_VALUE(m_u_light_pos[2], U_LIGHT_POS_SLIDER_63)
+	//
+	mIsRestoreNeed = false;
 }
 
 const glm::vec3& CustomUi::Get_u_light_pos() const
@@ -518,11 +866,48 @@ void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_tangent.z, VERTEX_3_SLIDER_117)
 	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_uv.x, VERTEX_3_SLIDER_118)
 	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_uv.y, VERTEX_3_SLIDER_119)
+	//
+	mIsRestoreNeed = false;
+}
+
+void CustomUi::Set_u_light_intensity(const glm::vec3& a_u_light_intensity)
+{
+	m_u_light_intensity = a_u_light_intensity;
+	//
+	SET_REAL_SLIDER_VALUE(m_u_light_intensity[0], U_LIGHT_INTENSITY_SLIDER_126)
+	SET_REAL_SLIDER_VALUE(m_u_light_intensity[1], U_LIGHT_INTENSITY_SLIDER_127)
+	SET_REAL_SLIDER_VALUE(m_u_light_intensity[2], U_LIGHT_INTENSITY_SLIDER_128)
+	//
+	mIsRestoreNeed = false;
+}
+
+const glm::vec3& CustomUi::Get_u_light_intensity() const
+{
+	return m_u_light_intensity;
+}
+
+void CustomUi::Set_u_light_range(float a_u_light_range)
+{
+	m_u_light_range = a_u_light_range;
+	//
+	SET_REAL_SLIDER_VALUE(m_u_light_range, U_LIGHT_RANGE_SLIDER_129)
+	//
+	mIsRestoreNeed = false;
+}
+
+float CustomUi::Get_u_light_range() const
+{
+	return m_u_light_range;
 }
 
 const std::vector<VertexStructure>& CustomUi::GetVertices() const
 {
 	return mVertices;
+}
+
+bool CustomUi::IsNeedRestore() const
+{
+	return mIsRestoreNeed;
 }
 
 Library::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
@@ -904,6 +1289,22 @@ Library::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float 
 
 		case VERTEX_3_SLIDER_119:
 			modelValue = &mVertices[3].a_vertex_uv.y;
+			break;
+
+		case U_LIGHT_INTENSITY_SLIDER_126:
+			modelValue = &m_u_light_intensity[0];
+			break;
+
+		case U_LIGHT_INTENSITY_SLIDER_127:
+			modelValue = &m_u_light_intensity[1];
+			break;
+
+		case U_LIGHT_INTENSITY_SLIDER_128:
+			modelValue = &m_u_light_intensity[2];
+			break;
+
+		case U_LIGHT_RANGE_SLIDER_129:
+			modelValue = &m_u_light_range;
 			break;
 
 		default:

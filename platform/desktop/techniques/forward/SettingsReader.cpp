@@ -26,9 +26,7 @@ void SettingsReader::clear()
 	mMapSpecular.clear();
 	mMapNormal.clear();
 	//
-	mLightDiffuse = glm::vec3();
-	mLightSpecular = glm::vec3();
-	mLightAmbient = glm::vec3();
+	mLightIntensity = glm::vec3();
 	mLightRange = glm::zero<float>();
 	//
 	mIsEmpty = true;
@@ -121,23 +119,9 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	const auto m_light_diffuse_node = root_node.child("light_diffuse");
+	const auto m_light_intensity = root_node.child("light_intensity");
 
-	if (m_light_diffuse_node.empty())
-	{
-		return !mIsEmpty;
-	}
-
-	const auto m_light_specular_node = root_node.child("light_specular");
-
-	if (m_light_specular_node.empty())
-	{
-		return !mIsEmpty;
-	}
-
-	const auto m_light_ambient_node = root_node.child("light_ambient");
-
-	if (m_light_ambient_node.empty())
+	if (m_light_intensity.empty())
 	{
 		return !mIsEmpty;
 	}
@@ -266,17 +250,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_vec3(m_light_diffuse_node, mLightDiffuse))
-	{
-		return !mIsEmpty;
-	}
-
-	if (!Library::ReaderHelpers::read_glm_vec3(m_light_specular_node, mLightSpecular))
-	{
-		return !mIsEmpty;
-	}
-
-	if (!Library::ReaderHelpers::read_glm_vec3(m_light_ambient_node, mLightAmbient))
+	if (!Library::ReaderHelpers::read_glm_vec3(m_light_intensity, mLightIntensity))
 	{
 		return !mIsEmpty;
 	}

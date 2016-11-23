@@ -1,6 +1,7 @@
 #ifndef _CONTROLS_H_
 #define _CONTROLS_H_
 
+#define RESTORE_BUTTON			"restore_button"
 #define U_MATRIX_MVP_BUTTON_13			"u_matrix_mvp_button_13"
 #define U_MATRIX_MODEL_VIEW_BUTTON_28			"u_matrix_model_view_button_28"
 #define U_MATRIX_NORMAL_BUTTON_37			"u_matrix_normal_button_37"
@@ -11,6 +12,7 @@
 #define VERTEX_1_BUTTON_92			"vertex_1_button_92"
 #define VERTEX_2_BUTTON_106			"vertex_2_button_106"
 #define VERTEX_3_BUTTON_120			"vertex_3_button_120"
+#define U_INTENSITY_RANGE_BUTTON_124	"u_intensity_range_button_124"
 
 #define U_MATRIX_MVP_PANEL_14			"u_matrix_mvp_panel_14"
 #define U_MATRIX_MODEL_VIEW_PANEL_29			"u_matrix_model_view_panel_29"
@@ -22,6 +24,7 @@
 #define VERTEX_1_PANEL_93			"vertex_1_panel_93"
 #define VERTEX_2_PANEL_107			"vertex_2_panel_107"
 #define VERTEX_3_PANEL_121			"vertex_3_panel_121"
+#define U_INTENSITY_RANGE_PANEL_123	"u_intensity_range_panel_123"
 
 #define U_MATRIX_MVP_SLIDER_1			0
 #define U_MATRIX_MVP_SLIDER_2			1
@@ -115,8 +118,12 @@
 #define VERTEX_3_SLIDER_117			89
 #define VERTEX_3_SLIDER_118			90
 #define VERTEX_3_SLIDER_119			91
+#define U_LIGHT_INTENSITY_SLIDER_126	92
+#define U_LIGHT_INTENSITY_SLIDER_127	93
+#define U_LIGHT_INTENSITY_SLIDER_128	94
+#define U_LIGHT_RANGE_SLIDER_129		95
 
-#define SLIDER_MODEL_COUNT			92
+#define SLIDER_MODEL_COUNT			96
 
 #define U_MATRIX_MVP_LABEL_1			"u_matrix_mvp_panel_14/u_matrix_mvp_label_1"
 #define U_MATRIX_MVP_LABEL_2			"u_matrix_mvp_panel_14/u_matrix_mvp_label_2"
@@ -220,5 +227,11 @@
 #define VERTEX_3_LABEL_118			"vertex_3_panel_121/vertex_3_label_118"
 #define VERTEX_3_LABEL_119			"vertex_3_panel_121/vertex_3_label_119"
 #define VERTEX_3_LABEL_122			"vertex_3_panel_121/vertex_3_label_122"
+
+#define U_LIGHT_INTENSITY_LABEL_130		"u_intensity_range_panel_123/u_light_intensity_label_130"
+#define U_LIGHT_INTENSITY_LABEL_131		"u_intensity_range_panel_123/u_light_intensity_label_131"
+#define U_LIGHT_INTENSITY_LABEL_132		"u_intensity_range_panel_123/u_light_intensity_label_132"
+#define U_LIGHT_RANGE_LABEL_133			"u_intensity_range_panel_123/u_light_range_label_133"
+#define U_INTENSITY_RANGE_LABEL_134		"u_intensity_range_panel_123/u_intensity_range_label_134"
 
 #endif
