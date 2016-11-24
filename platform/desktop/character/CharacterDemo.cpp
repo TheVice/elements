@@ -50,31 +50,27 @@ void CharacterDemo::Update()
 {
 	static float theta = glm::two_over_root_pi<float>();
 	static float phi = glm::quarter_pi<float>();
-	static float lastTime = rate_.elapsed();
 
-	if (rate_.update() && rate_.elapsed() > lastTime)
+	if (rate_.update() && rate_.elapsed() > 0.0f)
 	{
-		const float elapsedTime = rate_.elapsed() - lastTime;
-		lastTime = rate_.elapsed();
-
 		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_UP) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_W))
 		{
-			theta += glm::radians<float>(1) * elapsedTime;
+			theta += 0.0025f * rate_.elapsed();
 		}
 
 		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_DOWN) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_S))
 		{
-			theta -= glm::radians<float>(1) * elapsedTime;
+			theta -= 0.0025f * rate_.elapsed();
 		}
 
 		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_LEFT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_A))
 		{
-			phi += glm::radians<float>(1) * elapsedTime;
+			phi += 0.0025f * rate_.elapsed();
 		}
 
 		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_RIGHT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_D))
 		{
-			phi -= glm::radians<float>(1) * elapsedTime;
+			phi -= 0.0025f * rate_.elapsed();
 		}
 
 		auto renderer = mRendererFactory->get(mRenderId);
