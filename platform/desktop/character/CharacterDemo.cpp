@@ -43,6 +43,8 @@ bool CharacterDemo::Initialize()
 								 std::placeholders::_3, std::placeholders::_4);
 	mGame->AddKeyboardHandler(mKeyboardHandler);
 	//
+	glEnable(GL_CULL_FACE);
+	//
 	return true;
 }
 

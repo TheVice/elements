@@ -42,11 +42,16 @@ public class LiquidWallpaperService extends ElementsWallpaperService
     {
         private static final String DEFAULT_ASSET = "textures/background.png";
 
-        private SensorInterpreter sensorInterpreter = new SensorInterpreter();
-        private OffsetInterpreter offsetInterpreter = new OffsetInterpreter();
+        private SensorInterpreter sensorInterpreter;
+        private OffsetInterpreter offsetInterpreter;
 
         private Liquid liquid;
 
+        LiquidEngine()
+        {
+            sensorInterpreter = new SensorInterpreter(getApplicationContext());
+            offsetInterpreter = new OffsetInterpreter();
+        }
         @Override
         protected void onOffsets(float x, float y, float stepX, float stepY)
         {
@@ -68,14 +73,14 @@ public class LiquidWallpaperService extends ElementsWallpaperService
 
             if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             {
-                float[] delta = offsetInterpreter.accelerometer(getApplicationContext());
+                float[] delta = offsetInterpreter.accelerometer();
                 if(delta != null)
                 {
                     liquid.acceleration(delta[0], delta[1], 0.0f);
                 }
                 else
                 {
-                    delta = sensorInterpreter.accelerometer(getApplicationContext(), event);
+                    delta = sensorInterpreter.accelerometer(event);
                     if(delta != null)
                     {
                         liquid.acceleration(delta[0], delta[1], 0.0f);
@@ -111,7 +116,7 @@ public class LiquidWallpaperService extends ElementsWallpaperService
             super.onDestroy();
         }
 
-        class LiquidRenderer implements GLSurfaceView.Renderer
+        class LiquidRenderer extends ElementsRenderer
         {
             private Liquid liquid;
 
@@ -121,13 +126,10 @@ public class LiquidWallpaperService extends ElementsWallpaperService
             }
 
             @Override
-            public void onSurfaceCreated(GL10 gl, EGLConfig config)
-            {
-            }
-
-            @Override
             public void onSurfaceChanged(GL10 gl, int w, int h)
             {
+                super.onSurfaceChanged(gl, w, h);
+
                 liquid.startup(w, h, quality());
 
                 loadBackground();
