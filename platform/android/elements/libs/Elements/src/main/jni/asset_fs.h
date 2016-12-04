@@ -45,15 +45,8 @@ private:
 #else
 
 #include <map>
+#include <array>
 #include <memory>
-
-namespace eps
-{
-namespace io
-{
-struct file;
-}
-}
 
 struct asset_fs : public eps::io::system
 {
@@ -66,6 +59,7 @@ struct asset_fs : public eps::io::system
 
 private:
     const std::string mount_point_;
+    std::array<char, 4 * 1024 * 1024> assets_content_;
     std::map<std::string, std::unique_ptr<eps::io::file>> assets_;
 };
 #endif

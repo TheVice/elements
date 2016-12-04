@@ -100,6 +100,7 @@ void asset_fs::close(eps::io::file * file)
 
 #include <ios>
 #include <cassert>
+#include <cstring>
 #include <climits>
 
 struct asset_content : public eps::io::file
@@ -204,6 +205,105 @@ private:
 	std::string::size_type pos_;
 };
 
+struct asset_content2 : public eps::io::file
+{
+	explicit asset_content2(const char* content,
+							std::string::size_type content_size) :
+		content_(content),
+		content_size_(content_size),
+		pos_(0)
+	{
+	}
+
+	size_t read(void* output, size_t size, size_t count)
+	{
+		assert(size == 1 || count == 1);
+
+		if (pos_ < content_size_)
+		{
+			if (pos_ + size * count >= content_size_)
+			{
+				size = content_size_ - pos_;
+				count = 1;
+			}
+
+			std::memcpy(static_cast<char*>(output), &content_[pos_], size * count);
+			pos_ += size * count;
+			return size * count;
+		}
+
+		return 0;
+	}
+
+	size_t tell() const
+	{
+		return pos_;
+	}
+
+	size_t size() const
+	{
+		return content_size_;
+	}
+
+	int seek(size_t offset, int origin)
+	{
+		switch (static_cast<std::ios::seekdir>(origin))
+		{
+			case std::ios::beg:
+				if (offset < size())
+				{
+					pos_ = offset;
+				}
+				else
+				{
+					return std::ios::pos_type(-1);
+				}
+
+				break;
+
+			case std::ios::cur:
+				if (pos_ + offset < size())
+				{
+					pos_ += offset;
+				}
+				else
+				{
+					return std::ios::pos_type(-1);
+				}
+
+			case std::ios::end:
+				if (offset < size())
+				{
+					pos_ = size() - offset;
+				}
+				else
+				{
+					return std::ios::pos_type(-1);
+				}
+
+				break;
+
+			default:
+				return std::ios::pos_type(-1);
+		}
+
+		return pos_;
+	}
+
+	void flush()
+	{
+	}
+
+	virtual ~asset_content2()
+	{
+	}
+
+private:
+	const char* content_;
+	const std::string::size_type content_size_;
+	std::string::size_type pos_;
+};
+
 struct asset_file : public eps::io::file
 {
 	asset_file(const char* file_name)
@@ -294,6 +394,7 @@ private:
 
 asset_fs::asset_fs(const std::string& mount_point) :
 	mount_point_(mount_point.empty() ? "" : mount_point + "/"),
+	assets_content_(),
 	assets_()
 {
 }
@@ -308,13 +409,20 @@ eps::io::file* asset_fs::open(const std::string& file)
 	{
 		asset_file asset(full_path.c_str());
 		std::unique_ptr<eps::io::file> content;
+		static std::string::size_type content_pos_ = 0u;
 
 		if (asset.exists())
 		{
-			std::string file_content(asset.size(), '\0');
-			asset.read(&file_content.front(), 1, file_content.size());
+			//std::string file_content(asset.size(), '\0');
+			char* file_content = &assets_content_[content_pos_];
+			const std::string::size_type content_size_ = asset.size();
+			//asset.read(&file_content.front(), 1, file_content.size());
+			assert(content_pos_ + content_size_ <= assets_content_.size());
+			asset.read(file_content, 1, content_size_);
 			//content = std::make_unique<asset_content>(file_content);
-			content = std::make_unique<asset_content>(std::move(file_content));
+			//content = std::make_unique<asset_content>(std::move(file_content));
+			content = std::make_unique<asset_content2>(file_content, content_size_);
+			content_pos_ += content_size_;
 		}
 #ifndef NDEBUG
 		else
