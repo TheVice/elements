@@ -110,6 +110,12 @@ struct asset_content : public eps::io::file
 	{
 	}
 
+	explicit asset_content(const std::string&& content) :
+		content_(content),
+		pos_(0)
+	{
+	}
+
 	size_t read(void* output, size_t size, size_t count)
 	{
 		assert(size == 1 || count == 1);
@@ -292,6 +298,8 @@ asset_fs::asset_fs(const std::string& mount_point) :
 {
 }
 
+asset_fs::~asset_fs() = default;
+
 eps::io::file* asset_fs::open(const std::string& file)
 {
 	const auto full_path = mount_point_ + file;
@@ -299,20 +307,29 @@ eps::io::file* asset_fs::open(const std::string& file)
 	if (!assets_.count(full_path))
 	{
 		asset_file asset(full_path.c_str());
+		std::unique_ptr<eps::io::file> content;
 
 		if (asset.exists())
 		{
 			std::string file_content(asset.size(), '\0');
 			asset.read(&file_content.front(), 1, file_content.size());
-			assets_[full_path] = file_content;
+			//content = std::make_unique<asset_content>(file_content);
+			content = std::make_unique<asset_content>(std::move(file_content));
 		}
+#ifndef NDEBUG
 		else
 		{
-			return nullptr;
+			assert(false);
 		}
+#endif
+		assets_[full_path] = std::move(content);
+	}
+	else
+	{
+		assets_[full_path]->seek(0u, std::ios::beg);
 	}
 
-	return new asset_content(assets_[full_path]);
+	return assets_[full_path].get();
 }
 
 bool asset_fs::exists(const std::string& file)
@@ -323,10 +340,24 @@ bool asset_fs::exists(const std::string& file)
 
 void asset_fs::close(eps::io::file* file)
 {
-	if (file)
+#ifndef NDEBUG
+	assert(nullptr != file);
+	bool isFileInFS = false;
+
+	for (const auto& content : assets_)
 	{
-		delete file;
+		isFileInFS = (std::get<1>(content).get() == file);
+
+		if (isFileInFS)
+		{
+			break;
+		}
 	}
+
+	assert(isFileInFS);
+#else
+	(void)file;
+#endif
 }
 
 #endif

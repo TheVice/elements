@@ -265,10 +265,19 @@ std::pair<int, int> Game::CenterWindow(int aWindowWidth, int aWindowHeight)
 
 void Game::glfwErrorCallback(int aError, const char* aDescription)
 {
-	const auto sz = snprintf(nullptr, 0, "%s (Error #%i)\n", aDescription, aError);
-	char errorMessage[1 + sz] = "";
+#ifdef _MSC_VER
+	char errorMessage[2 * MAX_PATH];
+#else
+	const int sz = snprintf(nullptr, 0, "%s (Error #%i)\n", aDescription, aError);
+	char errorMessage[1 + sz];
+#endif
 	sprintf(errorMessage, "%s (Error #%i)\n", aDescription, aError);
 	fprintf(stderr, "%s", errorMessage);
+#ifndef NDEBUG
+#ifdef _MSC_VER
+	OutputDebugStringA(errorMessage);
+#endif
+#endif
 }
 
 }

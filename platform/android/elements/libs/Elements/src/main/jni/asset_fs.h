@@ -45,10 +45,20 @@ private:
 #else
 
 #include <map>
+#include <memory>
+
+namespace eps
+{
+namespace io
+{
+struct file;
+}
+}
 
 struct asset_fs : public eps::io::system
 {
     explicit asset_fs(const std::string& mount_point = "");
+    virtual ~asset_fs();
 
     eps::io::file* open(const std::string& file) final;
     bool exists(const std::string& file) final;
@@ -56,7 +66,7 @@ struct asset_fs : public eps::io::system
 
 private:
     const std::string mount_point_;
-    std::map<std::string, std::string> assets_;
+    std::map<std::string, std::unique_ptr<eps::io::file>> assets_;
 };
 #endif
 
