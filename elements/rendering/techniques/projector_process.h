@@ -21,50 +21,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "framerate.h"
-#include <chrono>
+#ifndef RENDERING_TECHNIQUES_PROJECTOR_PROCESS_H_INCLUDED
+#define RENDERING_TECHNIQUES_PROJECTOR_PROCESS_H_INCLUDED
+
+#include "rendering/core/program.h"
+#include "rendering/core/texture.h"
+#include "rendering/models/model.h"
+#include "scene/scene.h"
 
 namespace eps {
-namespace timing {
+namespace rendering {
+namespace techniques {
 
-framerate::framerate(unsigned int rate)
-    : rate_(rate)
-    , counter_(0)
-    , last_(0)
-    , elapsed_(0)
-    , frame_(0)
-    , fps_(rate)
-{}
-
-bool framerate::update()
+class projector_process : public scene::visitor<projector_process>
 {
-    using namespace std::chrono;
+public:
 
-    const auto now = steady_clock::now().time_since_epoch();
+    SNAPE_VISIT(model);
 
-    auto current = duration_cast<milliseconds>(now).count();
-    auto desired_fps = 1000 / rate_;
+public:
 
-    elapsed_ += last_ ? current - last_ : 0;
-    last_ = current;
+    void process();
+    bool initialize();
+    void visit(const model & m);
 
-    if(elapsed_ > desired_fps)
-    {
-        elapsed_ -= desired_fps;
+    void set_scene(const utils::pointer<scene::scene> & scene);
 
-        if(current - frame_ > 1000)
-        {
-            fps_ = frame_ ? counter_ / (float(current - frame_) / 1000.0f) : 0.0f;
-            counter_ = 0;
-            frame_ = current;
-        }
-        ++counter_;
+    bool set_projective_map(const std::string & asset);
+    void set_projective_camera(const std::string & camera);
 
-        return true;
-    }
-    
-    return false;
-}
+private:
 
-} /* timing */
+    program program_;
+    texture texture_projective_;
+    utils::pointer<scene::scene> scene_;
+
+    std::string camera_projective_;
+};
+
+} /* techniques */
+} /* rendering */
 } /* eps */
+
+#endif // RENDERING_TECHNIQUES_PROJECTOR_PROCESS_H_INCLUDED

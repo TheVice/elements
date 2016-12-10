@@ -31,8 +31,12 @@ public class CharacterWallpaperService extends ElementsWallpaperService
     class CharacterEngine extends ElementsEngine
     {
         private Character character;
-        private SensorInterpreter sensorInterpreter = new SensorInterpreter();
+        private SensorInterpreter sensorInterpreter;
 
+        CharacterEngine()
+        {
+            sensorInterpreter = new SensorInterpreter(getApplicationContext());
+        }
         @Override
         protected int getDepth()
         {
@@ -57,7 +61,7 @@ public class CharacterWallpaperService extends ElementsWallpaperService
 
             if(event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR)
             {
-                float [] delta = sensorInterpreter.rotation(getApplicationContext(), event);
+                float [] delta = sensorInterpreter.rotation(event);
                 if(delta != null)
                 {
                     character.rotation(delta[0], delta[1], delta[2]);
@@ -91,7 +95,7 @@ public class CharacterWallpaperService extends ElementsWallpaperService
             super.onDestroy();
         }
 
-        class CharacterRenderer implements GLSurfaceView.Renderer
+        class CharacterRenderer extends ElementsRenderer
         {
             private final String DEFAULT_MODEL = "assets/models/R2-D2/R2-D2.dae";
             private String currentModel;
@@ -103,13 +107,9 @@ public class CharacterWallpaperService extends ElementsWallpaperService
             }
 
             @Override
-            public void onSurfaceCreated(GL10 gl, EGLConfig config)
-            {
-            }
-
-            @Override
             public void onSurfaceChanged(GL10 gl, int w, int h)
             {
+                super.onSurfaceChanged(gl, w, h);
                 character.startup(w, h);
                 loadModel();
             }

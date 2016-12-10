@@ -21,50 +21,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "framerate.h"
-#include <chrono>
+#ifndef ELEMENTS_TECHNIQUES_PROJECTOR_H_INCLUDED
+#define ELEMENTS_TECHNIQUES_PROJECTOR_H_INCLUDED
+
+#include "rendering/passes/pass_base.h"
+#include "scene/scene.h"
+#include "projector_process.h"
 
 namespace eps {
-namespace timing {
+namespace rendering {
+namespace techniques {
 
-framerate::framerate(unsigned int rate)
-    : rate_(rate)
-    , counter_(0)
-    , last_(0)
-    , elapsed_(0)
-    , frame_(0)
-    , fps_(rate)
-{}
-
-bool framerate::update()
+class projector : public pass_base
 {
-    using namespace std::chrono;
+public:
 
-    const auto now = steady_clock::now().time_since_epoch();
+    using pass_base::pass_base;
 
-    auto current = duration_cast<milliseconds>(now).count();
-    auto desired_fps = 1000 / rate_;
+public:
 
-    elapsed_ += last_ ? current - last_ : 0;
-    last_ = current;
+    bool initialize() final;
+    void process(float dt) final;
 
-    if(elapsed_ > desired_fps)
-    {
-        elapsed_ -= desired_fps;
+    void set_scene(const utils::pointer<scene::scene> & scene);
+    bool set_projective_map(const std::string & asset);
+    void set_projective_camera(const std::string & camera);
 
-        if(current - frame_ > 1000)
-        {
-            fps_ = frame_ ? counter_ / (float(current - frame_) / 1000.0f) : 0.0f;
-            counter_ = 0;
-            frame_ = current;
-        }
-        ++counter_;
+private:
 
-        return true;
-    }
-    
-    return false;
-}
+    projector_process process_;
+};
 
-} /* timing */
+} /* techniques */
+} /* rendering */
 } /* eps */
+
+
+#endif // ELEMENTS_TECHNIQUES_PROJECTOR_H_INCLUDED

@@ -21,50 +21,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "framerate.h"
-#include <chrono>
+#include "projector.h"
 
 namespace eps {
-namespace timing {
+namespace rendering {
+namespace techniques {
 
-framerate::framerate(unsigned int rate)
-    : rate_(rate)
-    , counter_(0)
-    , last_(0)
-    , elapsed_(0)
-    , frame_(0)
-    , fps_(rate)
-{}
-
-bool framerate::update()
+bool projector::initialize()
 {
-    using namespace std::chrono;
-
-    const auto now = steady_clock::now().time_since_epoch();
-
-    auto current = duration_cast<milliseconds>(now).count();
-    auto desired_fps = 1000 / rate_;
-
-    elapsed_ += last_ ? current - last_ : 0;
-    last_ = current;
-
-    if(elapsed_ > desired_fps)
-    {
-        elapsed_ -= desired_fps;
-
-        if(current - frame_ > 1000)
-        {
-            fps_ = frame_ ? counter_ / (float(current - frame_) / 1000.0f) : 0.0f;
-            counter_ = 0;
-            frame_ = current;
-        }
-        ++counter_;
-
-        return true;
-    }
-    
-    return false;
+    return process_.initialize();
 }
 
-} /* timing */
+void projector::set_scene(const utils::pointer<scene::scene> & scene)
+{
+    process_.set_scene(scene);
+}
+
+bool projector::set_projective_map(const std::string & asset)
+{
+    return process_.set_projective_map(asset);
+}
+
+void projector::set_projective_camera(const std::string & camera)
+{
+    process_.set_projective_camera(camera);
+}
+
+void projector::process(float)
+{
+    process_.process();
+}
+
+
+} /* techniques */
+} /* rendering */
 } /* eps */
