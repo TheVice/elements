@@ -48,7 +48,7 @@ bool ParticlesDemo::Initialize()
 
 	if (!mSettings || mSettings->mIsEmpty)
 	{
-		throw std::runtime_error("Failed to load settings");
+		return false;
 	}
 
 	// Create the vertex buffer object
@@ -112,7 +112,7 @@ void ParticlesDemo::Draw()
 	mParticlesEffect->u_transform() << mUi->Get_u_transform();
 	mParticlesEffect->u_size() << mUi->Get_u_size();
 	//
-	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_BYTE, nullptr);
 	//
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

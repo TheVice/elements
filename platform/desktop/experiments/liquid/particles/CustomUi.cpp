@@ -1,14 +1,13 @@
 
 #include "CustomUi.h"
 #include "Controls.h"
+#include <checkbox.h>
+#include <SliderModel.h>
 #include <elements/ui/controls/button.h>
+#include <elements/ui/controls/check.h>
 #include <elements/ui/controls/label.h>
 #include <elements/ui/controls/panel.h>
 #include <elements/ui/controls/slider.h>
-#include <checkbox.h>
-#include <SliderModel.h>
-#include <sstream>
-#include <iomanip>
 
 namespace Rendering
 {
@@ -16,6 +15,7 @@ RTTI_DEFINITIONS(CustomUi)
 
 CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 	UiAsset(aGame, aAssetPath),
+	mIsRestoreNeed(true),
 	m_u_transform(),
 	m_u_size(),
 	mVertices(
@@ -24,9 +24,7 @@ CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 					VertexStructure(),
 					VertexStructure(),
 					VertexStructure()
-}),
-mSliderModels(SLIDER_MODEL_COUNT),
-mIsRestoreNeed(false)
+})
 {
 }
 
@@ -90,7 +88,7 @@ bool CustomUi::Initialize()
 	IS_CONTROL_EXIST(GL_POINT_SPRITE_CHECKBOX)
 	IS_CONTROL_EXIST(GL_VERTEX_PROGRAM_POINT_SIZE_CHECKBOX)
 	//
-	IS_ALL_SLIDER_MODELS_SET(mSliderModels)
+	IS_ALL_SLIDER_MODELS_SET(SLIDER_MODEL_COUNT)
 
 	if (auto directButton = std::static_pointer_cast<eps::ui::button>(mControls[RESTORE_BUTTON].lock()))
 	{
@@ -104,8 +102,7 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto transformPanel = std::static_pointer_cast<eps::ui::button>
-									  (this->mControls[U_TRANSFORM_PANEL_14].lock()))
+			if (auto transformPanel = this->mControls[U_TRANSFORM_PANEL_14].lock())
 			{
 				transformPanel->set_visible(!transformPanel->get_visible());
 			}
@@ -116,7 +113,7 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto sizePanel = std::static_pointer_cast<eps::ui::button>(this->mControls[U_SIZE_PANEL_18].lock()))
+			if (auto sizePanel = this->mControls[U_SIZE_PANEL_18].lock())
 			{
 				sizePanel->set_visible(!sizePanel->get_visible());
 			}
@@ -127,22 +124,22 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
+			if (auto ltPanel = this->mControls[VERTEX_0_PANEL_23].lock())
 			{
 				ltPanel->set_visible(!ltPanel->get_visible());
 			}
 
-			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_1_PANEL_28].lock()))
+			if (auto rtPanel = this->mControls[VERTEX_1_PANEL_28].lock())
 			{
 				rtPanel->set_visible(false);
 			}
 
-			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_2_PANEL_33].lock()))
+			if (auto rbPanel = this->mControls[VERTEX_2_PANEL_33].lock())
 			{
 				rbPanel->set_visible(false);
 			}
 
-			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_3_PANEL_38].lock()))
+			if (auto lbPanel = this->mControls[VERTEX_3_PANEL_38].lock())
 			{
 				lbPanel->set_visible(false);
 			}
@@ -153,22 +150,22 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
+			if (auto ltPanel = this->mControls[VERTEX_0_PANEL_23].lock())
 			{
 				ltPanel->set_visible(false);
 			}
 
-			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_1_PANEL_28].lock()))
+			if (auto rtPanel = this->mControls[VERTEX_1_PANEL_28].lock())
 			{
 				rtPanel->set_visible(!rtPanel->get_visible());
 			}
 
-			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_2_PANEL_33].lock()))
+			if (auto rbPanel = this->mControls[VERTEX_2_PANEL_33].lock())
 			{
 				rbPanel->set_visible(false);
 			}
 
-			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_3_PANEL_38].lock()))
+			if (auto lbPanel = this->mControls[VERTEX_3_PANEL_38].lock())
 			{
 				lbPanel->set_visible(false);
 			}
@@ -179,22 +176,22 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
+			if (auto ltPanel = this->mControls[VERTEX_0_PANEL_23].lock())
 			{
 				ltPanel->set_visible(false);
 			}
 
-			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_1_PANEL_28].lock()))
+			if (auto rtPanel = this->mControls[VERTEX_1_PANEL_28].lock())
 			{
 				rtPanel->set_visible(false);
 			}
 
-			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_2_PANEL_33].lock()))
+			if (auto rbPanel = this->mControls[VERTEX_2_PANEL_33].lock())
 			{
 				rbPanel->set_visible(!rbPanel->get_visible());
 			}
 
-			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_3_PANEL_38].lock()))
+			if (auto lbPanel = this->mControls[VERTEX_3_PANEL_38].lock())
 			{
 				lbPanel->set_visible(false);
 			}
@@ -205,22 +202,22 @@ bool CustomUi::Initialize()
 	{
 		directButton->set_click([this](eps::ui::state)
 		{
-			if (auto ltPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_0_PANEL_23].lock()))
+			if (auto ltPanel = this->mControls[VERTEX_0_PANEL_23].lock())
 			{
 				ltPanel->set_visible(false);
 			}
 
-			if (auto rtPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_1_PANEL_28].lock()))
+			if (auto rtPanel = this->mControls[VERTEX_1_PANEL_28].lock())
 			{
 				rtPanel->set_visible(false);
 			}
 
-			if (auto rbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_2_PANEL_33].lock()))
+			if (auto rbPanel = this->mControls[VERTEX_2_PANEL_33].lock())
 			{
 				rbPanel->set_visible(false);
 			}
 
-			if (auto lbPanel = std::static_pointer_cast<eps::ui::button>(this->mControls[VERTEX_3_PANEL_38].lock()))
+			if (auto lbPanel = this->mControls[VERTEX_3_PANEL_38].lock())
 			{
 				lbPanel->set_visible(!lbPanel->get_visible());
 			}
@@ -233,47 +230,87 @@ bool CustomUi::Initialize()
 void CustomUi::Update()
 {
 	UiAsset::Update();
-	//
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[0][0], U_TRANSFORM_LABEL_1)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[0][1], U_TRANSFORM_LABEL_2)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[0][2], U_TRANSFORM_LABEL_3)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[1][0], U_TRANSFORM_LABEL_4)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[1][1], U_TRANSFORM_LABEL_5)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[1][2], U_TRANSFORM_LABEL_6)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[2][0], U_TRANSFORM_LABEL_7)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[2][1], U_TRANSFORM_LABEL_8)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[2][2], U_TRANSFORM_LABEL_9)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[3][0], U_TRANSFORM_LABEL_10)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[3][1], U_TRANSFORM_LABEL_11)
-	DISPLAY_VALUE_AT_LABEL(m_u_transform[3][2], U_TRANSFORM_LABEL_12)
-	DISPLAY_VALUE_AT_LABEL(m_u_size, U_SIZE_LABEL_16)
-	//
-	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_xy.x, VERTEX_0_LABEL_20)
-	DISPLAY_VALUE_AT_LABEL(mVertices[0].a_vertex_xy.y, VERTEX_0_LABEL_21)
-	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_xy.x, VERTEX_1_LABEL_25)
-	DISPLAY_VALUE_AT_LABEL(mVertices[1].a_vertex_xy.y, VERTEX_1_LABEL_26)
-	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_xy.x, VERTEX_2_LABEL_30)
-	DISPLAY_VALUE_AT_LABEL(mVertices[2].a_vertex_xy.y, VERTEX_2_LABEL_31)
-	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_xy.x, VERTEX_3_LABEL_35)
-	DISPLAY_VALUE_AT_LABEL(mVertices[3].a_vertex_xy.y, VERTEX_3_LABEL_36)
+
+	if (auto directPanel = this->mControls[U_TRANSFORM_PANEL_14].lock())
+	{
+		if (directPanel->get_visible())
+		{
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[0][0], U_TRANSFORM_LABEL_1)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[0][1], U_TRANSFORM_LABEL_2)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[0][2], U_TRANSFORM_LABEL_3)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[1][0], U_TRANSFORM_LABEL_4)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[1][1], U_TRANSFORM_LABEL_5)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[1][2], U_TRANSFORM_LABEL_6)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[2][0], U_TRANSFORM_LABEL_7)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[2][1], U_TRANSFORM_LABEL_8)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[2][2], U_TRANSFORM_LABEL_9)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[3][0], U_TRANSFORM_LABEL_10)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[3][1], U_TRANSFORM_LABEL_11)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_transform[3][2], U_TRANSFORM_LABEL_12)
+		}
+	}
+
+	if (auto directPanel = this->mControls[U_SIZE_PANEL_18].lock())
+	{
+		if (directPanel->get_visible())
+		{
+			DISPLAY_FLOAT_VALUE_AT_LABEL(m_u_size, U_SIZE_LABEL_16)
+		}
+	}
+
+	if (auto directPanel = this->mControls[VERTEX_0_PANEL_23].lock())
+	{
+		if (directPanel->get_visible())
+		{
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[0].a_vertex_xy.x, VERTEX_0_LABEL_20)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[0].a_vertex_xy.y, VERTEX_0_LABEL_21)
+		}
+	}
+
+	if (auto directPanel = this->mControls[VERTEX_1_PANEL_28].lock())
+	{
+		if (directPanel->get_visible())
+		{
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[1].a_vertex_xy.x, VERTEX_1_LABEL_25)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[1].a_vertex_xy.y, VERTEX_1_LABEL_26)
+		}
+	}
+
+	if (auto directPanel = this->mControls[VERTEX_2_PANEL_33].lock())
+	{
+		if (directPanel->get_visible())
+		{
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[2].a_vertex_xy.x, VERTEX_2_LABEL_30)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[2].a_vertex_xy.y, VERTEX_2_LABEL_31)
+		}
+	}
+
+	if (auto directPanel = this->mControls[VERTEX_3_PANEL_38].lock())
+	{
+		if (directPanel->get_visible())
+		{
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[3].a_vertex_xy.x, VERTEX_3_LABEL_35)
+			DISPLAY_FLOAT_VALUE_AT_LABEL(mVertices[3].a_vertex_xy.y, VERTEX_3_LABEL_36)
+		}
+	}
 }
 
 void CustomUi::Set_u_transform(const glm::mat4& a_u_transform)
 {
 	m_u_transform = a_u_transform;
 	//
-	SET_REAL_SLIDER_VALUE(m_u_transform[0][0], U_TRANSFORM_SLIDER_1)
-	SET_REAL_SLIDER_VALUE(m_u_transform[0][1], U_TRANSFORM_SLIDER_2)
-	SET_REAL_SLIDER_VALUE(m_u_transform[0][2], U_TRANSFORM_SLIDER_3)
-	SET_REAL_SLIDER_VALUE(m_u_transform[1][0], U_TRANSFORM_SLIDER_4)
-	SET_REAL_SLIDER_VALUE(m_u_transform[1][1], U_TRANSFORM_SLIDER_5)
-	SET_REAL_SLIDER_VALUE(m_u_transform[1][2], U_TRANSFORM_SLIDER_6)
-	SET_REAL_SLIDER_VALUE(m_u_transform[2][0], U_TRANSFORM_SLIDER_7)
-	SET_REAL_SLIDER_VALUE(m_u_transform[2][1], U_TRANSFORM_SLIDER_8)
-	SET_REAL_SLIDER_VALUE(m_u_transform[2][2], U_TRANSFORM_SLIDER_9)
-	SET_REAL_SLIDER_VALUE(m_u_transform[3][0], U_TRANSFORM_SLIDER_10)
-	SET_REAL_SLIDER_VALUE(m_u_transform[3][1], U_TRANSFORM_SLIDER_11)
-	SET_REAL_SLIDER_VALUE(m_u_transform[3][2], U_TRANSFORM_SLIDER_12)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[0][0], U_TRANSFORM_SLIDER_1)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[0][1], U_TRANSFORM_SLIDER_2)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[0][2], U_TRANSFORM_SLIDER_3)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[1][0], U_TRANSFORM_SLIDER_4)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[1][1], U_TRANSFORM_SLIDER_5)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[1][2], U_TRANSFORM_SLIDER_6)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[2][0], U_TRANSFORM_SLIDER_7)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[2][1], U_TRANSFORM_SLIDER_8)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[2][2], U_TRANSFORM_SLIDER_9)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[3][0], U_TRANSFORM_SLIDER_10)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[3][1], U_TRANSFORM_SLIDER_11)
+	SET_REAL_VALUE_AT_SLIDER(m_u_transform[3][2], U_TRANSFORM_SLIDER_12)
 	//
 	mIsRestoreNeed = false;
 }
@@ -287,7 +324,7 @@ void CustomUi::Set_u_size(const float& a_u_size)
 {
 	m_u_size = a_u_size;
 	//
-	SET_REAL_SLIDER_VALUE(m_u_size, U_SIZE_SLIDER_16)
+	SET_REAL_VALUE_AT_SLIDER(m_u_size, U_SIZE_SLIDER_16)
 	//
 	mIsRestoreNeed = false;
 }
@@ -301,14 +338,14 @@ void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 {
 	mVertices = aVertices;
 	//
-	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_xy.x, VERTEX_0_SLIDER_20)
-	SET_REAL_SLIDER_VALUE(mVertices[0].a_vertex_xy.y, VERTEX_0_SLIDER_21)
-	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_xy.x, VERTEX_1_SLIDER_25)
-	SET_REAL_SLIDER_VALUE(mVertices[1].a_vertex_xy.y, VERTEX_1_SLIDER_26)
-	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_xy.x, VERTEX_2_SLIDER_30)
-	SET_REAL_SLIDER_VALUE(mVertices[2].a_vertex_xy.y, VERTEX_2_SLIDER_31)
-	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_xy.x, VERTEX_3_SLIDER_35)
-	SET_REAL_SLIDER_VALUE(mVertices[3].a_vertex_xy.y, VERTEX_3_SLIDER_36)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[0].a_vertex_xy.x, VERTEX_0_SLIDER_20)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[0].a_vertex_xy.y, VERTEX_0_SLIDER_21)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[1].a_vertex_xy.x, VERTEX_1_SLIDER_25)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[1].a_vertex_xy.y, VERTEX_1_SLIDER_26)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[2].a_vertex_xy.x, VERTEX_2_SLIDER_30)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[2].a_vertex_xy.y, VERTEX_2_SLIDER_31)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[3].a_vertex_xy.x, VERTEX_3_SLIDER_35)
+	SET_REAL_VALUE_AT_SLIDER(mVertices[3].a_vertex_xy.y, VERTEX_3_SLIDER_36)
 	//
 	mIsRestoreNeed = false;
 }
@@ -362,111 +399,79 @@ void CustomUi::SetCheckBoxState(bool aPointSpriteEnabled, bool aVertexProgramPoi
 	}
 }
 
-Library::SliderModel* CustomUi::GetSliderModel(int aSliderId, float aMin, float aMax)
+float& CustomUi::GetValueBySliderId(int aSliderId)
 {
-	Library::SliderModel* sliderModel = nullptr;
-
-	if (aSliderId > (SLIDER_MODEL_COUNT - 1) || mSliderModels[aSliderId])
-	{
-		return sliderModel;
-	}
-
-	float* modelValue = nullptr;
-
 	switch (aSliderId)
 	{
 		case U_TRANSFORM_SLIDER_1:
-			modelValue = &m_u_transform[0][0];
-			break;
+			return m_u_transform[0][0];
 
 		case U_TRANSFORM_SLIDER_2:
-			modelValue = &m_u_transform[0][1];
-			break;
+			return m_u_transform[0][1];
 
 		case U_TRANSFORM_SLIDER_3:
-			modelValue = &m_u_transform[0][2];
-			break;
+			return m_u_transform[0][2];
 
 		case U_TRANSFORM_SLIDER_4:
-			modelValue = &m_u_transform[1][0];
-			break;
+			return m_u_transform[1][0];
 
 		case U_TRANSFORM_SLIDER_5:
-			modelValue = &m_u_transform[1][1];
-			break;
+			return m_u_transform[1][1];
 
 		case U_TRANSFORM_SLIDER_6:
-			modelValue = &m_u_transform[1][2];
-			break;
+			return m_u_transform[1][2];
 
 		case U_TRANSFORM_SLIDER_7:
-			modelValue = &m_u_transform[2][0];
-			break;
+			return m_u_transform[2][0];
 
 		case U_TRANSFORM_SLIDER_8:
-			modelValue = &m_u_transform[2][1];
-			break;
+			return m_u_transform[2][1];
 
 		case U_TRANSFORM_SLIDER_9:
-			modelValue = &m_u_transform[2][2];
-			break;
+			return m_u_transform[2][2];
 
 		case U_TRANSFORM_SLIDER_10:
-			modelValue = &m_u_transform[3][0];
-			break;
+			return m_u_transform[3][0];
 
 		case U_TRANSFORM_SLIDER_11:
-			modelValue = &m_u_transform[3][1];
-			break;
+			return m_u_transform[3][1];
 
 		case U_TRANSFORM_SLIDER_12:
-			modelValue = &m_u_transform[3][2];
-			break;
+			return m_u_transform[3][2];
 
 		case U_SIZE_SLIDER_16:
-			modelValue = &m_u_size;
-			break;
+			return m_u_size;
 
 		case VERTEX_0_SLIDER_20:
-			modelValue = &mVertices[0].a_vertex_xy.x;
-			break;
+			return mVertices[0].a_vertex_xy.x;
 
 		case VERTEX_0_SLIDER_21:
-			modelValue = &mVertices[0].a_vertex_xy.y;
-			break;
+			return mVertices[0].a_vertex_xy.y;
 
 		case VERTEX_1_SLIDER_25:
-			modelValue = &mVertices[1].a_vertex_xy.x;
-			break;
+			return mVertices[1].a_vertex_xy.x;
 
 		case VERTEX_1_SLIDER_26:
-			modelValue = &mVertices[1].a_vertex_xy.y;
-			break;
+			return mVertices[1].a_vertex_xy.y;
 
 		case VERTEX_2_SLIDER_30:
-			modelValue = &mVertices[2].a_vertex_xy.x;
-			break;
+			return mVertices[2].a_vertex_xy.x;
 
 		case VERTEX_2_SLIDER_31:
-			modelValue = &mVertices[2].a_vertex_xy.y;
-			break;
+			return mVertices[2].a_vertex_xy.y;
 
 		case VERTEX_3_SLIDER_35:
-			modelValue = &mVertices[3].a_vertex_xy.x;
-			break;
+			return mVertices[3].a_vertex_xy.x;
 
 		case VERTEX_3_SLIDER_36:
-			modelValue = &mVertices[3].a_vertex_xy.y;
-			break;
+			return mVertices[3].a_vertex_xy.y;
 
 		default:
-			return sliderModel;
+			assert(false);
 	}
 
-	assert(modelValue);
-	sliderModel = new Library::CustomSliderModel(*modelValue, aMin, aMax);
-	mSliderModels[aSliderId] = sliderModel;
-	return sliderModel;
+	static float modelValue = 0.0f;
+	return modelValue;
 }
 
 }

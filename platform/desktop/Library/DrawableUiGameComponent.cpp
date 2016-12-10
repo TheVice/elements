@@ -1,6 +1,7 @@
 
 #include "DrawableUiGameComponent.h"
 #include <elements/math/transform.h>
+#include <elements/ui/system.h>
 #include <Game.h>
 
 namespace Library
@@ -25,7 +26,6 @@ bool DrawableUiGameComponent::Initialize()
 
 	if (!std::static_pointer_cast<eps::ui::system>(mUiSystem)->construct(screenSize))
 	{
-		//throw std::runtime_error("eps::ui::system::construct() failed");
 		return false;
 	}
 

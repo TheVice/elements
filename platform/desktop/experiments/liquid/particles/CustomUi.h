@@ -3,6 +3,7 @@
 
 #include "VertexStructure.h"
 #include <UiAsset.h>
+#include <vector>
 
 namespace Rendering
 {
@@ -39,17 +40,14 @@ public:
 
 	void SetCheckBoxState(bool aPointSpriteEnabled, bool aVertexProgramPointSizeEnabled);
 
-protected:
-	virtual Library::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
+private:
+	virtual float& GetValueBySliderId(int aSliderId) override;
 
 private:
+	bool mIsRestoreNeed;
 	glm::mat4 m_u_transform;
 	float m_u_size;
 	std::vector<VertexStructure> mVertices;
-
-	std::vector<Library::SliderModel*> mSliderModels;
-
-	bool mIsRestoreNeed;
 };
 }
 

@@ -2,7 +2,16 @@
 #define _DRAWABLE_UI_GAME_COMPONENT_H_
 
 #include <DrawableGameComponent.h>
-#include <elements/ui/system.h>
+#include <elements/math/types.h>
+#include <memory>
+
+namespace eps
+{
+namespace ui
+{
+class control;
+}
+}
 
 namespace Library
 {
@@ -12,7 +21,7 @@ class DrawableUiGameComponent : public DrawableGameComponent
 
 public:
 	DrawableUiGameComponent(Game& aGame);
-	~DrawableUiGameComponent();
+	virtual ~DrawableUiGameComponent();
 
 public:
 	DrawableUiGameComponent() = delete;

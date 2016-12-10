@@ -4,6 +4,14 @@
 #include <DrawableUiGameComponent.h>
 #include <map>
 
+namespace eps
+{
+namespace ui
+{
+class control;
+}
+}
+
 namespace Library
 {
 class CapsView : public DrawableUiGameComponent

@@ -68,7 +68,7 @@ bool GeometryDemo::Initialize()
 
 	if (!textureAsset || !textureAsset->pixels())
 	{
-		throw std::runtime_error("Failed to load texture");
+		return false;
 	}
 
 	auto textureMaker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>();
@@ -136,7 +136,7 @@ void GeometryDemo::Draw()
 	mGeometryEffect->u_matrix_mvp() << mUi->Get_u_matrix_mvp();
 	mGeometryEffect->u_matrix_normal() << mUi->Get_u_matrix_normal();
 	//
-	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_BYTE, nullptr);
 	//
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

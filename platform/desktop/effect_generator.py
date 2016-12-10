@@ -62,6 +62,12 @@ def read_program(a_path_2_xml_shader):
     return program
 
 
+def get_head_name(a_program):
+
+    head_name = a_program['name'].upper()
+    return head_name
+
+
 def get_class_name(a_program):
 
     class_name = a_program['name'].lower()
@@ -75,26 +81,33 @@ def generate_effect_h(a_program):
         '#ifndef _{0}_EFFECT_H_{1}'
         '#define _{0}_EFFECT_H_{1}'
         '{1}'
-        '#include "ShaderProgram.h"{1}'
+        '#include "VertexStructure.h"{1}'
+        '#include <elements/rendering/core/buffer.h>{1}'
+        '#include <vector>{1}'
         '{1}'
-        'namespace Library{1}'
+        'namespace eps{1}'
         '{{{1}'
-        'class {3}Effect : public ShaderProgram{1}'
+        'namespace rendering{1}'
         '{{{1}'
-        '{2}RTTI_DECLARATIONS({3}Effect, ShaderProgram){1}'
+        'class program;{1}'
+        '}}{1}'
+        '}}{1}'
         '{1}'
-        '{2}{4}{1}'     # uniform_declaration
-        '{1}'
+        'namespace Rendering{1}'
+        '{{{1}'
+        'class {2}Effect{1}'
+        '{{{1}'
         'public:{1}'
-        '{2}{3}Effect();{1}'
+        '{3}explicit {2}Effect(const std::vector<VertexStructure>& vertices,{1}'
+        '{3}{3}{3}const std::vector<GLubyte>& indices,{1}'
+        '{3}{3}{3}eps::rendering::buffer_usage usage = eps::rendering::buffer_usage::STATIC_DRAW);{1}'
         '{1}'
-        'public:{1}'
-        '{2}{3}Effect(const {3}Effect& aRhs) = delete;{1}'
-        '{2}{3}Effect& operator = (const {3}Effect& aRhs) = delete;{1}'
+        '{3}void construct(const std::vector<VertexStructure>& vertices);{1}'
+        '{3}void render(eps::rendering::program& program, short a_position, short index_count);{1}'
         '{1}'
-        'public:{1}'
-        '{2}virtual GLvoid Initialize(GLuint aVertexArrayObject) override;{1}'
-        '{2}virtual GLuint GetVertexSize() const override;{1}'
+        'private:{1}'
+        '{3}eps::rendering::vertices texture_vertices_;{1}'
+        '{3}eps::rendering::indices texture_indices_;{1}'
         '}};{1}'
         '}}{1}'
         '{1}'
@@ -102,18 +115,10 @@ def generate_effect_h(a_program):
         '{1}'
     )
 
-    head_name = a_program['name'].upper()
+    head_name = get_head_name(a_program)
     class_name = get_class_name(a_program)
 
-    uniform_declaration = []
-
-    for location in a_program['u_locations']:
-
-        uniform_declaration.append('SHADER_VARIABLE_DECLARATION({})'.format(location[0], os.linesep))
-
-    uniform_declaration = '{}{}'.format(os.linesep, '\t').join(uniform_declaration)
-
-    return effect_h_template.format(head_name, os.linesep, '\t', class_name, uniform_declaration)
+    return effect_h_template.format(head_name, os.linesep, class_name, '\t')
 
 
 def convert_type_from_glsl_to_cpp(a_type):
@@ -124,9 +129,7 @@ def convert_type_from_glsl_to_cpp(a_type):
         #
         'vec2': 'glm::vec2',
         'vec3': 'glm::vec3',
-        'vec4': 'glm::vec4',
-        #
-        'float': 'float'
+        'vec4': 'glm::vec4'
     }
 
     if a_type not in types.keys():
@@ -170,14 +173,7 @@ def get_variable_type(a_declaration, a_variable, a_source):
     variable_type = variable_type.replace(a_variable, '')
     variable_type = variable_type.replace(' ', '')
     variable_type = variable_type.replace('\t', '')
-
-    try:
-
-        variable_type = convert_type_from_glsl_to_cpp(variable_type)
-
-    except ValueError:
-
-        return ''
+    variable_type = convert_type_from_glsl_to_cpp(variable_type)
 
     return variable_type
 
@@ -200,81 +196,54 @@ def generate_effect_cpp(a_program):
     effect_cpp_template = (
         '{0}'
         '#include "{1}Effect.h"{0}'
-        '#include "VertexStructure.h"{0}'
+        '#include <elements/rendering/core/program.h>{0}'
+        '#include <elements/rendering/state/state_macro.h>{0}'
         '{0}'
-        'namespace Library{0}'
+        'namespace Rendering{0}'
         '{{{0}'
-        'RTTI_DEFINITIONS({1}Effect){0}'
         '{0}'
-        '{2}{0}'        # uniform_definition
-        '{0}'
-        '{1}Effect::{1}Effect() :{0}'
-        '{3}ShaderProgram(),{0}'
-        '{3}{4}'        # uniform_initialization
-        '{0}'
+        '{1}Effect::{1}Effect(const std::vector<VertexStructure>& vertices,{0}'
+        '{2}{2}{2}const std::vector<GLubyte>& indices,{0}'
+        '{2}{2}{2}eps::rendering::buffer_usage usage){0}'
+        '{2}: texture_vertices_(usage){0}'
+        '{2}, texture_indices_(usage){0}'
         '{{{0}'
+        '{2}assert(!vertices.empty());{0}'
+        '{2}assert(!indices.empty());{0}'
+        '{2}// Create the vertex buffer object{0}'
+        '{2}texture_vertices_.allocate(&vertices.front(), vertices.size(), sizeof(vertices.front()));{0}'
+        '{2}// Create the index buffer object{0}'
+        '{2}texture_indices_.allocate(&indices.front(), indices.size(), sizeof(indices.front()));{0}'
         '}}{0}'
         '{0}'
-        'GLvoid {1}Effect::Initialize(GLuint aVertexArrayObject){0}'
+        'void {1}Effect::construct(const std::vector<VertexStructure>& vertices){0}'
         '{{{0}'
-        '{3}ShaderProgram::Initialize(aVertexArrayObject);{0}'
-        '{3}//{0}'
-        '{3}{5}{0}'     # uniform_instantiate
-        '{3}//{0}'
-        '{3}{6}{0}'     # attribute_location
-        '{3}//{0}'
-        '{7}'           # attribute_pointer
+        '{2}assert(!vertices.empty());{0}'
+        '{2}// Update vertex buffer object{0}'
+        '{2}texture_vertices_.allocate(&vertices.front(), vertices.size(), sizeof(vertices.front()));{0}'
         '}}{0}'
         '{0}'
-        'GLuint {1}Effect::GetVertexSize() const{0}'
+        'void {1}Effect::render(eps::rendering::program& program, short a_position, short index_count){0}'
         '{{{0}'
-        '{3}return sizeof(VertexStructure);{0}'
+        '{2}EPS_STATE_VERTICES(texture_vertices_.get_product());{0}'
+        '{2}EPS_STATE_INDICES(texture_indices_.get_product());{0}'
+        '{2}//{0}'
+        '{2}program.attribute_array(a_position,{0}'
+        '{2}{2}{2}offsetof(VertexStructure, a_vertex_pos),{0}'
+        '{2}{2}{2}glm::vec3().length(),{0}'
+        '{2}{2}{2}sizeof(VertexStructure));{0}'
+        '{2}program.attribute_array_enable(a_position);{0}'
+        '{2}//{0}'
+        '{2}glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_BYTE, 0);{0}'
         '}}{0}'
         '{0}'
         '}}{0}'
-    )
-
-    attribute_pointer_template = (
-        '{0}glVertexAttribPointer(vertexAttribute_{1}, {2}, GL_FLOAT, GL_FALSE,{3}'
-        '{0}{0}GetVertexSize(),{3}'
-        '{0}{0}reinterpret_cast<GLvoid*>(offsetof(VertexStructure, {1})));{3}'
-        '{0}glEnableVertexAttribArray(vertexAttribute_{1});{3}'
+        '{0}'
     )
 
     class_name = get_class_name(a_program)
 
-    uniform_definition = []
-    uniform_initialization = []
-    uniform_instantiate = []
-    attribute_location = []
-    attribute_pointer = []
-
-    for location in a_program['u_locations']:
-
-        uniform_definition.append('SHADER_VARIABLE_DEFINITION({}Effect, {})'.format(class_name, location[0]))
-        uniform_initialization.append('SHADER_VARIABLE_INITIALIZATION({})'.format(location[0]))
-        uniform_instantiate.append('SHADER_VARIABLE_INSTANTIATE({})'.format(location[0]))
-
-    uniform_definition = '{}'.format(os.linesep).join(uniform_definition)
-    uniform_initialization = '{}{}{}'.format(',', os.linesep, '\t').join(uniform_initialization)
-    uniform_instantiate = '{}{}'.format(os.linesep, '\t').join(uniform_instantiate)
-
-    for location in a_program['a_locations']:
-
-        a_location = 'const GLint vertexAttribute_{0} = GetAttrib("{0}");'.format(location[0])
-        attribute_location.append(a_location)
-
-        attribute_type = get_attribute_type(location[0], a_program['vertex'])
-        attribute_length = get_type_length(attribute_type)
-
-        attribute_pointer.append(attribute_pointer_template.format('\t', location[0], attribute_length, os.linesep))
-
-    attribute_location = '{}{}'.format(os.linesep, '\t').join(attribute_location)
-    attribute_pointer = '{}//{}'.format('\t', os.linesep).join(attribute_pointer)
-
-    return effect_cpp_template.format(os.linesep, class_name, uniform_definition,
-                                      '\t', uniform_initialization, uniform_instantiate,
-                                      attribute_location, attribute_pointer)
+    return effect_cpp_template.format(os.linesep, class_name, '\t')
 
 
 def generate_vertex_structure(a_program):
@@ -284,6 +253,10 @@ def generate_vertex_structure(a_program):
         '#define _VERTEX_STRUCTURE_H_{0}'
         '{0}'
         '#include <glm/glm.hpp>{0}'
+        '{0}'
+        'namespace Rendering'
+        '{0}'
+        '{{'
         '{0}'
         'struct VertexStructure{0}'
         '{{'
@@ -306,6 +279,8 @@ def generate_vertex_structure(a_program):
         '{2}}}'
         '{0}'
         '}};{0}'
+        '}}'
+        '{0}'
         '{0}'
         '#endif{0}'
         '{0}'

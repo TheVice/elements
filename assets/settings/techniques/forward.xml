@@ -1,48 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<program name="Model Demo [techniques/forward]">
+<program name="Model Demo [Sources techniques/forward]">
   <vertices>
     <vertex>
-      <pos x="-0.55" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="1.0"/>
+      <position x="-0.55" y="0.55" z="0.0"/>
+      <normal x="1.0" y="1.0" z="1.0"/>
+      <tangent x="1.0" y="1.0" z="1.0"/>
+      <uv u="0.0" v="1.0"/>
     </vertex>
     <vertex>
-      <pos x="0.55" y="0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="1.0"/>
+      <position x="0.55" y="0.55" z="0.0"/>
+      <normal x="1.0" y="1.0" z="1.0"/>
+      <tangent x="1.0" y="1.0" z="1.0"/>
+      <uv u="1.0" v="1.0"/>
     </vertex>
     <vertex>
-      <pos x="0.55" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="1.0" v="0.0"/>
+      <position x="0.55" y="-0.55" z="0.0"/>
+      <normal x="1.0" y="1.0" z="1.0"/>
+      <tangent x="1.0" y="1.0" z="1.0"/>
+      <uv u="1.0" v="0.0"/>
     </vertex>
     <vertex>
-      <pos x="-0.55" y="-0.55" z="0.0"/><normal x="1.0" y="1.0" z="1.0"/><tangent x="1.0" y="1.0" z="1.0"/><uv u="0.0" v="0.0"/>
+      <position x="-0.55" y="-0.55" z="0.0"/>
+      <normal x="1.0" y="1.0" z="1.0"/>
+      <tangent x="1.0" y="1.0" z="1.0"/>
+      <uv u="0.0" v="0.0"/>
     </vertex>
   </vertices>
   <indices>
-    <index value="0"/>
-    <index value="1"/>
-    <index value="2"/>
-    <!---->
-    <index value="2"/>
-    <index value="3"/>
-    <index value="0"/>
+    <index>0</index>
+    <index>1</index>
+    <index>2</index>
+    <index>2</index>
+    <index>3</index>
+    <index>0</index>
   </indices>
-  <matrix_mvp m00="1.0" m01="0.0" m02="0.0" m03="0.0"
-              m10="0.0" m11="1.0" m12="0.0" m13="0.0"
-              m20="0.0" m21="0.0" m22="1.0" m23="0.0"
-              m30="0.0" m31="0.0" m32="0.0" m33="1.0"/>
-  <matrix_model_view m00="1.0" m01="0.0" m02="0.0" m03="0.0"
-                     m10="0.0" m11="1.0" m12="0.0" m13="0.0"
-                     m20="0.0" m21="0.0" m22="1.0" m23="0.0"
-                     m30="0.0" m31="0.0" m32="0.0" m33="1.0"/>
-  <matrix_view m00="1.0" m01="0.0" m02="0.0" m03="0.0"
-               m10="0.0" m11="1.0" m12="0.0" m13="0.0"
-               m20="0.0" m21="0.0" m22="1.0" m23="0.0"
-               m30="0.0" m31="0.0" m32="0.0" m33="1.0"/>
-  <matrix_normal m00="1.0" m01="0.0" m02="0.0"
-                 m10="0.0" m11="1.0" m12="0.0"
-                 m20="0.0" m21="0.0" m22="1.0"/>
+  <u_matrix_mvp>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_mvp>
+  <u_matrix_model_view>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_model_view>
+  <u_matrix_view>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_view>
+  <u_matrix_normal>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_normal>
   <light_pos x="1.0" y="1.0" z="1.0"/>
   <camera_pos x="1.0" y="1.0" z="1.0"/>
-  <map_diffuse value="assets/models/C-3PO/C-3PO_Dirty_D.png"/>
-  <map_specular value="assets/models/C-3PO/C-3PO_Dirty_S.png"/>
-  <map_normal value="assets/models/C-3PO/C-3PO_Dirty_N.png"/>
+  <map_diffuse>assets/models/C-3PO/C-3PO_Dirty_D.png</map_diffuse>
+  <map_specular>assets/models/C-3PO/C-3PO_Dirty_S.png</map_specular>
+  <map_normal>assets/models/C-3PO/C-3PO_Dirty_N.png</map_normal>
   <light_intensity x="1.0" y="1.0" z="1.0"/>
-  <light_range value="5.0"/>
+  <light_range>5.0</light_range>
 </program>

@@ -1,8 +1,8 @@
 
 #include "UiAsset.h"
-#include "SliderModel.h"
-#include "checkbox.h"
 #include "UiReader.h"
+#include "checkbox.h"
+#include "SliderModel.h"
 #include <elements/metrics/metrics.h>
 #include <elements/ui/controls/button.h>
 #include <elements/ui/controls/check.h>
@@ -10,7 +10,6 @@
 #include <elements/ui/controls/panel.h>
 #include <elements/ui/controls/slider.h>
 #include <elements/assets/assets_storage.h>
-#include <Game.h>
 
 namespace Library
 {
@@ -19,6 +18,7 @@ RTTI_DEFINITIONS(UiAsset)
 UiAsset::UiAsset(Game& aGame, const std::string& aAssetPath) :
 	DrawableUiGameComponent(aGame),
 	mControls(),
+	mSliderModels(),
 	mAssetPath(aAssetPath)
 {
 }
@@ -259,6 +259,9 @@ UiAsset::~UiAsset()
 
 bool UiAsset::Initialize()
 {
+	mControls.clear();
+	mSliderModels.clear();
+
 	if (!DrawableUiGameComponent::Initialize())
 	{
 		return false;
@@ -272,11 +275,9 @@ bool UiAsset::Initialize()
 		return false;
 	}
 
-	mControls.clear();
-
 	for (const auto& controlInfo : data->mControlsInfo)
 	{
-		const auto controlName = std::get<1>(controlInfo).find("control_name")->second;
+		const auto controlName = std::get<1>(controlInfo).at("control_name");
 
 		if (mControls.count(controlName))
 		{
@@ -322,7 +323,12 @@ bool UiAsset::Initialize()
 				sliderId = std::stoi(search->second);
 			}
 
-			SliderModel* sliderModel = nullptr;
+			if (mSliderModels.count(sliderId))
+			{
+				continue;
+			}
+
+			ValueSliderModel* sliderModel = nullptr;
 			search = std::get<1>(controlInfo).find("min");
 
 			if (search != std::get<1>(controlInfo).end())
@@ -333,23 +339,19 @@ bool UiAsset::Initialize()
 				if (search != std::get<1>(controlInfo).end())
 				{
 					auto maxValue = std::stof(search->second);
-					sliderModel = GetSliderModel(sliderId, minValue, maxValue);
+					sliderModel = new ValueSliderModel(GetValueBySliderId(sliderId), minValue,
+													   maxValue); // will be deleted by slider
 				}
-				else
-				{
-					sliderModel = GetSliderModel(sliderId);
-				}
-			}
-			else
-			{
-				sliderModel = GetSliderModel(sliderId);
 			}
 
-			if (sliderModel)
+			if (!sliderModel)
 			{
-				control = parentControl->add<eps::ui::slider>(sliderModel);
-				SET_SLIDER(control)
+				sliderModel = new ValueSliderModel(GetValueBySliderId(sliderId)); // will be deleted by slider
 			}
+
+			control = parentControl->add<eps::ui::slider>(sliderModel);
+			SET_SLIDER(control)
+			mSliderModels[sliderId] = sliderModel;
 		}
 		else if (std::get<0>(controlInfo) == "checkbox")
 		{
@@ -367,16 +369,11 @@ bool UiAsset::Initialize()
 	return !mControls.empty();
 }
 
-SliderModel* UiAsset::GetSliderModel(int aSliderId)
+float& UiAsset::GetValueBySliderId(int aSliderId)
 {
 	(void)aSliderId;
-	return new SliderModel();
-}
-
-SliderModel* UiAsset::GetSliderModel(int aSliderId, float aMin, float aMax)
-{
-	(void)aSliderId;
-	return new SliderModel(aMin, aMax);
+	static float f = 0.0f;
+	return f;
 }
 
 }

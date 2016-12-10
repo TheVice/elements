@@ -1,6 +1,6 @@
 
 #include "ReaderHelpers.h"
-#include <map>
+#include <limits>
 #include <cstring>
 
 namespace Library
@@ -8,183 +8,66 @@ namespace Library
 namespace ReaderHelpers
 {
 
-bool read_by_map(const pugi::xml_node& aNode, char aMemberCount,
-				 const std::map<std::string, float*> aMatrixMap)
-{
-	for (const auto& attribute : aNode.attributes())
-	{
-		const auto search = aMatrixMap.find(attribute.name());
-
-		if (search != aMatrixMap.end())
-		{
-			(*search->second) = attribute.as_float();
-			aMemberCount--;
-		}
-	}
-
-	return aMemberCount == 0;
-}
-
-bool read_by_map(const pugi::xml_node& aNode, char aMemberCount,
-				 const std::map<std::string, unsigned int*> aMatrixMap)
-{
-	for (const auto& attribute : aNode.attributes())
-	{
-		const auto search = aMatrixMap.find(attribute.name());
-
-		if (search != aMatrixMap.end())
-		{
-			(*search->second) = attribute.as_uint();
-			aMemberCount--;
-		}
-	}
-
-	return aMemberCount == 0;
-}
-
 bool read_float(const pugi::xml_node& aNode, float& aValue)
 {
-	const std::map<std::string, float*> matrixMap =
+	if (!aNode.empty())
 	{
-		{ "value", &aValue }
-	};
-	//
-	return read_by_map(aNode, 1, matrixMap);
-}
-
-bool read_glm_vec2(const pugi::xml_node& aNode, glm::vec2& aValue)
-{
-	const std::map<std::string, float*> matrixMap =
-	{
-		{ "x", &aValue[0] },
-		{ "y", &aValue[1] },
-		//
-		{ "u", &aValue[0] },
-		{ "v", &aValue[1] }
-	};
-	//
-	return read_by_map(aNode, aValue.length(), matrixMap);
-}
-
-bool read_glm_vec3(const pugi::xml_node& aNode, glm::vec3& aValue)
-{
-	const std::map<std::string, float*> matrixMap =
-	{
-		{ "x", &aValue[0] },
-		{ "y", &aValue[1] },
-		{ "z", &aValue[2] }
-	};
-	//
-	return read_by_map(aNode, aValue.length(), matrixMap);
-}
-
-bool read_glm_vec4(const pugi::xml_node& aNode, glm::vec4& aValue)
-{
-	const std::map<std::string, float*> matrixMap =
-	{
-		{ "x", &aValue[0] },
-		{ "y", &aValue[1] },
-		{ "z", &aValue[2] },
-		{ "w", &aValue[3] }
-	};
-	//
-	return read_by_map(aNode, aValue.length(), matrixMap);
-}
-
-bool read_glm_mat3(const pugi::xml_node& aNode, glm::mat3& aValue)
-{
-	const std::map<std::string, float*> matrixMap =
-	{
-		{ "m00", &aValue[0][0] },
-		{ "m01", &aValue[0][1] },
-		{ "m02", &aValue[0][2] },
-		//
-		{ "m10", &aValue[1][0] },
-		{ "m11", &aValue[1][1] },
-		{ "m12", &aValue[1][2] },
-		//
-		{ "m20", &aValue[2][0] },
-		{ "m21", &aValue[2][1] },
-		{ "m22", &aValue[2][2] }
-	};
-	//
-	return read_by_map(aNode, aValue[0].length() * aValue.length(), matrixMap);
-}
-
-bool read_glm_mat4(const pugi::xml_node& aNode, glm::mat4& aValue)
-{
-	const std::map<std::string, float*> matrixMap =
-	{
-		{ "m00", &aValue[0][0] },
-		{ "m01", &aValue[0][1] },
-		{ "m02", &aValue[0][2] },
-		{ "m03", &aValue[0][3] },
-		//
-		{ "m10", &aValue[1][0] },
-		{ "m11", &aValue[1][1] },
-		{ "m12", &aValue[1][2] },
-		{ "m13", &aValue[1][3] },
-		//
-		{ "m20", &aValue[2][0] },
-		{ "m21", &aValue[2][1] },
-		{ "m22", &aValue[2][2] },
-		{ "m23", &aValue[2][3] },
-		//
-		{ "m30", &aValue[3][0] },
-		{ "m31", &aValue[3][1] },
-		{ "m32", &aValue[3][2] },
-		{ "m33", &aValue[3][3] }
-	};
-	//
-	return read_by_map(aNode, aValue[0].length() * aValue.length(), matrixMap);
-}
-
-bool read_unsigned_int(const pugi::xml_node& aNode, unsigned int& aValue)
-{
-	const std::map<std::string, unsigned int*> matrixMap =
-	{
-		{ "value", &aValue }
-	};
-	//
-	return read_by_map(aNode, 1, matrixMap);
-}
-
-bool read_indices(const pugi::xml_node& aNode, std::vector<unsigned int>& aIndices)
-{
-	aIndices.clear();
-
-	for (const auto& index : aNode)
-	{
-		if (std::strcmp(index.name(), "index"))
-		{
-			continue;
-		}
-
-		unsigned int index_data = 0u;
-
-		if (!read_unsigned_int(index, index_data))
-		{
-			return false;
-		}
-
-		aIndices.push_back(index_data);
+		aValue = aNode.text().as_float();
+		return true;
 	}
 
-	return !aIndices.empty();
+	return false;
 }
 
 bool read_std_string(const pugi::xml_node& aNode, std::string& aValue)
 {
-	const auto value_attribute = aNode.attribute("value");
-
-	if (value_attribute.empty())
+	if (!aNode.empty())
 	{
-		return false;
+		aValue = aNode.text().get();
+		return true;
 	}
 
-	aValue = value_attribute.as_string();
-	//
-	return !aValue.empty();
+	return false;
+}
+
+bool read_unsigned_int(const pugi::xml_node& aNode, unsigned int& aValue)
+{
+	if (!aNode.empty())
+	{
+		aValue = aNode.text().as_uint();
+		return true;
+	}
+
+	return false;
+}
+
+bool read_indices(const pugi::xml_node& aNode, std::vector<unsigned char>& aIndices)
+{
+	aIndices.clear();
+
+	for (const auto& subNode : aNode)
+	{
+		if (std::strcmp(subNode.name(), "index"))
+		{
+			continue;
+		}
+
+		unsigned int index = 0u;
+
+		if (!read_unsigned_int(subNode, index))
+		{
+			return false;
+		}
+
+		if (index > std::numeric_limits<unsigned char>::max())
+		{
+			return false;
+		}
+
+		aIndices.push_back(static_cast<unsigned char>(index));
+	}
+
+	return !aIndices.empty();
 }
 
 }

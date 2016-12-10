@@ -2,19 +2,20 @@
 #define _UI_ASSET_H_
 
 #include "DrawableUiGameComponent.h"
-#include <elements/ui/system.h>
 #include <map>
+#include <string>
+#include <cstdio>
 
 namespace Library
 {
-class SliderModel;
+class ValueSliderModel;
 class UiAsset : public DrawableUiGameComponent
 {
 	RTTI_DECLARATIONS(UiAsset, DrawableUiGameComponent)
 
 public:
 	UiAsset(Game& aGame, const std::string& aAssetPath);
-	~UiAsset();
+	virtual ~UiAsset();
 
 public:
 	UiAsset() = delete;
@@ -24,37 +25,29 @@ public:
 public:
 	virtual bool Initialize() override;
 
-protected:
-	virtual SliderModel* GetSliderModel(int aSliderId);
-	virtual SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax);
+private:
+	virtual float& GetValueBySliderId(int aSliderId);
 
 protected:
 	std::map<std::string, std::weak_ptr<eps::ui::control>> mControls;
+	std::map<int, ValueSliderModel*> mSliderModels;
 
 private:
 	const std::string mAssetPath;
 };
 }
 
-#define IS_CONTROL_EXIST(CONTROL_NAME)														\
-	if (!mControls.count(CONTROL_NAME))														\
-	{																						\
-		throw std::runtime_error(std::string(CONTROL_NAME) + std::string(" not exist"));	\
-	}
-
-
-#define DISPLAY_VALUE_AT_LABEL(VALUE, LABEL)													\
+#define DISPLAY_FLOAT_VALUE_AT_LABEL(VALUE, LABEL)												\
 	if (auto directLabel = std::static_pointer_cast<eps::ui::label>(mControls[LABEL].lock()))	\
 	{																							\
-		std::ostringstream message;																\
-		message << std::setprecision(2) << VALUE;												\
-		directLabel->set_text(message.str());													\
+		if (directLabel->get_visible())															\
+		{																						\
+			const auto written = std::snprintf(nullptr, 0, "%.2f", VALUE);						\
+			std::string message(written, '\0');													\
+			std::sprintf(&message.front(), "%.2f", VALUE);										\
+			directLabel->set_text(message);														\
+		}																						\
 	}
-
-
-#define SET_REAL_SLIDER_VALUE(VALUE, SLIDER)	\
-	mSliderModels[SLIDER]->setRealValue(VALUE);
-
 
 #define SET_VISIBLE(VALUE, CONTROL)							\
 	if (auto directControl = (mControls[CONTROL].lock()))	\
@@ -62,13 +55,22 @@ private:
 		directControl->set_visible(VALUE);					\
 	}
 
-#define IS_ALL_SLIDER_MODELS_SET(SLIDER_MODELS)						\
-	for (const auto& sliderModel : SLIDER_MODELS)					\
-	{																\
-		if (!sliderModel)											\
-		{															\
-			throw std::runtime_error("Not all slider models set");	\
-		}															\
+#define SET_REAL_VALUE_AT_SLIDER(VALUE, SLIDER_ID)	\
+	mSliderModels[SLIDER_ID]->setRealValue(VALUE);
+
+#define IS_ALL_SLIDER_MODELS_SET(SLIDER_COUNT)	\
+	for (int i = 0; i < SLIDER_COUNT; ++i)		\
+	{											\
+		if (!mSliderModels.count(i))			\
+		{										\
+			return false;						\
+		}										\
+	}
+
+#define IS_CONTROL_EXIST(CONTROL_NAME)		\
+	if (!mControls.count(CONTROL_NAME))		\
+	{										\
+		return false;						\
 	}
 
 #endif

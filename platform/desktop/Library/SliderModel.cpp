@@ -1,5 +1,7 @@
 
 #include "SliderModel.h"
+#include <algorithm>
+#include <limits>
 
 namespace Library
 {
@@ -13,7 +15,6 @@ SliderModel::SliderModel() :
 	mDelta(sDefaultMax - sDefaultMin),
 	mValue(sDefaultMin)
 {
-	assert(sDefaultMin < sDefaultMax);
 }
 
 SliderModel::SliderModel(float aMin, float aMax) :
@@ -45,32 +46,30 @@ void SliderModel::setRealValue(float aValue)
 	mValue = (sDefaultMax * (aValue - mMin)) / mDelta;
 }
 
-CustomSliderModel::CustomSliderModel(float& aModelValue) :
+ValueSliderModel::ValueSliderModel(float& aModelValue) :
 	SliderModel(),
 	mModelValue(aModelValue)
 {
 	setRealValue(mModelValue);
 }
 
-CustomSliderModel::CustomSliderModel(float& aModelValue, float aMin, float aMax) :
+ValueSliderModel::ValueSliderModel(float& aModelValue, float aMin, float aMax) :
 	SliderModel(aMin, aMax),
 	mModelValue(aModelValue)
 {
 	setRealValue(mModelValue);
 }
 
-float CustomSliderModel::get_value() const
+float ValueSliderModel::get_value() const
 {
-	const float value = getRealValue();
+	const auto value = getRealValue();
 
-	if (std::abs(value - mModelValue) > sEpsilon)
+	if (std::abs(value - mModelValue) > (100 * std::numeric_limits<float>::epsilon()))
 	{
 		mModelValue = value;
 	}
 
 	return SliderModel::get_value();
 }
-
-const float CustomSliderModel::sEpsilon = 100 * std::numeric_limits<float>::epsilon();
 
 }

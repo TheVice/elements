@@ -69,7 +69,7 @@ bool ModelDemo::Initialize()
 
 	if (!textureAsset || !textureAsset->pixels())
 	{
-		throw std::runtime_error("Failed to load texture");
+		return false;
 	}
 
 	(*mDiffuse.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
@@ -162,7 +162,7 @@ void ModelDemo::Draw()
 	mModelEffect->u_light_intensity() << mUi->Get_u_light_intensity();
 	mModelEffect->u_light_range() << mUi->Get_u_light_range();
 	//
-	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_BYTE, nullptr);
 	//
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, 0);

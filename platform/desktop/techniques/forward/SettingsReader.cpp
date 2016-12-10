@@ -56,28 +56,28 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	const auto m_mvp_node = root_node.child("matrix_mvp");
+	const auto m_mvp_node = root_node.child("u_matrix_mvp");
 
 	if (m_mvp_node.empty())
 	{
 		return !mIsEmpty;
 	}
 
-	const auto m_matrix_model_view_node = root_node.child("matrix_model_view");
+	const auto m_matrix_model_view_node = root_node.child("u_matrix_model_view");
 
 	if (m_matrix_model_view_node.empty())
 	{
 		return !mIsEmpty;
 	}
 
-	const auto m_matrix_view_node = root_node.child("matrix_view");
+	const auto m_matrix_view_node = root_node.child("u_matrix_view");
 
 	if (m_matrix_view_node.empty())
 	{
 		return !mIsEmpty;
 	}
 
-	const auto m_normal_node = root_node.child("matrix_normal");
+	const auto m_normal_node = root_node.child("u_matrix_normal");
 
 	if (m_normal_node.empty())
 	{
@@ -140,7 +140,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 			continue;
 		}
 
-		const auto pos_node = vertex.child("pos");
+		const auto pos_node = vertex.child("position");
 
 		if (pos_node.empty())
 		{
@@ -170,28 +170,28 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 
 		auto vertex_pos = glm::vec3();
 
-		if (!Library::ReaderHelpers::read_glm_vec3(pos_node, vertex_pos))
+		if (!Library::ReaderHelpers::read_glm_vec(pos_node, vertex_pos))
 		{
 			return !mIsEmpty;
 		}
 
 		auto vertex_normal = glm::vec3();
 
-		if (!Library::ReaderHelpers::read_glm_vec3(normal_node, vertex_normal))
+		if (!Library::ReaderHelpers::read_glm_vec(normal_node, vertex_normal))
 		{
 			return !mIsEmpty;
 		}
 
 		auto vertex_tangent = glm::vec3();
 
-		if (!Library::ReaderHelpers::read_glm_vec3(tangent_node, vertex_tangent))
+		if (!Library::ReaderHelpers::read_glm_vec(tangent_node, vertex_tangent))
 		{
 			return !mIsEmpty;
 		}
 
 		auto vertex_uv = glm::vec2();
 
-		if (!Library::ReaderHelpers::read_glm_vec2(uv_node, vertex_uv))
+		if (!Library::ReaderHelpers::read_glm_vec(uv_node, vertex_uv))
 		{
 			return !mIsEmpty;
 		}
@@ -205,32 +205,32 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_mat4(m_mvp_node, mMatrixMvp))
+	if (!Library::ReaderHelpers::read_glm_mat(m_mvp_node, mMatrixMvp))
 	{
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_mat4(m_matrix_model_view_node, mMatrixModelView))
+	if (!Library::ReaderHelpers::read_glm_mat(m_matrix_model_view_node, mMatrixModelView))
 	{
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_mat4(m_matrix_view_node, mMatrixView))
+	if (!Library::ReaderHelpers::read_glm_mat(m_matrix_view_node, mMatrixView))
 	{
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_mat3(m_normal_node, mMatrixNormal))
+	if (!Library::ReaderHelpers::read_glm_mat(m_normal_node, mMatrixNormal))
 	{
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_vec3(m_light_pos_node, mLightPos))
+	if (!Library::ReaderHelpers::read_glm_vec(m_light_pos_node, mLightPos))
 	{
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_vec3(m_camera_pos_node, mCameraPos))
+	if (!Library::ReaderHelpers::read_glm_vec(m_camera_pos_node, mCameraPos))
 	{
 		return !mIsEmpty;
 	}
@@ -250,7 +250,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_vec3(m_light_intensity, mLightIntensity))
+	if (!Library::ReaderHelpers::read_glm_vec(m_light_intensity, mLightIntensity))
 	{
 		return !mIsEmpty;
 	}

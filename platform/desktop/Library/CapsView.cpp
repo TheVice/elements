@@ -2,6 +2,7 @@
 #include "CapsView.h"
 #include "checkbox.h"
 #include <elements/metrics/metrics.h>
+#include <elements/ui/system.h>
 #include <elements/ui/controls/label.h>
 #include <Game.h>
 #include <sstream>

@@ -33,14 +33,14 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	const auto transform_node = root_node.child("transform");
+	const auto transform_node = root_node.child("u_transform");
 
 	if (transform_node.empty())
 	{
 		return !mIsEmpty;
 	}
 
-	const auto size_node = root_node.child("size");
+	const auto size_node = root_node.child("u_size");
 
 	if (size_node.empty())
 	{
@@ -54,7 +54,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 			continue;
 		}
 
-		const auto pos_node = vertex.child("pos");
+		const auto pos_node = vertex.child("position");
 
 		if (pos_node.empty())
 		{
@@ -63,7 +63,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 
 		auto vertex_pos = glm::vec2();
 
-		if (!Library::ReaderHelpers::read_glm_vec2(pos_node, vertex_pos))
+		if (!Library::ReaderHelpers::read_glm_vec(pos_node, vertex_pos))
 		{
 			return !mIsEmpty;
 		}
@@ -77,7 +77,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_mat4(transform_node, mTransform))
+	if (!Library::ReaderHelpers::read_glm_mat(transform_node, mTransform))
 	{
 		return !mIsEmpty;
 	}

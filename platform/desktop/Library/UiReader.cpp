@@ -1,5 +1,6 @@
 
 #include "UiReader.h"
+#include <cstdio>
 
 namespace Library
 {
@@ -27,26 +28,27 @@ bool UiReader::addControl(const pugi::xml_node& node, const std::string& parent)
 
 	mControlsInfo.push_back(info);
 	const auto& search = attribAndValue.find("control_name");
-	int written = parent.size() + 1 + (search != attribAndValue.end() ? search->second.size() + 1 : 32);
-	std::string controlName(written, '\0');
+	std::string controlName;
 
 	if (search != attribAndValue.end())
 	{
 		if (parent.empty())
 		{
-			written = std::sprintf(&controlName.front(), "%s", search->second.c_str());
+			controlName = search->second;
 		}
 		else
 		{
-			written = std::sprintf(&controlName.front(), "%s/%s", parent.c_str(), search->second.c_str());
+			controlName = parent + "/" + search->second;
 		}
 	}
 	else
 	{
-		written = std::sprintf(&controlName.front(), "%p", &mControlsInfo.back());
+		const auto written = std::snprintf(nullptr, 0, "%p", &mControlsInfo.back());
+		controlName.reserve(written);
+		controlName.resize(written);
+		std::sprintf(&controlName.front(), "%p", &mControlsInfo.back());
 	}
 
-	controlName.resize(written);
 	mControlsInfo.back().second["control_name"] = controlName;
 
 	for (const auto& sub_node : node)

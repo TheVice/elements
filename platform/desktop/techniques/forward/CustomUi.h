@@ -3,6 +3,7 @@
 
 #include "VertexStructure.h"
 #include <UiAsset.h>
+#include <vector>
 
 namespace Rendering
 {
@@ -53,10 +54,11 @@ public:
 
 	bool IsNeedRestore() const;
 
-protected:
-	virtual Library::SliderModel* GetSliderModel(int aSliderId, float aMin, float aMax) override;
+private:
+	virtual float& GetValueBySliderId(int aSliderId) override;
 
 private:
+	bool mIsRestoreNeed;
 	glm::mat4 m_u_matrix_mvp;
 	glm::mat4 m_u_matrix_model_view;
 	glm::mat3 m_u_matrix_normal;
@@ -66,10 +68,6 @@ private:
 	glm::vec3 m_u_light_intensity;
 	float m_u_light_range;
 	std::vector<VertexStructure> mVertices;
-
-	std::vector<Library::SliderModel*> mSliderModels;
-
-	bool mIsRestoreNeed;
 };
 }
 

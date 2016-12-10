@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings name="Projector Demo [Sources techniques/projector]">
+  <vertices>
+    <vertex>
+      <position x="-0.55" y="0.55" z="0.0"/>
+    </vertex>
+    <vertex>
+      <position x="0.55" y="0.55" z="0.0"/>
+    </vertex>
+    <vertex>
+      <position x="0.55" y="-0.55" z="0.0"/>
+    </vertex>
+    <vertex>
+      <position x="-0.55" y="-0.55" z="0.0"/>
+    </vertex>
+  </vertices>
+  <indices>
+    <index>0</index>
+    <index>1</index>
+    <index>2</index>
+    <index>2</index>
+    <index>3</index>
+    <index>0</index>
+  </indices>
+  <u_matrix_mvp>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_mvp>
+  <u_matrix_model>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_model>
+  <u_matrix_pvp>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_pvp>
+  <u_map_projective>assets/textures/noise.png</u_map_projective>
+</settings>
+<ui name="projector">
+  <controls>
+    <button asset_path="assets/ui/textures/restore.png" control_name="restore_button" position_x="725" position_y="525" size_h="75" size_w="75" visible="true"/>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_matrix_mvp_button_13" position_x="10" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_matrix_mvp_panel_14" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_1" id="0" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_1" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_2" id="1" max="1.0" min="-1.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_2" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_3" id="2" max="1.0" min="-1.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_3" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_4" id="3" max="1.0" min="-1.0" position_x="10" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_4" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_5" id="4" max="1.0" min="-1.0" position_x="250" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_5" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_6" id="5" max="1.0" min="-1.0" position_x="490" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_6" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_7" id="6" max="1.0" min="-1.0" position_x="10" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_7" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_8" id="7" max="1.0" min="-1.0" position_x="250" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_8" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_9" id="8" max="1.0" min="-1.0" position_x="490" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_9" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_10" id="9" max="1.0" min="-1.0" position_x="10" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_10" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_11" id="10" max="1.0" min="-1.0" position_x="250" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_11" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_12" id="11" max="1.0" min="-1.0" position_x="490" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_12" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="13" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_15" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Matrix mvp" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_matrix_model_button_28" position_x="90" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_matrix_model_panel_29" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_16" id="12" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_16" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_17" id="13" max="1.0" min="-1.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_17" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_18" id="14" max="1.0" min="-1.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_18" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_19" id="15" max="1.0" min="-1.0" position_x="10" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_19" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_20" id="16" max="1.0" min="-1.0" position_x="250" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_20" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_21" id="17" max="1.0" min="-1.0" position_x="490" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_21" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_22" id="18" max="1.0" min="-1.0" position_x="10" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_22" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_23" id="19" max="1.0" min="-1.0" position_x="250" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_23" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_24" id="20" max="1.0" min="-1.0" position_x="490" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_24" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_25" id="21" max="1.0" min="-1.0" position_x="10" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_25" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_26" id="22" max="1.0" min="-1.0" position_x="250" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_26" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_model_slider_27" id="23" max="1.0" min="-1.0" position_x="490" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_27" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="13" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_model_label_30" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Matrix model" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_matrix_pvp_button_43" position_x="170" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_matrix_pvp_panel_44" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_31" id="24" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_31" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_32" id="25" max="1.0" min="-1.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_32" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_33" id="26" max="1.0" min="-1.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_33" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_34" id="27" max="1.0" min="-1.0" position_x="10" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_34" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_35" id="28" max="1.0" min="-1.0" position_x="250" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_35" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_36" id="29" max="1.0" min="-1.0" position_x="490" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_36" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_37" id="30" max="1.0" min="-1.0" position_x="10" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_37" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_38" id="31" max="1.0" min="-1.0" position_x="250" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_38" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_39" id="32" max="1.0" min="-1.0" position_x="490" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_39" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_40" id="33" max="1.0" min="-1.0" position_x="10" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_40" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_41" id="34" max="1.0" min="-1.0" position_x="250" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_41" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_pvp_slider_42" id="35" max="1.0" min="-1.0" position_x="490" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_42" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="13" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_pvp_label_45" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Matrix pvp" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_0_button_49" position_x="250" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_0_panel_50" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_46" id="36" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_46" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_47" id="37" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_47" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_48" id="38" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_48" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_51" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Top" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_1_button_55" position_x="330" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_1_panel_56" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_52" id="39" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_52" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_53" id="40" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_53" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_54" id="41" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_54" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_57" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Right Top" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_2_button_61" position_x="410" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_2_panel_62" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_58" id="42" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_58" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_59" id="43" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_59" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_60" id="44" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_60" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_63" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Right Bottom" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_3_button_67" position_x="490" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_3_panel_68" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_64" id="45" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_64" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_65" id="46" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_65" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_66" id="47" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_66" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_69" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Bottom" visible="true"/>
+    </panel>
+  </controls>
+</ui>

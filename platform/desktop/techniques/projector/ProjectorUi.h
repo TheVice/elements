@@ -1,5 +1,5 @@
-#ifndef _CUSTOM_UI_H_
-#define _CUSTOM_UI_H_
+#ifndef _PROJECTOR_UI_H_
+#define _PROJECTOR_UI_H_
 
 #include "VertexStructure.h"
 #include <UiAsset.h>
@@ -7,18 +7,18 @@
 
 namespace Rendering
 {
-class CustomUi : public Library::UiAsset
+class ProjectorUi : public Library::UiAsset
 {
-	RTTI_DECLARATIONS(CustomUi, UiAsset)
+	RTTI_DECLARATIONS(ProjectorUi, UiAsset)
 
 public:
-	CustomUi(Library::Game& aGame, const std::string& aAssetPath);
-	~CustomUi();
+	ProjectorUi(Library::Game& aGame, const std::string& aAssetPath);
+	~ProjectorUi();
 
 public:
-	CustomUi() = delete;
-	CustomUi(const CustomUi& aRhs) = delete;
-	CustomUi& operator = (const CustomUi& aRhs) = delete;
+	ProjectorUi() = delete;
+	ProjectorUi(const ProjectorUi& aRhs) = delete;
+	ProjectorUi& operator = (const ProjectorUi& aRhs) = delete;
 
 public:
 	virtual bool Initialize() override;
@@ -28,25 +28,25 @@ public:
 	void Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp);
 	const glm::mat4& Get_u_matrix_mvp() const;
 
-	void Set_u_matrix_normal(const glm::mat3& a_u_matrix_normal);
-	const glm::mat3& Get_u_matrix_normal() const;
+	void Set_u_matrix_model(const glm::mat4& a_u_matrix_model);
+	const glm::mat4& Get_u_matrix_model() const;
+
+	void Set_u_matrix_pvp(const glm::mat4& a_u_matrix_pvp);
+	const glm::mat4& Get_u_matrix_pvp() const;
 
 	void SetVertices(const std::vector<VertexStructure>& aVertices);
 	const std::vector<VertexStructure>& GetVertices() const;
 
 	bool IsNeedRestore() const;
-	bool IsEncodeNormal() const;
-
-	void SetEncodeNormalControlsVisible(bool aVisible);
 
 private:
 	virtual float& GetValueBySliderId(int aSliderId) override;
 
 private:
 	bool mIsRestoreNeed;
-	bool mIsEncodeNormal;
 	glm::mat4 m_u_matrix_mvp;
-	glm::mat3 m_u_matrix_normal;
+	glm::mat4 m_u_matrix_model;
+	glm::mat4 m_u_matrix_pvp;
 	std::vector<VertexStructure> mVertices;
 };
 }

@@ -11,7 +11,7 @@ struct SettingsReader : public eps::asset_xml
 {
 public:
 	std::vector<VertexStructure> mVertices;
-	std::vector<unsigned int> mIndices;
+	std::vector<unsigned char> mIndices;
 
 	glm::mat4 mMatrixMvp;
 	glm::mat4 mMatrixModelView;

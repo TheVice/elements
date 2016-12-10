@@ -95,28 +95,28 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 
 		auto vertex_pos = glm::vec3();
 
-		if (!Library::ReaderHelpers::read_glm_vec3(pos_node, vertex_pos))
+		if (!Library::ReaderHelpers::read_glm_vec(pos_node, vertex_pos))
 		{
 			return !mIsEmpty;
 		}
 
 		auto vertex_normal = glm::vec3();
 
-		if (!Library::ReaderHelpers::read_glm_vec3(normal_node, vertex_normal))
+		if (!Library::ReaderHelpers::read_glm_vec(normal_node, vertex_normal))
 		{
 			return !mIsEmpty;
 		}
 
 		auto vertex_tangent = glm::vec3();
 
-		if (!Library::ReaderHelpers::read_glm_vec3(tangent_node, vertex_tangent))
+		if (!Library::ReaderHelpers::read_glm_vec(tangent_node, vertex_tangent))
 		{
 			return !mIsEmpty;
 		}
 
 		auto vertex_uv = glm::vec2();
 
-		if (!Library::ReaderHelpers::read_glm_vec2(uv_node, vertex_uv))
+		if (!Library::ReaderHelpers::read_glm_vec(uv_node, vertex_uv))
 		{
 			return !mIsEmpty;
 		}
@@ -130,12 +130,12 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_mat4(m_mvp_node, mMatrixMvp))
+	if (!Library::ReaderHelpers::read_glm_mat(m_mvp_node, mMatrixMvp))
 	{
 		return !mIsEmpty;
 	}
 
-	if (!Library::ReaderHelpers::read_glm_mat3(m_normal_node, mMatrixNormal))
+	if (!Library::ReaderHelpers::read_glm_mat(m_normal_node, mMatrixNormal))
 	{
 		return !mIsEmpty;
 	}
