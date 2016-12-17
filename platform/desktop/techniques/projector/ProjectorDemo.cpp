@@ -34,7 +34,6 @@ ProjectorDemo::ProjectorDemo(Library::Game& aGame) :
 	mProgram(nullptr),
 	mProjectorEffect(nullptr),
 	mMapProjectiveTexture(nullptr),
-	mMapProjective(0),
 	mProjectorSettings(),
 	mProjectorUi(nullptr)
 {
@@ -74,7 +73,6 @@ bool ProjectorDemo::Initialize()
 	auto textureMaker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>();
 	mMapProjectiveTexture = eps::utils::make_unique<eps::rendering::texture>();
 	(*mMapProjectiveTexture.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
-	mMapProjective = eps::utils::raw_product(mMapProjectiveTexture->get_product());
 	// Create the effect
 	mProjectorEffect = eps::utils::make_unique<ProjectorEffect>(mProjectorSettings->mVertices,
 					   mProjectorSettings->mIndices,
@@ -100,7 +98,7 @@ void ProjectorDemo::Update()
 void ProjectorDemo::Draw()
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mMapProjective);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(mMapProjectiveTexture->get_product()));
 	//
 	EPS_STATE_PROGRAM(mProgram->get_product());
 	//

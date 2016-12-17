@@ -21,10 +21,10 @@ ProjectorUi::ProjectorUi(Library::Game& aGame, const std::string& aAssetPath) :
 	m_u_matrix_pvp(),
 	mVertices(
 {
-	VertexStructure(),
-					VertexStructure(),
-					VertexStructure(),
-					VertexStructure()
+	ProjectorVertex(),
+					ProjectorVertex(),
+					ProjectorVertex(),
+					ProjectorVertex()
 })
 {
 }
@@ -398,7 +398,7 @@ const glm::mat4& ProjectorUi::Get_u_matrix_pvp() const
 	return m_u_matrix_pvp;
 }
 
-void ProjectorUi::SetVertices(const std::vector<VertexStructure>& aVertices)
+void ProjectorUi::SetVertices(const std::vector<ProjectorVertex>& aVertices)
 {
 	mVertices = aVertices;
 	//
@@ -418,7 +418,7 @@ void ProjectorUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 	mIsRestoreNeed = false;
 }
 
-const std::vector<VertexStructure>& ProjectorUi::GetVertices() const
+const std::vector<ProjectorVertex>& ProjectorUi::GetVertices() const
 {
 	return mVertices;
 }

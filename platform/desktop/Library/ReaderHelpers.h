@@ -3,9 +3,7 @@
 
 #include <pugixml.hpp>
 #include <glm/glm.hpp>
-#include <algorithm>
 #include <array>
-#include <bitset>
 #include <vector>
 
 namespace Library
@@ -16,122 +14,99 @@ namespace ReaderHelpers
 template<typename T>
 bool read_glm_vec(const pugi::xml_node& aNode, T& aValue)
 {
-	std::array<char, 14> keys = { 'x', 'y', 'z', 'w',
-								  'u', 'v',
-								  'r', 'g', 'b', 'a',
-								  's', 't', 'p', 'q'
-								};
-	std::bitset<4> setKeys;
-	const auto vecLength = aValue.length();
-
-	switch (vecLength)
+	if (aNode.empty())
 	{
-		case 2:
-			setKeys.set(2);
-			setKeys.set(3);
-			break;
-
-		case 3:
-			setKeys.set(3);
-			break;
-
-		case 4:
-			setKeys.reset();
-			break;
-
-		default:
-			return false;
+		return false;
 	}
 
-	for (const auto& attribute : aNode.attributes())
+	std::array<std::string, 4> keys;
+	const auto element_count = aValue.length();
+
+	if (static_cast<size_t>(element_count) > keys.size())
 	{
-		const auto find = std::find(keys.cbegin(), keys.cend(), attribute.name()[0]);
+		return false;
+	}
 
-		if (find != keys.cend())
+	if (aNode.attribute("x"))
+	{
+		keys = { "x", "y", "z", "w" };
+	}
+	else if (aNode.attribute("u"))
+	{
+		keys = { "u", "v" };
+
+		if (static_cast<size_t>(element_count) > 2u)
 		{
-			const auto value = attribute.as_float();
-
-			switch (*find)
-			{
-				case 'x':
-				case 'u':
-				case 'r':
-				case 's':
-					if (!setKeys.test(0))
-					{
-						aValue[0] = value;
-						setKeys.set(0);
-					}
-
-					break;
-
-				case 'y':
-				case 'v':
-				case 'g':
-				case 't':
-					if (!setKeys.test(1))
-					{
-						aValue[1] = value;
-						setKeys.set(1);
-					}
-
-					break;
-
-				case 'z':
-				case 'b':
-				case 'p':
-					if (!setKeys.test(2))
-					{
-						aValue[2] = value;
-						setKeys.set(2);
-					}
-
-					break;
-
-				case 'w':
-				case 'a':
-				case 'q':
-					if (!setKeys.test(3))
-					{
-						aValue[3] = value;
-						setKeys.set(3);
-					}
-
-					break;
-
-				default:
-					break;
-			}
+			return false;
 		}
 	}
+	else if (aNode.attribute("r"))
+	{
+		keys = { "r", "g", "b", "a" };
+	}
+	else if (aNode.attribute("s"))
+	{
+		keys = { "s", "t", "p", "q" };
+	}
+	else
+	{
+		return false;
+	}
 
-	return setKeys.all();
+	for (auto element_num = 0; element_num < element_count; ++element_num)
+	{
+		const auto attribute_node = aNode.attribute(keys[element_num].c_str());
+
+		if (!attribute_node)
+		{
+			return false;
+		}
+
+		aValue[element_num] = attribute_node.as_float();
+	}
+
+	return true;
 }
 
 template<typename T>
 bool read_glm_mat(const pugi::xml_node& aNode, T& aValue)
 {
-	auto row_count = aValue.length();
-
-	for (const auto& subNode : aNode)
+	if (aNode.empty())
 	{
-		auto row = aValue[0];
-
-		if (read_glm_vec(subNode, row))
-		{
-			aValue[aValue.length() - row_count] = row;
-			--row_count;
-
-			if (!row_count)
-			{
-				return true;
-			}
-		}
+		return false;
 	}
 
-	return false;
+	const std::array<std::string, 4> keys = { "r0", "r1", "r2", "r3" };
+	const auto row_count = aValue.length();
+
+	if (static_cast<size_t>(row_count) > keys.size())
+	{
+		return false;
+	}
+
+	for (auto row_num = 0; row_num < row_count; ++row_num)
+	{
+		const auto row_node = aNode.child(keys[row_num].c_str());
+
+		if (!row_node)
+		{
+			return false;
+		}
+
+		auto row = aValue[row_num];
+
+		if (!read_glm_vec(row_node, row))
+		{
+			return false;
+		}
+
+		aValue[row_num] = row;
+	}
+
+	return true;
 }
 
+bool read_bool(const pugi::xml_node& aNode, bool& aValue);
 bool read_float(const pugi::xml_node& aNode, float& aValue);
 bool read_std_string(const pugi::xml_node& aNode, std::string& aValue);
 bool read_unsigned_int(const pugi::xml_node& aNode, unsigned int& aValue);

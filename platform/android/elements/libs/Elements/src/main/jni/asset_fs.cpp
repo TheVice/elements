@@ -394,7 +394,7 @@ private:
 
 asset_fs::asset_fs(const std::string& mount_point) :
 	mount_point_(mount_point.empty() ? "" : mount_point + "/"),
-	assets_content_(),
+	non_exists_assets_(),
 	assets_()
 {
 }
@@ -405,39 +405,29 @@ eps::io::file* asset_fs::open(const std::string& file)
 {
 	const auto full_path = mount_point_ + file;
 
+	if (non_exists_assets_.count(full_path))
+	{
+		return nullptr;
+	}
+
 	if (!assets_.count(full_path))
 	{
 		asset_file asset(full_path.c_str());
-		std::unique_ptr<eps::io::file> content;
-		static std::string::size_type content_pos_ = 0u;
 
 		if (asset.exists())
 		{
-			//std::string file_content(asset.size(), '\0');
-			char* file_content = &assets_content_[content_pos_];
-			const std::string::size_type content_size_ = asset.size();
-			//asset.read(&file_content.front(), 1, file_content.size());
-			assert(content_pos_ + content_size_ <= assets_content_.size());
-			asset.read(file_content, 1, content_size_);
-			//content = std::make_unique<asset_content>(file_content);
-			//content = std::make_unique<asset_content>(std::move(file_content));
-			content = std::make_unique<asset_content2>(file_content, content_size_);
-			content_pos_ += content_size_;
+			std::string file_content(asset.size(), '\0');
+			asset.read(&file_content.front(), 1, file_content.size());
+			assets_[full_path] = file_content;
 		}
-#ifndef NDEBUG
 		else
 		{
-			assert(false);
+			non_exists_assets_.insert(full_path);
+			return nullptr;
 		}
-#endif
-		assets_[full_path] = std::move(content);
-	}
-	else
-	{
-		assets_[full_path]->seek(0u, std::ios::beg);
 	}
 
-	return assets_[full_path].get();
+	return new asset_content(assets_[full_path]);
 }
 
 bool asset_fs::exists(const std::string& file)
@@ -448,24 +438,10 @@ bool asset_fs::exists(const std::string& file)
 
 void asset_fs::close(eps::io::file* file)
 {
-#ifndef NDEBUG
-	assert(nullptr != file);
-	bool isFileInFS = false;
-
-	for (const auto& content : assets_)
+	if (file)
 	{
-		isFileInFS = (std::get<1>(content).get() == file);
-
-		if (isFileInFS)
-		{
-			break;
-		}
+		delete file;
 	}
-
-	assert(isFileInFS);
-#else
-	(void)file;
-#endif
 }
 
 #endif

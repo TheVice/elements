@@ -1,16 +1,16 @@
-#ifndef _SETTINGS_READER_H_
-#define _SETTINGS_READER_H_
+#ifndef _MODEL_SETTINGS_H_
+#define _MODEL_SETTINGS_H_
 
-#include "VertexStructure.h"
+#include "ModelVertex.h"
 #include <elements/assets/asset_xml.h>
 #include <vector>
 
 namespace Rendering
 {
-struct SettingsReader : public eps::asset_xml
+struct ModelSettings : public eps::asset_xml
 {
 public:
-	std::vector<VertexStructure> mVertices;
+	std::vector<ModelVertex> mVertices;
 	std::vector<unsigned char> mIndices;
 
 	glm::mat4 mMatrixMvp;

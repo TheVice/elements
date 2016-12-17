@@ -1,5 +1,5 @@
-#ifndef _CONTROLS_H_
-#define _CONTROLS_H_
+#ifndef _PARTICLES_CONTROLS_H_
+#define _PARTICLES_CONTROLS_H_
 
 #define RESTORE_BUTTON			"restore_button"
 #define U_TRANSFORM_BUTTON_13			"u_transform_button_13"

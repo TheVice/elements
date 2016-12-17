@@ -1,60 +1,52 @@
 
 #include "GeometryEffect.h"
-#include "VertexStructure.h"
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/state/state_macro.h>
 
-namespace Library
+namespace Rendering
 {
-RTTI_DEFINITIONS(GeometryEffect)
 
-SHADER_VARIABLE_DEFINITION(GeometryEffect, u_matrix_mvp)
-SHADER_VARIABLE_DEFINITION(GeometryEffect, u_matrix_normal)
-//SHADER_VARIABLE_DEFINITION(GeometryEffect, u_map_normal)
-
-GeometryEffect::GeometryEffect() :
-	ShaderProgram(),
-	SHADER_VARIABLE_INITIALIZATION(u_matrix_mvp),
-	SHADER_VARIABLE_INITIALIZATION(u_matrix_normal)//,
-	//SHADER_VARIABLE_INITIALIZATION(u_map_normal)
+GeometryEffect::GeometryEffect(const std::vector<GeometryVertex>& vertices,
+							   const std::vector<GLubyte>& indices,
+							   eps::rendering::buffer_usage usage)
+	: texture_vertices_(usage)
+	, texture_indices_(usage)
 {
+	assert(!vertices.empty());
+	assert(!indices.empty());
+	// Create the vertex buffer object
+	texture_vertices_.allocate(&vertices.front(), vertices.size(), sizeof(vertices.front()));
+	// Create the index buffer object
+	texture_indices_.allocate(&indices.front(), indices.size(), sizeof(indices.front()));
 }
 
-GLvoid GeometryEffect::Initialize(GLuint aVertexArrayObject)
+void GeometryEffect::construct(const std::vector<GeometryVertex>& vertices)
 {
-	ShaderProgram::Initialize(aVertexArrayObject);
-	//
-	SHADER_VARIABLE_INSTANTIATE(u_matrix_mvp)
-	SHADER_VARIABLE_INSTANTIATE(u_matrix_normal)
-	//SHADER_VARIABLE_INSTANTIATE(u_map_normal)
-	//
-	const GLint vertexAttribute_a_vertex_pos = GetAttrib("a_vertex_pos");
-	const GLint vertexAttribute_a_vertex_normal = GetAttrib("a_vertex_normal");
-	const GLint vertexAttribute_a_vertex_tangent = GetAttrib("a_vertex_tangent");
-	const GLint vertexAttribute_a_vertex_uv = GetAttrib("a_vertex_uv");
-	//
-	glVertexAttribPointer(vertexAttribute_a_vertex_pos, glm::vec3().length(), GL_FLOAT, GL_FALSE,
-						  GetVertexSize(),
-						  reinterpret_cast<GLvoid*>(offsetof(VertexStructure, a_vertex_pos)));
-	glEnableVertexAttribArray(vertexAttribute_a_vertex_pos);
-	//
-	glVertexAttribPointer(vertexAttribute_a_vertex_normal, glm::vec3().length(), GL_FLOAT, GL_FALSE,
-						  GetVertexSize(),
-						  reinterpret_cast<GLvoid*>(offsetof(VertexStructure, a_vertex_normal)));
-	glEnableVertexAttribArray(vertexAttribute_a_vertex_normal);
-	//
-	glVertexAttribPointer(vertexAttribute_a_vertex_tangent, glm::vec3().length(), GL_FLOAT, GL_FALSE,
-						  GetVertexSize(),
-						  reinterpret_cast<GLvoid*>(offsetof(VertexStructure, a_vertex_tangent)));
-	glEnableVertexAttribArray(vertexAttribute_a_vertex_tangent);
-	//
-	glVertexAttribPointer(vertexAttribute_a_vertex_uv, glm::vec2().length(), GL_FLOAT, GL_FALSE,
-						  GetVertexSize(),
-						  reinterpret_cast<GLvoid*>(offsetof(VertexStructure, a_vertex_uv)));
-	glEnableVertexAttribArray(vertexAttribute_a_vertex_uv);
+	assert(!vertices.empty());
+	// Update vertex buffer object
+	texture_vertices_.allocate(&vertices.front(), vertices.size(), sizeof(vertices.front()));
 }
 
-GLuint GeometryEffect::GetVertexSize() const
+void GeometryEffect::render(eps::rendering::program& program, const std::array<short, 4>& a_position,
+							short index_count)
 {
-	return sizeof(VertexStructure);
+	EPS_STATE_VERTICES(texture_vertices_.get_product());
+	EPS_STATE_INDICES(texture_indices_.get_product());
+	//
+	program.attribute_array(std::get<0>(a_position), offsetof(GeometryVertex, a_vertex_pos),
+							eps::math::vec3().length(), sizeof(GeometryVertex));
+	program.attribute_array_enable(std::get<0>(a_position));
+	program.attribute_array(std::get<1>(a_position), offsetof(GeometryVertex, a_vertex_normal),
+							eps::math::vec3().length(), sizeof(GeometryVertex));
+	program.attribute_array_enable(std::get<1>(a_position));
+	program.attribute_array(std::get<2>(a_position), offsetof(GeometryVertex, a_vertex_tangent),
+							eps::math::vec3().length(), sizeof(GeometryVertex));
+	program.attribute_array_enable(std::get<2>(a_position));
+	program.attribute_array(std::get<3>(a_position), offsetof(GeometryVertex, a_vertex_uv),
+							eps::math::vec2().length(), sizeof(GeometryVertex));
+	program.attribute_array_enable(std::get<3>(a_position));
+	//
+	glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_BYTE, 0);
 }
 
 }

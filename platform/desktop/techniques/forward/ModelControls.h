@@ -1,5 +1,5 @@
-#ifndef _CONTROLS_H_
-#define _CONTROLS_H_
+#ifndef _MODEL_CONTROLS_H_
+#define _MODEL_CONTROLS_H_
 
 #define RESTORE_BUTTON			"restore_button"
 #define U_MATRIX_MVP_BUTTON_13			"u_matrix_mvp_button_13"

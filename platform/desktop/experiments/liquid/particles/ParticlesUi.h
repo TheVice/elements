@@ -1,24 +1,24 @@
-#ifndef _CUSTOM_UI_H_
-#define _CUSTOM_UI_H_
+#ifndef _PARTICLES_UI_H_
+#define _PARTICLES_UI_H_
 
-#include "VertexStructure.h"
+#include "ParticlesVertex.h"
 #include <UiAsset.h>
 #include <vector>
 
 namespace Rendering
 {
-class CustomUi : public Library::UiAsset
+class ParticlesUi : public Library::UiAsset
 {
-	RTTI_DECLARATIONS(CustomUi, UiAsset)
+	RTTI_DECLARATIONS(ParticlesUi, UiAsset)
 
 public:
-	CustomUi(Library::Game& aGame, const std::string& aAssetPath);
-	~CustomUi();
+	ParticlesUi(Library::Game& aGame, const std::string& aAssetPath);
+	~ParticlesUi();
 
 public:
-	CustomUi() = delete;
-	CustomUi(const CustomUi& aRhs) = delete;
-	CustomUi& operator = (const CustomUi& aRhs) = delete;
+	ParticlesUi() = delete;
+	ParticlesUi(const ParticlesUi& aRhs) = delete;
+	ParticlesUi& operator = (const ParticlesUi& aRhs) = delete;
 
 public:
 	virtual bool Initialize() override;
@@ -31,8 +31,8 @@ public:
 	void Set_u_size(const float& a_u_size);
 	const float& Get_u_size() const;
 
-	void SetVertices(const std::vector<VertexStructure>& aVertices);
-	const std::vector<VertexStructure>& GetVertices() const;
+	void SetVertices(const std::vector<ParticlesVertex>& aVertices);
+	const std::vector<ParticlesVertex>& GetVertices() const;
 
 	bool IsNeedRestore() const;
 	bool IsPointSpriteEnabled();
@@ -47,7 +47,7 @@ private:
 	bool mIsRestoreNeed;
 	glm::mat4 m_u_transform;
 	float m_u_size;
-	std::vector<VertexStructure> mVertices;
+	std::vector<ParticlesVertex> mVertices;
 };
 }
 

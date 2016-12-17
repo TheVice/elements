@@ -1,17 +1,24 @@
 #ifndef _MODEL_DEMO_H_
 #define _MODEL_DEMO_H_
 
-#include "ModelEffect.h"
-#include "SettingsReader.h"
+#include "ModelSettings.h"
 #include <DrawableGameComponent.h>
-#include <elements/rendering/core/buffer.h>
-#include <elements/rendering/core/program.h>
-#include <elements/rendering/core/texture.h>
+#include <elements/utils/std/pointer.h>
 #include <elements/utils/std/optional.h>
+
+namespace eps
+{
+namespace rendering
+{
+class program;
+class texture;
+}
+}
 
 namespace Rendering
 {
-class CustomUi;
+class ModelEffect;
+class ModelUi;
 class ModelDemo : public Library::DrawableGameComponent
 {
 	RTTI_DECLARATIONS(ModelDemo, DrawableGameComponent)
@@ -32,22 +39,12 @@ public:
 
 private:
 	eps::utils::unique<eps::rendering::program> mProgram;
-	eps::utils::unique<Library::ModelEffect> mModelEffect;
-
-	GLuint mVertexArrayObject;
-	eps::utils::unique<eps::rendering::vertices> mVertexBuffer;
-	eps::utils::unique<eps::rendering::indices> mIndexBuffer;
-
-	GLuint mDiffuseTexture;
-	GLuint mSpecularTexture;
-	GLuint mNormalTexture;
-
-	eps::utils::unique<eps::rendering::texture> mDiffuse;
-	eps::utils::unique<eps::rendering::texture> mSpecular;
-	eps::utils::unique<eps::rendering::texture> mNormal;
-
-	eps::utils::optional<SettingsReader> mSettings;
-	CustomUi* mUi;
+	eps::utils::unique<ModelEffect> mModelEffect;
+	eps::utils::unique<eps::rendering::texture> mDiffuseTexture;
+	eps::utils::unique<eps::rendering::texture> mSpecularTexture;
+	eps::utils::unique<eps::rendering::texture> mNormalTexture;
+	eps::utils::optional<ModelSettings> mModelSettings;
+	ModelUi* mModelUi;
 };
 }
 

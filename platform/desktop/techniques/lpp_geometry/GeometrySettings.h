@@ -1,23 +1,23 @@
-#ifndef _PROJECTOR_SETTINGS_H_
-#define _PROJECTOR_SETTINGS_H_
+#ifndef _GEOMETRY_SETTINGS_H_
+#define _GEOMETRY_SETTINGS_H_
 
-#include "ProjectorVertex.h"
+#include "GeometryVertex.h"
 #include <elements/math/types.h>
 #include <elements/assets/asset_xml.h>
 #include <vector>
 
 namespace Rendering
 {
-struct ProjectorSettings : public eps::asset_xml
+struct GeometrySettings : public eps::asset_xml
 {
 public:
-	std::vector<ProjectorVertex> mVertices;
+	std::vector<GeometryVertex> mVertices;
 	std::vector<unsigned char> mIndices;
 
 	eps::math::mat4 u_matrix_mvp;
-	eps::math::mat4 u_matrix_model;
-	eps::math::mat4 u_matrix_pvp;
-	std::string u_map_projective;
+	eps::math::mat4 u_matrix_model_view;
+	std::string u_map_normal;
+	bool u_has_map_normal;
 
 	bool mIsEmpty;
 

@@ -1,17 +1,24 @@
 #ifndef _GEOMETRY_DEMO_H_
 #define _GEOMETRY_DEMO_H_
 
-#include "GeometryEffect.h"
-#include "SettingsReader.h"
+#include "GeometrySettings.h"
 #include <DrawableGameComponent.h>
-#include <elements/rendering/core/buffer.h>
-#include <elements/rendering/core/program.h>
-#include <elements/rendering/core/texture.h>
+#include <elements/utils/std/pointer.h>
 #include <elements/utils/std/optional.h>
+
+namespace eps
+{
+namespace rendering
+{
+class program;
+class texture;
+}
+}
 
 namespace Rendering
 {
-class CustomUi;
+class GeometryEffect;
+class GeometryUi;
 class GeometryDemo : public Library::DrawableGameComponent
 {
 	RTTI_DECLARATIONS(GeometryDemo, DrawableGameComponent)
@@ -31,20 +38,11 @@ public:
 	virtual void Draw() override;
 
 private:
-	eps::utils::unique<eps::rendering::program> mProgramEncodeNormal;
-	eps::utils::unique<eps::rendering::program> mProgramNonEncodeNormal;
-	eps::utils::unique<Library::GeometryEffect> mGeometryEffect;
-	GLuint mVertexArrayObject;
-	eps::utils::unique<eps::rendering::vertices> mVertexBuffer;
-	eps::utils::unique<eps::rendering::indices> mIndexBuffer;
-	GLuint mColorTexture;
-
-	eps::utils::unique<eps::rendering::texture> mTexture;
-	eps::utils::optional<SettingsReader> mSettings;
-
-	CustomUi* mUi;
-
-	bool mIsNonEncodeProgramLoaded;
+	eps::utils::unique<eps::rendering::program> mProgram;
+	eps::utils::unique<GeometryEffect> mGeometryEffect;
+	eps::utils::unique<eps::rendering::texture> mMapNormalTexture;
+	eps::utils::optional<GeometrySettings> mGeometrySettings;
+	GeometryUi* mGeometryUi;
 };
 }
 

@@ -1,7 +1,7 @@
 #ifndef _PROJECTOR_UI_H_
 #define _PROJECTOR_UI_H_
 
-#include "VertexStructure.h"
+#include "ProjectorVertex.h"
 #include <UiAsset.h>
 #include <vector>
 
@@ -34,8 +34,8 @@ public:
 	void Set_u_matrix_pvp(const glm::mat4& a_u_matrix_pvp);
 	const glm::mat4& Get_u_matrix_pvp() const;
 
-	void SetVertices(const std::vector<VertexStructure>& aVertices);
-	const std::vector<VertexStructure>& GetVertices() const;
+	void SetVertices(const std::vector<ProjectorVertex>& aVertices);
+	const std::vector<ProjectorVertex>& GetVertices() const;
 
 	bool IsNeedRestore() const;
 
@@ -47,7 +47,7 @@ private:
 	glm::mat4 m_u_matrix_mvp;
 	glm::mat4 m_u_matrix_model;
 	glm::mat4 m_u_matrix_pvp;
-	std::vector<VertexStructure> mVertices;
+	std::vector<ProjectorVertex> mVertices;
 };
 }
 

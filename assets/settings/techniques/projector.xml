@@ -2,16 +2,16 @@
 <settings name="Projector Demo [Sources techniques/projector]">
   <vertices>
     <vertex>
-      <position x="-0.55" y="0.55" z="0.0"/>
+      <a_vertex_pos x="-0.55" y="0.55" z="0.0"/>
     </vertex>
     <vertex>
-      <position x="0.55" y="0.55" z="0.0"/>
+      <a_vertex_pos x="0.55" y="0.55" z="0.0"/>
     </vertex>
     <vertex>
-      <position x="0.55" y="-0.55" z="0.0"/>
+      <a_vertex_pos x="0.55" y="-0.55" z="0.0"/>
     </vertex>
     <vertex>
-      <position x="-0.55" y="-0.55" z="0.0"/>
+      <a_vertex_pos x="-0.55" y="-0.55" z="0.0"/>
     </vertex>
   </vertices>
   <indices>
@@ -41,8 +41,6 @@
     <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
   </u_matrix_pvp>
   <u_map_projective>assets/textures/noise.png</u_map_projective>
-</settings>
-<ui name="projector">
   <controls>
     <button asset_path="assets/ui/textures/restore.png" control_name="restore_button" position_x="725" position_y="525" size_h="75" size_w="75" visible="true"/>
     <button asset_path="assets/ui/textures/settings.png" control_name="u_matrix_mvp_button_13" position_x="10" position_y="5" size_h="75" size_w="75" visible="true"/>
@@ -170,4 +168,4 @@
       <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_69" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Bottom" visible="true"/>
     </panel>
   </controls>
-</ui>
+</settings>

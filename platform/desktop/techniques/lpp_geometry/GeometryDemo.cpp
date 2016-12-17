@@ -1,9 +1,13 @@
 
 #include "GeometryDemo.h"
-#include "CustomUi.h"
-#include <elements/rendering/utils/program_loader.h>
+#include "GeometryEffect.h"
+#include "GeometryUi.h"
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
+#include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/core/texture_maker.h>
 #include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/utils/program_loader.h>
 #include <elements/assets/asset_texture.h>
 #include <elements/assets/assets_storage.h>
 #include <elements/utils/std/enum.h>
@@ -14,57 +18,55 @@ namespace Rendering
 {
 RTTI_DEFINITIONS(GeometryDemo)
 
+enum class program_enum : short
+{
+	// attributes
+	a_vertex_pos = 0,
+	a_vertex_normal = 1,
+	a_vertex_tangent = 2,
+	a_vertex_uv = 3,
+	// uniforms
+	u_matrix_mvp = 0,
+	u_matrix_model_view = 1,
+	u_map_normal = 2,
+	u_has_map_normal = 3
+};
+
 GeometryDemo::GeometryDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgramEncodeNormal(nullptr),
-	mProgramNonEncodeNormal(nullptr),
+	mProgram(nullptr),
 	mGeometryEffect(nullptr),
-	mVertexArrayObject(0),
-	mVertexBuffer(nullptr),
-	mIndexBuffer(nullptr),
-	mColorTexture(0),
-	mTexture(nullptr),
-	mSettings(),
-	mUi(nullptr),
-	mIsNonEncodeProgramLoaded(false)
+	mMapNormalTexture(nullptr),
+	mGeometrySettings(),
+	mGeometryUi(nullptr)
 {
 }
 
-GeometryDemo::~GeometryDemo()
-{
-	glDeleteVertexArrays(1, &mVertexArrayObject);
-}
+GeometryDemo::~GeometryDemo() = default;
 
 bool GeometryDemo::Initialize()
 {
-	mProgramEncodeNormal = eps::utils::make_unique<eps::rendering::program>();
-	mProgramNonEncodeNormal = eps::utils::make_unique<eps::rendering::program>();
-	mGeometryEffect = eps::utils::make_unique<Library::GeometryEffect>();
-	mVertexBuffer = eps::utils::make_unique<eps::rendering::vertices>(eps::rendering::buffer_usage::STATIC_DRAW);
-	mIndexBuffer = eps::utils::make_unique<eps::rendering::indices>(eps::rendering::buffer_usage::STATIC_DRAW);
-	mTexture = eps::utils::make_unique<eps::rendering::texture>();
 	// Build the shader program
+	mProgram = eps::utils::make_unique<eps::rendering::program>();
 	auto assetPath = "assets/shaders/techniques/lpp_geometry.prog";
 
-	if (!eps::rendering::load_program(assetPath, (*mProgramEncodeNormal.get())))
+	if (!eps::rendering::load_program(assetPath, (*mProgram.get())))
 	{
 		return false;
 	}
 
-	mGeometryEffect->SetProgram(eps::utils::raw_product(mProgramEncodeNormal->get_product()));
-	assetPath = "assets/shaders/techniques/lpp_geometry_non_encode.prog";
-	mIsNonEncodeProgramLoaded = eps::rendering::load_program(assetPath, (*mProgramNonEncodeNormal.get()));
 	// Load the settings
-	assetPath = "assets/settings/techniques/geometry.xml"; //TODO: lpp_geometry.xml;
-	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
+	assetPath = "assets/settings/techniques/lpp_geometry.xml";
+	mGeometrySettings = eps::assets_storage::instance().read<GeometrySettings>(assetPath);
 
-	if (!mSettings || mSettings->mIsEmpty)
+	if (!mGeometrySettings || mGeometrySettings->mIsEmpty)
 	{
 		return false;
 	}
 
 	// Load the texture
-	const auto textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mTexturePath);
+	const auto textureAsset = eps::assets_storage::instance().read<eps::asset_texture>
+							  (mGeometrySettings->u_map_normal);
 
 	if (!textureAsset || !textureAsset->pixels())
 	{
@@ -72,76 +74,50 @@ bool GeometryDemo::Initialize()
 	}
 
 	auto textureMaker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>();
-	(*mTexture.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
-	mColorTexture = eps::utils::raw_product(mTexture->get_product());
-	// Create the vertex buffer object
-	mVertexBuffer->allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(),
-							sizeof(mSettings->mVertices.front()));
-	// Create the index buffer object
-	mIndexBuffer->allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(),
-						   sizeof(mSettings->mIndices.front()));
-	// Create the vertex array object
-	glGenVertexArrays(1, &mVertexArrayObject);
-	mGeometryEffect->Initialize(mVertexArrayObject);
-	glBindVertexArray(0);
-	//
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	// Retry the UI service and set the values from settings class
-	mUi = static_cast<Rendering::CustomUi*>(mGame->GetServices().GetService(Rendering::CustomUi::TypeIdClass()));
-	assert(mUi);
-	mUi->Set_u_matrix_mvp(mSettings->mMatrixMvp);
-	mUi->Set_u_matrix_normal(mSettings->mMatrixNormal);
-	mUi->SetVertices(mSettings->mVertices);
-
-	if (!mIsNonEncodeProgramLoaded)
-	{
-		mUi->SetEncodeNormalControlsVisible(false);
-	}
-
+	mMapNormalTexture = eps::utils::make_unique<eps::rendering::texture>();
+	(*mMapNormalTexture.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
+	// Create the effect
+	mGeometryEffect = eps::utils::make_unique<GeometryEffect>(mGeometrySettings->mVertices,
+					  mGeometrySettings->mIndices,
+					  eps::rendering::buffer_usage::STREAM_DRAW);
+	// Retry the UI service
+	mGeometryUi = static_cast<Rendering::GeometryUi*>(mGame->GetServices().GetService(
+					  Rendering::GeometryUi::TypeIdClass()));
+	assert(mGeometryUi);
 	return true;
 }
 
 void GeometryDemo::Update()
 {
-	if (mUi->IsNeedRestore())
+	if (mGeometryUi->IsNeedRestore())
 	{
-		mUi->Set_u_matrix_mvp(mSettings->mMatrixMvp);
-		mUi->Set_u_matrix_normal(mSettings->mMatrixNormal);
-		mUi->SetVertices(mSettings->mVertices);
+		mGeometryUi->Set_u_matrix_mvp(mGeometrySettings->u_matrix_mvp);
+		mGeometryUi->Set_u_matrix_model_view(mGeometrySettings->u_matrix_model_view);
+		mGeometryUi->SetVertices(mGeometrySettings->mVertices);
 	}
 }
 
 void GeometryDemo::Draw()
 {
-	glBindVertexArray(mVertexArrayObject);
-	mVertexBuffer->allocate(&mUi->GetVertices().front(), mUi->GetVertices().size(),
-							sizeof(mUi->GetVertices().front()));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer->get_product()));
-	glBindTexture(GL_TEXTURE_2D, mColorTexture);
-
-	if (mIsNonEncodeProgramLoaded)
-	{
-		if (mUi->IsEncodeNormal())
-		{
-			mGeometryEffect->SetProgram(eps::utils::raw_product(mProgramEncodeNormal->get_product()));
-		}
-		else
-		{
-			mGeometryEffect->SetProgram(eps::utils::raw_product(mProgramNonEncodeNormal->get_product()));
-		}
-	}
-
-	mGeometryEffect->Use();
-	mGeometryEffect->u_matrix_mvp() << mUi->Get_u_matrix_mvp();
-	mGeometryEffect->u_matrix_normal() << mUi->Get_u_matrix_normal();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(mMapNormalTexture->get_product()));
 	//
-	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_BYTE, nullptr);
+	EPS_STATE_PROGRAM(mProgram->get_product());
+	//
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_matrix_mvp), mGeometryUi->Get_u_matrix_mvp());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_matrix_model_view),
+							mGeometryUi->Get_u_matrix_model_view());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_has_map_normal),
+							static_cast<int>(mGeometryUi->Get_u_has_map_normal()));
+	//
+	mGeometryEffect->construct(mGeometryUi->GetVertices());
+	//
+	std::array<short, 4> attributes = { eps::utils::to_int(program_enum::a_vertex_pos), eps::utils::to_int(program_enum::a_vertex_normal),
+										eps::utils::to_int(program_enum::a_vertex_tangent), eps::utils::to_int(program_enum::a_vertex_uv)
+									  };
+	mGeometryEffect->render(*mProgram.get(), attributes, mGeometrySettings->mIndices.size());
 	//
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
 }
 
 }

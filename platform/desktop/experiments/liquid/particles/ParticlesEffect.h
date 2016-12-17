@@ -1,27 +1,34 @@
 #ifndef _PARTICLES_EFFECT_H_
 #define _PARTICLES_EFFECT_H_
 
-#include <ShaderProgram.h>
+#include "ParticlesVertex.h"
+#include <elements/rendering/core/buffer.h>
+#include <vector>
+#include <array>
 
-namespace Library
+namespace eps
 {
-class ParticlesEffect : public ShaderProgram
+namespace rendering
 {
-	RTTI_DECLARATIONS(ParticlesEffect, ShaderProgram)
+class program;
+}
+}
 
-	SHADER_VARIABLE_DECLARATION(u_transform)
-	SHADER_VARIABLE_DECLARATION(u_size)
-
+namespace Rendering
+{
+class ParticlesEffect
+{
 public:
-	ParticlesEffect();
+	explicit ParticlesEffect(const std::vector<ParticlesVertex>& vertices,
+							 const std::vector<GLubyte>& indices,
+							 eps::rendering::buffer_usage usage = eps::rendering::buffer_usage::STATIC_DRAW);
 
-public:
-	ParticlesEffect(const ParticlesEffect& aRhs) = delete;
-	ParticlesEffect& operator = (const ParticlesEffect& aRhs) = delete;
+	void construct(const std::vector<ParticlesVertex>& vertices);
+	void render(eps::rendering::program& program, short a_position, short index_count);
 
-public:
-	virtual GLvoid Initialize(GLuint aVertexArrayObject) override;
-	virtual GLuint GetVertexSize() const override;
+private:
+	eps::rendering::vertices texture_vertices_;
+	eps::rendering::indices texture_indices_;
 };
 }
 

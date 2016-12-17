@@ -1,6 +1,6 @@
 
 #include "GeometryDemo.h"
-#include "CustomUi.h"
+#include "GeometryUi.h"
 #include <RenderingGame.h>
 #include <ClearBackground.h>
 
@@ -33,8 +33,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #endif
 	auto game = std::make_unique<Library::RenderingGame>("Geometry Demo [Sources techniques/lpp_geometry]");
 	game->addComponent<Library::ClearBackground>();
-	game->addService<Rendering::CustomUi>("assets/settings/techniques/geometry_ui.xml");//TODO: lpp_geometry_ui.xml;
-	//game->addComponent<Rendering::GeometryDemo>();
+	game->addService<Rendering::GeometryUi>("assets/settings/techniques/lpp_geometry.xml");
+	game->addComponent<Rendering::GeometryDemo>();
 
 	try
 	{

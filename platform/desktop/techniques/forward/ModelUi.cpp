@@ -1,6 +1,6 @@
 
-#include "CustomUi.h"
-#include "Controls.h"
+#include "ModelUi.h"
+#include "ModelControls.h"
 #include <checkbox.h>
 #include <SliderModel.h>
 #include <elements/ui/controls/button.h>
@@ -11,9 +11,9 @@
 
 namespace Rendering
 {
-RTTI_DEFINITIONS(CustomUi)
+RTTI_DEFINITIONS(ModelUi)
 
-CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
+ModelUi::ModelUi(Library::Game& aGame, const std::string& aAssetPath) :
 	UiAsset(aGame, aAssetPath),
 	mIsRestoreNeed(true),
 	m_u_matrix_mvp(),
@@ -26,19 +26,19 @@ CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
 	m_u_light_range(),
 	mVertices(
 {
-	VertexStructure(),
-					VertexStructure(),
-					VertexStructure(),
-					VertexStructure()
+	ModelVertex(),
+				ModelVertex(),
+				ModelVertex(),
+				ModelVertex()
 })
 {
 }
 
-CustomUi::~CustomUi()
+ModelUi::~ModelUi()
 {
 }
 
-bool CustomUi::Initialize()
+bool ModelUi::Initialize()
 {
 	if (!UiAsset::Initialize())
 	{
@@ -586,7 +586,7 @@ bool CustomUi::Initialize()
 	return true;
 }
 
-void CustomUi::Update()
+void ModelUi::Update()
 {
 	UiAsset::Update();
 
@@ -764,7 +764,7 @@ void CustomUi::Update()
 	}
 }
 
-void CustomUi::Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp)
+void ModelUi::Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp)
 {
 	m_u_matrix_mvp = a_u_matrix_mvp;
 	//
@@ -784,12 +784,12 @@ void CustomUi::Set_u_matrix_mvp(const glm::mat4& a_u_matrix_mvp)
 	mIsRestoreNeed = false;
 }
 
-const glm::mat4& CustomUi::Get_u_matrix_mvp() const
+const glm::mat4& ModelUi::Get_u_matrix_mvp() const
 {
 	return m_u_matrix_mvp;
 }
 
-void CustomUi::Set_u_matrix_model_view(const glm::mat4& a_u_matrix_model_view)
+void ModelUi::Set_u_matrix_model_view(const glm::mat4& a_u_matrix_model_view)
 {
 	m_u_matrix_model_view = a_u_matrix_model_view;
 	//
@@ -809,12 +809,12 @@ void CustomUi::Set_u_matrix_model_view(const glm::mat4& a_u_matrix_model_view)
 	mIsRestoreNeed = false;
 }
 
-const glm::mat4& CustomUi::Get_u_matrix_model_view() const
+const glm::mat4& ModelUi::Get_u_matrix_model_view() const
 {
 	return m_u_matrix_model_view;
 }
 
-void CustomUi::Set_u_matrix_normal(const glm::mat3& a_u_matrix_normal)
+void ModelUi::Set_u_matrix_normal(const glm::mat3& a_u_matrix_normal)
 {
 	m_u_matrix_normal = a_u_matrix_normal;
 	//
@@ -828,12 +828,12 @@ void CustomUi::Set_u_matrix_normal(const glm::mat3& a_u_matrix_normal)
 	mIsRestoreNeed = false;
 }
 
-const glm::mat3& CustomUi::Get_u_matrix_normal() const
+const glm::mat3& ModelUi::Get_u_matrix_normal() const
 {
 	return m_u_matrix_normal;
 }
 
-void CustomUi::Set_u_matrix_view(const glm::mat4& a_u_matrix_view)
+void ModelUi::Set_u_matrix_view(const glm::mat4& a_u_matrix_view)
 {
 	m_u_matrix_view = a_u_matrix_view;
 	//
@@ -853,12 +853,12 @@ void CustomUi::Set_u_matrix_view(const glm::mat4& a_u_matrix_view)
 	mIsRestoreNeed = false;
 }
 
-const glm::mat4& CustomUi::Get_u_matrix_view() const
+const glm::mat4& ModelUi::Get_u_matrix_view() const
 {
 	return m_u_matrix_view;
 }
 
-void CustomUi::Set_u_camera_pos(const glm::vec3& a_u_camera_pos)
+void ModelUi::Set_u_camera_pos(const glm::vec3& a_u_camera_pos)
 {
 	m_u_camera_pos = a_u_camera_pos;
 	//
@@ -869,12 +869,12 @@ void CustomUi::Set_u_camera_pos(const glm::vec3& a_u_camera_pos)
 	mIsRestoreNeed = false;
 }
 
-const glm::vec3& CustomUi::Get_u_camera_pos() const
+const glm::vec3& ModelUi::Get_u_camera_pos() const
 {
 	return m_u_camera_pos;
 }
 
-void CustomUi::Set_u_light_pos(const glm::vec3& a_u_light_pos)
+void ModelUi::Set_u_light_pos(const glm::vec3& a_u_light_pos)
 {
 	m_u_light_pos = a_u_light_pos;
 	//
@@ -885,12 +885,12 @@ void CustomUi::Set_u_light_pos(const glm::vec3& a_u_light_pos)
 	mIsRestoreNeed = false;
 }
 
-const glm::vec3& CustomUi::Get_u_light_pos() const
+const glm::vec3& ModelUi::Get_u_light_pos() const
 {
 	return m_u_light_pos;
 }
 
-void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
+void ModelUi::SetVertices(const std::vector<ModelVertex>& aVertices)
 {
 	mVertices = aVertices;
 	//
@@ -942,7 +942,7 @@ void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 	mIsRestoreNeed = false;
 }
 
-void CustomUi::Set_u_light_intensity(const glm::vec3& a_u_light_intensity)
+void ModelUi::Set_u_light_intensity(const glm::vec3& a_u_light_intensity)
 {
 	m_u_light_intensity = a_u_light_intensity;
 	//
@@ -953,12 +953,12 @@ void CustomUi::Set_u_light_intensity(const glm::vec3& a_u_light_intensity)
 	mIsRestoreNeed = false;
 }
 
-const glm::vec3& CustomUi::Get_u_light_intensity() const
+const glm::vec3& ModelUi::Get_u_light_intensity() const
 {
 	return m_u_light_intensity;
 }
 
-void CustomUi::Set_u_light_range(float a_u_light_range)
+void ModelUi::Set_u_light_range(float a_u_light_range)
 {
 	m_u_light_range = a_u_light_range;
 	//
@@ -967,22 +967,22 @@ void CustomUi::Set_u_light_range(float a_u_light_range)
 	mIsRestoreNeed = false;
 }
 
-float CustomUi::Get_u_light_range() const
+float ModelUi::Get_u_light_range() const
 {
 	return m_u_light_range;
 }
 
-const std::vector<VertexStructure>& CustomUi::GetVertices() const
+const std::vector<ModelVertex>& ModelUi::GetVertices() const
 {
 	return mVertices;
 }
 
-bool CustomUi::IsNeedRestore() const
+bool ModelUi::IsNeedRestore() const
 {
 	return mIsRestoreNeed;
 }
 
-float& CustomUi::GetValueBySliderId(int aSliderId)
+float& ModelUi::GetValueBySliderId(int aSliderId)
 {
 	switch (aSliderId)
 	{

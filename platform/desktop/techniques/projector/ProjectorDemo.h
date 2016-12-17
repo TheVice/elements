@@ -5,12 +5,6 @@
 #include <DrawableGameComponent.h>
 #include <elements/utils/std/pointer.h>
 #include <elements/utils/std/optional.h>
-#include <elements/rendering/core/buffer.h>
-
-namespace Library
-{
-class ProjectorEffect;
-}
 
 namespace eps
 {
@@ -47,7 +41,6 @@ private:
 	eps::utils::unique<eps::rendering::program> mProgram;
 	eps::utils::unique<ProjectorEffect> mProjectorEffect;
 	eps::utils::unique<eps::rendering::texture> mMapProjectiveTexture;
-	GLuint mMapProjective;
 	eps::utils::optional<ProjectorSettings> mProjectorSettings;
 	ProjectorUi* mProjectorUi;
 };

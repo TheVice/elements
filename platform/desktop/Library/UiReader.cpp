@@ -67,14 +67,14 @@ bool UiReader::read(const pugi::xml_document& doc)
 	mControlsInfo.clear();
 	mIsEmpty = true;
 	//
-	const auto ui_node = doc.child("ui");
+	const auto settings_node = doc.child("settings");
 
-	if (ui_node.empty())
+	if (settings_node.empty())
 	{
 		return !mIsEmpty;
 	}
 
-	const auto controls_node = ui_node.child("controls");
+	const auto controls_node = settings_node.child("controls");
 
 	if (controls_node.empty())
 	{

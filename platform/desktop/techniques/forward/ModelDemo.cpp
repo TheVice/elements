@@ -1,50 +1,62 @@
 
 #include "ModelDemo.h"
-#include "CustomUi.h"
-#include <elements/rendering/utils/program_loader.h>
+#include "ModelEffect.h"
+#include "ModelUi.h"
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
+#include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/core/texture_maker.h>
 #include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/utils/program_loader.h>
 #include <elements/assets/asset_texture.h>
 #include <elements/assets/assets_storage.h>
+#include <elements/utils/std/enum.h>
+#include <elements/utils/std/product.h>
 #include <Game.h>
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(ModelDemo)
 
+enum class program_enum : short
+{
+	// attributes
+	a_vertex_pos = 0,
+	a_vertex_normal = 1,
+	a_vertex_tangent = 2,
+	a_vertex_uv = 3,
+	// uniforms
+	u_matrix_mvp = 0,
+	u_matrix_model_view = 1,
+	u_matrix_normal = 2,
+	u_matrix_view = 3,
+	u_camera_pos = 4,
+	u_map_diffuse = 5,
+	u_map_specular = 6,
+	u_map_normal = 7,
+	u_light_pos = 8,
+	u_light_intensity = 9,
+	u_light_range = 10
+};
+
 ModelDemo::ModelDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgram(),
-	mModelEffect(),
-	mVertexArrayObject(0),
-	mVertexBuffer(nullptr),
-	mIndexBuffer(nullptr),
-	mDiffuseTexture(0),
-	mSpecularTexture(0),
-	mNormalTexture(0),
-	mDiffuse(nullptr),
-	mSpecular(nullptr),
-	mNormal(nullptr),
-	mSettings(),
-	mUi(nullptr)
+	mProgram(nullptr),
+	mModelEffect(nullptr),
+	mDiffuseTexture(nullptr),
+	mSpecularTexture(nullptr),
+	mNormalTexture(nullptr),
+	mModelSettings(),
+	mModelUi(nullptr)
 {
 }
 
-ModelDemo::~ModelDemo()
-{
-	glDeleteVertexArrays(1, &mVertexArrayObject);
-}
+ModelDemo::~ModelDemo() = default;
 
 bool ModelDemo::Initialize()
 {
-	mProgram = eps::utils::make_unique<eps::rendering::program>();
-	mModelEffect = eps::utils::make_unique<Library::ModelEffect>();
-	mVertexBuffer = eps::utils::make_unique<eps::rendering::vertices>(eps::rendering::buffer_usage::STATIC_DRAW);
-	mIndexBuffer = eps::utils::make_unique<eps::rendering::indices>(eps::rendering::buffer_usage::STATIC_DRAW);
-	mDiffuse = eps::utils::make_unique<eps::rendering::texture>();
-	mSpecular = eps::utils::make_unique<eps::rendering::texture>();
-	mNormal = eps::utils::make_unique<eps::rendering::texture>();
 	// Build the shader program
+	mProgram = eps::utils::make_unique<eps::rendering::program>();
 	auto assetPath = "assets/shaders/techniques/forward.prog";
 
 	if (!eps::rendering::load_program(assetPath, (*mProgram.get())))
@@ -52,12 +64,11 @@ bool ModelDemo::Initialize()
 		return false;
 	}
 
-	mModelEffect->SetProgram(eps::utils::raw_product(mProgram->get_product()));
 	// Load the settings
 	assetPath = "assets/settings/techniques/forward.xml";
-	mSettings = eps::assets_storage::instance().read<SettingsReader>(assetPath);
+	mModelSettings = eps::assets_storage::instance().read<ModelSettings>(assetPath);
 
-	if (!mSettings || mSettings->mIsEmpty)
+	if (!mModelSettings || mModelSettings->mIsEmpty)
 	{
 		return false;
 	}
@@ -65,104 +76,95 @@ bool ModelDemo::Initialize()
 	// Load the textures
 	const auto textureMaker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>();
 	//
-	auto textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mMapDiffuse);
+	auto textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mModelSettings->mMapDiffuse);
 
 	if (!textureAsset || !textureAsset->pixels())
 	{
 		return false;
 	}
 
-	(*mDiffuse.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
-	mDiffuseTexture = eps::utils::raw_product(mDiffuse->get_product());
+	mDiffuseTexture = eps::utils::make_unique<eps::rendering::texture>();
+	(*mDiffuseTexture.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
 	//
-	textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mMapSpecular);
+	textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mModelSettings->mMapSpecular);
 
 	if (!textureAsset || !textureAsset->pixels())
 	{
 		return false;
 	}
 
-	(*mSpecular.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
-	mSpecularTexture = eps::utils::raw_product(mSpecular->get_product());
+	mSpecularTexture = eps::utils::make_unique<eps::rendering::texture>();
+	(*mSpecularTexture.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
 	//
-	textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mSettings->mMapNormal);
+	textureAsset = eps::assets_storage::instance().read<eps::asset_texture>(mModelSettings->mMapNormal);
 
 	if (!textureAsset || !textureAsset->pixels())
 	{
 		return false;
 	}
 
-	(*mNormal.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
-	mNormalTexture = eps::utils::raw_product(mNormal->get_product());
-	// Create the vertex buffer object
-	mVertexBuffer->allocate(&mSettings->mVertices.front(), mSettings->mVertices.size(),
-							sizeof(mSettings->mVertices.front()));
-	// Create the index buffer object
-	mIndexBuffer->allocate(&mSettings->mIndices.front(), mSettings->mIndices.size(),
-						   sizeof(mSettings->mIndices.front()));
-	// Create the vertex array object
-	glGenVertexArrays(1, &mVertexArrayObject);
-	mModelEffect->Initialize(mVertexArrayObject);
-	glBindVertexArray(0);
-	//
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	mNormalTexture = eps::utils::make_unique<eps::rendering::texture>();
+	(*mNormalTexture.get()) = textureMaker.construct(textureAsset->pixels(), textureAsset->size());
+	// Create the effect
+	mModelEffect = eps::utils::make_unique<ModelEffect>(mModelSettings->mVertices, mModelSettings->mIndices,
+				   eps::rendering::buffer_usage::STREAM_DRAW);
 	// Retry the UI service
-	mUi = static_cast<Rendering::CustomUi*>(mGame->GetServices().GetService(Rendering::CustomUi::TypeIdClass()));
-	assert(mUi);
-	return true;
+	mModelUi = static_cast<Rendering::ModelUi*>(mGame->GetServices().GetService(
+				   Rendering::ModelUi::TypeIdClass()));
+	assert(mModelUi);
+	return mModelUi != nullptr;
 }
 
 void ModelDemo::Update()
 {
-	if (mUi->IsNeedRestore())
+	if (mModelUi->IsNeedRestore())
 	{
-		mUi->Set_u_matrix_mvp(mSettings->mMatrixMvp);
-		mUi->Set_u_matrix_model_view(mSettings->mMatrixModelView);
-		mUi->Set_u_matrix_view(mSettings->mMatrixView);
-		mUi->Set_u_matrix_normal(mSettings->mMatrixNormal);
+		mModelUi->Set_u_matrix_mvp(mModelSettings->mMatrixMvp);
+		mModelUi->Set_u_matrix_model_view(mModelSettings->mMatrixModelView);
+		mModelUi->Set_u_matrix_view(mModelSettings->mMatrixView);
+		mModelUi->Set_u_matrix_normal(mModelSettings->mMatrixNormal);
 		//
-		mUi->Set_u_light_pos(mSettings->mLightPos);
-		mUi->Set_u_camera_pos(mSettings->mCameraPos);
+		mModelUi->Set_u_light_pos(mModelSettings->mLightPos);
+		mModelUi->Set_u_camera_pos(mModelSettings->mCameraPos);
 		//
-		mUi->Set_u_light_intensity(mSettings->mLightIntensity);
-		mUi->Set_u_light_range(mSettings->mLightRange);
+		mModelUi->Set_u_light_intensity(mModelSettings->mLightIntensity);
+		mModelUi->Set_u_light_range(mModelSettings->mLightRange);
 		//
-		mUi->SetVertices(mSettings->mVertices);
+		mModelUi->SetVertices(mModelSettings->mVertices);
 	}
 }
 
 void ModelDemo::Draw()
 {
-	glBindVertexArray(mVertexArrayObject);
-	mVertexBuffer->allocate(&mUi->GetVertices().front(), mUi->GetVertices().size(),
-							sizeof(mUi->GetVertices().front()));
-	//
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eps::utils::raw_product(mIndexBuffer->get_product()));
-	//
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mDiffuseTexture);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(mDiffuseTexture->get_product()));
 	//
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, mSpecularTexture);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(mSpecularTexture->get_product()));
 	//
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, mNormalTexture);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(mNormalTexture->get_product()));
 	//
-	mModelEffect->Use();
+	EPS_STATE_PROGRAM(mProgram->get_product());
 	//
-	mModelEffect->u_matrix_mvp() << mUi->Get_u_matrix_mvp();
-	mModelEffect->u_matrix_model_view() << mUi->Get_u_matrix_model_view();
-	mModelEffect->u_matrix_view() << mUi->Get_u_matrix_view();
-	mModelEffect->u_matrix_normal() << mUi->Get_u_matrix_normal();
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_matrix_mvp), mModelUi->Get_u_matrix_mvp());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_matrix_model_view),
+							mModelUi->Get_u_matrix_model_view());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_matrix_normal), mModelUi->Get_u_matrix_normal());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_matrix_view), mModelUi->Get_u_matrix_view());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_camera_pos), mModelUi->Get_u_camera_pos());
 	//
-	mModelEffect->u_light_pos() << mUi->Get_u_light_pos();
-	mModelEffect->u_camera_pos() << mUi->Get_u_camera_pos();
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_light_pos), mModelUi->Get_u_light_pos());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_light_intensity),
+							mModelUi->Get_u_light_intensity());
+	mProgram->uniform_value(eps::utils::to_int(program_enum::u_light_range), mModelUi->Get_u_light_range());
 	//
-	mModelEffect->u_light_intensity() << mUi->Get_u_light_intensity();
-	mModelEffect->u_light_range() << mUi->Get_u_light_range();
+	mModelEffect->construct(mModelUi->GetVertices());
 	//
-	glDrawElements(GL_TRIANGLES, mSettings->mIndices.size(), GL_UNSIGNED_BYTE, nullptr);
+	std::array<short, 4> attributes = { eps::utils::to_int(program_enum::a_vertex_pos), eps::utils::to_int(program_enum::a_vertex_normal),
+										eps::utils::to_int(program_enum::a_vertex_tangent), eps::utils::to_int(program_enum::a_vertex_uv)
+									  };
+	mModelEffect->render(*mProgram.get(), attributes, mModelSettings->mIndices.size());
 	//
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -172,10 +174,6 @@ void ModelDemo::Draw()
 	//
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
 }
 
 }

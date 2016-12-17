@@ -3,7 +3,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
-from effect_generator import read_program, get_attribute_type, get_variable_type, get_head_name, get_class_name
+from effect_generator import read_program, extend_program_info
 
 
 class Control(dict):
@@ -16,8 +16,8 @@ class Control(dict):
 
         self['position_x'] = str(10)
         self['position_y'] = str(20)
-        self['size_w'] = str(30)
-        self['size_h'] = str(40)
+        self['size_w'] = str(75)
+        self['size_h'] = str(75)
         self['visible'] = 'true'
         self['control_name'] = 'control_name_{}'.format(Control.control_number)
 
@@ -34,6 +34,16 @@ class Button(Control):
         self['control_name'] = self['control_name'].replace('control_name_', 'button_')
 
 
+class Check(Button):
+
+    def __init__(self, *args):
+
+        Button.__init__(self, *args)
+
+        self['asset_path'] = 'assets/ui/textures/light.png'
+        self['control_name'] = self['control_name'].replace('button_', 'check_')
+
+
 class Label(Control):
 
     def __init__(self, *args):
@@ -43,9 +53,9 @@ class Label(Control):
         self['font_path'] = 'assets/ui/fonts/OpenSans-Regular.ttf'
         self['font_height'] = str(18)
         self['text'] = 'This is label'
-        self['color_r'] = str(0.9)
-        self['color_g'] = str(0.25)
-        self['color_b'] = str(0.2)
+        self['color_r'] = str(0.0)
+        self['color_g'] = str(0.65)
+        self['color_b'] = str(0.95)
         self['color_a'] = str(1.0)
         # self['alignment_haling'] = 'RESERVED'
         # self['alignment_valign'] = 'RESERVED'
@@ -67,9 +77,9 @@ class Panel(Control):
 
         Control.__init__(self, *args)
 
-        self['color_r'] = str(0.9)
-        self['color_g'] = str(0.25)
-        self['color_b'] = str(0.2)
+        self['color_r'] = str(0.8)
+        self['color_g'] = str(0.8)
+        self['color_b'] = str(0.8)
         self['color_a'] = str(0.5)
         self['visible'] = 'false'
         self['control_name'] = self['control_name'].replace('control_name_', 'panel_')
@@ -112,14 +122,16 @@ class Checkbox(Control):
 def get_member_count(a_type):
 
     types = {
-        'glm::mat3': 9 - 3,
-        'glm::mat4': 16 - 4,
+        'bool': 1,
+        'float': 1,
         #
-        'glm::vec2': 2,
-        'glm::vec3': 3,
-        'glm::vec4': 4,
+        'eps::math::vec2': 2,
+        'eps::math::vec3': 3,
+        'eps::math::vec4': 4,
         #
-        'float': 1
+        'eps::math::mat2': 4 - 2,
+        'eps::math::mat3': 9 - 3,
+        'eps::math::mat4': 16 - 4
     }
 
     if a_type not in types.keys():
@@ -134,9 +146,15 @@ def generate_controls_by_type(a_type):
     controls = []
     for i in range(0, get_member_count(a_type)):
 
-        controls.append(ET.Element('slider', Slider()))
-        Control.control_number -= 1
-        controls.append(ET.Element('label', Label()))
+        if a_type == 'bool':
+
+            controls.append(ET.Element('check', Check()))
+
+        else:
+
+            controls.append(ET.Element('slider', Slider()))
+            Control.control_number -= 1
+            controls.append(ET.Element('label', Label()))
 
     return controls
 
@@ -169,14 +187,19 @@ def process_controls(a_controls, a_cs, a_name):
 
 def generate_ui_xml(a_program, a_vertex_count):
 
-    ui_node = ET.Element('ui', {'name': a_program['name']})
+    settings_node = ET.Element('settings', {'name': a_program['name']})
     controls = ET.Element('controls')
+
+    restore_button = ET.Element('button', Button())
+    restore_button.attrib['asset_path'] = 'assets/ui/textures/restore.png'
+    restore_button.attrib['control_name'] = 'restore_button'
+    controls.append(restore_button)
 
     for location in a_program['u_locations']:
 
-        uniform_type = get_variable_type('uniform', location[0], a_program['vertex'])
+        uniform_type = location[2]
 
-        if uniform_type == '':
+        if uniform_type == 'std::string':
 
             continue
 
@@ -188,13 +211,13 @@ def generate_ui_xml(a_program, a_vertex_count):
         cs = list()
         for location in a_program['a_locations']:
 
-            attribute_type = get_attribute_type(location[0], a_program['vertex'])
+            attribute_type = location[2]
             cs.extend(generate_controls_by_type(attribute_type))
 
         process_controls(controls, cs, 'vertex_{}'.format(i))
 
-    ui_node.append(controls)
-    return ui_node
+    settings_node.append(controls)
+    return settings_node
 
 
 def to_pretty_xml(a_element):
@@ -227,7 +250,7 @@ def fill_controls_def(a_ui_xml, a_controls, a_parent):
 
             control_def = ''
 
-            if control.tag in ['panel', 'button', 'label']:
+            if control.tag in ['panel', 'button', 'check', 'label']:
 
                 if len(a_parent) > 0:
 
@@ -256,25 +279,28 @@ def fill_controls_def(a_ui_xml, a_controls, a_parent):
             fill_controls_def(control, a_controls, '')
 
 
-def generate_controls_h(a_ui_xml):
+def generate_controls_h(a_program, a_ui_xml):
 
     controls_h_template = (
-        '#ifndef _CONTROLS_H_{0}'
-        '#define _CONTROLS_H_{0}'
+        '#ifndef _{7}_CONTROLS_H_{0}'
+        '#define _{7}_CONTROLS_H_{0}'
         '{0}'
-        '{1}'
-        '{0}'
-        '{0}'
-        '{2}'
+        '{1}'                           # button
         '{0}'
         '{0}'
-        '{3}'
+        '{2}'                           # check
         '{0}'
         '{0}'
-        '{4}'
+        '{3}'                           # panel
         '{0}'
         '{0}'
-        '{5}'
+        '{4}'                           # slider
+        '{0}'
+        '{0}'
+        '{5}'                           # slide_count
+        '{0}'
+        '{0}'
+        '{6}'                           # label
         '{0}'
         '{0}'
         '#endif{0}'
@@ -282,6 +308,7 @@ def generate_controls_h(a_ui_xml):
 
     controls = dict()
     controls['button'] = list()
+    controls['check'] = list()
     controls['panel'] = list()
     controls['slider'] = list()
     controls['label'] = list()
@@ -291,10 +318,12 @@ def generate_controls_h(a_ui_xml):
 
     return controls_h_template.format(os.linesep,
                                       os.linesep.join(controls['button']),
+                                      os.linesep.join(controls['check']),
                                       os.linesep.join(controls['panel']),
                                       os.linesep.join(controls['slider']),
                                       slider_count,
-                                      os.linesep.join(controls['label'])), controls
+                                      os.linesep.join(controls['label']),
+                                      a_program['head_name']), controls
 
 
 def generate_custom_ui_h(a_program):
@@ -303,7 +332,7 @@ def generate_custom_ui_h(a_program):
         '#ifndef _{4}_UI_H_{0}'
         '#define _{4}_UI_H_{0}'
         '{0}'
-        '#include "VertexStructure.h"{0}'
+        '#include "{5}Vertex.h"{0}'
         '#include <UiAsset.h>{0}'
         '#include <vector>{0}'
         '{0}'
@@ -329,15 +358,18 @@ def generate_custom_ui_h(a_program):
         'public:{0}'
         '{2}'
         '{0}'
-        '{1}void SetVertices(const std::vector<VertexStructure>& aVertices);{0}'
-        '{1}const std::vector<VertexStructure>& GetVertices() const;{0}'
+        '{1}void SetVertices(const std::vector<{5}Vertex>& aVertices);{0}'
+        '{1}const std::vector<{5}Vertex>& GetVertices() const;{0}'
+        '{0}'
+        '{1}bool IsNeedRestore() const;{0}'
         '{0}'
         'private:{0}'
         '{1}virtual float& GetValueBySliderId(int aSliderId) override;{0}'
         '{0}'
         'private:{0}'
+        '{1}bool mIsRestoreNeed;{0}'
         '{3}'
-        '{1}std::vector<VertexStructure> mVertices;{0}'
+        '{1}std::vector<{5}Vertex> mVertices;{0}'
         '}};{0}'
         '}}{0}'
         '{0}'
@@ -358,20 +390,25 @@ def generate_custom_ui_h(a_program):
 
     for location in a_program['u_locations']:
 
-        uniform_type = get_variable_type('uniform', location[0], a_program['vertex'])
+        uniform_type = location[2]
 
-        if uniform_type == '':
+        if uniform_type == 'std::string':
 
             continue
 
-        uniform_method.append(uniform_method_template.format(os.linesep, '\t', location[0], uniform_type))
+        um = uniform_method_template.format(os.linesep, '\t', location[0], uniform_type)
+
+        if uniform_type == 'bool':
+
+            um = um.replace('&', '')
+            um = um.replace('const ', '')
+            um = '//{}'.format(um)  # check component do not support direct set of state
+
+        uniform_method.append(um)
         uniform_variable.append(uniform_variable_template.format(os.linesep, '\t', location[0], uniform_type))
 
-    head_name = get_head_name(a_program)
-    class_name = get_class_name(a_program)
-
     return custom_ui_h_template.format(os.linesep, '\t', os.linesep.join(uniform_method), ''.join(uniform_variable),
-                                       head_name, class_name)
+                                       a_program['head_name'], a_program['class_name'])
 
 
 def get_control_from_define(a_define):
@@ -394,29 +431,34 @@ def get_control_from_define(a_define):
 def get_uniform_list(a_type):
 
     types = {
-        'glm::mat4': [
-                        '[0][0]', '[0][1]', '[0][2]',
-                        '[1][0]', '[1][1]', '[1][2]',
-                        '[2][0]', '[2][1]', '[2][2]',
-                        '[3][0]', '[3][1]', '[3][2]'
-                     ],
-        'glm::mat3': [
-                        '[0][0]', '[0][1]',
-                        '[1][0]', '[1][1]',
-                        '[2][0]', '[2][1]'
-                     ],
+        'bool': [''],
+        'float': [''],
         #
-        'glm::vec4': [
-                        '[0]', '[1]', '[2]', '[3]'
-                     ],
-        'glm::vec3': [
-                        '[0]', '[1]', '[2]'
-                     ],
-        'glm::vec2': [
-                        '[0]', '[1]'
-                     ],
+        'eps::math::vec4': [
+            '[0]', '[1]', '[2]', '[3]'
+        ],
+        'eps::math::vec3': [
+            '[0]', '[1]', '[2]'
+        ],
+        'eps::math::vec2': [
+            '[0]', '[1]'
+        ],
         #
-        'float': ['']
+        'eps::math::mat4': [
+            '[0][0]', '[0][1]', '[0][2]',
+            '[1][0]', '[1][1]', '[1][2]',
+            '[2][0]', '[2][1]', '[2][2]',
+            '[3][0]', '[3][1]', '[3][2]'
+        ],
+        'eps::math::mat3': [
+            '[0][0]', '[0][1]',
+            '[1][0]', '[1][1]',
+            '[2][0]', '[2][1]'
+        ],
+        'eps::math::mat2': [
+            '[0][0]',
+            '[1][0]'
+        ]
     }
 
     if a_type not in types.keys():
@@ -453,9 +495,10 @@ def get_uniform_with_corresponding_defines(a_program, a_controls, a_define):
 
     for location in a_program['u_locations']:
 
-        uniform_type = get_variable_type('uniform', location[0], a_program['vertex'])
+        uniform_type = location[2]
 
-        if uniform_type == '':
+        if uniform_type == 'std::string':
+
             continue
 
         uniform_list = get_uniform_list(uniform_type)
@@ -482,16 +525,7 @@ def get_vertices_with_corresponding_defines(a_program, a_controls, a_vertex_coun
 
         for location in a_program['a_locations']:
 
-                attribute_type = ''
-
-                try:
-
-                    attribute_type = get_attribute_type(location[0], a_program['vertex'])
-
-                except ValueError:
-
-                    continue
-
+                attribute_type = location[2]
                 member_count = get_member_count(attribute_type)
 
                 if member_count > len(vertex_members):
@@ -522,6 +556,7 @@ def generate_custom_ui_cpp_constructor(a_program, a_vertex_count):
     constructor_template = (
         '{4}Ui::{4}Ui(Library::Game& aGame, const std::string& aAssetPath) :{0}'
         '{1}UiAsset(aGame, aAssetPath),{0}'
+        '{1}mIsRestoreNeed(true),{0}'
         '{2},'          # uniform_variable
         '{0}'
         'mVertices({0}'
@@ -537,9 +572,9 @@ def generate_custom_ui_cpp_constructor(a_program, a_vertex_count):
 
     for location in a_program['u_locations']:
 
-        uniform_type = get_variable_type('uniform', location[0], a_program['vertex'])
+        uniform_type = location[2]
 
-        if uniform_type == '':
+        if uniform_type == 'std::string':
 
             continue
 
@@ -549,14 +584,12 @@ def generate_custom_ui_cpp_constructor(a_program, a_vertex_count):
 
     for i in range(0, a_vertex_count):
 
-        vertex_structure.append('\tVertexStructure()')
-
-    class_name = get_class_name(a_program)
+        vertex_structure.append('\t{0}Vertex()'.format(a_program['class_name']))
 
     return constructor_template.format(os.linesep, '\t',
                                        ',{}'.format(os.linesep).join(uniform_variable),
                                        ',{}'.format(os.linesep).join(vertex_structure),
-                                       class_name)
+                                       a_program['class_name'])
 
 
 def generate_custom_ui_cpp_initialize(a_program, a_controls):
@@ -592,27 +625,30 @@ def generate_custom_ui_cpp_initialize(a_program, a_controls):
     is_exist_control = []
     set_button_click = []
     is_button = True
+    is_check = True
 
-    for controls in [a_controls[1]['button'], a_controls[1]['panel'], a_controls[1]['label']]:
+    for controls in [a_controls[1]['button'], a_controls[1]['check'], a_controls[1]['panel'], a_controls[1]['label']]:
 
         for control in controls:
 
             control = get_control_from_define(control)
             is_exist_control.append('\tIS_CONTROL_EXIST({}){}'.format(control, os.linesep))
 
-            if is_button:
+            if is_button or is_check:
 
                 set_button_click.append(button_template.format(os.linesep, '\t', control))
+
+        if is_button is False:
+
+            is_check = False
 
         is_button = False
         is_exist_control.append('{}{}{}'.format('\t', '//', os.linesep))
 
-    class_name = get_class_name(a_program)
-
     return initialize_template.format(os.linesep, '\t',
                                       ''.join(is_exist_control),
                                       '{0}{0}'.format(os.linesep).join(set_button_click),
-                                      class_name)
+                                      a_program['class_name'])
 
 
 def generate_custom_ui_cpp_update(a_program, a_controls, a_vertex_count):
@@ -623,7 +659,7 @@ def generate_custom_ui_cpp_update(a_program, a_controls, a_vertex_count):
         '{1}UiAsset::Update();{0}'
         '{1}//{0}'
         '{2}'           # uniform_variable
-        '\t//{0}'
+        '{1}//{0}'
         '{3}'           # vertices_variable
         '}}{0}'
     )
@@ -646,9 +682,8 @@ def generate_custom_ui_cpp_update(a_program, a_controls, a_vertex_count):
 
         vertices_variable.append('\tDISPLAY_FLOAT_VALUE_AT_LABEL({}, {}){}'.format(vertex[0], vertex[1], os.linesep))
 
-    class_name = get_class_name(a_program)
-
-    return update_template.format(os.linesep, '\t', ''.join(uniform_variable), ''.join(vertices_variable), class_name)
+    return update_template.format(os.linesep, '\t', ''.join(uniform_variable),
+                                  ''.join(vertices_variable), a_program['class_name'])
 
 
 def generate_custom_ui_cpp_uniform_methods(a_program, a_controls):
@@ -659,6 +694,8 @@ def generate_custom_ui_cpp_uniform_methods(a_program, a_controls):
         '{1}m_{2} = a_{2};{0}'
         '{1}//{0}'
         '{4}'
+        '{1}//{0}'
+        '{1}mIsRestoreNeed = false;{0}'
         '}}{0}'
         '{0}'
         'const {3}& {5}Ui::Get_{2}() const{0}'
@@ -669,26 +706,33 @@ def generate_custom_ui_cpp_uniform_methods(a_program, a_controls):
 
     uniforms = get_uniform_with_corresponding_defines(a_program, a_controls, 'slider')
     methods = []
-    class_name = get_class_name(a_program)
 
     for location in a_program['u_locations']:
 
         if location[0] in uniforms:
 
-            uniform_type = get_variable_type('uniform', location[0], a_program['vertex'])
-
-            if uniform_type == '':
-
-                continue
-
+            uniform_type = location[2]
             uniform_variable = []
 
             for uniform in uniforms[location[0]]:
 
-                uniform_variable.append('\tSET_REAL_VALUE_AT_SLIDER({}, {}){}'.format(uniform[0], uniform[1], os.linesep))
+                uniform_variable.append('\tSET_REAL_VALUE_AT_SLIDER({}, {}){}'.format(uniform[0],
+                                                                                      uniform[1],
+                                                                                      os.linesep))
 
-            methods.append(uniform_method_template.format(os.linesep, '\t', location[0],
-                                                          uniform_type, ''.join(uniform_variable), class_name))
+            um = uniform_method_template.format(os.linesep, '\t', location[0], uniform_type,
+                                                ''.join(uniform_variable), a_program['class_name'])
+
+            if uniform_type == 'bool':
+
+                um = um.replace('&', '')
+                um = um.replace('const ', '')
+                um = '/*{}'.format(um)  # check component do not support direct set of state
+                pos = um.find('{}Ui::Get_'.format(a_program['class_name'])) - len('bool ') - 2 * len(os.linesep)
+                new_um = '{}*/{}'.format(um[:pos], um[pos:])
+                um = new_um
+
+            methods.append(um)
 
     return os.linesep.join(methods)
 
@@ -696,14 +740,16 @@ def generate_custom_ui_cpp_uniform_methods(a_program, a_controls):
 def generate_custom_ui_cpp_vertex_methods(a_program, a_controls, a_vertex_count):
 
     vertex_method_template = (
-        'void {3}Ui::SetVertices(const std::vector<VertexStructure>& aVertices){0}'
+        'void {3}Ui::SetVertices(const std::vector<{3}Vertex>& aVertices){0}'
         '{{{0}'
         '{1}mVertices = aVertices;{0}'
         '{1}//{0}'
         '{2}'
+        '{1}//{0}'
+        '{1}mIsRestoreNeed = false;{0}'
         '}}{0}'
         '{0}'
-        'const std::vector<VertexStructure>& {3}Ui::GetVertices() const{0}'
+        'const std::vector<{3}Vertex>& {3}Ui::GetVertices() const{0}'
         '{{{0}'
         '{1}return mVertices;{0}'
         '}}{0}'
@@ -716,9 +762,7 @@ def generate_custom_ui_cpp_vertex_methods(a_program, a_controls, a_vertex_count)
 
         vertices_variable.append('{}SET_REAL_VALUE_AT_SLIDER({}, {}){}'.format('\t', vertex[0], vertex[1], os.linesep))
 
-    class_name = get_class_name(a_program)
-
-    return vertex_method_template.format(os.linesep, '\t', ''.join(vertices_variable), class_name)
+    return vertex_method_template.format(os.linesep, '\t', ''.join(vertices_variable), a_program['class_name'])
 
 
 def generate_custom_ui_cpp_get_slider_model(a_program, a_controls, a_vertex_count):
@@ -744,7 +788,6 @@ def generate_custom_ui_cpp_get_slider_model(a_program, a_controls, a_vertex_coun
     case_template = (
         '{1}{1}case {2}:{0}'
         '{1}{1}{1}return {3};{0}'
-        # '{1}{1}{1}break;{0}'
     )
     model_switch = []
 
@@ -762,9 +805,7 @@ def generate_custom_ui_cpp_get_slider_model(a_program, a_controls, a_vertex_coun
         case = case_template.format(os.linesep, '\t', vertex[1], vertex[0])
         model_switch.append(case)
 
-    class_name = get_class_name(a_program)
-
-    return get_slider_model_template.format(os.linesep, '\t', os.linesep.join(model_switch), class_name)
+    return get_slider_model_template.format(os.linesep, '\t', os.linesep.join(model_switch), a_program['class_name'])
 
 
 def generate_custom_ui_cpp(a_program, a_controls, a_vertex_count):
@@ -798,6 +839,11 @@ def generate_custom_ui_cpp(a_program, a_controls, a_vertex_count):
         '{0}'
         '{6}'                                   # vertex_methods
         '{0}'
+        'bool {8}Ui::IsNeedRestore() const{0}'
+        '{{{0}'
+        'return mIsRestoreNeed;{0}'
+        '}}{0}'
+        '{0}'
         '{7}'                                   # get_slider_model
         '{0}'
         '}}{0}'
@@ -810,7 +856,7 @@ def generate_custom_ui_cpp(a_program, a_controls, a_vertex_count):
                                          generate_custom_ui_cpp_uniform_methods(a_program, a_controls),
                                          generate_custom_ui_cpp_vertex_methods(a_program, a_controls, a_vertex_count),
                                          generate_custom_ui_cpp_get_slider_model(a_program, a_controls, a_vertex_count),
-                                         get_class_name(a_program))
+                                         a_program['class_name'])
 
 
 if __name__ == '__main__':
@@ -824,8 +870,9 @@ if __name__ == '__main__':
         vertex_count = 4
 
         shader_program = read_program(sys.argv[1])
+        shader_program = extend_program_info(shader_program)
         ui_xml = generate_ui_xml(shader_program, vertex_count)
-        controls_h = generate_controls_h(ui_xml)
+        controls_h = generate_controls_h(shader_program, ui_xml)
         custom_ui_h = generate_custom_ui_h(shader_program)
         custom_ui_cpp = generate_custom_ui_cpp(shader_program, controls_h, vertex_count)
 

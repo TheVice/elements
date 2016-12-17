@@ -7,20 +7,20 @@
 namespace Rendering
 {
 
-#define CLEAN()						\
-	mVertices.clear();				\
-	mIndices.clear();				\
+#define CLEAR()	\
+	mVertices.clear();	\
+	mIndices.clear();	\
 	\
-	u_matrix_mvp = glm::mat4();		\
-	u_matrix_model = glm::mat4();	\
-	u_matrix_pvp = glm::mat4();		\
-	u_map_projective.clear();		\
+	u_matrix_mvp = eps::math::mat4();	\
+	u_matrix_model = eps::math::mat4();	\
+	u_matrix_pvp = eps::math::mat4();	\
+	u_map_projective.clear();	\
 	\
 	mIsEmpty = true;
 
 bool ProjectorSettings::read(const pugi::xml_document& doc)
 {
-	CLEAN()
+	CLEAR()
 	const auto settings_node = doc.child("settings");
 
 	if (settings_node.empty())
@@ -58,7 +58,7 @@ bool ProjectorSettings::read(const pugi::xml_document& doc)
 
 	const auto u_matrix_pvp_node = settings_node.child("u_matrix_pvp");
 
-	if (u_matrix_mvp_node.empty())
+	if (u_matrix_pvp_node.empty())
 	{
 		return !mIsEmpty;
 	}
@@ -77,21 +77,21 @@ bool ProjectorSettings::read(const pugi::xml_document& doc)
 			continue;
 		}
 
-		const auto position_node = subNode.child("position");
+		const auto a_vertex_pos_node = subNode.child("a_vertex_pos");
 
-		if (position_node.empty())
+		if (a_vertex_pos_node.empty())
 		{
 			return !mIsEmpty;
 		}
 
-		auto position = glm::vec3();
+		auto a_vertex_pos = eps::math::vec3();
 
-		if (!Library::ReaderHelpers::read_glm_vec(position_node, position))
+		if (!Library::ReaderHelpers::read_glm_vec(a_vertex_pos_node, a_vertex_pos))
 		{
 			return !mIsEmpty;
 		}
 
-		const auto vertex = VertexStructure(position);
+		const auto vertex = ProjectorVertex(a_vertex_pos);
 		mVertices.push_back(vertex);
 	}
 

@@ -6,7 +6,7 @@
 namespace Rendering
 {
 
-ProjectorEffect::ProjectorEffect(const std::vector<VertexStructure>& vertices,
+ProjectorEffect::ProjectorEffect(const std::vector<ProjectorVertex>& vertices,
 								 const std::vector<GLubyte>& indices,
 								 eps::rendering::buffer_usage usage)
 	: texture_vertices_(usage)
@@ -20,7 +20,7 @@ ProjectorEffect::ProjectorEffect(const std::vector<VertexStructure>& vertices,
 	texture_indices_.allocate(&indices.front(), indices.size(), sizeof(indices.front()));
 }
 
-void ProjectorEffect::construct(const std::vector<VertexStructure>& vertices)
+void ProjectorEffect::construct(const std::vector<ProjectorVertex>& vertices)
 {
 	assert(!vertices.empty());
 	// Update vertex buffer object
@@ -32,15 +32,8 @@ void ProjectorEffect::render(eps::rendering::program& program, short a_position,
 	EPS_STATE_VERTICES(texture_vertices_.get_product());
 	EPS_STATE_INDICES(texture_indices_.get_product());
 	//
-	/*glVertexAttribPointer(a_position,
-							glm::vec3().length(),
-							GL_FLOAT,
-							GL_FALSE,
-							sizeof(VertexStructure),
-							reinterpret_cast<GLvoid*>(offsetof(VertexStructure, a_vertex_pos)));
-	glEnableVertexAttribArray(a_position);*/
-	program.attribute_array(a_position, offsetof(VertexStructure, a_vertex_pos), glm::vec3().length(),
-							sizeof(VertexStructure));
+	program.attribute_array(a_position, offsetof(ProjectorVertex, a_vertex_pos),
+							eps::math::vec3().length(), sizeof(ProjectorVertex));
 	program.attribute_array_enable(a_position);
 	//
 	glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_BYTE, 0);

@@ -8,6 +8,17 @@ namespace Library
 namespace ReaderHelpers
 {
 
+bool read_bool(const pugi::xml_node& aNode, bool& aValue)
+{
+	if (!aNode.empty())
+	{
+		aValue = aNode.text().as_bool();
+		return true;
+	}
+
+	return false;
+}
+
 bool read_float(const pugi::xml_node& aNode, float& aValue)
 {
 	if (!aNode.empty())
@@ -21,10 +32,12 @@ bool read_float(const pugi::xml_node& aNode, float& aValue)
 
 bool read_std_string(const pugi::xml_node& aNode, std::string& aValue)
 {
+	aValue.clear();
+
 	if (!aNode.empty())
 	{
 		aValue = aNode.text().get();
-		return true;
+		return !aValue.empty();
 	}
 
 	return false;

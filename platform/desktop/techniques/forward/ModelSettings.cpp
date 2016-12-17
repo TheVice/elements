@@ -1,5 +1,5 @@
 
-#include "SettingsReader.h"
+#include "ModelSettings.h"
 #include <elements/assets/assets_storage.h>
 #include <ReaderHelpers.h>
 #include <glm/gtc/constants.hpp>
@@ -9,7 +9,7 @@
 namespace Rendering
 {
 
-void SettingsReader::clear()
+void ModelSettings::clear()
 {
 	mVertices.clear();
 	mIndices.clear();
@@ -32,10 +32,10 @@ void SettingsReader::clear()
 	mIsEmpty = true;
 }
 
-bool SettingsReader::read(const pugi::xml_document& doc)
+bool ModelSettings::read(const pugi::xml_document& doc)
 {
 	clear();
-	const auto root_node = doc.child("program");
+	const auto root_node = doc.child("settings");
 
 	if (root_node.empty())
 	{
@@ -196,7 +196,7 @@ bool SettingsReader::read(const pugi::xml_document& doc)
 			return !mIsEmpty;
 		}
 
-		const auto vertex_data = VertexStructure(vertex_pos, vertex_normal, vertex_tangent, vertex_uv);
+		const auto vertex_data = ModelVertex(vertex_pos, vertex_normal, vertex_tangent, vertex_uv);
 		mVertices.push_back(vertex_data);
 	}
 

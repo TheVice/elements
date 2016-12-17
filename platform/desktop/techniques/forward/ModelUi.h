@@ -1,24 +1,24 @@
-#ifndef _CUSTOM_UI_H_
-#define _CUSTOM_UI_H_
+#ifndef _MODEL_UI_H_
+#define _MODEL_UI_H_
 
-#include "VertexStructure.h"
+#include "ModelVertex.h"
 #include <UiAsset.h>
 #include <vector>
 
 namespace Rendering
 {
-class CustomUi : public Library::UiAsset
+class ModelUi : public Library::UiAsset
 {
-	RTTI_DECLARATIONS(CustomUi, UiAsset)
+	RTTI_DECLARATIONS(ModelUi, UiAsset)
 
 public:
-	CustomUi(Library::Game& aGame, const std::string& aAssetPath);
-	~CustomUi();
+	ModelUi(Library::Game& aGame, const std::string& aAssetPath);
+	~ModelUi();
 
 public:
-	CustomUi() = delete;
-	CustomUi(const CustomUi& aRhs) = delete;
-	CustomUi& operator = (const CustomUi& aRhs) = delete;
+	ModelUi() = delete;
+	ModelUi(const ModelUi& aRhs) = delete;
+	ModelUi& operator = (const ModelUi& aRhs) = delete;
 
 public:
 	virtual bool Initialize() override;
@@ -49,8 +49,8 @@ public:
 	void Set_u_light_range(float a_u_light_range);
 	float Get_u_light_range() const;
 
-	void SetVertices(const std::vector<VertexStructure>& aVertices);
-	const std::vector<VertexStructure>& GetVertices() const;
+	void SetVertices(const std::vector<ModelVertex>& aVertices);
+	const std::vector<ModelVertex>& GetVertices() const;
 
 	bool IsNeedRestore() const;
 
@@ -67,7 +67,7 @@ private:
 	glm::vec3 m_u_light_pos;
 	glm::vec3 m_u_light_intensity;
 	float m_u_light_range;
-	std::vector<VertexStructure> mVertices;
+	std::vector<ModelVertex> mVertices;
 };
 }
 

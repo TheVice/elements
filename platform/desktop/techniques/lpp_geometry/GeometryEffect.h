@@ -1,28 +1,34 @@
 #ifndef _GEOMETRY_EFFECT_H_
 #define _GEOMETRY_EFFECT_H_
 
-#include <ShaderProgram.h>
+#include "GeometryVertex.h"
+#include <elements/rendering/core/buffer.h>
+#include <vector>
+#include <array>
 
-namespace Library
+namespace eps
 {
-class GeometryEffect : public ShaderProgram
+namespace rendering
 {
-	RTTI_DECLARATIONS(GeometryEffect, ShaderProgram)
+class program;
+}
+}
 
-	SHADER_VARIABLE_DECLARATION(u_matrix_mvp)
-	SHADER_VARIABLE_DECLARATION(u_matrix_normal)
-	//SHADER_VARIABLE_DECLARATION(u_map_normal)
-
+namespace Rendering
+{
+class GeometryEffect
+{
 public:
-	GeometryEffect();
+	explicit GeometryEffect(const std::vector<GeometryVertex>& vertices,
+							const std::vector<GLubyte>& indices,
+							eps::rendering::buffer_usage usage = eps::rendering::buffer_usage::STATIC_DRAW);
 
-public:
-	GeometryEffect(const GeometryEffect& aRhs) = delete;
-	GeometryEffect& operator = (const GeometryEffect& aRhs) = delete;
+	void construct(const std::vector<GeometryVertex>& vertices);
+	void render(eps::rendering::program& program, const std::array<short, 4>& a_position, short index_count);
 
-public:
-	virtual GLvoid Initialize(GLuint aVertexArrayObject) override;
-	virtual GLuint GetVertexSize() const override;
+private:
+	eps::rendering::vertices texture_vertices_;
+	eps::rendering::indices texture_indices_;
 };
 }
 

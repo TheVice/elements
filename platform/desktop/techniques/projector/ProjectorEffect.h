@@ -1,7 +1,7 @@
 #ifndef _PROJECTOR_EFFECT_H_
 #define _PROJECTOR_EFFECT_H_
 
-#include "VertexStructure.h"
+#include "ProjectorVertex.h"
 #include <elements/rendering/core/buffer.h>
 #include <vector>
 
@@ -18,11 +18,11 @@ namespace Rendering
 class ProjectorEffect
 {
 public:
-	explicit ProjectorEffect(const std::vector<VertexStructure>& vertices,
+	explicit ProjectorEffect(const std::vector<ProjectorVertex>& vertices,
 							 const std::vector<GLubyte>& indices,
 							 eps::rendering::buffer_usage usage = eps::rendering::buffer_usage::STATIC_DRAW);
 
-	void construct(const std::vector<VertexStructure>& vertices);
+	void construct(const std::vector<ProjectorVertex>& vertices);
 	void render(eps::rendering::program& program, short a_position, short index_count);
 
 private:

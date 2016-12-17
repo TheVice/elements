@@ -1,6 +1,6 @@
 
-#include "CustomUi.h"
-#include "Controls.h"
+#include "ParticlesUi.h"
+#include "ParticlesControls.h"
 #include <checkbox.h>
 #include <SliderModel.h>
 #include <elements/ui/controls/button.h>
@@ -11,35 +11,34 @@
 
 namespace Rendering
 {
-RTTI_DEFINITIONS(CustomUi)
+RTTI_DEFINITIONS(ParticlesUi)
 
-CustomUi::CustomUi(Library::Game& aGame, const std::string& aAssetPath) :
+ParticlesUi::ParticlesUi(Library::Game& aGame, const std::string& aAssetPath) :
 	UiAsset(aGame, aAssetPath),
 	mIsRestoreNeed(true),
 	m_u_transform(),
 	m_u_size(),
 	mVertices(
 {
-	VertexStructure(),
-					VertexStructure(),
-					VertexStructure(),
-					VertexStructure()
+	ParticlesVertex(),
+					ParticlesVertex(),
+					ParticlesVertex(),
+					ParticlesVertex()
 })
 {
 }
 
-CustomUi::~CustomUi()
+ParticlesUi::~ParticlesUi()
 {
 }
 
-bool CustomUi::Initialize()
+bool ParticlesUi::Initialize()
 {
 	if (!UiAsset::Initialize())
 	{
 		return false;
 	}
 
-	//
 	IS_CONTROL_EXIST(RESTORE_BUTTON)
 	IS_CONTROL_EXIST(U_TRANSFORM_BUTTON_13)
 	IS_CONTROL_EXIST(U_SIZE_BUTTON_17)
@@ -227,7 +226,7 @@ bool CustomUi::Initialize()
 	return true;
 }
 
-void CustomUi::Update()
+void ParticlesUi::Update()
 {
 	UiAsset::Update();
 
@@ -295,7 +294,7 @@ void CustomUi::Update()
 	}
 }
 
-void CustomUi::Set_u_transform(const glm::mat4& a_u_transform)
+void ParticlesUi::Set_u_transform(const glm::mat4& a_u_transform)
 {
 	m_u_transform = a_u_transform;
 	//
@@ -315,12 +314,12 @@ void CustomUi::Set_u_transform(const glm::mat4& a_u_transform)
 	mIsRestoreNeed = false;
 }
 
-const glm::mat4& CustomUi::Get_u_transform() const
+const glm::mat4& ParticlesUi::Get_u_transform() const
 {
 	return m_u_transform;
 }
 
-void CustomUi::Set_u_size(const float& a_u_size)
+void ParticlesUi::Set_u_size(const float& a_u_size)
 {
 	m_u_size = a_u_size;
 	//
@@ -329,12 +328,12 @@ void CustomUi::Set_u_size(const float& a_u_size)
 	mIsRestoreNeed = false;
 }
 
-const float& CustomUi::Get_u_size() const
+const float& ParticlesUi::Get_u_size() const
 {
 	return m_u_size;
 }
 
-void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
+void ParticlesUi::SetVertices(const std::vector<ParticlesVertex>& aVertices)
 {
 	mVertices = aVertices;
 	//
@@ -350,17 +349,17 @@ void CustomUi::SetVertices(const std::vector<VertexStructure>& aVertices)
 	mIsRestoreNeed = false;
 }
 
-const std::vector<VertexStructure>& CustomUi::GetVertices() const
+const std::vector<ParticlesVertex>& ParticlesUi::GetVertices() const
 {
 	return mVertices;
 }
 
-bool CustomUi::IsNeedRestore() const
+bool ParticlesUi::IsNeedRestore() const
 {
 	return mIsRestoreNeed;
 }
 
-bool CustomUi::IsPointSpriteEnabled()
+bool ParticlesUi::IsPointSpriteEnabled()
 {
 	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[GL_POINT_SPRITE_CHECKBOX].lock()))
@@ -371,7 +370,7 @@ bool CustomUi::IsPointSpriteEnabled()
 	return false;
 }
 
-bool CustomUi::IsVertexProgramPointSizeEnabled()
+bool ParticlesUi::IsVertexProgramPointSizeEnabled()
 {
 	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[GL_VERTEX_PROGRAM_POINT_SIZE_CHECKBOX].lock()))
@@ -382,7 +381,7 @@ bool CustomUi::IsVertexProgramPointSizeEnabled()
 	return false;
 }
 
-void CustomUi::SetCheckBoxState(bool aPointSpriteEnabled, bool aVertexProgramPointSizeEnabled)
+void ParticlesUi::SetCheckBoxState(bool aPointSpriteEnabled, bool aVertexProgramPointSizeEnabled)
 {
 	if (auto directCheckbox = std::static_pointer_cast<Library::checkbox>
 							  (mControls[GL_POINT_SPRITE_CHECKBOX].lock()))
@@ -399,7 +398,7 @@ void CustomUi::SetCheckBoxState(bool aPointSpriteEnabled, bool aVertexProgramPoi
 	}
 }
 
-float& CustomUi::GetValueBySliderId(int aSliderId)
+float& ParticlesUi::GetValueBySliderId(int aSliderId)
 {
 	switch (aSliderId)
 	{

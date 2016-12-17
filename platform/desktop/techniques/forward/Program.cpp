@@ -1,6 +1,6 @@
 
 #include "ModelDemo.h"
-#include "CustomUi.h"
+#include "ModelUi.h"
 #include <RenderingGame.h>
 #include <ClearBackground.h>
 
@@ -33,7 +33,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #endif
 	auto game = std::make_unique<Library::RenderingGame>("Model Demo [Sources techniques/forward]");
 	game->addComponent<Library::ClearBackground>();
-	game->addService<Rendering::CustomUi>("assets/settings/techniques/forward_ui.xml");
+	game->addService<Rendering::ModelUi>("assets/settings/techniques/forward.xml");
 	game->addComponent<Rendering::ModelDemo>();
 
 	try
