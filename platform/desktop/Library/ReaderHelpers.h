@@ -4,6 +4,7 @@
 #include <pugixml.hpp>
 #include <glm/glm.hpp>
 #include <array>
+#include <string>
 #include <vector>
 
 namespace Library

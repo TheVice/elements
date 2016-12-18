@@ -37,7 +37,7 @@ SquareTextureDemo::~SquareTextureDemo()
 
 bool SquareTextureDemo::Initialize()
 {
-	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
+	const glm::uvec2 texture_size(1920, 1080);//(mGame->GetScreenWidth(), mGame->GetScreenHeight());
 	mProgram = eps::utils::make_unique<eps::rendering::program>();
 	mTexture = eps::utils::make_unique<eps::rendering::texture>();
 	mSquare = eps::utils::make_unique<eps::rendering::primitive::square>();
@@ -49,13 +49,12 @@ bool SquareTextureDemo::Initialize()
 	}
 
 	// Load the texture
-	glm::uvec2 texture_size = size;
 	auto texture_data = eps::utils::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
-	Library::TestCard::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
+	Library::TestCard::MakeSmpteColorBarsHD(texture_data.get(), texture_size.x, texture_size.y);
 	//
 	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>();
-	(*mTexture.get()) = maker.construct(texture_data.get(), size);
-	mColorTexture = (*eps::utils::ptr_product(mTexture->get_product()));
+	(*mTexture.get()) = maker.construct(texture_data.get(), texture_size);
+	mColorTexture = eps::utils::raw_product(mTexture->get_product());
 	//
 	return true;
 }
