@@ -777,6 +777,8 @@ if(EXPERIMENTS_SOURCE_FILES)
             ${DESKTOP_PATH}/Library/SliderModel.h
             ${DESKTOP_PATH}/Library/TestCard.cpp
             ${DESKTOP_PATH}/Library/TestCard.h
+            ${DESKTOP_PATH}/Library/TextureLoader.cpp
+            ${DESKTOP_PATH}/Library/TextureLoader.h
             ${DESKTOP_PATH}/Library/UiAsset.cpp
             ${DESKTOP_PATH}/Library/UiAsset.h
             ${DESKTOP_PATH}/Library/UiReader.cpp

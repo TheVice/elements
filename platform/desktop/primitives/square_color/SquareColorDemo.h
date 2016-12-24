@@ -1,14 +1,24 @@
-#ifndef _SQUARE_DEMO_H_
-#define _SQUARE_DEMO_H_
+#ifndef _SQUARE_COLOR_DEMO_H_
+#define _SQUARE_COLOR_DEMO_H_
 
+#include "SquareColorSettings.h"
 #include <DrawableGameComponent.h>
-#include <elements/rendering/core/program.h>
-#include <elements/rendering/primitives/square.h>
 #include <elements/utils/std/pointer.h>
-#include <elements/timing/framerate.h>
+#include <elements/utils/std/optional.h>
+
+namespace eps
+{
+namespace rendering
+{
+class program;
+class texture;
+}
+}
 
 namespace Rendering
 {
+class SquareColorEffect;
+class SquareColorUi;
 class SquareColorDemo : public Library::DrawableGameComponent
 {
 	RTTI_DECLARATIONS(SquareColorDemo, DrawableGameComponent)
@@ -28,11 +38,10 @@ public:
 	virtual void Draw() override;
 
 private:
-	eps::utils::unique<eps::rendering::program> mProgram;
-	eps::utils::unique<eps::rendering::primitive::square> mSquare;
-	eps::math::vec4 mColor;
-	eps::math::mat4 mTransform;
-	eps::timing::framerate rate_;
+	eps::utils::unique<eps::rendering::program> mSquareColorProgram;
+	eps::utils::unique<SquareColorEffect> mSquareColorEffect;
+	eps::utils::optional<SquareColorSettings> mSquareColorSettings;
+	SquareColorUi* mSquareColorUi;
 };
 }
 

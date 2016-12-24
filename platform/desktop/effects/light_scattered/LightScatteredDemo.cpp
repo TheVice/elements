@@ -1,126 +1,122 @@
 
 #include "LightScatteredDemo.h"
+#include "LightScatteredEffect.h"
+#include "LightScatteredUi.h"
+#include <TextureLoader.h>
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
 #include <elements/rendering/state/state_macro.h>
-#include <elements/rendering/utils/program_loader.h>
 #include <elements/rendering/core/texture_maker.h>
 #include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/utils/program_loader.h>
+#include <elements/assets/asset_texture.h>
+#include <elements/assets/assets_storage.h>
 #include <elements/utils/std/enum.h>
-#include <TestCard.h>
+#include <elements/utils/std/product.h>
 #include <Game.h>
+#include <array>
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(LightScatteredDemo)
 
-enum ProgramEnum
+enum class program_enum : short
 {
-	VertexAttributePosition = 0,
-	VertexAttributeTextureCoordinate = 1,
-	//
-	FragmentUniformOccluding = 0,
-	FragmentUniformExposure = 1,
-	FragmentUniformDecay = 2,
-	FragmentUniformDensity = 3,
-	FragmentUniformWeight = 4,
-	FragmentUniformLightPosition = 5
+	// attributes
+	a_vertex_xy = 0,
+	a_vertex_uv = 1,
+	// uniforms
+	u_occluding = 0,
+	u_exposure = 1,
+	u_decay = 2,
+	u_density = 3,
+	u_weight = 4,
+	u_light_position = 5
 };
 
 LightScatteredDemo::LightScatteredDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgram(nullptr),
-	mTexture(nullptr),
-	mSquare(nullptr),
-	mExposure(0.0f),
-	mDecay(0.0f),
-	mDensity(0.0f),
-	mWeight(0.0f),
-	mLightPosition(),
-	mColorTexture(0),
-	rate_(60)
+	mLightScatteredProgram(nullptr),
+	mLightScatteredEffect(nullptr),
+	u_occluding(nullptr),
+	mLightScatteredSettings(),
+	mLightScatteredUi(nullptr)
 {
 }
 
-LightScatteredDemo::~LightScatteredDemo()
-{
-}
+LightScatteredDemo::~LightScatteredDemo() = default;
 
 bool LightScatteredDemo::Initialize()
 {
-	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	mProgram = eps::utils::make_unique<eps::rendering::program>();
-	mTexture = eps::utils::make_unique<eps::rendering::texture>();
-	mSquare = eps::utils::make_unique<eps::rendering::primitive::square>();
-
 	// Build the shader program
-	if (!eps::rendering::load_program("assets/shaders/effects/light_scattered.prog", *mProgram.get()))
+	mLightScatteredProgram = eps::utils::make_unique<eps::rendering::program>();
+	auto assetPath = "assets/shaders/effects/light_scattered.prog";
+
+	if (!eps::rendering::load_program(assetPath, (*mLightScatteredProgram.get())))
 	{
 		return false;
 	}
 
-	// Load the texture
-	glm::uvec2 texture_size = size;
-	auto texture_data = eps::utils::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
-	Library::TestCard::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
-	//
-	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>();
-	(*mTexture.get()) = maker.construct(texture_data.get(), size);
-	mColorTexture = (*eps::utils::ptr_product(mTexture->get_product()));
-	//
-	mExposure = 1.0f;
-	mDecay = 1.0f;
-	mDensity = 1.0f;
-	mWeight = 1.0f;
-	mLightPosition = eps::math::vec2(1.0f, 1.0f);
-	//
-	return true;
+	// Load the settings
+	assetPath = "assets/settings/effects/light_scattered.xml";
+	mLightScatteredSettings = eps::assets_storage::instance().read<LightScatteredSettings>(assetPath);
+
+	if (!mLightScatteredSettings || mLightScatteredSettings->mIsEmpty)
+	{
+		return false;
+	}
+
+	u_occluding = eps::utils::make_unique<eps::rendering::texture>();
+	LOAD_TEXTURE(mLightScatteredSettings->u_occluding, (*u_occluding.get()))
+	// Create the effect
+	mLightScatteredEffect = eps::utils::make_unique<LightScatteredEffect>(mLightScatteredSettings->mVertices,
+							mLightScatteredSettings->mIndices,
+							eps::rendering::buffer_usage::STREAM_DRAW);
+	// Retry the UI service
+	mLightScatteredUi = static_cast<Rendering::LightScatteredUi*>(mGame->GetServices().GetService(
+							Rendering::LightScatteredUi::TypeIdClass()));
+	assert(mLightScatteredUi);
+	return mLightScatteredUi != nullptr;
 }
 
 void LightScatteredDemo::Update()
 {
-	float lastTime = rate_.elapsed();
-
-	if (rate_.update() && rate_.elapsed() > lastTime)
+	if (mLightScatteredUi->IsNeedRestore())
 	{
-		const float elapsedTime = rate_.elapsed() - lastTime;
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_UP) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_W))
-		{
-			mLightPosition.y = std::min(1.0f, mLightPosition.y + 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_DOWN) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_S))
-		{
-			mLightPosition.y = std::max(-1.0f, mLightPosition.y - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_LEFT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_A))
-		{
-			mLightPosition.x = std::max(-1.0f, mLightPosition.x - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_RIGHT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_D))
-		{
-			mLightPosition.x = std::min(1.0f, mLightPosition.x + 0.0125f * elapsedTime);
-		}
+		mLightScatteredUi->Set_u_exposure(mLightScatteredSettings->u_exposure);
+		mLightScatteredUi->Set_u_decay(mLightScatteredSettings->u_decay);
+		mLightScatteredUi->Set_u_density(mLightScatteredSettings->u_density);
+		mLightScatteredUi->Set_u_weight(mLightScatteredSettings->u_weight);
+		mLightScatteredUi->Set_u_light_position(mLightScatteredSettings->u_light_position);
+		//
+		mLightScatteredUi->SetVertices(mLightScatteredSettings->mVertices);
 	}
 }
 
 void LightScatteredDemo::Draw()
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mColorTexture);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(u_occluding->get_product()));
 	//
-	EPS_STATE_PROGRAM(mProgram->get_product());
+	EPS_STATE_PROGRAM(mLightScatteredProgram->get_product());
 	//
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformOccluding), 0);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformExposure), mExposure);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformDecay), mDecay);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformDensity), mDensity);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformWeight), mWeight);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformLightPosition), mLightPosition);
-	mSquare->render((*mProgram.get()), eps::utils::to_int(VertexAttributePosition),
-					eps::utils::to_int(VertexAttributeTextureCoordinate));
+	mLightScatteredProgram->uniform_value(eps::utils::to_int(program_enum::u_exposure),
+										  mLightScatteredUi->Get_u_exposure());
+	mLightScatteredProgram->uniform_value(eps::utils::to_int(program_enum::u_decay),
+										  mLightScatteredUi->Get_u_decay());
+	mLightScatteredProgram->uniform_value(eps::utils::to_int(program_enum::u_density),
+										  mLightScatteredUi->Get_u_density());
+	mLightScatteredProgram->uniform_value(eps::utils::to_int(program_enum::u_weight),
+										  mLightScatteredUi->Get_u_weight());
+	mLightScatteredProgram->uniform_value(eps::utils::to_int(program_enum::u_light_position),
+										  mLightScatteredUi->Get_u_light_position());
 	//
+	mLightScatteredEffect->construct(mLightScatteredUi->GetVertices());
+	std::array<short, 2> attributes = { eps::utils::to_int(program_enum::a_vertex_xy), eps::utils::to_int(program_enum::a_vertex_uv) };
+	mLightScatteredEffect->render(*mLightScatteredProgram.get(), attributes,
+								  mLightScatteredSettings->mIndices.size());
+	//
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

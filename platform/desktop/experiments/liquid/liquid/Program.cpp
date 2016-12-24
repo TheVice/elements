@@ -1,6 +1,8 @@
 
 #include "LiquidDemo.h"
+#include "LiquidUi.h"
 #include <RenderingGame.h>
+#include <ClearBackground.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)
@@ -29,7 +31,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Library::RenderingGame>("Liquid Demo [Sources experiments/liquid/liquid]");
+	auto game = std::make_unique<Library::RenderingGame>("Liquid [Sources experiments/liquid/liquid]");
+	game->addComponent<Library::ClearBackground>();
+	game->addService<Rendering::LiquidUi>("assets/settings/experiments/liquid/liquid.xml");
 	game->addComponent<Rendering::LiquidDemo>();
 
 	try

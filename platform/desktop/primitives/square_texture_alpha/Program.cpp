@@ -1,6 +1,8 @@
 
 #include "SquareTextureAlphaDemo.h"
+#include "SquareTextureAlphaUi.h"
 #include <RenderingGame.h>
+#include <ClearBackground.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)
@@ -30,7 +32,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #endif
 #endif
 	auto game =
-		std::make_unique<Library::RenderingGame>("Square Texture Alpha Demo [Sources primitives/square_texture_alpha]");
+		std::make_unique<Library::RenderingGame>("Square texture alpha [Sources primitives/square_texture_alpha]");
+	game->addComponent<Library::ClearBackground>();
+	game->addService<Rendering::SquareTextureAlphaUi>("assets/settings/primitives/square_texture_alpha.xml");
 	game->addComponent<Rendering::SquareTextureAlphaDemo>();
 
 	try

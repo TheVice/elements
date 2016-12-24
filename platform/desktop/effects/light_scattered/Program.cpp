@@ -1,6 +1,8 @@
 
 #include "LightScatteredDemo.h"
+#include "LightScatteredUi.h"
 #include <RenderingGame.h>
+#include <ClearBackground.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)
@@ -29,8 +31,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game =
-		std::make_unique<Library::RenderingGame>("Light Scattered Demo [Sources effects/light_scattered]");
+	auto game = std::make_unique<Library::RenderingGame>("Light scattered [Sources effects/lightScattered]");
+	game->addComponent<Library::ClearBackground>();
+	game->addService<Rendering::LightScatteredUi>("assets/settings/effects/light_scattered.xml");
 	game->addComponent<Rendering::LightScatteredDemo>();
 
 	try

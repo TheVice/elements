@@ -1,96 +1,116 @@
 
 #include "LiquidDemo.h"
+#include "LiquidEffect.h"
+#include "LiquidUi.h"
+#include <TextureLoader.h>
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
 #include <elements/rendering/state/state_macro.h>
-#include <elements/rendering/utils/program_loader.h>
 #include <elements/rendering/core/texture_maker.h>
 #include <elements/rendering/core/texture_policy.h>
-#include <elements/rendering/passes/pass_base.h>
-#include <elements/utils/std/enum.h>
-#include <elements/math/transform.h>
+#include <elements/rendering/utils/program_loader.h>
 #include <elements/assets/asset_texture.h>
 #include <elements/assets/assets_storage.h>
-#include <TestCard.h>
+#include <elements/utils/std/enum.h>
+#include <elements/utils/std/product.h>
 #include <Game.h>
+#include <array>
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(LiquidDemo)
 
-enum ProgramEnum
+enum class program_enum : short
 {
-	VertexAttributePosition = 0,
-	VertexAttributeTextureCoordinate = 1,
-	//
-	FragmentUniformSurface = 0,
-	FragmentUniformBackground = 1,
-	FragmentUniformColor = 2,
-	FragmentUniformTexel = 3
+	// attributes
+	a_vertex_xy = 0,
+	a_vertex_uv = 1,
+	// uniforms
+	u_surface = 0,
+	u_surface_background = 1,
+	u_surface_color = 2,
+	u_surface_texel = 3
 };
 
 LiquidDemo::LiquidDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgram(nullptr),
-	mTexture(nullptr),
-	mSquare(nullptr),
-	mSurfaceColor(),
-	mSurfaceTexel(),
-	mColorTexture(0)
+	mLiquidProgram(nullptr),
+	mLiquidEffect(nullptr),
+	u_surface(nullptr),
+	u_surface_background(nullptr),
+	mLiquidSettings(),
+	mLiquidUi(nullptr)
 {
 }
 
-LiquidDemo::~LiquidDemo()
-{
-}
+LiquidDemo::~LiquidDemo() = default;
 
 bool LiquidDemo::Initialize()
 {
-	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	mProgram = eps::utils::make_unique<eps::rendering::program>();
-	mTexture = eps::utils::make_unique<eps::rendering::texture>();
-	mSquare = eps::utils::make_unique<eps::rendering::primitive::square>();
-
 	// Build the shader program
-	if (!eps::rendering::load_program("assets/shaders/experiments/liquid/liquid.prog", (*mProgram.get())))
+	mLiquidProgram = eps::utils::make_unique<eps::rendering::program>();
+	auto assetPath = "assets/shaders/experiments/liquid/liquid.prog";
+
+	if (!eps::rendering::load_program(assetPath, (*mLiquidProgram.get())))
 	{
 		return false;
 	}
 
-	// Load the texture
-	glm::uvec2 texture_size = size;
-	auto texture_data = eps::utils::make_unique<GLubyte[]>(4 * texture_size.x * texture_size.y);
-	Library::TestCard::MakeColorBars(texture_data.get(), texture_size.x, texture_size.y);
-	//
-	auto maker = eps::rendering::get_texture_maker<eps::rendering::default_texture_policy>();
-	(*mTexture.get()) = maker.construct(texture_data.get(), size);
-	mColorTexture = (*eps::utils::ptr_product(mTexture->get_product()));
-	//
-	mSurfaceColor = { 0.33f, 0.098f, 0.38f, 0.44f };
-	mSurfaceTexel.x = 1.0f / size.x;
-	mSurfaceTexel.y = 1.0f / size.y;
-	//
-	return true;
+	// Load the settings
+	assetPath = "assets/settings/experiments/liquid/liquid.xml";
+	mLiquidSettings = eps::assets_storage::instance().read<LiquidSettings>(assetPath);
+
+	if (!mLiquidSettings || mLiquidSettings->mIsEmpty)
+	{
+		return false;
+	}
+
+	u_surface = eps::utils::make_unique<eps::rendering::texture>();
+	LOAD_TEXTURE(mLiquidSettings->u_surface, (*u_surface.get()))
+	u_surface_background = eps::utils::make_unique<eps::rendering::texture>();
+	LOAD_TEXTURE(mLiquidSettings->u_surface_background, (*u_surface_background.get()))
+	// Create the effect
+	mLiquidEffect = eps::utils::make_unique<LiquidEffect>(mLiquidSettings->mVertices, mLiquidSettings->mIndices,
+					eps::rendering::buffer_usage::STREAM_DRAW);
+	// Retry the UI service
+	mLiquidUi = static_cast<Rendering::LiquidUi*>(mGame->GetServices().GetService(
+					Rendering::LiquidUi::TypeIdClass()));
+	assert(mLiquidUi);
+	return mLiquidUi != nullptr;
 }
 
 void LiquidDemo::Update()
 {
+	if (mLiquidUi->IsNeedRestore())
+	{
+		mLiquidUi->Set_u_surface_color(mLiquidSettings->u_surface_color);
+		mLiquidUi->Set_u_surface_texel(mLiquidSettings->u_surface_texel);
+		//
+		mLiquidUi->SetVertices(mLiquidSettings->mVertices);
+	}
 }
 
 void LiquidDemo::Draw()
 {
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(eps::rendering::pass_slot::slot_0));
-	glActiveTexture(GL_TEXTURE0 + 1);
-	glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(eps::rendering::pass_slot::slot_1));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(u_surface->get_product()));
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(u_surface_background->get_product()));
 	//
-	EPS_STATE_PROGRAM(mProgram->get_product());
+	EPS_STATE_PROGRAM(mLiquidProgram->get_product());
 	//
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformSurface), 0);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformBackground), 1);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformColor), mSurfaceColor);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformTexel), mSurfaceTexel);
-	mSquare->render((*mProgram.get()), eps::utils::to_int(VertexAttributePosition),
-					eps::utils::to_int(VertexAttributeTextureCoordinate));
+	mLiquidProgram->uniform_value(eps::utils::to_int(program_enum::u_surface_color),
+								  mLiquidUi->Get_u_surface_color());
+	mLiquidProgram->uniform_value(eps::utils::to_int(program_enum::u_surface_texel),
+								  mLiquidUi->Get_u_surface_texel());
 	//
+	mLiquidEffect->construct(mLiquidUi->GetVertices());
+	std::array<short, 2> attributes = { eps::utils::to_int(program_enum::a_vertex_xy), eps::utils::to_int(program_enum::a_vertex_uv) };
+	mLiquidEffect->render(*mLiquidProgram.get(), attributes, mLiquidSettings->mIndices.size());
+	//
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

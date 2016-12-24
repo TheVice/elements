@@ -1,131 +1,99 @@
 
 #include "SquareColorDemo.h"
-#include "SettingsReader.h"
+#include "SquareColorEffect.h"
+#include "SquareColorUi.h"
+#include <TextureLoader.h>
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
 #include <elements/rendering/state/state_macro.h>
+#include <elements/rendering/core/texture_maker.h>
+#include <elements/rendering/core/texture_policy.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/assets/asset_texture.h>
+#include <elements/assets/assets_storage.h>
 #include <elements/utils/std/enum.h>
-#include <elements/math/transform.h>
+#include <elements/utils/std/product.h>
 #include <Game.h>
-#include <algorithm>
+#include <array>
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(SquareColorDemo)
 
-enum ProgramEnum
+enum class program_enum : short
 {
-	VertexAttributePosition = 0,
-	VertexAttributeTextureCoordinate = 1,
-	//
-	FragmentUniformTransformation = 0,
-	FragmentUniformColor = 1
+	// attributes
+	a_vertex_xy = 0,
+	a_vertex_uv = 1,
+	// uniforms
+	u_transform = 0,
+	u_color = 1
 };
 
-SquareColorDemo::SquareColorDemo(Library::Game& aGame)
-	: DrawableGameComponent(aGame),
-	  mProgram(nullptr),
-	  mSquare(nullptr),
-	  mColor(),
-	  mTransform(),
-	  rate_(60)
+SquareColorDemo::SquareColorDemo(Library::Game& aGame) :
+	DrawableGameComponent(aGame),
+	mSquareColorProgram(nullptr),
+	mSquareColorEffect(nullptr),
+	mSquareColorSettings(),
+	mSquareColorUi(nullptr)
 {
 }
 
-SquareColorDemo::~SquareColorDemo()
-{
-}
+SquareColorDemo::~SquareColorDemo() = default;
 
 bool SquareColorDemo::Initialize()
 {
-	const glm::uvec2 size(mGame->GetScreenWidth(), mGame->GetScreenHeight());
-	mProgram = eps::utils::make_unique<eps::rendering::program>();
-	mSquare = eps::utils::make_unique<eps::rendering::primitive::square>();
-
 	// Build the shader program
-	if (!eps::rendering::load_program("assets/shaders/primitives/square_color.prog", (*mProgram.get())))
+	mSquareColorProgram = eps::utils::make_unique<eps::rendering::program>();
+	auto assetPath = "assets/shaders/primitives/square_color.prog";
+
+	if (!eps::rendering::load_program(assetPath, (*mSquareColorProgram.get())))
 	{
 		return false;
 	}
 
-	//	SettingsReader settings;
-	//	bool settingLoaded = load_data("settings/primitives/square_color.xml", settings);
-	//
-	glm::vec2 pos = { 1.0f, 0.0f };
-	float offset = size.y * 0.5f;
-	glm::vec2 tracker(pos.x + (size.x - offset) * 0.5f, pos.y + (size.y - offset) * 0.5f);
-	GLfloat vertices[] =
+	// Load the settings
+	assetPath = "assets/settings/primitives/square_color.xml";
+	mSquareColorSettings = eps::assets_storage::instance().read<SquareColorSettings>(assetPath);
+
+	if (!mSquareColorSettings || mSquareColorSettings->mIsEmpty)
 	{
-		(tracker.x), (tracker.y),          0.0f, 1.0f,
-		(tracker.x + offset), (tracker.y),          1.0f, 1.0f,
-		(tracker.x + offset), (tracker.y + offset), 1.0f, 0.0f,
-		(tracker.x), (tracker.y + offset), 0.0f, 0.0f
-	};
-	mSquare->construct(vertices);
-	mColor = { 0.33f, 0.098f, 0.38f, 1.0f };
-	mTransform = eps::math::translate(-1.0f, -1.0f, 0.0f) *
-				 eps::math::scale(2.0f, 2.0f, 1.0f) *
-				 eps::math::scale(1.0f / size.x, 1.0f / size.y, 1.0f);
-	//
-	return true;
+		return false;
+	}
+
+	// Create the effect
+	mSquareColorEffect = eps::utils::make_unique<SquareColorEffect>(mSquareColorSettings->mVertices,
+						 mSquareColorSettings->mIndices,
+						 eps::rendering::buffer_usage::STREAM_DRAW);
+	// Retry the UI service
+	mSquareColorUi = static_cast<Rendering::SquareColorUi*>(mGame->GetServices().GetService(
+						 Rendering::SquareColorUi::TypeIdClass()));
+	assert(mSquareColorUi);
+	return mSquareColorUi != nullptr;
 }
 
 void SquareColorDemo::Update()
 {
-	float lastTime = rate_.elapsed();
-
-	if (rate_.update() && rate_.elapsed() > lastTime)
+	if (mSquareColorUi->IsNeedRestore())
 	{
-		const float elapsedTime = rate_.elapsed() - lastTime;
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_Z))
-		{
-			mColor.r = std::max(0.0f, mColor.r - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_X))
-		{
-			mColor.r = std::min(1.0f, mColor.r + 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_C))
-		{
-			mColor.g = std::max(0.0f, mColor.g - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_V))
-		{
-			mColor.g = std::min(1.0f, mColor.g + 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_B))
-		{
-			mColor.b = std::max(0.0f, mColor.b - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_N))
-		{
-			mColor.b = std::min(1.0f, mColor.b + 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_M))
-		{
-			mColor.a = std::max(0.0f, mColor.a - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_COMMA))
-		{
-			mColor.a = std::min(1.0f, mColor.a + 0.0125f * elapsedTime);
-		}
+		mSquareColorUi->Set_u_transform(mSquareColorSettings->u_transform);
+		mSquareColorUi->Set_u_color(mSquareColorSettings->u_color);
+		//
+		mSquareColorUi->SetVertices(mSquareColorSettings->mVertices);
 	}
 }
 
 void SquareColorDemo::Draw()
 {
-	EPS_STATE_PROGRAM(mProgram->get_product());
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformTransformation), mTransform);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformColor), mColor);
-	mSquare->render((*mProgram.get()), eps::utils::to_int(VertexAttributePosition),
-					eps::utils::to_int(VertexAttributeTextureCoordinate));
+	EPS_STATE_PROGRAM(mSquareColorProgram->get_product());
+	//
+	mSquareColorProgram->uniform_value(eps::utils::to_int(program_enum::u_transform),
+									   mSquareColorUi->Get_u_transform());
+	mSquareColorProgram->uniform_value(eps::utils::to_int(program_enum::u_color), mSquareColorUi->Get_u_color());
+	//
+	mSquareColorEffect->construct(mSquareColorUi->GetVertices());
+	std::array<short, 2> attributes = { eps::utils::to_int(program_enum::a_vertex_xy), eps::utils::to_int(program_enum::a_vertex_uv) };
+	mSquareColorEffect->render(*mSquareColorProgram.get(), attributes, mSquareColorSettings->mIndices.size());
 }
 
 }

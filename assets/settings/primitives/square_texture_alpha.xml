@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings name="Square texture alpha [Sources primitives/square_texture_alpha]">
+  <vertices>
+    <vertex>
+      <a_vertex_xy x="-0.55" y="0.55"/>
+      <a_vertex_uv x="0.0" y="1.0"/>
+    </vertex>
+    <vertex>
+      <a_vertex_xy x="0.55" y="0.55"/>
+      <a_vertex_uv x="1.0" y="1.0"/>
+    </vertex>
+    <vertex>
+      <a_vertex_xy x="0.55" y="-0.55"/>
+      <a_vertex_uv x="1.0" y="0.0"/>
+    </vertex>
+    <vertex>
+      <a_vertex_xy x="-0.55" y="-0.55"/>
+      <a_vertex_uv x="0.0" y="0.0"/>
+    </vertex>
+  </vertices>
+  <indices>
+    <index>0</index>
+    <index>1</index>
+    <index>2</index>
+    <index>2</index>
+    <index>3</index>
+    <index>0</index>
+  </indices>
+  <u_source>SmpteColorBars</u_source>
+  <u_transform>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_transform>
+  <u_color x="0.1" y="0.1" z="0.1" w="0.1"/>
+  <controls>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_transform_button_13" position_x="10" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_transform_panel_14" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_1" id="0" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_1" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_2" id="1" max="1.0" min="-1.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_2" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_3" id="2" max="1.0" min="-1.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_3" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_4" id="3" max="1.0" min="-1.0" position_x="10" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_4" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_5" id="4" max="1.0" min="-1.0" position_x="250" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_5" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_6" id="5" max="1.0" min="-1.0" position_x="490" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_6" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_7" id="6" max="1.0" min="-1.0" position_x="10" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_7" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_8" id="7" max="1.0" min="-1.0" position_x="250" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_8" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_9" id="8" max="1.0" min="-1.0" position_x="490" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_9" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_10" id="9" max="1.0" min="-1.0" position_x="10" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_10" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_11" id="10" max="1.0" min="-1.0" position_x="250" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_11" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_transform_slider_12" id="11" max="1.0" min="-1.0" position_x="490" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_12" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="13" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_transform_label_15" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Transform" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_color_button_20" position_x="90" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_color_panel_21" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_color_slider_16" id="12" max="1.0" min="0.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_color_label_16" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_color_slider_17" id="13" max="1.0" min="0.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_color_label_17" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_color_slider_18" id="14" max="1.0" min="0.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_color_label_18" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_color_slider_19" id="15" max="1.0" min="0.0" position_x="10" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_color_label_19" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="63" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_color_label_22" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Color" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_0_button_27" position_x="170" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_0_panel_28" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_23" id="16" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_23" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_24" id="17" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_24" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_25" id="18" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_25" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_26" id="19" max="1.0" min="-1.0" position_x="10" position_y="220" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_26" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="223" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_29" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Top" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_1_button_34" position_x="250" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_1_panel_35" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_30" id="20" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_30" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_31" id="21" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_31" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_32" id="22" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_32" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_33" id="23" max="1.0" min="-1.0" position_x="10" position_y="220" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_33" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="223" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_36" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Right Top" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_2_button_41" position_x="330" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_2_panel_42" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_37" id="24" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_37" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_38" id="25" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_38" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_39" id="26" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_39" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_40" id="27" max="1.0" min="-1.0" position_x="10" position_y="220" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_40" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="223" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_43" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Right Bottom" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_3_button_48" position_x="410" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_3_panel_49" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_44" id="28" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_44" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_45" id="29" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_45" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_46" id="30" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_46" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_47" id="31" max="1.0" min="-1.0" position_x="10" position_y="220" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_47" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="223" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_50" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Bottom" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/restore.png" control_name="restore_button" position_x="725" position_y="525" size_h="75" size_w="75" visible="true"/>
+  </controls>
+</settings>

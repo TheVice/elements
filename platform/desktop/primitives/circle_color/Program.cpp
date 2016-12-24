@@ -1,6 +1,8 @@
 
-#include "CircleColorDemo.h"
+#include "SquareColorCircleDemo.h"
+#include "SquareColorCircleUi.h"
 #include <RenderingGame.h>
+#include <ClearBackground.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)
@@ -29,8 +31,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Library::RenderingGame>("Circle Color Demo [Sources primitives/circle_color]");
-	game->addComponent<Rendering::CircleColorDemo>();
+	auto game = std::make_unique<Library::RenderingGame>("Square color circle [Sources primitives/circle_color]");
+	game->addComponent<Library::ClearBackground>();
+	game->addService<Rendering::SquareColorCircleUi>("assets/settings/primitives/circle_color.xml");
+	game->addComponent<Rendering::SquareColorCircleDemo>();
 
 	try
 	{

@@ -79,7 +79,31 @@ def get_head_name(a_program):
 def get_class_name(a_program):
 
     class_name = a_program['name'].lower()
-    class_name = '{}{}'.format(class_name[0].upper(), class_name[1:])
+    tmp_class_name = []
+
+    already_assigned = False
+
+    for i in range(0, len(class_name) - 1):
+
+        if '_' == class_name[i]:
+
+            tmp_class_name.append(class_name[i + 1].upper())
+            already_assigned = True
+
+        elif already_assigned:
+
+            already_assigned = False
+
+        else:
+
+            tmp_class_name.append(class_name[i])
+
+    if tmp_class_name:
+
+        tmp_class_name[0] = tmp_class_name[0].upper()
+        tmp_class_name.append(class_name[len(class_name) - 1])
+        class_name = ''.join(tmp_class_name)
+
     return class_name
 
 
@@ -272,6 +296,7 @@ def generate_effect_cpp(a_program):
         '#include "{1}Effect.h"{0}'
         '#include <elements/rendering/core/program.h>{0}'
         '#include <elements/rendering/state/state_macro.h>{0}'
+        '#include <cassert>{0}'
         '{0}'
         'namespace Rendering{0}'
         '{{{0}'

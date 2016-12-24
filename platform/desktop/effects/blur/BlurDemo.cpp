@@ -1,113 +1,102 @@
 
 #include "BlurDemo.h"
+#include "BlurEffect.h"
+#include "BlurUi.h"
+#include <TextureLoader.h>
+#include <elements/rendering/core/program.h>
+#include <elements/rendering/core/texture.h>
 #include <elements/rendering/state/state_macro.h>
-#include <elements/rendering/utils/program_loader.h>
 #include <elements/rendering/core/texture_maker.h>
 #include <elements/rendering/core/texture_policy.h>
-#include <elements/rendering/passes/pass_base.h>
-#include <elements/utils/std/enum.h>
-#include <elements/math/transform.h>
+#include <elements/rendering/utils/program_loader.h>
 #include <elements/assets/asset_texture.h>
 #include <elements/assets/assets_storage.h>
+#include <elements/utils/std/enum.h>
+#include <elements/utils/std/product.h>
 #include <Game.h>
-#include <algorithm>
+#include <array>
 
 namespace Rendering
 {
 RTTI_DEFINITIONS(BlurDemo)
 
-enum ProgramEnum
+enum class program_enum : short
 {
-	VertexAttributePosition = 0,
-	VertexAttributeTextureCoordinate = 1,
-	//
-	FragmentUniformSource = 0,
-	FragmentUniformOffset = 1
+	// attributes
+	a_vertex_xy = 0,
+	a_vertex_uv = 1,
+	// uniforms
+	u_source = 0,
+	u_offset = 1
 };
 
 BlurDemo::BlurDemo(Library::Game& aGame) :
 	DrawableGameComponent(aGame),
-	mProgram(nullptr),
-	mTexture(nullptr),
-	mSquare(nullptr),
-	mOffset(0.25f, 0.75f),
-	mColorTexture(0),
-	rate_(60)
+	mBlurProgram(nullptr),
+	mBlurEffect(nullptr),
+	u_source(nullptr),
+	mBlurSettings(),
+	mBlurUi(nullptr)
 {
 }
 
-BlurDemo::~BlurDemo()
-{
-}
+BlurDemo::~BlurDemo() = default;
 
 bool BlurDemo::Initialize()
 {
-	mProgram = eps::utils::make_unique<eps::rendering::program>();
-	mTexture = eps::utils::make_unique<eps::rendering::texture>();
-	mSquare = eps::utils::make_unique<eps::rendering::primitive::square>();
-
 	// Build the shader program
-	if (!eps::rendering::load_program("assets/shaders/effects/blur.prog", *mProgram.get()))
+	mBlurProgram = eps::utils::make_unique<eps::rendering::program>();
+	auto assetPath = "assets/shaders/effects/blur.prog";
+
+	if (!eps::rendering::load_program(assetPath, (*mBlurProgram.get())))
 	{
 		return false;
 	}
 
-	// Load the texture
-	auto asset = eps::assets_storage::instance().read<eps::asset_texture>("assets/textures/noise.png");
+	// Load the settings
+	assetPath = "assets/settings/effects/blur.xml";
+	mBlurSettings = eps::assets_storage::instance().read<BlurSettings>(assetPath);
 
-	if (!asset.value().pixels())
+	if (!mBlurSettings || mBlurSettings->mIsEmpty)
 	{
 		return false;
 	}
 
-	auto maker = eps::rendering::get_texture_maker<eps::rendering::repeat_texture_policy>();
-	(*mTexture.get()) = maker.construct(asset->pixels(), asset->size());
-	mColorTexture = (*eps::utils::ptr_product(mTexture->get_product()));
-	return true;
+	u_source = eps::utils::make_unique<eps::rendering::texture>();
+	LOAD_TEXTURE(mBlurSettings->u_source, (*u_source.get()))
+	// Create the effect
+	mBlurEffect = eps::utils::make_unique<BlurEffect>(mBlurSettings->mVertices, mBlurSettings->mIndices,
+				  eps::rendering::buffer_usage::STREAM_DRAW);
+	// Retry the UI service
+	mBlurUi = static_cast<Rendering::BlurUi*>(mGame->GetServices().GetService(
+				  Rendering::BlurUi::TypeIdClass()));
+	assert(mBlurUi);
+	return mBlurUi != nullptr;
 }
 
 void BlurDemo::Update()
 {
-	float lastTime = rate_.elapsed();
-
-	if (rate_.update() && rate_.elapsed() > lastTime)
+	if (mBlurUi->IsNeedRestore())
 	{
-		const float elapsedTime = rate_.elapsed() - lastTime;
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_UP) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_W))
-		{
-			mOffset.y = std::min(1.0f, mOffset.y + 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_DOWN) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_S))
-		{
-			mOffset.y = std::max(-1.0f, mOffset.y - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_LEFT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_A))
-		{
-			mOffset.x = std::max(-1.0f, mOffset.x - 0.0125f * elapsedTime);
-		}
-
-		if (glfwGetKey(mGame->GetWindow(), GLFW_KEY_RIGHT) || glfwGetKey(mGame->GetWindow(), GLFW_KEY_D))
-		{
-			mOffset.x = std::min(1.0f, mOffset.x + 0.0125f * elapsedTime);
-		}
+		mBlurUi->Set_u_offset(mBlurSettings->u_offset);
+		mBlurUi->SetVertices(mBlurSettings->mVertices);
 	}
 }
 
 void BlurDemo::Draw()
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mColorTexture);
+	glBindTexture(GL_TEXTURE_2D, eps::utils::raw_product(u_source->get_product()));
 	//
-	EPS_STATE_PROGRAM(mProgram->get_product());
+	EPS_STATE_PROGRAM(mBlurProgram->get_product());
 	//
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformSource), 0);
-	mProgram->uniform_value(eps::utils::to_int(FragmentUniformOffset), mOffset);
-	mSquare->render(*mProgram.get(), eps::utils::to_int(VertexAttributePosition),
-					eps::utils::to_int(VertexAttributeTextureCoordinate));
+	mBlurProgram->uniform_value(eps::utils::to_int(program_enum::u_offset), mBlurUi->Get_u_offset());
 	//
+	mBlurEffect->construct(mBlurUi->GetVertices());
+	std::array<short, 2> attributes = { eps::utils::to_int(program_enum::a_vertex_xy), eps::utils::to_int(program_enum::a_vertex_uv) };
+	mBlurEffect->render(*mBlurProgram.get(), attributes, mBlurSettings->mIndices.size());
+	//
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

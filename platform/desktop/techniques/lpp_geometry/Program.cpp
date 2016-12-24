@@ -31,7 +31,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Library::RenderingGame>("Geometry Demo [Sources techniques/lpp_geometry]");
+	auto game = std::make_unique<Library::RenderingGame>("Geometry [Sources techniques/lpp_geometry]");
 	game->addComponent<Library::ClearBackground>();
 	game->addService<Rendering::GeometryUi>("assets/settings/techniques/lpp_geometry.xml");
 	game->addComponent<Rendering::GeometryDemo>();

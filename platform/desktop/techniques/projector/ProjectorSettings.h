@@ -5,6 +5,7 @@
 #include <elements/math/types.h>
 #include <elements/assets/asset_xml.h>
 #include <vector>
+#include <string>
 
 namespace Rendering
 {

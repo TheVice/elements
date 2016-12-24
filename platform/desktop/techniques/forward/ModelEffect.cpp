@@ -2,6 +2,7 @@
 #include "ModelEffect.h"
 #include <elements/rendering/core/program.h>
 #include <elements/rendering/state/state_macro.h>
+#include <cassert>
 
 namespace Rendering
 {

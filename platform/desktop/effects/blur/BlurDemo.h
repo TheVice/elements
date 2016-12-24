@@ -1,15 +1,24 @@
 #ifndef _BLUR_DEMO_H_
 #define _BLUR_DEMO_H_
 
+#include "BlurSettings.h"
 #include <DrawableGameComponent.h>
-#include <elements/rendering/core/program.h>
-#include <elements/rendering/core/texture.h>
-#include <elements/rendering/primitives/square.h>
 #include <elements/utils/std/pointer.h>
-#include <elements/timing/framerate.h>
+#include <elements/utils/std/optional.h>
+
+namespace eps
+{
+namespace rendering
+{
+class program;
+class texture;
+}
+}
 
 namespace Rendering
 {
+class BlurEffect;
+class BlurUi;
 class BlurDemo : public Library::DrawableGameComponent
 {
 	RTTI_DECLARATIONS(BlurDemo, DrawableGameComponent)
@@ -29,13 +38,11 @@ public:
 	virtual void Draw() override;
 
 private:
-	eps::utils::unique<eps::rendering::program> mProgram;
-	eps::utils::unique<eps::rendering::texture> mTexture;
-	eps::utils::unique<eps::rendering::primitive::square> mSquare;
-	eps::math::vec2 mOffset;
-
-	GLuint mColorTexture;
-	eps::timing::framerate rate_;
+	eps::utils::unique<eps::rendering::program> mBlurProgram;
+	eps::utils::unique<BlurEffect> mBlurEffect;
+	eps::utils::unique<eps::rendering::texture> u_source;
+	eps::utils::optional<BlurSettings> mBlurSettings;
+	BlurUi* mBlurUi;
 };
 }
 

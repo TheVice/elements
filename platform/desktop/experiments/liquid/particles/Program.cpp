@@ -31,7 +31,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Library::RenderingGame>("Particles Demo [Sources experiments/liquid/particles]");
+	auto game = std::make_unique<Library::RenderingGame>("Particles [Sources experiments/liquid/particles]");
 	game->addComponent<Library::ClearBackground>();
 	game->addService<Rendering::ParticlesUi>("assets/settings/experiments/liquid/particles.xml");
 	game->addComponent<Rendering::ParticlesDemo>();

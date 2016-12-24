@@ -48,7 +48,7 @@ def type_to_xlm_element(a_type, a_name):
         'eps::math::mat3': ElementMatrix(a_name, level=3),
         'eps::math::mat4': ElementMatrix(a_name, level=4),
         #
-        'std::string': ElementText(a_name, text='This is a std::string')
+        'std::string': ElementText(a_name, text='SmpteColorBars')
     }
 
     if a_type not in types.keys():
@@ -154,6 +154,7 @@ def generate_settings_h(a_program):
         '#include <elements/math/types.h>{0}'
         '#include <elements/assets/asset_xml.h>{0}'
         '#include <vector>{0}'
+        '#include <string>{0}'  # TODO:
         '{0}'
         'namespace Rendering{0}'
         '{{{0}'

@@ -31,7 +31,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Library::RenderingGame>("Projector Demo [Sources techniques/projector]");
+	auto game = std::make_unique<Library::RenderingGame>("Projector [Sources techniques/projector]");
 	game->addComponent<Library::ClearBackground>();
 	game->addService<Rendering::ProjectorUi>("assets/settings/techniques/projector.xml");
 	game->addComponent<Rendering::ProjectorDemo>();

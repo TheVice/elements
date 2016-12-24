@@ -1,6 +1,8 @@
 
 #include "SquareTextureDemo.h"
+#include "SquareTextureUi.h"
 #include <RenderingGame.h>
+#include <ClearBackground.h>
 
 #ifdef WIN32
 #if defined(DEBUG) || defined(_DEBUG)
@@ -29,8 +31,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game =
-		std::make_unique<Library::RenderingGame>("Square Texture Demo [Sources primitives/square_texture]");
+	auto game = std::make_unique<Library::RenderingGame>("Square texture [Sources primitives/square_texture]");
+	game->addComponent<Library::ClearBackground>();
+	game->addService<Rendering::SquareTextureUi>("assets/settings/primitives/square_texture.xml");
 	game->addComponent<Rendering::SquareTextureDemo>();
 
 	try

@@ -187,13 +187,7 @@ def process_controls(a_controls, a_cs, a_name):
 
 def generate_ui_xml(a_program, a_vertex_count):
 
-    settings_node = ET.Element('settings', {'name': a_program['name']})
     controls = ET.Element('controls')
-
-    restore_button = ET.Element('button', Button())
-    restore_button.attrib['asset_path'] = 'assets/ui/textures/restore.png'
-    restore_button.attrib['control_name'] = 'restore_button'
-    controls.append(restore_button)
 
     for location in a_program['u_locations']:
 
@@ -216,8 +210,478 @@ def generate_ui_xml(a_program, a_vertex_count):
 
         process_controls(controls, cs, 'vertex_{}'.format(i))
 
-    settings_node.append(controls)
-    return settings_node
+    restore_button = ET.Element('button', Button())
+    restore_button.attrib['asset_path'] = 'assets/ui/textures/restore.png'
+    restore_button.attrib['control_name'] = 'restore_button'
+    controls.append(restore_button)
+
+    return controls
+
+
+def customize_ui_xml(a_ui_xml):
+
+    button_position_x = 10
+    button_position_y = 5
+
+    for control in a_ui_xml:
+
+        if control.tag == 'button':
+
+            control.attrib['size_w'] = str(75)
+            control.attrib['size_h'] = str(75)
+
+            if control.attrib['control_name'] == 'restore_button':
+
+                control.attrib['position_x'] = str(725)
+                control.attrib['position_y'] = str(525)
+
+                continue
+
+            control.attrib['position_x'] = str(button_position_x)
+            control.attrib['position_y'] = str(button_position_y)
+            button_position_x += 80
+
+        elif control.tag == 'panel':
+
+            slider_number = 0
+            label_number = 0
+
+            if 'vertex' in control.attrib['control_name']:
+
+                control.attrib['position_x'] = str(10)
+                control.attrib['position_y'] = str(110)
+                control.attrib['size_h'] = str(355)
+                control.attrib['size_w'] = str(160)
+
+                for sub_control in control:
+
+                    if sub_control.tag == 'slider':
+
+                        if 0 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(310)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 1 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(280)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 2 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(250)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 3 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(220)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 4 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(190)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 5 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(160)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 6 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(130)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 7 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(100)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 8 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(70)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 9 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(40)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        elif 10 == slider_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(10)
+                            sub_control.attrib['size_h'] = str(16)
+                            sub_control.attrib['size_w'] = str(100)
+
+                        slider_number += 1
+
+                    elif sub_control.tag == 'label':
+
+                        if slider_number == label_number:
+
+                            sub_control.attrib['position_x'] = str(10)
+                            sub_control.attrib['position_y'] = str(335)
+                            # sub_control.attrib['text'] = '{}_{}'.format(sub_control.attrib['text'], slider_number)
+
+                        elif 0 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(313)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 1 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(283)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 2 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(253)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 3 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(223)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 4 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(193)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 5 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(163)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 6 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(133)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 7 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(103)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 8 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(73)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 9 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(43)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        elif 10 == label_number:
+
+                            sub_control.attrib['position_x'] = str(120)
+                            sub_control.attrib['position_y'] = str(13)
+
+                            if 'text' in sub_control.attrib:
+
+                                del sub_control.attrib['text']
+
+                        label_number += 1
+
+                continue
+
+            control.attrib['position_x'] = str(10)
+            control.attrib['position_y'] = str(470)
+            control.attrib['size_h'] = str(125)
+            control.attrib['size_w'] = str(710)
+
+            for sub_control in control:
+
+                if sub_control.tag == 'slider':
+
+                    if 0 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(10)
+                        sub_control.attrib['position_y'] = str(85)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 1 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(250)
+                        sub_control.attrib['position_y'] = str(85)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 2 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(490)
+                        sub_control.attrib['position_y'] = str(85)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 3 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(10)
+                        sub_control.attrib['position_y'] = str(60)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 4 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(250)
+                        sub_control.attrib['position_y'] = str(60)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 5 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(490)
+                        sub_control.attrib['position_y'] = str(60)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 6 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(10)
+                        sub_control.attrib['position_y'] = str(35)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 7 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(250)
+                        sub_control.attrib['position_y'] = str(35)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 8 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(490)
+                        sub_control.attrib['position_y'] = str(35)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 9 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(10)
+                        sub_control.attrib['position_y'] = str(10)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 10 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(250)
+                        sub_control.attrib['position_y'] = str(10)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    elif 11 == slider_number:
+
+                        sub_control.attrib['position_x'] = str(490)
+                        sub_control.attrib['position_y'] = str(10)
+                        sub_control.attrib['size_h'] = str(16)
+                        sub_control.attrib['size_w'] = str(150)
+
+                    slider_number += 1
+
+                elif sub_control.tag == 'label':
+
+                    if slider_number == label_number:
+
+                        sub_control.attrib['position_x'] = str(355)
+                        sub_control.attrib['position_y'] = str(105)
+                        # sub_control.attrib['text'] = '{}_{}'.format(sub_control.attrib['text'], slider_number)
+
+                    elif 0 == label_number:
+
+                        sub_control.attrib['position_x'] = str(180)
+                        sub_control.attrib['position_y'] = str(88)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 1 == label_number:
+
+                        sub_control.attrib['position_x'] = str(420)
+                        sub_control.attrib['position_y'] = str(88)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 2 == label_number:
+
+                        sub_control.attrib['position_x'] = str(660)
+                        sub_control.attrib['position_y'] = str(88)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 3 == label_number:
+
+                        sub_control.attrib['position_x'] = str(180)
+                        sub_control.attrib['position_y'] = str(63)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 4 == label_number:
+
+                        sub_control.attrib['position_x'] = str(420)
+                        sub_control.attrib['position_y'] = str(63)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 5 == label_number:
+
+                        sub_control.attrib['position_x'] = str(660)
+                        sub_control.attrib['position_y'] = str(63)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 6 == label_number:
+
+                        sub_control.attrib['position_x'] = str(180)
+                        sub_control.attrib['position_y'] = str(38)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 7 == label_number:
+
+                        sub_control.attrib['position_x'] = str(420)
+                        sub_control.attrib['position_y'] = str(38)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 8 == label_number:
+
+                        sub_control.attrib['position_x'] = str(660)
+                        sub_control.attrib['position_y'] = str(38)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 9 == label_number:
+
+                        sub_control.attrib['position_x'] = str(180)
+                        sub_control.attrib['position_y'] = str(13)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 10 == label_number:
+
+                        sub_control.attrib['position_x'] = str(420)
+                        sub_control.attrib['position_y'] = str(13)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    elif 11 == label_number:
+
+                        sub_control.attrib['position_x'] = str(660)
+                        sub_control.attrib['position_y'] = str(13)
+
+                        if 'text' in sub_control.attrib:
+
+                            del sub_control.attrib['text']
+
+                    label_number += 1
+
+    if vertex_count == 4:
+
+        texts_for_vertex_panels = [
+                ('vertex_0', 'Left Top'), ('vertex_1', 'Right Top'),
+                ('vertex_2', 'Right Bottom'), ('vertex_3', 'Left Bottom')
+        ]
+
+        for control in a_ui_xml:
+
+            if control.tag == 'panel' and 'vertex_' in control.attrib['control_name']:
+
+                for sub_control in control:
+
+                    if sub_control.tag == 'label' and 'text' in sub_control.attrib:
+
+                        for text in texts_for_vertex_panels:
+
+                            if text[0] in sub_control.attrib['control_name']:
+
+                                sub_control.attrib['text'] = text[1]
+
+    return a_ui_xml
 
 
 def to_pretty_xml(a_element):
@@ -334,6 +798,7 @@ def generate_custom_ui_h(a_program):
         '{0}'
         '#include "{5}Vertex.h"{0}'
         '#include <UiAsset.h>{0}'
+        '#include <elements/math/types.h>{0}'
         '#include <vector>{0}'
         '{0}'
         'namespace Rendering{0}'
@@ -557,8 +1022,7 @@ def generate_custom_ui_cpp_constructor(a_program, a_vertex_count):
         '{4}Ui::{4}Ui(Library::Game& aGame, const std::string& aAssetPath) :{0}'
         '{1}UiAsset(aGame, aAssetPath),{0}'
         '{1}mIsRestoreNeed(true),{0}'
-        '{2},'          # uniform_variable
-        '{0}'
+        '{2}'          # uniform_variable
         'mVertices({0}'
         '{{{0}'
         '{3}'           # vertex
@@ -586,10 +1050,55 @@ def generate_custom_ui_cpp_constructor(a_program, a_vertex_count):
 
         vertex_structure.append('\t{0}Vertex()'.format(a_program['class_name']))
 
+    uniform_variable = ',{}'.format(os.linesep).join(uniform_variable)
+
+    if uniform_variable:
+
+        uniform_variable = '{},{}'.format(uniform_variable, os.linesep)
+
     return constructor_template.format(os.linesep, '\t',
-                                       ',{}'.format(os.linesep).join(uniform_variable),
+                                       uniform_variable,
                                        ',{}'.format(os.linesep).join(vertex_structure),
                                        a_program['class_name'])
+
+
+def get_job_for_set_click(a_panels, a_control):
+
+    uniform_or_vertex_group = a_control[:a_control.find('_')]
+
+    if uniform_or_vertex_group == 'RESTORE':
+
+        return '{1}{1}{1}mIsRestoreNeed = !mIsRestoreNeed;{0}'.format(os.linesep, '\t')
+
+    control_group = a_control[:a_control.rfind('_BUTTON_')]
+    corresponded_panel = ''
+    panels_to_visible = []
+
+    for panel in a_panels:
+
+        panel_define = get_control_from_define(panel)
+
+        if uniform_or_vertex_group in panel_define:
+
+            if control_group in panel_define:
+                panels_to_visible.append('{1}{1}{1}{1}SET_VISIBLE(!directPanel->get_visible(), {2})'.format(os.linesep,
+                                                                                                            '\t',
+                                                                                                            panel_define))
+                corresponded_panel = panel_define
+            else:
+
+                panels_to_visible.append('{1}{1}{1}{1}SET_VISIBLE(false, {2})'.format(os.linesep, '\t', panel_define))
+
+    panels_to_visible = os.linesep.join(panels_to_visible)
+
+    direct_panel_surface = (
+        '{1}{1}{1}if (auto directPanel = mControls[{2}].lock()){0}'
+        '{1}{1}{1}{{{0}'
+        '{3}{0}'
+        '{1}{1}{1}}}'
+    )
+
+    return direct_panel_surface.format(os.linesep, '\t', corresponded_panel, panels_to_visible)
 
 
 def generate_custom_ui_cpp_initialize(a_program, a_controls):
@@ -617,7 +1126,7 @@ def generate_custom_ui_cpp_initialize(a_program, a_controls):
         '{1}{{{0}'
         '{1}{1}directButton->set_click([this](eps::ui::state){0}'
         '{1}{1}{{{0}'
-        '{1}{1}{1}// TODO:{0}'
+        '{3}{0}'
         '{1}{1}}});{0}'
         '{1}}}'
     )
@@ -636,7 +1145,8 @@ def generate_custom_ui_cpp_initialize(a_program, a_controls):
 
             if is_button or is_check:
 
-                set_button_click.append(button_template.format(os.linesep, '\t', control))
+                set_button_click.append(button_template.format(os.linesep, '\t', control,
+                                                               get_job_for_set_click(a_controls[1]['panel'], control)))
 
         if is_button is False:
 
@@ -654,36 +1164,59 @@ def generate_custom_ui_cpp_initialize(a_program, a_controls):
 def generate_custom_ui_cpp_update(a_program, a_controls, a_vertex_count):
 
     update_template = (
-        'void {4}Ui::Update(){0}'
+        'void {3}Ui::Update(){0}'
         '{{{0}'
         '{1}UiAsset::Update();{0}'
-        '{1}//{0}'
-        '{2}'           # uniform_variable
-        '{1}//{0}'
-        '{3}'           # vertices_variable
+        '{0}'
+        '{2}'                       # update_content
         '}}{0}'
     )
 
+    check_panel_visible_template = (
+        '{1}if (auto directPanel = mControls[{2}].lock()){0}'
+        '{1}{{{0}'
+        '{1}{1}if (directPanel->get_visible()){0}'
+        '{1}{1}{{{0}'
+        '{1}{1}{1}{3}{0}'
+        '{1}{1}}}{0}'
+        '{1}}}{0}'
+    )
+
+    update_content = []
+
     uniforms = get_uniform_with_corresponding_defines(a_program, a_controls, 'label')
-    uniform_variable = []
-
-    for location in a_program['u_locations']:
-
-        if location[0] in uniforms:
-
-            for uniform in uniforms[location[0]]:
-
-                uniform_variable.append('\tDISPLAY_FLOAT_VALUE_AT_LABEL({}, {}){}'.format(uniform[0], uniform[1], os.linesep))
-
     vertices = get_vertices_with_corresponding_defines(a_program, a_controls, a_vertex_count, 'label')
-    vertices_variable = []
 
-    for vertex in vertices:
+    for panel in a_controls[1]['panel']:
 
-        vertices_variable.append('\tDISPLAY_FLOAT_VALUE_AT_LABEL({}, {}){}'.format(vertex[0], vertex[1], os.linesep))
+        controls_to_display = []
+        panel_define = get_control_from_define(panel)
+        control_group = panel_define[:panel_define.rfind('_PANEL_')]
 
-    return update_template.format(os.linesep, '\t', ''.join(uniform_variable),
-                                  ''.join(vertices_variable), a_program['class_name'])
+        for location in a_program['u_locations']:
+
+            if location[0] in uniforms:
+
+                for uniform in uniforms[location[0]]:
+
+                    if control_group in uniform[1]:
+
+                        controls_to_display.append(
+                            'DISPLAY_FLOAT_VALUE_AT_LABEL({}, {})'.format(uniform[0], uniform[1]))
+
+        for vertex in vertices:
+
+            if control_group in vertex[1]:
+
+                controls_to_display.append(
+                    'DISPLAY_FLOAT_VALUE_AT_LABEL({}, {})'.format(vertex[0], vertex[1]))
+
+        controls_to_display = '{0}{1}{1}{1}'.format(os.linesep, '\t').join(controls_to_display)
+        update_content.append(check_panel_visible_template.format(os.linesep, '\t', panel_define, controls_to_display))
+
+    update_content = os.linesep.join(update_content)
+
+    return update_template.format(os.linesep, '\t', update_content, a_program['class_name'])
 
 
 def generate_custom_ui_cpp_uniform_methods(a_program, a_controls):
@@ -820,6 +1353,7 @@ def generate_custom_ui_cpp(a_program, a_controls, a_vertex_count):
         '#include <elements/ui/controls/label.h>{0}'
         '#include <elements/ui/controls/panel.h>{0}'
         '#include <elements/ui/controls/slider.h>{0}'
+        '#include <cassert>{0}'
         '{0}'
         'namespace Rendering{0}'
         '{{{0}'
@@ -827,9 +1361,7 @@ def generate_custom_ui_cpp(a_program, a_controls, a_vertex_count):
         '{0}'
         '{2}'                                   # constructor
         '{0}'
-        '{8}Ui::~{8}Ui(){0}'
-        '{{{0}'
-        '}}{0}'
+        '{8}Ui::~{8}Ui() = default;{0}'
         '{0}'
         '{3}'                                   # initialize
         '{0}'
@@ -841,7 +1373,7 @@ def generate_custom_ui_cpp(a_program, a_controls, a_vertex_count):
         '{0}'
         'bool {8}Ui::IsNeedRestore() const{0}'
         '{{{0}'
-        'return mIsRestoreNeed;{0}'
+        'return mIsRestoreNeed;{0}'             # DO_NOT_FIX: no tab allowed here
         '}}{0}'
         '{0}'
         '{7}'                                   # get_slider_model
@@ -875,6 +1407,10 @@ if __name__ == '__main__':
         controls_h = generate_controls_h(shader_program, ui_xml)
         custom_ui_h = generate_custom_ui_h(shader_program)
         custom_ui_cpp = generate_custom_ui_cpp(shader_program, controls_h, vertex_count)
+        ui_xml = customize_ui_xml(ui_xml)
+        settings_node = ET.Element('settings', {'name': shader_program['name']})
+        settings_node.append(ui_xml)
+        ui_xml = settings_node
 
         print('--------------------------------------------------------------------')
         print(to_pretty_xml(ui_xml).decode('utf-8'))

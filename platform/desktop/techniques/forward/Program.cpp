@@ -31,7 +31,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 #endif
-	auto game = std::make_unique<Library::RenderingGame>("Model Demo [Sources techniques/forward]");
+	auto game = std::make_unique<Library::RenderingGame>("Model [Sources techniques/forward]");
 	game->addComponent<Library::ClearBackground>();
 	game->addService<Rendering::ModelUi>("assets/settings/techniques/forward.xml");
 	game->addComponent<Rendering::ModelDemo>();

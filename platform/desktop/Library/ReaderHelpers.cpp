@@ -32,12 +32,10 @@ bool read_float(const pugi::xml_node& aNode, float& aValue)
 
 bool read_std_string(const pugi::xml_node& aNode, std::string& aValue)
 {
-	aValue.clear();
-
 	if (!aNode.empty())
 	{
 		aValue = aNode.text().get();
-		return !aValue.empty();
+		return true;
 	}
 
 	return false;

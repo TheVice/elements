@@ -4,6 +4,7 @@
 #include "ModelVertex.h"
 #include <elements/assets/asset_xml.h>
 #include <vector>
+#include <string>
 
 namespace Rendering
 {

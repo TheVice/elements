@@ -1,15 +1,24 @@
 #ifndef _SQUARE_TEXTURE_ALPHA_DEMO_H_
 #define _SQUARE_TEXTURE_ALPHA_DEMO_H_
 
+#include "SquareTextureAlphaSettings.h"
 #include <DrawableGameComponent.h>
-#include <elements/rendering/core/program.h>
-#include <elements/rendering/core/texture.h>
-#include <elements/rendering/primitives/square.h>
 #include <elements/utils/std/pointer.h>
-#include <elements/timing/framerate.h>
+#include <elements/utils/std/optional.h>
+
+namespace eps
+{
+namespace rendering
+{
+class program;
+class texture;
+}
+}
 
 namespace Rendering
 {
+class SquareTextureAlphaEffect;
+class SquareTextureAlphaUi;
 class SquareTextureAlphaDemo : public Library::DrawableGameComponent
 {
 	RTTI_DECLARATIONS(SquareTextureAlphaDemo, DrawableGameComponent)
@@ -29,14 +38,11 @@ public:
 	virtual void Draw() override;
 
 private:
-	eps::utils::unique<eps::rendering::program> mProgram;
-	eps::utils::unique<eps::rendering::texture> mTexture;
-	eps::utils::unique<eps::rendering::primitive::square> mSquare;
-	eps::math::mat4 mTransform;
-	eps::math::vec4 mColor;
-
-	GLuint mColorTexture;
-	eps::timing::framerate rate_;
+	eps::utils::unique<eps::rendering::program> mSquareTextureAlphaProgram;
+	eps::utils::unique<SquareTextureAlphaEffect> mSquareTextureAlphaEffect;
+	eps::utils::unique<eps::rendering::texture> u_source;
+	eps::utils::optional<SquareTextureAlphaSettings> mSquareTextureAlphaSettings;
+	SquareTextureAlphaUi* mSquareTextureAlphaUi;
 };
 }
 
