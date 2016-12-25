@@ -1,8 +1,5 @@
 import os
-# import re
 import sys
-# import xml.etree.ElementTree as ET
-# sys.path.append('.')
 from effect_generator import read_program, extend_program_info
 
 
@@ -22,7 +19,7 @@ def generate_demo_h(a_program):
         'namespace rendering{0}'
         '{{{0}'
         'class program;{0}'
-        'class texture;{0}'  # TODO:
+        'class texture;{0}'
         '}}{0}'
         '}}{0}'
         '{0}'
@@ -77,26 +74,26 @@ def generate_demo_h(a_program):
     return demo_h_template.format(os.linesep, '\t', a_program['class_name'], a_program['head_name'], uniforms_samplers)
 
 
-def generate_demo_cpp(a_program, a_path_2_xml_shader):
+def generate_demo_cpp(a_program):
 
     demo_cpp_template = (
         '{0}'
         '#include "{2}Demo.h"{0}'
         '#include "{2}Effect.h"{0}'
         '#include "{2}Ui.h"{0}'
-        '#include <TextureLoader.h>{0}'  # TODO:
+        '#include <TextureLoader.h>{0}'
         '#include <elements/rendering/core/program.h>{0}'
-        '#include <elements/rendering/core/texture.h>{0}'  # TODO:
+        '#include <elements/rendering/core/texture.h>{0}'
         '#include <elements/rendering/state/state_macro.h>{0}'
-        '#include <elements/rendering/core/texture_maker.h>{0}'  # TODO:
-        '#include <elements/rendering/core/texture_policy.h>{0}'  # TODO:
+        '#include <elements/rendering/core/texture_maker.h>{0}'
+        '#include <elements/rendering/core/texture_policy.h>{0}'
         '#include <elements/rendering/utils/program_loader.h>{0}'
-        '#include <elements/assets/asset_texture.h>{0}'  # TODO:
+        '#include <elements/assets/asset_texture.h>{0}'
         '#include <elements/assets/assets_storage.h>{0}'
         '#include <elements/utils/std/enum.h>{0}'
         '#include <elements/utils/std/product.h>{0}'
-        '#include <Game.h>{0}'  # TODO:
-        '#include <array>{0}'  # TODO:
+        '#include <Game.h>{0}'
+        '#include <array>{0}'
         '{0}'
         'namespace Rendering{0}'
         '{{{0}'
@@ -253,6 +250,10 @@ def generate_demo_cpp(a_program, a_path_2_xml_shader):
             deactivate_textures.append(deactivate_texture_template.format(os.linesep, '\t', i))
             i += 1
 
+        elif 'bool' == location[2]:
+
+            continue
+
         else:
 
             set_ui_from_settings.append('{0}{0}m{1}Ui->Set_{2}(m{1}Settings->{2});'.format('\t',
@@ -275,12 +276,6 @@ def generate_demo_cpp(a_program, a_path_2_xml_shader):
 
         uniforms_samplers = '{}{}'.format(uniforms_samplers, os.linesep)
 
-    path_to_shader = a_path_2_xml_shader.replace(os.path.sep, '/')
-    path_to_shader = path_to_shader[path_to_shader.find('assets/'):]
-    path_to_settings = path_to_shader.replace('shaders', 'settings')
-    path_to_settings = path_to_settings.replace('.prog', '.xml')
-    path_to_settings = path_to_settings[path_to_settings.find('assets/'):]
-
     load_textures = os.linesep.join(load_textures)
 
     if load_textures:
@@ -297,12 +292,12 @@ def generate_demo_cpp(a_program, a_path_2_xml_shader):
 
     return demo_cpp_template.format(os.linesep, '\t', a_program['class_name'],
                                     attributes_location, uniforms_location, uniforms_samplers,
-                                    path_to_shader, path_to_settings, load_textures,
+                                    a_program['path_to_shader'], a_program['path_to_settings'], load_textures,
                                     set_ui_from_settings, activate_textures, set_uniforms,
                                     attributes_to_construct, deactivate_textures)
 
 
-def generate_program_cpp(a_program, a_path_2_xml_shader):
+def generate_program_cpp(a_program):
 
     program_cpp_template = (
         '{0}'
@@ -361,14 +356,8 @@ def generate_program_cpp(a_program, a_path_2_xml_shader):
         '}}{0}'
     )
 
-    path_to_shader = a_path_2_xml_shader.replace(os.path.sep, '/')
-    path_to_settings = path_to_shader.replace('shaders', 'settings')
-    path_to_settings = path_to_settings.replace('.prog', '.xml')
-    path_to_settings = path_to_settings[path_to_settings.find('assets/'):]
-    path_to_source = path_to_settings[path_to_settings.find('settings/') + len('settings/'):]
-    path_to_source = path_to_source.replace('.xml', '')
-
-    return program_cpp_template.format(os.linesep, '\t', a_program['class_name'], path_to_settings, path_to_source)
+    return program_cpp_template.format(os.linesep, '\t', a_program['class_name'],
+                                       a_program['path_to_settings'], a_program['path_to_source'])
 
 
 if __name__ == '__main__':
@@ -382,8 +371,8 @@ if __name__ == '__main__':
         shader_program = read_program(sys.argv[1])
         shader_program = extend_program_info(shader_program)
         demo_h = generate_demo_h(shader_program)
-        demo_cpp = generate_demo_cpp(shader_program, sys.argv[1])
-        program_cpp = generate_program_cpp(shader_program, sys.argv[1])
+        demo_cpp = generate_demo_cpp(shader_program)
+        program_cpp = generate_program_cpp(shader_program)
 
         print('--------------------------------------------------------------------')
         print(demo_h)

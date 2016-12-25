@@ -67,6 +67,14 @@ def read_program(a_path_2_xml_shader):
 
         raise ValueError('No fragment section at program at {}.'.format(a_path_2_xml_shader))
 
+    path_to_shader = a_path_2_xml_shader.replace(os.path.sep, '/')
+
+    if 'assets/' in path_to_shader:
+
+        path_to_shader = path_to_shader[path_to_shader.find('assets/'):]
+
+    program['path_to_shader'] = path_to_shader
+
     return program
 
 
@@ -113,13 +121,13 @@ def convert_type_from_glsl_to_cpp(a_type):
         'bool': 'bool',
         'float': 'float',
         #
-        'vec2': 'eps::math::vec2',  # 'glm::vec2',
-        'vec3': 'eps::math::vec3',  # 'glm::vec3',
-        'vec4': 'eps::math::vec4',  # 'glm::vec4',
+        'vec2': 'eps::math::vec2',
+        'vec3': 'eps::math::vec3',
+        'vec4': 'eps::math::vec4',
         #
-        'mat2': 'eps::math::mat2',  # 'glm::mat2',
-        'mat3': 'eps::math::mat3',  # 'glm::mat3',
-        'mat4': 'eps::math::mat4',  # 'glm::mat4',
+        'mat2': 'eps::math::mat2',
+        'mat3': 'eps::math::mat3',
+        'mat4': 'eps::math::mat4',
         #
         'sampler2D': 'std::string'
     }
@@ -134,9 +142,9 @@ def convert_type_from_glsl_to_cpp(a_type):
 def get_type_length(a_type):
 
     types = {
-        'eps::math::vec2': 'eps::math::vec2().length()',  # 'glm::vec2...',
-        'eps::math::vec3': 'eps::math::vec3().length()',  # 'glm::vec3...',
-        'eps::math::vec4': 'eps::math::vec4().length()'   # 'glm::vec4...',
+        'eps::math::vec2': 'eps::math::vec2().length()',
+        'eps::math::vec3': 'eps::math::vec3().length()',
+        'eps::math::vec4': 'eps::math::vec4().length()'
     }
 
     if a_type not in types.keys():
@@ -221,6 +229,25 @@ def extend_program_info(a_program):
         uniform = a_program['u_locations'][i][0]
         uniform_type = get_uniform_type(uniform, a_program['vertex'], a_program['fragment'])
         a_program['u_locations'][i] += (uniform_type, )
+
+    path_to_settings = a_program['path_to_shader'].replace('shaders', 'settings')
+    path_to_settings = path_to_settings.replace('.prog', '.xml')
+    path_to_source = path_to_settings.replace('.xml', '')
+
+    if 'settings/' in path_to_source:
+
+        path_to_source = path_to_source[path_to_source.find('settings/'):]
+        path_to_source = path_to_source[path_to_source.find('settings/') + len('settings/'):]
+
+    settings_file = path_to_settings
+
+    if '/' in settings_file:
+
+        settings_file = settings_file[settings_file.rfind('/') + len('/'):]
+
+    a_program['path_to_settings'] = path_to_settings
+    a_program['path_to_source'] = path_to_source
+    a_program['settings_file'] = settings_file
 
     return a_program
 

@@ -218,14 +218,14 @@ def generate_ui_xml(a_program, a_vertex_count):
     return controls
 
 
-def customize_ui_xml(a_ui_xml):
+def customize_ui_xml(a_ui_xml, a_vertex_count):
 
     button_position_x = 10
     button_position_y = 5
 
     for control in a_ui_xml:
 
-        if control.tag == 'button':
+        if control.tag == 'button' or control.tag == 'check':
 
             control.attrib['size_w'] = str(75)
             control.attrib['size_h'] = str(75)
@@ -660,7 +660,7 @@ def customize_ui_xml(a_ui_xml):
 
                     label_number += 1
 
-    if vertex_count == 4:
+    if a_vertex_count == 4:
 
         texts_for_vertex_panels = [
                 ('vertex_0', 'Left Top'), ('vertex_1', 'Right Top'),
@@ -704,6 +704,21 @@ def to_file(a_file_content, a_file_name):
     opened_file = open(a_file_name, 'wb')
     opened_file.write(a_file_content)
     opened_file.close()
+
+
+def from_file(a_file_name):
+
+    opened_file = open(a_file_name, 'rb')
+    file_content = list(opened_file)
+    opened_file.close()
+
+    file_content_2 = []
+
+    for fc in file_content:
+
+        file_content_2.append(fc.decode())
+
+    return ''.join(file_content_2)
 
 
 def fill_controls_def(a_ui_xml, a_controls, a_parent):
@@ -1022,7 +1037,7 @@ def generate_custom_ui_cpp_constructor(a_program, a_vertex_count):
         '{4}Ui::{4}Ui(Library::Game& aGame, const std::string& aAssetPath) :{0}'
         '{1}UiAsset(aGame, aAssetPath),{0}'
         '{1}mIsRestoreNeed(true),{0}'
-        '{2}'          # uniform_variable
+        '{2}'           # uniform_variable
         'mVertices({0}'
         '{{{0}'
         '{3}'           # vertex
@@ -1069,6 +1084,10 @@ def get_job_for_set_click(a_panels, a_control):
     if uniform_or_vertex_group == 'RESTORE':
 
         return '{1}{1}{1}mIsRestoreNeed = !mIsRestoreNeed;{0}'.format(os.linesep, '\t')
+
+    if '_CHECK_' in a_control:
+
+        return '{0}{0}{0}//TODO:'.format('\t')
 
     control_group = a_control[:a_control.rfind('_BUTTON_')]
     corresponded_panel = ''
@@ -1407,7 +1426,7 @@ if __name__ == '__main__':
         controls_h = generate_controls_h(shader_program, ui_xml)
         custom_ui_h = generate_custom_ui_h(shader_program)
         custom_ui_cpp = generate_custom_ui_cpp(shader_program, controls_h, vertex_count)
-        ui_xml = customize_ui_xml(ui_xml)
+        ui_xml = customize_ui_xml(ui_xml, vertex_count)
         settings_node = ET.Element('settings', {'name': shader_program['name']})
         settings_node.append(ui_xml)
         ui_xml = settings_node

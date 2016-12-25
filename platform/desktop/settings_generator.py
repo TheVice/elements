@@ -154,7 +154,7 @@ def generate_settings_h(a_program):
         '#include <elements/math/types.h>{0}'
         '#include <elements/assets/asset_xml.h>{0}'
         '#include <vector>{0}'
-        '#include <string>{0}'  # TODO:
+        '#include <string>{0}'
         '{0}'
         'namespace Rendering{0}'
         '{{{0}'

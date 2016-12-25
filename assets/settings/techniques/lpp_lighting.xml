@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings name="lpp_lighting">
+  <vertices>
+    <vertex>
+      <a_vertex_pos x="-0.55" y="0.55" z="0.0"/>
+    </vertex>
+    <vertex>
+      <a_vertex_pos x="0.55" y="0.55" z="0.0"/>
+    </vertex>
+    <vertex>
+      <a_vertex_pos x="0.55" y="-0.55" z="0.0"/>
+    </vertex>
+    <vertex>
+      <a_vertex_pos x="-0.55" y="-0.55" z="0.0"/>
+    </vertex>
+  </vertices>
+  <indices>
+    <index>0</index>
+    <index>1</index>
+    <index>2</index>
+    <index>2</index>
+    <index>3</index>
+    <index>0</index>
+  </indices>
+  <u_matrix_mvp>
+    <r0 x="1.0" y="0.0" z="0.0" w="0.0"/>
+    <r1 x="0.0" y="1.0" z="0.0" w="0.0"/>
+    <r2 x="0.0" y="0.0" z="1.0" w="0.0"/>
+    <r3 x="0.0" y="0.0" z="0.0" w="1.0"/>
+  </u_matrix_mvp>
+  <u_camera_view_param x="0.0" y="0.0"/>
+  <u_camera_near>1.0</u_camera_near>
+  <u_camera_far>0.5</u_camera_far>
+  <u_map_geometry>assets/models/C-3PO/C-3PO_Dirty_N.png</u_map_geometry>
+  <u_map_depth>assets/models/C-3PO/C-3PO_Dirty_D.png</u_map_depth>
+  <u_light_pos x="0.3" y="0.2" z="0.1"/>
+  <u_light_intensity x="0.25" y="0.5" z="0.75"/>
+  <u_light_inv_range_square>0.5</u_light_inv_range_square>
+  <controls>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_matrix_mvp_button_13" position_x="10" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_matrix_mvp_panel_14" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_1" id="0" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_1" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_2" id="1" max="1.0" min="-1.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_2" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_3" id="2" max="1.0" min="-1.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_3" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_4" id="3" max="1.0" min="-1.0" position_x="10" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_4" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_5" id="4" max="1.0" min="-1.0" position_x="250" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_5" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_6" id="5" max="1.0" min="-1.0" position_x="490" position_y="60" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_6" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="63" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_7" id="6" max="1.0" min="-1.0" position_x="10" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_7" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_8" id="7" max="1.0" min="-1.0" position_x="250" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_8" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_9" id="8" max="1.0" min="-1.0" position_x="490" position_y="35" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_9" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="38" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_10" id="9" max="1.0" min="-1.0" position_x="10" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_10" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_11" id="10" max="1.0" min="-1.0" position_x="250" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_11" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="13" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_matrix_mvp_slider_12" id="11" max="1.0" min="-1.0" position_x="490" position_y="10" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_12" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="13" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_matrix_mvp_label_15" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Matrix mvp" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_camera_view_param_button_18" position_x="90" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_camera_view_param_panel_19" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_camera_view_param_slider_16" id="12" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_camera_view_param_label_16" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_camera_view_param_slider_17" id="13" max="1.0" min="-1.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_camera_view_param_label_17" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_camera_view_param_label_20" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Camera view" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_camera_near_button_22" position_x="170" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_camera_near_panel_23" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_camera_near_slider_21" id="14" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_camera_near_label_21" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_camera_near_label_24" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Camera near" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_camera_far_button_26" position_x="250" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_camera_far_panel_27" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_camera_far_slider_25" id="15" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_camera_far_label_25" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_camera_far_label_28" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Camera far" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_light_pos_button_32" position_x="330" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_light_pos_panel_33" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_light_pos_slider_29" id="16" max="1.0" min="-1.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_pos_label_29" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_light_pos_slider_30" id="17" max="1.0" min="-1.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_pos_label_30" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_light_pos_slider_31" id="18" max="1.0" min="-1.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_pos_label_31" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_pos_label_34" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Light position" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_light_intensity_button_38" position_x="410" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_light_intensity_panel_39" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_light_intensity_slider_35" id="19" max="1.0" min="0.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_intensity_label_35" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_light_intensity_slider_36" id="20" max="1.0" min="0.0" position_x="250" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_intensity_label_36" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="420" position_y="88" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_light_intensity_slider_37" id="21" max="1.0" min="0.0" position_x="490" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_intensity_label_37" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="660" position_y="88" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_intensity_label_40" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Light intensity" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="u_light_inv_range_square_button_42" position_x="490" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="u_light_inv_range_square_panel_43" position_x="10" position_y="470" size_h="125" size_w="710" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="u_light_inv_range_square_slider_41" id="22" max="1.0" min="0.0" position_x="10" position_y="85" size_h="16" size_w="150" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_inv_range_square_label_41" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="180" position_y="88" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="u_light_inv_range_square_label_44" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="355" position_y="105" text="Light inv range square" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_0_button_48" position_x="570" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_0_panel_49" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_45" id="23" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_45" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_46" id="24" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_46" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_0_slider_47" id="25" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_47" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_0_label_50" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Top" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_1_button_54" position_x="650" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_1_panel_55" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_51" id="26" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_51" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_52" id="27" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_52" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_1_slider_53" id="28" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_53" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_1_label_56" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Right Top" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_2_button_60" position_x="730" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_2_panel_61" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_57" id="29" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_57" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_58" id="30" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_58" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_2_slider_59" id="31" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_59" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_2_label_62" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Right Bottom" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/settings.png" control_name="vertex_3_button_66" position_x="810" position_y="5" size_h="75" size_w="75" visible="true"/>
+    <panel color_a="0.5" color_b="0.8" color_g="0.8" color_r="0.8" control_name="vertex_3_panel_67" position_x="10" position_y="110" size_h="355" size_w="160" visible="false">
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_63" id="32" max="1.0" min="-1.0" position_x="10" position_y="310" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_63" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="313" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_64" id="33" max="1.0" min="-1.0" position_x="10" position_y="280" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_64" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="283" visible="true"/>
+      <slider color_slider_a="1.0" color_slider_b="0.8" color_slider_g="0.8" color_slider_r="0.8" color_tracker_a="1.0" color_tracker_b="0.95" color_tracker_g="0.65" color_tracker_r="0.0" control_name="vertex_3_slider_65" id="34" max="1.0" min="-1.0" position_x="10" position_y="250" size_h="16" size_w="100" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_65" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="120" position_y="253" visible="true"/>
+      <label color_a="1.0" color_b="0.95" color_g="0.65" color_r="0.0" control_name="vertex_3_label_68" font_height="18" font_path="assets/ui/fonts/OpenSans-Regular.ttf" position_x="10" position_y="335" text="Left Bottom" visible="true"/>
+    </panel>
+    <button asset_path="assets/ui/textures/restore.png" control_name="restore_button" position_x="725" position_y="525" size_h="75" size_w="75" visible="true"/>
+  </controls>
+</settings>
