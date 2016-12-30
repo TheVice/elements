@@ -26,7 +26,9 @@ IN THE SOFTWARE.
 #include "io/path.h"
 #include <cstdio>
 #include <sys/stat.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 namespace eps {
 
@@ -93,7 +95,13 @@ struct asset_system : public io::system
     }
     bool exists(const std::string & file) final
     {
+#ifndef _MSC_VER
         return access(file.c_str(), R_OK) != -1;
+#else
+        auto asset = std::make_unique<asset_stream>(file.c_str());
+        const auto asset_size = asset->size();
+        return 0 != asset_size;
+#endif
     }
 };
 

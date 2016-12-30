@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     else:
 
-        path_2_xml_shader = pathlib.Path(sys.argv[1])
+        path_2_xml_shader = pathlib.Path(sys.argv[1]).absolute()
 
         if not path_2_xml_shader.exists() or not path_2_xml_shader.is_file():
 

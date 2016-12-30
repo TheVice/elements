@@ -347,6 +347,9 @@ def generate_settings_cpp(a_program):
     read_vertex_data = ('{0}{0}'.format(os.linesep)).join(read_vertex_data)
     vertex_parameters = ', '.join(vertex_parameters)
 
+    if not clean_uniform_variables:
+        clean_uniform_variables = '{}\\'.format('\t')
+
     return settings_cpp_template.format(os.linesep, a_program['class_name'], '\t',
                                         clean_uniform_variables, node_uniform_variables,
                                         node_attribute_variables, read_vertex_data, vertex_parameters,
