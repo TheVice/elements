@@ -1,12 +1,12 @@
-###Overview
+### Overview
 
 In this folder located source files required for build for desktop platforms: Linux, Windows
 
-###Dependencies
+### Dependencies
 * [GLFW](https://github.com/glfw/glfw/releases) - used for cooperation with operation system
 * [GLEW](https://github.com/nigels-com/glew/releases) - used for cooperation with OpenGL extensions (on Windows platform required [alternative distributive](https://github.com/nigels-com/glew/issues/31#issuecomment-145498979), [mirror](https://sourceforge.net/projects/glew/files/glew/1.13.0/))
 
-###Build from Eclipse (Linux)
+### Build from Eclipse (Linux)
 * Open terminal (console) and enter into directory where you want to generated project files
 * For Debug build type and execute ```cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ECLIPSE_MAKE_ARGUMENTS="-j$(nproc) -s" <Path to project root source directory>```
 * For Release build type and execute ```cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_ECLIPSE_MAKE_ARGUMENTS="-j$(nproc) -s" <Path to project root source directory>```
@@ -15,7 +15,7 @@ In this folder located source files required for build for desktop platforms: Li
 * Now you can add existing project into ```Eclipse``` workspace to make and run targets from it
 * To build project from terminal run ```make -C . -j$(nproc) -s all```
 
-###Build from Eclipse (Windows)
+### Build from Eclipse (Windows)
 * Open terminal (```cmd.exe```) and enter into directory where you want to generated project files
 * Make sure that bin directory of MinGW in your PATH environment variable, otherwise cmake may do not found your C++ compiler
 * For Debug build type and execute ```cmake -G "Eclipse CDT4 - MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ECLIPSE_MAKE_ARGUMENTS="-j%NUMBER_OF_PROCESSORS% -s" -DGLEW_PATH=<Path to glew> <Path to project root source directory>```

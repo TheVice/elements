@@ -1,4 +1,4 @@
-###Overview
+### Overview
 
 In this folder located modified partial source code of Library created for video series *OpenGL Essentials LiveLessons* by Paul Varcholik
 

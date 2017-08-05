@@ -1,6 +1,7 @@
 #ifndef _SERVICE_CONTAINER_H_
 #define _SERVICE_CONTAINER_H_
 
+#include <cstdint>
 #include <map>
 
 namespace Library

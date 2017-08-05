@@ -1,6 +1,7 @@
 #ifndef _RTTI_H_
 #define _RTTI_H_
 
+#include <cstdint>
 #include <string>
 
 namespace Library
